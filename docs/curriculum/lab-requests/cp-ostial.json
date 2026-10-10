@@ -1,0 +1,188 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "An ostial-lesion context the PCI lab reports to the tip registry, so ostial tips appear only when the target lesion is aorto-ostial or branch ostial. Today the cp-ostial tips can only be triggered by phase and vessel (RCA, LM, SVG or LAD, LCx), so they also show in the non-ostial RCA, LAD and LCx scenarios (for example 'balloon half in the aorta' during mid-RCA PCI); their titles now name the lesion type as a stopgap. Needed: a lesion-site condition on TipTrigger and LabContext (site: aorto-ostial | branch-ostial, reported by the PCI lab from the scenario's lesion definition), or LAB_EVENTS entries 'aorto-ostial-lesion' and 'branch-ostial-lesion' raised whenever the target lesion lies within 3–5 mm of an origin; then every cp-ostial PCI tip adds it. Also an 'aortocoronary-dissection' event, raised only when contrast staining involves the ostium, sinus or aortic wall, so pci-ostial-aortocoronary-seal stops firing on distal wire dissections, and a 'stent-recoil' event (a stent that expanded and then lost diameter, as distinct from stent-underexpanded), so pci-ostial-recoil fires only then instead of in every optimise phase. Once these exist, every cp-ostial tip gains site: ['aorto-ostial'] or site: ['branch-ostial'] (open dependency carried from round 2 review). Round 1 fixer: until this exists, pci-ostial-rota-coaxial and pci-ostial-orbital-constrain are triggered in the plan phase only (with the balloon-undilatable event they scored above generic calcium tips in the calcified mid-RCA scenario); once 'aorto-ostial-lesion' exists they should return to { phase: ['lesion-prep'], event: ['balloon-undilatable'], requires: ['aorto-ostial-lesion'] }, pci-ostial-aortocoronary-seal should use event 'aortocoronary-dissection', and pci-ostial-recoil event 'stent-recoil'. Round 2 fixer: pci-ostial-undilatable is likewise gated to the plan phase (it should return to { phase: ['lesion-prep'], event: ['balloon-undilatable'], requires: ['aorto-ostial-lesion'] }), and pci-ostial-stent-underexpanded has lost its event (it should return to { phase: ['optimise'], event: ['stent-underexpanded'], requires: ['aorto-ostial-lesion'] }); with their events both scored above generic calcium tips in the calcified mid-RCA scenario.",
+    "learnerDoes": "Nothing new; the lab raises the context automatically when the scenario's target lesion is ostial.",
+    "success": "Ostial tips (pci-ostial-*, pci-branch-*) appear in ostial scenarios and not in the focal mid-LAD, calcified mid-RCA, LCx STEMI or mid-RCA CTO scenarios; pci-ostial-aortocoronary-seal appears only for staining at the ostium or aortic wall.",
+    "tips": [
+      "pci-branch-angle-choice",
+      "pci-branch-angulated-wiring",
+      "pci-branch-minicrush-proximal-cell",
+      "pci-branch-mv-shift",
+      "pci-branch-prep-protect-mv",
+      "pci-branch-tstent-marker",
+      "pci-branch-wire-both",
+      "pci-ostial-aortocoronary-seal",
+      "pci-ostial-balloon-straddle",
+      "pci-ostial-damped-wire-and-off",
+      "pci-ostial-deploy-ready",
+      "pci-ostial-distal-first",
+      "pci-ostial-final-reflux",
+      "pci-ostial-flare-reengage",
+      "pci-ostial-guide-lost",
+      "pci-ostial-guide-stent-unit",
+      "pci-ostial-ivus-not-oct",
+      "pci-ostial-missed-ostium",
+      "pci-ostial-old-stent-rewire",
+      "pci-ostial-orbital-constrain",
+      "pci-ostial-overhang-flare",
+      "pci-ostial-plan-hit-and-run",
+      "pci-ostial-protrude-1-2",
+      "pci-ostial-recoil",
+      "pci-ostial-rota-coaxial",
+      "pci-ostial-stent-underexpanded",
+      "pci-ostial-stenting-wire",
+      "pci-ostial-szabo",
+      "pci-ostial-undilatable",
+      "pci-ostial-watermelon"
+    ],
+    "lessonIds": [
+      "cp-ostial-kinds-plan",
+      "cp-ostial-prep",
+      "cp-ostial-stent",
+      "cp-ostial-troubleshoot",
+      "cp-ostial-branch-prep",
+      "cp-ostial-branch-stent"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An ostial RCA scenario (aorto-ostial, calcified, with a second mid-RCA lesion), built from the ostial RCA pathology that already exists in the diagnostic generator. Engagement is modelled: a guide that seats in the ostium damps (damped or ventricularised trace), more readily with 7–8 Fr guides, Amplatz shapes and deep seating; ischaemia (chest pain, ST change) develops while it stays damped; an injection into a damped trace produces aorto-coronary dissection (contrast staining of the aortic wall). Side-hole guides are selectable: they normalise the trace but ischaemia and dissection can still happen, and images are fainter with more contrast used.",
+    "learnerDoes": "Chooses guide size and shape (6 Fr JR4 or IM for isolated ostial disease; from the radial, or with more distal disease, a supportive AL1, Ikari right or 3D right, the 3D right reaching the ostium with counterclockwise and the distal disease with clockwise torque), loads a wire to the guide tip before engaging, wires the RCA at once, then takes the guide off the ostium by rotating it to a non-coaxial position rather than pulling it back; may add a floating wire in the aortic root or engage the RCA with a small guide extension. Never injects into a damped trace. If dissection occurs: stops injecting, keeps or confirms the wire with IVUS, and stents the ostium to seal it. Avoids moving an engaged catheter, especially advancing it against plaque; recognises conus cannulation (rapid damping) and withdraws gently without injecting. Never injects when the catheter does not back-bleed. After any dissection, follows it with serial CT or transoesophageal echo if large and keeps the blood pressure controlled.",
+    "success": "Wire in the distal RCA before any selective injection; no injection while the trace is damped; disengagement by rotation does not lose the wire (pulling back can); if dissection was provoked, the ostium is stented with 1–2 mm in the aorta without further antegrade injections.",
+    "tips": [
+      "pci-ostial-plan-hit-and-run",
+      "pci-ostial-damped-wire-and-off",
+      "pci-ostial-side-hole-limits",
+      "pci-ostial-aortocoronary-seal",
+      "pci-guide-damped-work-outside"
+    ],
+    "lessonIds": [
+      "cp-ostial-kinds-plan",
+      "cp-ostial-engage"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Aorto-ostial stenting in the ostial RCA scenario, step by step, with the guide-stent interaction modelled: withdrawing the guide pushes the stent forward and withdrawing the stent pulls the guide in, unless they are moved together; the stent can be positioned against the ostium in at least two projections (steep LAO and another); deployment with or without breath-hold, and with the indeflator connected or not; flaring by pulling the stent balloon half into the aorta; re-engagement over the deflated balloon (forced re-engagement over unflared struts deforms the stent); final injection with or without reflux into the aorta, with the trace checked.",
+    "learnerDoes": "Predilates the ostium enough for devices to pass, stents the mid-RCA lesion, then completes preparation of the ostium with a balloon straddling the aortic wall (non-compliant about 30 mm or scoring balloon, inflated 1 atm at a time with back-tension), disengages the guide with the stent as one unit, pulls the stent back until 1–2 mm protrude and confirms it in two views, deploys, flares, re-engages gently and performs the final assessment.",
+    "success": "Scored on: ostium predilated before any stent is delivered through it, then distal-first stenting (a stent pushed through an unprepared calcified ostium can deform or be lost; one pushed through a fresh ostial stent likewise, unless a guide extension is brought in over a balloon without force); balloon placed partly in the aorta; no watermelon seeding (fast inflation of a short balloon inside the vessel makes it slip); protrusion 1–2 mm confirmed in two projections (flush or short placement scores as a missed ostium, clearly more than 2 mm as excessive overhang; Brilakis gives 1–2 mm as the optimal protrusion and the exact overhang threshold is a lab design choice); flaring done before re-engagement; final injection refluxes into the aorta; no damping at the end (unless the vessel is no larger than the guide).",
+    "tips": [
+      "pci-ostial-distal-first",
+      "pci-ostial-balloon-straddle",
+      "pci-ostial-watermelon",
+      "pci-ostial-guide-stent-unit",
+      "pci-ostial-guide-lost",
+      "pci-ostial-protrude-1-2",
+      "pci-ostial-deploy-ready",
+      "pci-ostial-flare-reengage",
+      "pci-ostial-stenting-wire",
+      "pci-ostial-final-reflux"
+    ],
+    "lessonIds": [
+      "cp-ostial-prep",
+      "cp-ostial-stent"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "An aorto-ostial bench mode: a vessel leaving an aortic wall, with the stent's markers and actual stent edges shown separately (the stent lying just inside the markers on most platforms, centred on them on some), IVUS pullback from the vessel into the aorta, and the four failure modes: a stent stopping short of the aorta that still looks treated on angiography because the balloon shoulder dilated the ostium; overhang of several millimetres; underexpansion in a fibrotic, calcified ostium after primary stenting (a waist that never opened); and acute recoil after deployment (a stent that opened and then lost diameter). The two must be distinguishable so that the recoil and underexpansion tips can be raised separately (a 'stent-recoil' state or event).",
+    "learnerDoes": "Positions and deploys an ostial stent; reads the IVUS pullback for ostial coverage, protrusion and expansion; corrects a missed ostium with a second stent, an overhang by flaring with a short (6–8 mm) oversized balloon or a dual-balloon flaring catheter, recoil by post-dilating and waiting, then placing a stent of strong radial strength inside if it recurs, and underexpansion by the balloon-undilatable algorithm (high-pressure non-compliant inflation, laser, lithotripsy or very-high-pressure balloon) rather than a second stent. Optional aids: a floating wire, an ostial positioning device and the Szabo technique (with its risk of stent deformation).",
+    "success": "Final IVUS shows complete ostial coverage with struts in the aorta and good expansion; the learner does not accept the angiographic result alone; overhang is flared rather than snared unless more than half the stent protrudes.",
+    "tips": [
+      "pci-img-ostial-coverage",
+      "pci-ostial-ivus-not-oct",
+      "pci-ostial-missed-ostium",
+      "pci-ostial-overhang-flare",
+      "pci-ostial-recoil",
+      "pci-ostial-stent-underexpanded",
+      "pci-ostial-szabo"
+    ],
+    "lessonIds": [
+      "cp-ostial-troubleshoot",
+      "cp-ostial-assess"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Calcium modification at the ostium in the ostial RCA scenario: a balloon-undilatable ostial waist, with rotational atherectomy (extra-support atherectomy wire, guide coaxial or not, burr activated at the guide tip with tension off or not) and orbital atherectomy (crown able or unable to cross; nose cone seated in the ostium with the crown 5 mm back, or spun free in the aortic root) as options, and lithotripsy or a very-high-pressure balloon as alternatives.",
+    "learnerDoes": "Recognises the undilatable waist, stops before stenting, images the lesion, chooses and performs the modification safely for an ostial position.",
+    "success": "No stent while a waist persists; rotational atherectomy only from a coaxial guide with the burr started at the tip (otherwise the lab models burr jump and entrapment risk or aortic dissection); orbital atherectomy never activated free in the aorta (otherwise vessel injury or perforation), and not used if the nose cone cannot engage the ostium.",
+    "tips": [
+      "pci-ostial-undilatable",
+      "pci-ostial-rota-coaxial",
+      "pci-ostial-orbital-constrain"
+    ],
+    "lessonIds": [
+      "cp-ostial-prep"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "An aorto-ostial physiology case: equalisation and measurement with the guide seated (damped trace, FFR and resting index reading falsely high, about 0.04 higher on average with a guide without side holes and about 0.02 with a side-hole guide in the study Brilakis cites) versus disengaged in the aorta; adenosine given intracoronary before disengaging, or intravenously. The lab should not model the error as a falsely low aortic pressure alone, since neither manual gives that mechanism.",
+    "learnerDoes": "Equalises with the sensor and guide in the ascending aorta, disengages the guide before reading, and repeats the same steps after stenting.",
+    "success": "The learner rejects a value measured with a damped, seated guide and records the true value with the guide off the ostium.",
+    "tips": [
+      "pci-phys-ostial-disengage"
+    ],
+    "lessonIds": [
+      "cp-ostial-assess"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A branch ostial scenario: an isolated ostial lesion of a large first diagonal (Medina 0,0,1) with selectable branch angles (about 45° and about 85°), and optionally an ostial circumflex. Wiring is modelled: a workhorse wire prolapses down the LAD at acute angles; a microcatheter, a dual-lumen microcatheter over the LAD wire, or a reversed (hairpin) polymer wire can wire the branch; forcing the wire can dissect the ostium. Main-vessel injury is modelled when a balloon slips back or is placed across the LAD. A drug-coated balloon after good preparation is accepted without penalty; provisional stenting of the LAD across a prepared diagonal is allowed but leaves the diagonal ostium untreated and jailed (the cross-over data concern the ostial LAD, where left main to LAD cross-over is accepted); a T-stent that protrudes well into a healthy main vessel is scored as the wrong technique for the angle.",
+    "learnerDoes": "Wires both vessels, exchanges any polymer wire before preparation, prepares the branch ostium with a scoring balloon without touching the LAD, then T-stents (70–90°, proximal marker at the ostium, deploy and remove the balloon, with no pull-back high-pressure inflation into the unstented main vessel) or performs a mini-crush (under 70°: branch stent protruding to cover both edges of the ostium, LAD balloon 1:1, deploy, crush, rewire through a proximal strut, deliver both balloons, remove the jailed wire, kiss). Checks the LAD in orthogonal views and with imaging; stents it for significant plaque shift, or by DK crush for a dissection after a mini-crush. After provisional LAD stenting that compromises the diagonal, rewires it through a distal strut and performs kissing balloon inflation, placing a branch stent only if the result stays suboptimal.",
+    "success": "Technique matches the angle; branch ostium fully covered on imaging; proximal-strut rewiring after the crush (a distal crossing pushes the crushed struts away from the carina); jailed wire removed only after both balloons are delivered; LAD intact or appropriately treated.",
+    "tips": [
+      "pci-branch-wire-both",
+      "pci-branch-angulated-wiring",
+      "pci-branch-prep-protect-mv",
+      "pci-branch-angle-choice",
+      "pci-branch-tstent-marker",
+      "pci-branch-minicrush-proximal-cell",
+      "pci-branch-mv-shift"
+    ],
+    "lessonIds": [
+      "cp-ostial-branch-prep",
+      "cp-ostial-branch-stent"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "In the diagnostic lab, an ostial RCA and an ostial left main lesion with catheter-tip spasm as an alternative cause of the same appearance; contrast that fails to clear when the catheter occludes the ostium (with ventricular ectopy if not disengaged); and a view check that rewards the least foreshortened projections of each ostium.",
+    "learnerDoes": "Gives nitrate before judging the ostium, injects non-selectively in the sinus when the tip is too deep or the trace damps, disengages when contrast hangs, and chooses steep LAO (± caudal) for the RCA ostium and LAO caudal or LAO cranial for the left main.",
+    "success": "Spasm is not reported as an ostial stenosis; no injection into a damped trace; contrast clears after disengagement; ostial views chosen correctly.",
+    "tips": [
+      "diag-aorto-ostial-views",
+      "diag-ostial-spasm-withdraw-nitrate"
+    ],
+    "lessonIds": [
+      "cp-ostial-assess"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An ostial left main scenario: severe ostial left main disease in which engagement damps quickly and causes extensive ischaemia and hypotension; left-dominant variant, or a totally occluded RCA, in which long injections cause hypotension; a left main ostial dissection if the learner injects into a damped trace.",
+    "learnerDoes": "Preloads a wire, and often a balloon on it, to the guide tip before engaging; wires (and balloons) at once; disengages as soon as the trace damps; avoids side-hole guides; keeps injections and left main inflations short; if the ostium dissects, disengages, injects only cautiously from a distance and prepares to stent the entry.",
+    "success": "No injection into a damped trace; disengagement before haemodynamic deterioration; no side-hole guide; short inflations; dissection, if provoked, managed without enlarging it.",
+    "tips": [
+      "pci-ostial-damped-wire-and-off",
+      "pci-ostial-side-hole-limits",
+      "pci-ostial-aortocoronary-seal"
+    ],
+    "lessonIds": [
+      "cp-ostial-engage",
+      "cp-ostial-kinds-plan"
+    ],
+    "priority": "P2"
+  }
+]

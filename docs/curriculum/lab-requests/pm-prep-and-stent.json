@@ -1,0 +1,142 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Balloon preparation and an indeflator-driven inflation step in every PCI-lab scenario: a prep station (syringe of diluted contrast or saline, label, negative suction with plunger up, connect indeflator), then inflation where the learner sets speed, target pressure and hold time, with the balloon's compliance chart applied and a live pressure needle.",
+    "learnerDoes": "Prepares the balloon (choosing contrast mixture, removing air), inflates over 3–5 s to a chosen pressure, holds 10–20 s, deflates by locking vacuum, and confirms full deflation on fluoroscopy before withdrawing.",
+    "success": "Balloon is visible (contrast used, no air); target pressure within the device's limits (non-compliant 12–20 atm, compliant 12–14 atm, cutting balloon 6–8 atm at 5 s per atm and never above 12 atm); hold 10–20 s; no withdrawal before full deflation. Saline or air in the balloon produces an invisible balloon the learner must recognise and re-prepare.",
+    "tips": [
+      "pci-balloon-prep-visible",
+      "pci-balloon-inflation-numbers",
+      "pci-balloon-withdraw-deflated",
+      "pci-balloon-size-and-length"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-balloon-choose",
+      "pm-prep-and-stent-balloon-inflate"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Inflation complications driven by the learner's choices: balloon rupture (high pressures in heavy calcium: sudden needle drop), watermelon seeding (short balloon, fast inflation, angulated lesion), and a balloon-undilatable lesion in the calcified mid-RCA scenario (a waist that persists despite prolonged high-pressure inflations of a non-compliant balloon within its rated burst pressure). Intravascular imaging available before preparation to grade the calcium.",
+    "learnerDoes": "Responds to a rupture (suction, remove balloon, aspirate guide, angiogram), to slipping (deflate, retry slower and lower, longer balloon or buddy wire), and to a waist (prolonged inflations and higher pressure within the balloon's compliance chart first; then stops, does not stent, opens imaging and the undilatable pathway). May image the calcium before choosing balloon-first or upfront modification.",
+    "success": "Correct order for rupture; no inflation continued while the balloon is outside the lesion; no balloon taken past its rated burst pressure (rupture modelled otherwise); no stent deployed while a waist persists.",
+    "tips": [
+      "pci-balloon-rupture-suction",
+      "pci-balloon-watermelon",
+      "pci-balloon-waist-stop"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-balloon-inflate"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A pre-balloon checklist step: the wire tip position (sometimes in a small branch next to the lesion) and the state of the guide (back-bled, aspirated, filled with contrast) before the first device and after each device is removed.",
+    "learnerDoes": "Injects to check the wire tip and repositions it several centimetres beyond the lesion out of small branches; back-bleeds and aspirates the guide before injecting.",
+    "success": "No balloon inflated with the wire in a small branch near the lesion; no injection after device removal without aspiration (otherwise the lab models air or debris embolisation).",
+    "tips": [
+      "pci-prep-wire-check-before-balloon",
+      "pci-prep-clear-the-guide"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-prep-why"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Device delivery mechanics: shaft markers (90 cm and 100 cm) that the learner pushes to without screening, then screened advancement to the guide tip and lesion; choice of two-hand or independent-hand technique, with the independent-hand technique allowing forward guide push; guide back-out and wire slip when the learner pushes against resistance.",
+    "learnerDoes": "Advances to the correct marker for the guide length, screens the remainder, watches the guide and wire tip, and stops when the guide begins to back out.",
+    "success": "No device advanced into the coronary unscreened; pushing against resistance produces guide prolapse, wire loss or stent deformation, which the learner must then recover (re-engage, rewire, withdraw the stent through a coaxial guide).",
+    "tips": [
+      "pci-delivery-marker-then-screen",
+      "pci-delivery-small-bites",
+      "pci-delivery-withdraw-coaxial"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-delivery"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Failed stent delivery in the calcified mid-RCA scenario (and a tortuous variant), with the support menu available: forward push, larger or more supportive guide (with a risk of wire loss on exchange), buddy wire, support wire, partial wire withdrawal, buddy balloon, deep breath, guide extension (pressure damps if wedged), side-branch anchor in the conus or acute marginal (size and pressure chosen by the learner), distal anchor (second wire and balloon that must be removed before deployment), and shorter or two stents.",
+    "learnerDoes": "Recognises poor support, escalates stepwise and in combination, sizes an anchor balloon 1:1 at low pressure, avoids injecting through a wedged extension, and removes a distal anchor before deploying.",
+    "success": "Stent delivered without guide or wire loss; anchor balloon not oversized (branch dissection or perforation modelled otherwise); no injection while the extension trace is damped (hydraulic dissection modelled otherwise); distal anchor wire never trapped.",
+    "tips": [
+      "pci-support-five-levers",
+      "pci-support-buddy-wire",
+      "pci-support-side-branch-anchor",
+      "pci-support-distal-anchor-out",
+      "pci-support-extension-wedge",
+      "pci-support-deep-breath",
+      "pci-guide-extension-watch-act"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-support"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Resistance at a previously placed stent caused by a wire that passed under a strut (an in-stent restenosis variant of the mid-LAD scenario).",
+    "learnerDoes": "Recognises that the device stops exactly at the old stent edge, withdraws the wire and recrosses with a knuckled tip.",
+    "success": "Device passes after rewiring; forcing it produces longitudinal deformation of the old stent.",
+    "tips": [
+      "pci-delivery-old-stent-rewire"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-delivery"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A stent-or-not decision point after predilatation, with generated states: good result, slow flow or no-reflow without dissection, flow-limiting dissection, persistent waist, very small distal vessel, and a drug-coated balloon device available, plus a pre-procedure flag for planned non-cardiac surgery or high bleeding risk.",
+    "learnerDoes": "Chooses stent, treat flow first (vasodilator, thrombectomy), modify the lesion, balloon-only, or drug-coated balloon, and gives the reason.",
+    "success": "No stent into no-reflow without dissection; stent for a flow-limiting dissection; no stent over a persistent waist; drug-coated balloon offered for in-stent restenosis or small vessels, not as the default for de novo non-complex lesions; high bleeding risk met with a drug-eluting stent and a short antiplatelet course rather than a bare-metal stent; planned non-cardiac surgery prompts a decision on whether PCI or surgery waits.",
+    "tips": [
+      "pci-stent-not-into-no-reflow",
+      "pci-stent-check-dapt-and-surgery"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-when"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Stent sizing and positioning feedback: tapering vessel with distal and proximal references, a record of where and over what length the predilatation balloon was inflated, platform post-dilatation limits by size group, cardiac motion that swings the stent, and an option for rapid pacing during deployment.",
+    "learnerDoes": "Sizes to the distal reference, chooses a length that covers every balloon-injured segment, checks the platform limit against the proximal reference, positions against landmarks and deploys at 12–14 atm while holding as the pressure falls.",
+    "success": "Feedback flags geographic miss (uncovered injured segment), proximal oversizing (distal edge dissection or perforation risk), platform overexpansion, and deployment during excessive motion.",
+    "tips": [
+      "pci-stent-size-distal",
+      "pci-stent-cover-injured-segment",
+      "pci-stent-cardiac-motion",
+      "pci-stent-hold-the-inflation"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-deploy"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An enhanced stent visualisation toggle after deployment and during post-dilatation, an IVUS or OCT option (recommended in calcified and anatomically complex lesions), and a final-result checklist step (aspirate, guide position, nitroglycerin, injection, stent view, imaging or physiology option, two orthogonal views with the wire still across, then wire removal and repeat views).",
+    "learnerDoes": "Uses the stent view to judge expansion and confirm the post-dilatation balloon lies inside the stent, post-dilates at 20 atm or more with a shorter non-compliant balloon (or justifies skipping it), and completes the checklist.",
+    "success": "Underexpansion detected and treated; no post-dilatation balloon outside the stent; distal edge dissection or side-branch loss recognised and treated while the wire is still across; final residual stenosis under 20% judged in two orthogonal views with the wire out; removing the wire before the wire-in views produces a dissection that can no longer be easily treated.",
+    "tips": [
+      "pci-optimise-nc-postdilate",
+      "pci-optimise-show-the-stent",
+      "pci-optimise-edge-dissection",
+      "pci-optimise-side-branch-loss",
+      "pci-optimise-final-views"
+    ],
+    "lessonIds": [
+      "pm-prep-and-stent-result"
+    ],
+    "priority": "P1"
+  }
+]

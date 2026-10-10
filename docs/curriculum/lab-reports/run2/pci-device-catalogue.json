@@ -1,0 +1,38 @@
+{
+ "package": "pci-device-catalogue",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "equipment.test.ts: chartDiameter is monotone in pressure for every balloon; NC grows less per atm than SC; every DeviceSpec has sources or modelParam",
+      "met": true,
+      "evidence": "src/simulation/pci/equipment.test.ts 'compliance charts' sweeps every inflatable spec (at least 16) at every diameter from 0 to RBP+4 atm in 0.25 atm steps and asserts non-decreasing diameter, plus label size at nominal within 0.08 mm; 'a non-compliant balloon grows less per atm than a semi-compliant one' checks nc < sc at 2.0 to 4.0 mm and vhp < sc; 'provenance' asserts hasProvenance for every DEVICES, GUIDES and WIRE_SPEC entry and that each source names an existing manual lesson id or docs/ file. DeviceSpec type (equipment.ts lines 478-560) requires sources: string[] and modelParam: true | string[]. All pass."
+     },
+     {
+      "criterion": "A 2.0 mm burr reports minGuideFr 7; extension inner diameters match the table; covered stents offer exactly the listed diameters",
+      "met": true,
+      "evidence": "Test 'a 2.0 mm burr reports minimum guide 7 Fr' asserts DEVICE_BY_ID.rota.minFrench(2.0) === 7, 6 Fr for 1.25-1.75, 8 Fr for 2.15-2.25, null for 2.38/2.5, and cross-checks against Table 30.4 lumens. 'extension inner diameters match Table 30.5' asserts EXTENSION_ID_IN/EXTENSION_ID_MM for 5, 5.5, 6, 7, 8 Fr, lengths 25/40 cm, and that the box prints the inner diameter; a separate test refuses unlisted sizes (6.5 Fr throws). 'covered stents offer exactly the listed diameters' asserts the two designs only, diameters [2.8,3.5,4.0,4.5,4.8] and [2.5..5.0], lengths, French needs, nominal at least 15 atm, 1.6 mm shortening per end. All pass."
+     },
+     {
+      "criterion": "boxLabel shows nominal, RBP and expiry for each class",
+      "met": true,
+      "evidence": "Test 'box label: shows nominal, rated burst pressure and expiry for every class' iterates every class and every spec, asserting a 'Use by' line with the given date, 'Nominal pressure' and 'Rated burst pressure' lines with the spec's values for inflatable devices (and no RBP line otherwise), a non-empty chart and a Guide line. A further test checks expired is computed but no 'expired' text is printed on the box (no ground truth on screen). boxLabel implementation at equipment.ts ~1556 matches. All pass."
+     },
+     {
+      "criterion": "guide.test.ts ordering (EBU > JL, 7 Fr > 6 Fr) still holds",
+      "met": true,
+      "evidence": "src/simulation/pci/guide.test.ts 'back-up follows the published ordering' asserts backupForce(EBU3.5) > backupForce(JL4) and backupForce(JL4 at 7 Fr) > backupForce(JL4 at 6 Fr); 5/5 tests pass. guide.ts GuideState.french is typed GuideFrench (5|6|7|8). equipment.test.ts also checks every EBU backupN > every JL backupN. guide.catalogue.test.ts 4/4 pass."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/equipment.test.ts src/simulation/pci/guide.test.ts src/simulation/pci/guide.catalogue.test.ts -> 3 files, 34 tests passed (equipment 25, guide 5, guide.catalogue 4)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0, no errors"
+   }
+  ]
+ }
+}

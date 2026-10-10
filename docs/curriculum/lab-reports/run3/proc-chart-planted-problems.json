@@ -1,0 +1,414 @@
+{
+ "package": "proc-chart-planted-problems",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built proc-chart-planted-problems. Each full-case patient now gets a pre-procedure record with exactly one planted problem from the manuals' checklists. The record covers medications with last-dose times, bloods and their age, devices, arms and groins, resuscitation status, pre-assessment notes and, where it applies, the pregnancy test.\n\n- **Pure core (src/simulation/session/planning.ts):**\n  - The 11 problem definitions: chart item, correct actions, lesson, tips and module-text source.\n  - Brilakis Table 1.2, with Oxford's 24 h (72 h for dabigatran in renal impairment) accepted as an alternative.\n  - Seeded record generation with problem detection that runs independently of it.\n  - The action menu, and Oxford's eight-item pre-puncture checklist.\n- **Session module 'planning':**\n  - Reading a record item takes chart time. Every action writes the ledger. The first fitting action before the time-out scores the problem found; a time-out without one scores it missed, with the debrief linking pm-planning-assessment.\n  - Hold and delay ends the case: the needle is refused from then on.\n  - Premedication gives Oxford's hydrocortisone 100 mg and chlorphenamine 10 mg IV, then waits the hour. Check INR, repeat bloods, the pregnancy test and clarifying resuscitation status each take time and return a result.\n  - Case events (pde5-recent, contrast-sensitive, pregnancy-possible) are raised only once the item that states them has been read.\n- **Consequences come from the patient:**\n  - A DOAC inside its hold, or warfarin at an unchecked INR, raises the baseline ACT (model parameter).\n  - The PDE-5 inhibitor makes the engine's nitroglycerin response larger through the existing interaction table.\n  - Nitroglycerin given inside the PDE-5 window is scored.\n  - A puncture in the plug groin or the fistula arm is scored, and a closure device is refused in the plug groin.\n  - Handing to PCI despite planned surgery, and fluoroscopy before a pregnancy test, are scored.\n- **Checklist:**\n  - SpO2 is read from the monitor and refused at 96% or below, with an oxygen button.\n  - Confirming the manifold or transducer item without the line flushed or the transducer zeroed is recorded as a false confirmation, as the time-out does.\n  - In supervised and exam modes placeNeedle is blocked until the checklist is complete. The first skin puncture scores it in every mode.\n- **Scenarios:** 12 in scenarios/planning.ts, one per problem plus 'checklist' opened ready to puncture, with their .launch.ts. The chart section PlantedProblems.tsx shows the record, the actions and the checklist, and never says which item is the problem or whether an action was right.\n- **patient.ts** gains pure helpers only: childbearingPotential, residualAnticoagActRiseS and MP_PRE_PROCEDURE. generatePatient is unchanged.\n\nTypecheck is clean and all new tests pass. One existing test owned by another package now fails, because the autopilot does not yet act on the planted problem or the checklist (see outOfScope).",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/planning.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/planning.tips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/planning.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/planning.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/chart/PlantedProblems.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/session/planning.test.ts (17 tests): one planted problem per patient over 300 seeds plus 10 live sessions, with the chart stating it; each planning scenario plants its own problem and no other; Brilakis Table 1.2; pde5-24h GTN drop compared with a control; doac-recent hold and delay, and the doac-recent miss with its ACT rise; wrong and late actions; closure-device groin scoring and the closure-device block; other access; premedication; supervised SpO2 needle gate; guided checklist scoring and false confirmation; team-played starts; SpO2 refusal; practice index links; launch and scenario agreement; lesson and tip resolution",
+     "src/simulation/session/modules/planning.tips.test.ts (4 tests): diag-planning-pde5-nitrate appears after the GTN that raises hypotension; diag-planning-contrast-allergy appears at setup; case events follow reading the record; raises use only registered events; no waiting.ts or deferred-retarget entries name this package"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/planning.test.ts src/simulation/session/modules/planning.tips.test.ts src/simulation/session/handover.test.ts src/simulation/session/multiSite.tips.test.ts: 39 passed",
+     "npx vitest run src/simulation/session/caseSession.test.ts src/simulation/session/ledgerTips.test.ts src/simulation/session/planning.test.ts: 36 passed",
+     "npx vitest run src/simulation/session/multiSite.test.ts src/simulation/session/scenarios.test.ts: 42 passed, 1 FAILED. The failure is scenarios.test.ts 'session.decide() records appear in finish().decisions, with the scored steps of a clean case'. It asserts that every autopilot decision is correct; the autopilot (autopilot.ts, not in this package) does not act on the planted problem or the checklist, so planning-problem and pre-puncture-checklist are scored false. See outOfScope.",
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts src/ui/access/siteSelector.test.ts src/state/useProcedureStore.test.ts: 37 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/tips.test.ts src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts: 123 passed, 1 skipped",
+     "npx vitest run src/content/content.test.ts: 61 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors. An earlier run showed errors only in src/ui/pci/PciLabSession.test.ts, another package's file, and those were gone by the final run.",
+    "acceptance": [
+     {
+      "criterion": "planning.test.ts: every generated patient in a fixed seed set has exactly one planted problem and the chart states it",
+      "status": "met",
+      "evidence": "The test covers 300 seeds across three access routes. For each, problemsPresent(facts, access) equals [planted], the planted problem's chart item contains statedBy(...), and the record is deterministic per seed. A further 10 live newCaseSession cases pass (the record reads the session chart's DOAC dose time), as does each of the 11 planning scenarios."
+     },
+     {
+      "criterion": "'pde5-24h' with GTN drops true MAP more than the same dose without the flag",
+      "status": "met",
+      "evidence": "gtnDrop() opens pde5-24h at sheath-in, gives GTN 200 \u00b5g intra-arterially and takes the lowest aortaTrue.mean over the next minute. A control without profile.pde5 gives a smaller drop: in exploration 6 against 1 mmHg on this seed (12 against 5 on the original seed). The effect comes from the formulary's existing interaction gain."
+     },
+     {
+      "criterion": "'doac-recent' with 'hold and delay' records a correct decision and ends the case; missed, the debrief links pm-planning-assessment",
+      "status": "met",
+      "evidence": "After hold and delay, planning-problem and planning-action-hold-and-delay are both recorded correct, state.postponed is set, placeNeedle returns false with a stop line, and further actions return null. Missed: prepare() completes the time-out, planning-problem is recorded false with lessonId pm-planning-assessment, and the ACT baseline rises. Caveat: the case 'ends' inside the module only; the store's finish() still needs closure (see outOfScope)."
+     },
+     {
+      "criterion": "placeNeedle in supervised mode is blocked while SpO2 is unconfirmed",
+      "status": "met",
+      "evidence": "In the checklist scenario in supervised mode, with the time-out done and every item confirmed except SpO2, placeNeedle returns false and the attending stop line names the SpO2 item. Once SpO2 is confirmed (or oxygen given first), placeNeedle returns true. The block applies where the policy requires a time-out (supervised and exam), as the time-out gate does."
+     },
+     {
+      "criterion": "browser: __caseSession.scenario('closure-device-90d') shows the device on ultrasound of that groin",
+      "status": "not-met",
+      "evidence": "The plug is in the record, its groin is known once punctured (state.plugSite), and a closure device is refused there. Drawing a plug on ultrasound needs src/simulation/access/site.ts and src/ui/access/UltrasoundView.tsx, which are not this package's files (see outOfScope). Not checked in a browser."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios doac-recent, warfarin-inr-unchecked, metformin-ckd under lessons pm-planning-assessment, pm-planning-preparation, pm-to-the-root-table (from src/simulation/session/scenarios/planning.launch.ts)",
+      "status": "partly",
+      "evidence": "All three scenarios are listed under pm-planning-assessment and pm-planning-preparation. Under pm-to-the-root-table (the table set-up lesson) the 'checklist' scenario is listed instead, because that lesson teaches the pre-puncture checklist rather than chart review. If the literal reading (all three under all three lessons) is wanted, it is a two-line change in planning.launch.ts and scenarios/planning.ts. PRACTICE_INDEX reports no problems for planning.launch."
+     },
+     {
+      "criterion": "Tips: after the action that raises 'hypotension', tipsFor(ctx, 20) includes diag-planning-pde5-nitrate, and at phase 'setup' it includes diag-planning-contrast-allergy; every waiting.ts entry naming proc-chart-planted-problems becomes satisfiable",
+      "status": "partly",
+      "evidence": "Tested in pde5-24h, not doac-recent, because nothing in doac-recent produces hypotension and the tip is about the PDE-5 and nitrate combination. Two GTN doses raise 'hypotension' (MAP below 65 for 10 s) only with the sildenafil; diag-planning-pde5-nitrate then appears in tipsFor of the diagnostic setup context, at the table and at the chart. diag-planning-contrast-allergy appears in tipsFor(setup ctx, 20) in contrast-allergy-unpremedicated. No WAITING_TIPS or DEFERRED_RETARGETS entry names this package (asserted to be zero), so the 'falls by at least their number' clause is vacuous. The module exports raises (pde5-recent, contrast-sensitive, pregnancy-possible) for the access, diagnostic and PCI labs."
+     }
+    ],
+    "outOfScope": [
+     "src/simulation/session/autopilot.ts: prepare() must play the new planning step cleanly. It should read each record item (planningOf(s).actions.readItem), act on the planted problem with its first correct action other than hold-and-delay (PLANTED_PROBLEMS[planted].correct), then run s.flushLine() and s.zero() and confirm every PRE_PUNCTURE_CHECKLIST item (oxygen first if SpO2 is refused). Without this, scenarios.test.ts 'with the scored steps of a clean case' (seed led-1, which draws surgery-planned) fails, and in supervised or exam mode a chart-start autopilot run would be stopped at the needle. Note: a random DOAC patient whose last dose is inside both manuals' holds can only be held and delayed, so the 'every decision correct' assertion should use a seed without one.",
+     "src/simulation/session/modules/index.ts and caseSession.ts: there is no module hook to gate an action. The planning module wraps the session instance's placeNeedle and femoralDevice in attach() and restores them on dispose. A CaseSessionModule.gate?(action) consulted by placeNeedle and femoralDevice would be cleaner. A public say() or attending API for modules would also help: the module currently pushes stop lines into session.attending and session.log directly.",
+     "src/simulation/session/caseSession.ts finish() and src/state/useProcedureStore.ts finish(): a case postponed by hold and delay before any puncture cannot be finished, because closureDone() needs a closed site. A postponed-case end path, for example finish() accepting the planning module's postponed state, is needed so the debrief and logbook row appear.",
+     "src/simulation/access/site.ts and src/ui/access/UltrasoundView.tsx: draw an anchor-and-collagen-plug in the femoral artery of the groin named by the record (planningOf(s).state.record.facts.closureDevice), for the browser acceptance item.",
+     "src/simulation/patient/engine.ts and responses.ts (owned by found-patient-formulary): the design asks premedication to scale the previous-reaction probability. The engine draws the reaction from profile.allergies.contrast alone. This package relies on the existing anti-allergic effect of hydrocortisone and chlorphenamine, which reduces a reaction's severity but not its likelihood. A probability-scaling input (or an armContrastReaction API) would make a missed allergy show more reliably.",
+     "docs/realism/facts (a new section or file): record the model parameters added here, which are labelled in code only: MP_PRE_PROCEDURE in patient.ts (childbearing age limit and the ACT rises for a residual DOAC or warfarin), MP_PLANNING in planning.ts (the renal-impairment and CKD limits, the do-not-resuscitate age, the fallback hold below 15 mL/min and the drawn ranges) and MP_PLANNING_TIME and MP_OXYGEN_LPM in modules/planning.ts."
+    ],
+    "notes": "Snapshot: datasets/tmp/wp-snapshots/proc-chart-planted-problems/ holds src/simulation/patient/patient.ts, the only listed file that existed before; the .started marker is there. patient.ts was last modified on 8 October, so the snapshot is the pre-package state.\n\nDesign choices to review:\n1. Problem priority: a problem the patient carries comes first (PDE-5 inhibitor, then a DOAC inside Brilakis's hold, then a previous contrast reaction), then a scenario's forced problem, then a seeded draw. Random draws exclude the closure-device and fistula problems, which come only from their scenarios, so the planted problem never invalidates the route a random case was planned with.\n2. To keep exactly one problem, facts that are not the planted problem are written as handled: diabetic patients' metformin is held, warfarin patients have today's INR, and a second contrast reaction is shown as premedicated. For that last case the engine is given Oxford's IV regimen at attach as a stand-in for the oral course.\n3. A case opened past the chart was planned by the team, so no planning decisions are scored. Past 'access' the checklist is also taken as done, so autopilot starts work in supervised mode.\n4. The ACT rise mutates session.profile.act, the profile object the engine reads. It is applied only when the planted problem is doac-recent or warfarin-inr-unchecked.\n5. The pde5-24h scenario uses seed planning-pde5-149 (resting pressure 96/58) so that repeated sourced GTN doses cross the 65 mmHg hypotension threshold with sildenafil and not without it.\n\nEvery dose, window and threshold is cited from the module text in comments (01-planning.ts, 06-to-the-root.ts, PDE5_WINDOW_H) or labelled MODEL PARAMETER. The UI uses generic names and Clinical Graphite classes, and shows no ground truth.\n\nNot verified in the browser."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/simulation/session/planning.ts: planFacts / chartOnlyEligible / recordItems / PLANTED_PROBLEMS (doac-recent, bloods-old, surgery-planned)",
+      "problem": "Every random full case gets the elective out-patient record, whatever the indication. I ran a probe over 1,000 seeds with generatePatient and buildPlanningRecord: 521 were STEMI, 56 NSTEMI and 122 UA. Among the STEMI cases, 227 were planted bloods-old ('taken N days ago, at the out-patient pre-assessment'), 194 surgery-planned (the only correct action is 'Diagnostic study only'), 36 doac-recent (the only correct action is 'Hold and delay the case', or proceed only after Oxford's 24 h) and 43 dnacpr-unsuspended. The record also says 'Consent discussed at pre-assessment; out-patient day case' next to 'P2Y12 inhibitor: loading dose given on admission.' The rules do not apply here. Brilakis Table 1.2 is captioned 'before an elective catheter procedure'. The 14-day bloods rule is for out-patients (01-planning.ts line 425: 24 hours for an in-patient). For a STEMI, the module text says anticoagulation favours radial access, not postponement (line 88). As built, the lab scores 'delay primary PCI' and 'diagnostic only' as correct for STEMI patients.",
+      "severity": "critical",
+      "fix": "Add `setting: 'elective' | 'acute'` to PlanningFacts, set from `profile.indication === 'SA'`. In planFacts, for acute cases: (a) do not add doac-recent to `carried`, and gate it in problemsPresent on setting === 'elective'. (b) Restrict chartOnlyEligible to ['dnacpr-unsuspended', 'pregnancy-test']. (c) Draw bloods as 'taken on admission today' and never plant bloods-old or surgery-planned. (d) Do not hold metformin 'as instructed at pre-assessment'. In recordItems, write in-patient wording for acute cases ('Admitted with ...; bloods on admission'), not 'out-patient day case'. For an acute contrast reaction, use Brilakis's emergency IV hydrocortisone 100 mg as soon as possible (01-planning.ts line 611), not the hour's wait. An acute patient may be eligible for no problem (for example a man under 65 with no allergy). In that case, plant nothing and score no planning-problem decision. Amend the acceptance wording to 'every elective patient', and add a test that an acute (STEMI) seed never gets doac-recent, bloods-old or surgery-planned, and never scores hold-and-delay as correct."
+     },
+     {
+      "where": "src/simulation/session/scenarios.test.ts 'session.decide() records appear in finish().decisions, with the scored steps of a clean case' (via src/simulation/session/autopilot.ts prepare())",
+      "problem": "An existing test owned by another package now fails, and I reproduced the failure. The autopilot does not act on the planted problem or on the checklist, so seed led-1 (surgery-planned) gets planning-problem and pre-puncture-checklist scored false. In supervised or exam mode, a chart-start autopilot run is now also stopped at the needle ('the needle could not be placed').",
+      "severity": "major",
+      "fix": "Do not merge until a follow-up change to autopilot.ts lands; it is out of this package's scope. In prepare(): (1) read every item with planningOf(s)?.actions.readItem. (2) Act with the first entry of PLANTED_PROBLEMS[planted].correct that is not 'hold-and-delay'. Where hold-and-delay is the only option (doac-recent inside both holds), choose 'proceed' when Oxford's hold is met. (3) Run s.flushLine() and s.zero(), then confirm each PRE_PUNCTURE_CHECKLIST item, calling giveOxygen() first if spo2 is refused. Also switch the scenarios.test.ts seed to one without a DOAC inside its hold."
+     },
+     {
+      "where": "src/simulation/session/modules/planning.ts act('hold-and-delay') and src/ui/access/chart/PlantedProblems.tsx line 55",
+      "problem": "Hold and delay leaves the case with no way to finish. CaseSession.finish() and useProcedureStore.finish() both need closureDone(), and a postponed case has no closed site. There is no debrief and no logbook row, yet the notice tells the learner 'The decisions are in the debrief.' The acceptance criterion 'ends the case' is only met inside the module.",
+      "severity": "major",
+      "fix": "Now, within this package: change the notice to something true, for example 'Case postponed and rebooked. Start a new patient to continue.' Follow-up (caseSession.ts and useProcedureStore.ts): let finish() accept a postponed case, for example `if (!this.closureDone() && !(planning postponed with no site punctured)) return null`, so the debrief and logbook row appear."
+     },
+     {
+      "where": "src/simulation/session/scenarios/planning.ts and planning.launch.ts (lessonIds of doac-recent, warfarin-inr-unchecked, metformin-ckd)",
+      "problem": "Acceptance is not met as written. The plan asks for doac-recent, warfarin-inr-unchecked and metformin-ckd to be listed under pm-planning-assessment, pm-planning-preparation and pm-to-the-root-table. They are listed under the first two only. Only 'checklist' is under pm-to-the-root-table, and the test was rewritten to assert the deviation.",
+      "severity": "major",
+      "fix": "Either add TABLE to the lessonIds of those three scenarios in both scenarios/planning.ts and planning.launch.ts, and change the planning.test.ts practice-index test to loop over all three lessons, or get the plan entry amended before acceptance. Do not keep a test that asserts something other than the criterion."
+     },
+     {
+      "where": "src/simulation/session/scenarios/planning.ts (closure-device-90d, dialysis-fistula, doac-recent, bloods-old, and every scenario built on CLEAN)",
+      "problem": "The session chart's 'Previous access' item contradicts the record or adds a second concern, which I confirmed by probing the scenarios. In closure-device-90d, history reads 'Previous coronary bypass grafting with a left internal mammary artery graft' while the record says 'Right femoral angiogram 24 days ago, closed with an anchor-and-collagen-plug closure device'. In dialysis-fistula, history reads 'Previous coronary angiography through the right radial artery; a weak right radial pulse is documented since' for a patient with a right forearm fistula and a planned right radial case. doac-recent and bloods-old also show the weak right radial pulse with a planned right radial route. That breaks 'that problem and no other'.",
+      "severity": "major",
+      "fix": "Give each planning scenario a chart history override. For CLEAN scenarios, add `chart: { history: 'No previous arterial access.' }`. closure-device-90d: `chart: { history: 'Previous right femoral coronary angiography, closed with a closure device (details in the pre-procedure record).' }`. dialysis-fistula: `chart: { history: 'No previous arterial access; right forearm arteriovenous fistula for haemodialysis.' }`. Add a test that, in each planning scenario, s.chart.history.text holds no previous-radial or weak-pulse finding on the planned route."
+     },
+     {
+      "where": "Acceptance 'browser: __caseSession.scenario('closure-device-90d') shows the device on ultrasound of that groin'",
+      "problem": "Not met. Nothing draws the anchor-and-collagen plug on ultrasound, and SiteOverrides has no field for one. The design's 'plug visible on ultrasound' consequence is therefore missing.",
+      "severity": "major",
+      "fix": "Follow-up package, outside this one's files. Add a plug option to SiteOverrides or the femoral site build in src/simulation/access/site.ts, set from planningOf(s).state.record.facts.closureDevice. Draw it in src/ui/access/UltrasoundView.tsx as a small echogenic intraluminal or anterior-wall anchor with an extravascular collagen plug. Then check it in the browser."
+     },
+     {
+      "where": "src/simulation/session/modules/planning.ts attach() (ACT rise only when planted)",
+      "problem": "The residual-anticoagulant ACT rise is applied only when doac-recent or warfarin-inr-unchecked is the planted problem. A random warfarin patient (chart 'INR today' 1.8 to 3.2) never gets the rise, but the warfarin-inr-unchecked scenario patient does. The header says 'the anticoagulant is in the patient whether or not the learner reads the chart', and the code contradicts that.",
+      "severity": "minor",
+      "fix": "Compute the rise from the facts, not the planted id: warfarin from facts.warfarin.inrToday, and a DOAC when hoursSinceDose is inside its hold. Then run the access, closure and ACT tests of other packages, since random warfarin patients will change ACT. Alternatively, document that the rise is a teaching consequence of the planted problem only, and correct the header comment."
+     },
+     {
+      "where": "src/simulation/session/planning.ts planFacts (doac agent default 'apixaban') and recordItems",
+      "problem": "For a random DOAC patient (no profile.doac), the session chart says 'Direct oral anticoagulant; last dose X h ago' while the record says 'Apixaban: last dose X h ago'. The two disagree, and the agent comes from a default, not from the patient.",
+      "severity": "minor",
+      "fix": "When profile.doac is undefined, make the record line read 'Direct oral anticoagulant (apixaban): last dose X h ago', or draw the agent in the planning RNG and say in the line that it is from the pre-assessment medicines list. Keep the Brilakis hold computed for the agent shown."
+     },
+     {
+      "where": "src/simulation/session/planning.test.ts and modules/planning.tips.test.ts (coverage)",
+      "problem": "Several consequence paths have no test: the planning-nitrate decision (gtnDrop never checks it), planning-fistula-arm, planning-stent-candidacy at handover to PCI, planning-pregnancy-before-radiation, check-inr in warfarin-inr-unchecked and its ACT rise, and clarify-resuscitation. The SpO2 test puts giveOxygen behind `if (!confirmCheck('spo2'))`. The checklist seed reads 97%, so that branch never runs and giveOxygen is untested.",
+      "severity": "minor",
+      "fix": "Add one test per path. Examples: pde5-24h plus gtn, expecting decisions to include planning-nitrate with correct false; dialysis-fistula fastForward to sheath-in, expecting planning-fistula-arm false; surgery-planned handover('pci'), expecting planning-stent-candidacy false; pregnancy-test fluoroscopy, expecting planning-pregnancy-before-radiation false; warfarin-inr-unchecked act('check-inr'), expecting inrAgeH 0 and actRiseS > 0. For oxygen: mock vitals to spo2 95 with respiratory.oxygenLpm 0, assert confirmCheck fails and the note says 'Give oxygen first', assert giveOxygen() is true and the engine's vitals().respiratory.oxygenLpm is 2, then mock 97 and assert confirmCheck passes."
+     },
+     {
+      "where": "Acceptance 'Tips ... in scenario doac-recent, after the action that raises hypotension'",
+      "problem": "The tips test was run in pde5-24h, not doac-recent. The change is defensible, because nothing in doac-recent raises hypotension through a nitrate and the tip is about PDE-5. Even so, it departs from the plan's wording.",
+      "severity": "minor",
+      "fix": "Get the plan entry amended to name pde5-24h. If the literal criterion is wanted, add a doac-recent case in which hypotension comes from bleeding at the puncture site, and assert which tips appear then."
+     },
+     {
+      "where": "src/ui/access/chart/PlantedProblems.tsx lines 25, 53, 84",
+      "problem": "The section headings use 'text-[12px] uppercase tracking-wide'. That breaks Clinical Graphite, which uses sentence case and no all-caps tracked labels. The 'Do it' button label is also informal.",
+      "severity": "minor",
+      "fix": "Replace with sentence-case headings, for example `<div className=\"text-[13px] font-medium text-ink-soft\">Pre-procedure record</div>`, or use the panel-head pattern used by other chart sections. Rename the button to 'Record action'."
+     },
+     {
+      "where": "src/simulation/session/modules/planning.ts stop() and the placeNeedle wrapper",
+      "problem": "stop() pushes into session.attending and session.log directly, bypassing say(). Each blocked needle click adds another identical stop line, and in exam mode each one is marked critical. state.consequences is collected but nothing reads it: no debrief or panel uses it.",
+      "severity": "minor",
+      "fix": "Skip the push when the last attending line has the same text and is less than 5 s old. Either surface state.consequences in the debrief (a follow-up in the debrief owner's files) or remove the field, since the decisions already carry the information."
+     },
+     {
+      "where": "docs/realism/facts (no entry for MP_PRE_PROCEDURE, MP_PLANNING, MP_PLANNING_TIME, MP_OXYGEN_LPM)",
+      "problem": "The model parameters are labelled in code but not recorded in docs/realism/facts, which the project rules require. Separately, the design's 'premedication scales the previous-reaction probability' is not implemented: a missed allergy keeps the same reaction probability and differs only in severity. Both need files outside this package, as the builder reported.",
+      "severity": "minor",
+      "fix": "Follow-up: add a docs/realism/facts section that lists each parameter, its value and its 'model, not population' rationale. In found-patient-formulary's engine or responses.ts, add a premedication factor on the previous-reaction probability, labelled MODEL PARAMETER, that this module can set when premedication is given."
+     }
+    ],
+    "verdict": "Not ready to accept. Typecheck (npx tsc -p tsconfig.app.json --noEmit) is clean, and the package's 21 tests pass (planning.test.ts and modules/planning.tips.test.ts). The store, caseTips, practiceIndex and launch-store tests also pass (47). scenarios.test.ts has one existing test failing, because the autopilot does not yet play the new planning step; caseSession.test.ts passes. patient.ts differs from its snapshot only by the new pure helpers; generatePatient is unchanged. The other files under src/ modified since .started are all PCI-lab and X-ray files from other packages and do not touch planning. The sourced numbers check out against the module text (Brilakis Table 1.2, the 14 days, 24 h INR, 90 days, 6-12 months, 96%, the Oxford premedication and the PDE-5 windows). Live screens show no ground truth. The critical problem is that the out-patient record and its elective rules apply to every random case. About half of those are STEMI, and the lab scores 'hold and delay' or 'diagnostic only' as correct for them. Also outstanding: the failing scenarios.test.ts, a postponed case that cannot reach its debrief, two acceptance criteria unmet (the pm-to-the-root-table listing and the plug on ultrasound), and scenario charts whose 'Previous access' contradicts the record. Paths: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.ts, .../src/simulation/session/modules/planning.ts, .../src/simulation/session/scenarios/planning.ts, .../src/simulation/session/scenarios/planning.launch.ts, .../src/ui/access/chart/PlantedProblems.tsx, .../src/simulation/session/planning.test.ts, .../src/simulation/session/modules/planning.tips.test.ts."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 9,
+    "rejected": [
+     "Finding 2 (autopilot does not act on the planted problem or the checklist; scenarios.test.ts 'scored steps of a clean case' fails on seed led-1): I confirmed it still fails for this reason. The fix belongs in src/simulation/session/autopilot.ts and scenarios.test.ts, which this package does not own. Follow-up for the autopilot owner: in prepare(), read every item with planningOf(s)?.actions.readItem. Then act with the first PLANTED_PROBLEMS[planted].correct entry other than hold-and-delay, choosing 'proceed' where actionFits says so, and do nothing when planted is null (an acute case can now have no problem). Then flushLine, zero, and confirm each PRE_PUNCTURE_CHECKLIST item, calling giveOxygen first if spo2 is refused.",
+     "Finding 6 (the collagen plug shown on ultrasound): this needs src/simulation/access/site.ts (a SiteOverrides plug field) and src/ui/access/UltrasoundView.tsx, both outside this package. The browser acceptance item stays unmet until a follow-up package draws it from planningOf(s).state.record.facts.closureDevice.",
+     "Finding 10 (tips test run in pde5-24h, not doac-recent): the plan's literal wording cannot be met in a meaningful way. diag-planning-pde5-nitrate is a PDE-5 tip, and nothing in doac-recent raises hypotension through a nitrate. The plan entry in docs/curriculum/lab-build-plan.json needs amending to name pde5-24h; I cannot edit it from this package.",
+     "Finding 13 (docs/realism/facts entries for MP_PRE_PROCEDURE, MP_PLANNING, MP_PLANNING_TIME, MP_OXYGEN_LPM, and a premedication factor on the previous-reaction probability): both need files outside this package (docs/realism/facts and found-patient-formulary's engine or responses.ts). Reported as follow-ups.",
+     "Finding 3, follow-up half only (letting CaseSession.finish() and useProcedureStore.finish() accept a postponed case, so the debrief and logbook row appear): caseSession.ts and useProcedureStore.ts are out of scope. The in-package half, the notice text, was applied.",
+     "Finding 12, consequences half only: state.consequences is kept and its comment now says no debrief shows it yet. Showing it in the debrief needs the debrief owner's files. The stop-line dedupe half was applied."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/planning.test.ts src/simulation/session/modules/planning.tips.test.ts: 34 passed (30 + 4)",
+     "npx vitest run src/simulation/session/caseSession.test.ts src/simulation/session/multiSite.test.ts: 33 passed (run because random warfarin and DOAC patients now get the ACT rise)",
+     "npx vitest run src/simulation/session/scenarios.test.ts src/simulation/session/ledgerTips.test.ts: 28 passed, 1 failed. The failure is the known out-of-scope autopilot test from finding 2, seed led-1.",
+     "npx vitest run src/ui/content/practiceIndex.test.ts: 10 passed"
+    ],
+    "tsc": "Clean: npx tsc -p tsconfig.app.json --noEmit reported 0 errors. One intermediate run showed an error in src/ui/pci/PciLabSession.ts ('mode' on AdrcState), which is another package's file being edited at the same time; the next run was clean.",
+    "notes": "Applied, all inside the package's files.\n\n1. Acute and elective setting (finding 1, critical):\n   - Changed in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.ts. PlanningFacts gains setting: 'elective' | 'acute', set by settingOf(profile), which returns 'elective' only when the indication is SA.\n   - doac-recent is never carried in an acute case, and problemsPresent counts it only in elective cases. For acute cases, chartOnlyEligible is restricted to dnacpr-unsuspended and pregnancy-test; carried pde5 and contrast-allergy still apply.\n   - Acute bloods read 'taken on admission today'. Metformin reads 'held since admission', the INR reads 'on admission' and aspirin reads 'loading dose given on admission'. The item is titled 'Admission notes' and says 'Admitted with <indication>; in-patient. Consent discussed on the ward.'\n   - PlanningRecord.planted is now PlantedProblemId | null. An acute patient eligible for no problem gets nothing planted and no planning-problem decision; with nothing planted, only 'proceed' fits.\n   - actionFits never scores hold-and-delay as correct in an acute case, and the ledger's expected text leaves it out.\n   - Acute premedication follows Brilakis's emergency regimen, cited from 01-planning.ts: hydrocortisone 100 mg IV now, with no chlorphenamine and no hour's wait. The label comes from the new planningActionLabel(id, setting).\n   - New tests cover 200 STEMI seeds, 50 of them on a DOAC inside its hold: never doac-recent, bloods-old, surgery-planned or metformin-ckd; in-patient wording; hold-and-delay never fits. Further tests cover an acute session with nothing planted and the acute contrast premedication.\n   - Acceptance wording should be amended to 'every elective patient'. The seed-set test now asserts exactly one problem for elective patients and at most one for acute patients.\n\n2. Postponed notice (finding 3): PlantedProblems.tsx now says '<postponed text> Start a new patient to continue.'\n\n3. Lesson links (finding 4): pm-to-the-root-table was added to doac-recent, warfarin-inr-unchecked and metformin-ckd in both scenarios/planning.ts and planning.launch.ts. The practice-index test now loops over all three lessons.\n\n4. Chart history (finding 5): every planning scenario now sets chart.history.\n   - The CLEAN scenarios read 'No previous arterial access.'\n   - closure-device-90d and dialysis-fistula use the reviewer's wording.\n   - The scenario test asserts that no history mentions a weak pulse, bypass or a radial artery, and checks the two specific texts.\n\n5. ACT rise from the facts (finding 7): the rise now applies to a DOAC inside its Brilakis hold, or to warfarin at today's INR, whatever the planted problem. The header comment is corrected. A test covers a random warfarin patient. The other packages' session tests still pass.\n\n6. Unnamed DOAC (finding 8): it now reads 'Direct oral anticoagulant (apixaban): last dose X h ago', using a new doac.agentNamed fact. Tested.\n\n7. Missing coverage (finding 9): new tests cover planning-nitrate, planning-fistula-arm, planning-stent-candidacy at a PCI handover, planning-pregnancy-before-radiation (beam on), check-inr with its ACT rise, and clarify-resuscitation.\n   - The oxygen test mocks SpO2 at 95% on air, checks 'Give oxygen first', calls giveOxygen, checks that the engine's oxygenLpm equals MP_OXYGEN_LPM after a tick, then checks that a 97% reading confirms.\n   - Writing these tests showed that a case opened past the chart scores nothing, so the nitrate test opens at the chart and fast-forwards.\n\n8. Design system (finding 11): headings are now sentence case ('text-[13px] font-medium text-ink-soft'), and the button reads 'Record action'.\n\n9. Stop lines (finding 12): a stop line identical to the last attending line within MP_PLANNING_TIME.repeatStopS (5 s, MODEL PARAMETER) is not repeated. Tested.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/planning.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/planning.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/planning.launch.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/chart/PlantedProblems.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.test.ts\n\npatient.ts was not changed.\n\nOut of scope, still open:\n- The autopilot follow-up from finding 2 is needed before merge. It must also handle planted === null.\n- finish() for a postponed case (caseSession.ts, useProcedureStore.ts).\n- The ultrasound plug (site.ts, UltrasoundView.tsx).\n- docs/realism/facts entries, and the premedication factor on the previous-reaction probability.\n- Amending the plan wording for the 'every elective patient' and pde5-24h tips criteria."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-40) at http://localhost:5173, went to Full procedure and used the __caseSession dev hook. Did not touch the owner's tab. Reset the viewport and closed the tab at the end.",
+     "Chart section 'Pre-procedure record and checklist' (src/ui/access/chart/PlantedProblems.tsx): it is registered through the chart glob and appears under the chart, consent and time-out. At 1440x900 it showed the five record items with Read buttons, the action select with 11 actions, and Oxford's 8-item pre-puncture checklist. The layout follows Clinical Graphite. Nothing on screen names the planted problem.",
+     "doac-recent: the record matches the session chart ('Rivaroxaban: last dose 18 h ago', CrCl 97; Brilakis hold 48 h, Oxford 24 h). Brilakis's rivaroxaban rows are in src/content/manual/pci-manual/01-planning.ts. Clicking Read on medications through the UI took chart time and showed the lines.",
+     "doac-recent, hold and delay through the UI (select, then Record action): planning-action-hold-and-delay and planning-problem were both recorded correct, state.postponed was set, and the section showed the warn notice 'Case postponed ... Start a new patient to continue.' Afterwards s.placeNeedle returned false with the stop line 'The case has been postponed: no puncture today.'",
+     "doac-recent, missed path: I reviewed every chart item, confirmed consent and confirmed all 6 time-out items without any chart action. planning-problem was recorded correct:false with lessonId pm-planning-assessment and given 'Not acted on before the time-out'. state.missed was true, actRiseS was 20 and actTrue was 131 s.",
+     "checklist scenario, supervised mode (newCase {scenario:'checklist', start:'access', mode:'supervised'}): the first placeNeedle was refused with a stop line listing all 8 items. With every item but SpO2 confirmed, placeNeedle was still refused, naming only the SpO2 item. Confirming manifold and transducer without flushing or zeroing recorded checklistFalse [manifold, transducer]. After confirming SpO2 at 97%, placeNeedle returned true. The first skin pass recorded pre-puncture-checklist correct:false, lessonId pm-to-the-root-table.",
+     "checklist scenario, exam mode: connectManifold, flushLine and zero are all possible before the puncture (lineFlushed and zeroed both became true), so the learner can back those two items.",
+     "pde5-24h: the record shows 'Sildenafil: taken 14 h ago'. Reading the medications item raised the pde5-recent event in both the access/plan and diagnostic/setup tip contexts. Opened at sheath-in, my GTN 200 \u00b5g IA took the true mean from 76.6 to a minimum of 63.9 mmHg over the next minute. No nitrate decision was scored because the team played the chart (planningByTeam).",
+     "contrast-allergy-unpremedicated: after the record and the allergy item were read, contrast-sensitive was raised. With the panel limits off, diag-planning-contrast-allergy ranks 3rd among the diagnostic tips. The live panel (diagnostic cap 2) does not show it (see problems).",
+     "Seven more scenarios each planted their own problem, and the chart states it: pregnancy-test (woman; 'Not done.'), dnacpr-unsuspended, surgery-planned (knee replacement in 3 months), dialysis-fistula (right forearm fistula, planned right radial), bloods-old (21 days), warfarin-inr-unchecked (INR 6 days ago), metformin-ckd.",
+     "closure-device-90d: the record says 'Right femoral angiogram 24 days ago, closed with an anchor-and-collagen-plug closure device'. The base chart history was updated to match, and the planned access is right femoral. Nothing draws the plug on ultrasound: there is no plug or collagen code in src/simulation/access/site.ts or src/ui/access/UltrasoundView.tsx. The builder reported this criterion as not met, and it is not met.",
+     "closure-device-90d opened at 'closure' (the team punctured the right femoral): plugSite stayed null, femoralDevice was not refused, and the attending gave the femoral-angiogram warning instead.",
+     "practiceIndex in the browser: pm-to-the-root-table lists doac-recent, warfarin-inr-unchecked, metformin-ckd and checklist; pm-planning-assessment and pm-planning-preparation list the three chart reviews. This criterion is now fully met; the builder's report said 'partly', but launch.ts has since been updated.",
+     "Console: no errors or warnings in tab-40 for the whole session."
+    ],
+    "problems": [
+     {
+      "where": "Acceptance criterion 'browser: __caseSession.scenario(closure-device-90d) shows the device on ultrasound of that groin'",
+      "problem": "Not met. Nothing draws the anchor-and-collagen plug in the ultrasound of the affected groin. Neither src/simulation/access/site.ts nor src/ui/access/UltrasoundView.tsx mentions a plug. The builder reported this as out of scope.",
+      "severity": "major",
+      "fix": "Owner of site.ts and UltrasoundView.tsx: add an optional per-site echogenic intra-arterial or perivascular plug feature (a MODEL PARAMETER for its size). Fill it from planningOf(session).state.record.facts.closureDevice for femoral:<side> when daysAgo < PLANNING_RULES.closureDeviceDays."
+     },
+     {
+      "where": "src/simulation/session/modules/planning.ts checkSites() (about line 403) and own.femoralDevice (about line 580)",
+      "problem": "The plug-groin refusal depends on st.plugSite, and checkSites sets that only when !st.planningByTeam. If the case is opened past the chart (for example closure-device-90d at 'closure') and the team punctured the plug groin, the closure device in that groin is not refused. The plug exists whoever made the puncture.",
+      "severity": "minor",
+      "fix": "In checkSites, move `if (st.planningByTeam) return;` so it skips only the s.decide(...) and consequences scoring. Set st.plugSite = key whenever a punctured site matches femoral:<closureDevice.side> inside the 90-day window, or have femoralDevice compare against `femoral:${facts.closureDevice.side}` directly."
+     },
+     {
+      "where": "src/simulation/session/modules/planning.ts needleBlock() (about line 215) and onPuncture() 'given' text (about line 386)",
+      "problem": "Checklist text is fully lower-cased in the stop line and the debrief, so it reads 'continuous ecg of good quality; pulse oximetry: spo2 above 96%'. The debrief's false-confirmation text shows raw ids ('Confirmed without it being so: manifold, transducer') instead of the item text.",
+      "severity": "minor",
+      "fix": "Use a helper that lower-cases only the first character, e.g. const lc = (t: string) => t[0].toLowerCase() + t.slice(1), in place of c.text.toLowerCase(). In onPuncture, map st.checklistFalse ids to PRE_PUNCTURE_CHECKLIST.find(c => c.id === id)!.text."
+     },
+     {
+      "where": "Live tips panel in the chart workspace, contrast-allergy-unpremedicated (tips content and ranking, outside this package)",
+      "problem": "Raising contrast-sensitive does not bring diag-planning-contrast-allergy onto the panel. That tip's when has no event, so the event does not boost it, and with the diagnostic cap of 2 the panel shows diag-rad-pregnancy-check (to a man) and diag-bg-secondary-mi-question instead. The plan's tip integration ('the problem itself raises its case event ... so setup tips show') is met only in tipsFor(ctx, 20), not on screen. The PDE-5 tip likewise keys on 'hypotension' only, so pde5-recent shows nothing at the chart.",
+      "severity": "minor",
+      "fix": "For the owner of src/content/manual/pci-manual/01-planning.ts tips: add event: ['contrast-sensitive'] to diag-planning-contrast-allergy.when, and event: ['pregnancy-possible'] to diag-rad-pregnancy-check.when. Optionally add a setup-phase variant of the PDE-5 tip keyed on 'pde5-recent'. Report in outOfScope; these are not this package's files."
+     },
+     {
+      "where": "src/simulation/session/autopilot.ts (out of scope, already noted by the builder)",
+      "problem": "When a planning scenario is opened past the chart, the team ignores the planted problem. In pde5-24h at 'sheath-in' the patient has had sildenafil 14 h earlier, and the team had already given the radial spasmolytic. In closure-device-90d at 'closure' the team punctured the plug groin. Its own consequences are then unscored (planningByTeam), so the patient carries an unreachable problem.",
+      "severity": "minor",
+      "fix": "Autopilot owner: before the access stage, apply the planning module's correct action for the planted problem (for example planningOf(s)?.actions.act('avoid-nitrate') or 'other-access' plus setAccess). Or make the planning scenarios start only at 'chart' (and 'access' for checklist)."
+     },
+     {
+      "where": "src/ui/sections/ProcedureLab.tsx attending bubble (outside this package)",
+      "problem": "After switching scenarios the attending banner kept the previous patient's line, for example 'Attending 34-year-old woman ...' while the session and header showed a 54-year-old man. Each new session's first attending line reuses an id, so the memoised utterance or bubble does not refresh.",
+      "severity": "minor",
+      "fix": "Make the utterance id unique per session, e.g. id: `${s.caseId ?? scenarioId}-${last.id}`, or key the mentor bubble component on the session instance."
+     },
+     {
+      "where": "src/simulation/session/modules/planning.ts act() hold-and-delay (about line 334)",
+      "problem": "The attending always answers 'Agreed: we stop here and rebook the case.' This includes a hold that is not justified (no problem in the chart). It reads as approval of a wrong decision, although it does not leak which item is the problem.",
+      "severity": "minor",
+      "fix": "Use neutral wording, e.g. 'Understood: the case is stopped and rebooked. Nothing more is done today.'"
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [
+     "Finding 1 (plug not drawn on the groin ultrasound): not applied here because it is out of scope. The fix belongs in src/simulation/access/site.ts and src/ui/access/UltrasoundView.tsx, which are not this package's files. The owner should add an optional echogenic plug feature per site, sized by a MODEL PARAMETER, and fill it from planningOf(session).state.record.facts.closureDevice for femoral:<side> while daysAgo < PLANNING_RULES.closureDeviceDays.",
+     "Finding 4 (contrast-allergy and pregnancy tips not on the live panel): not applied, out of scope. The fix belongs in src/content/manual/pci-manual/01-planning.ts. Add event: ['contrast-sensitive'] to diag-planning-contrast-allergy.when and event: ['pregnancy-possible'] to diag-rad-pregnancy-check.when. Optionally add a setup-phase PDE-5 tip keyed on 'pde5-recent'. This package already raises those events once the item that states them has been read.",
+     "Finding 5 (the autopilot ignores the planted problem when a planning scenario opens past the chart): not applied, out of scope. The fix belongs in src/simulation/session/autopilot.ts: apply the module's correct action before the access stage, for example planningOf(s)?.actions.act('avoid-nitrate'), or act('other-access') with setAccess. The alternative is to limit the planning scenarios' allowed starts, but that would also change the autopilot-owned fastForward tests. Part of the closure-device case is now handled here: the closure device is refused in the plug groin even when the team made the puncture.",
+     "Finding 6 (the attending bubble keeps the previous patient's line after a scenario switch): not applied, out of scope. The fix belongs in src/ui/sections/ProcedureLab.tsx: make the utterance id unique per session, or key the mentor bubble on the session instance."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/planning.test.ts src/simulation/session/modules/planning.tips.test.ts (35/35 passed)",
+     "npx vitest run src/simulation/session/planning.test.ts -t 'opened past the chart' (new test, passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output)",
+    "notes": "I applied three of the seven findings. The other four need files outside this package and are listed under rejected with the owner's fix. The 35 package tests pass and the typecheck is clean.\n\n**Finding 2 (plug groin, minor), in src/simulation/session/modules/planning.ts**\n- checkSites() no longer returns early when the team did the planning. It sets st.plugSite whenever a punctured site is the plug groin inside the 90-day window. It skips the scoring only when the team made the puncture. The fistula check is skipped in the same case, so nothing is newly scored when the case opens past the chart.\n- femoralDevice also compares the active site directly against femoral:<closureDevice.side> inside the window, so the closure device is refused in that groin whoever punctured it.\n- New test: closure-device-90d opened at 'closure'. The team punctured femoral:right, no planning-plug-groin decision is written, and the closure device is refused there with the collagen-plug stop line.\n\n**Finding 3 (checklist text, minor), same file**\n- A helper `lc` lower-cases only the first letter, and only when the second is lower case, so acronyms keep their case: \"continuous ECG of good quality\", \"pulse oximetry: SpO2 above 96%\", \"check the INR now\", \"a DOAC taken...\". It replaces every lower-casing in the module: stop lines, the ledger's expected text, chart reading, the missed-problem consequence and the checklist debrief.\n- Falsely confirmed items now appear as their item text, not their ids.\n- One change beyond the suggested fix: the ledger cuts decision text at 160 characters (DECISION_TEXT_MAX in src/mentor/ledger.ts). The false confirmation would otherwise have been cut off behind seven missing items. It now comes first, and more than two missing items are summarised as \"Not confirmed: N of 8 items, from <first item>\". Tests check the SpO2 stop line's casing and the debrief wording.\n\n**Finding 7 (attending's wording on hold and delay, minor), same file**\n- The attending now says: \"Understood: the case is stopped and rebooked. Nothing more is done today.\" The doac-recent hold test checks this exact line and that no attending line contains \"agreed\".\n\n**Files changed**\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/planning.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.test.ts"
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "planning.test.ts: every generated patient in a fixed seed set has exactly one planted problem and the chart states it",
+      "met": true,
+      "evidence": "planning.test.ts 'every elective patient in a fixed seed set has exactly one planted problem and the chart states it; an acute one at most one' passes. It covers 300 seeds, at least 150 of them elective, and checks that the same seed gives the same record. One documented deviation: acute (ACS in-patient) patients may carry no problem. The reason is given in src/simulation/session/planning.ts lines 16-23: Brilakis Table 1.2, the 14-day bloods window and postponement are elective rules. A second test checks that an acute case with nothing planted scores nothing. Taken literally ('every generated patient ... exactly one'), the criterion is not met for acute seeds. See the minor failure entry."
+     },
+     {
+      "criterion": "'pde5-24h' with GTN drops true MAP more than the same dose without the flag",
+      "met": true,
+      "evidence": "planning.test.ts 'pde5-24h with GTN drops true MAP more than the same dose without the flag' passes. It compares the drop in aortaTrue.mean against a control with profile.pde5 removed, and requires a drop above 2 mmHg."
+     },
+     {
+      "criterion": "'doac-recent' with 'hold and delay' records a correct decision and ends the case; missed, the debrief links pm-planning-assessment",
+      "met": true,
+      "evidence": "Both tests pass. 'doac-recent with hold and delay records a correct decision and ends the case' checks: planning-problem correct, postponed set, placeNeedle refused, and further act() returns null. 'doac-recent missed: ...' checks that after prepare(), planning-problem is correct=false with lessonId pm-planning-assessment, and that the residual DOAC raises the ACT."
+     },
+     {
+      "criterion": "placeNeedle in supervised mode is blocked while SpO2 is unconfirmed",
+      "met": true,
+      "evidence": "planning.test.ts 'placeNeedle in supervised mode is blocked while SpO2 is unconfirmed' passes. With every other checklist item confirmed, placeNeedle returns false and the attending stop line names SpO2. Once SpO2 is confirmed (oxygen first if needed), it returns true. Further tests cover refusal at 95% on air and the oxygen path."
+     },
+     {
+      "criterion": "browser: __caseSession.scenario('closure-device-90d') shows the device on ultrasound of that groin",
+      "met": false,
+      "evidence": "There is no verify report and no test for this, and the code does not implement it. renderBMode (src/simulation/access/ultrasound.ts:815) and BModeExtras (only 'frame') draw nothing for a closure device. UltrasoundView.tsx passes only {frame}. The closure-device-90d scenario (src/simulation/session/scenarios/planning.ts:93-102) sets no 'site' override. The planning module only scores the plug groin and refuses femoralDevice() there (modules/planning.ts 412-430, 594-596); it never touches pm/site. grep finds closureDevice only in the package's own planning files. The plan has not moved this criterion to another package."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios doac-recent, warfarin-inr-unchecked, metformin-ckd under lessons pm-planning-assessment, pm-planning-preparation, pm-to-the-root-table (from planning.launch.ts)",
+      "met": true,
+      "evidence": "planning.test.ts 'practiceIndex lists the scenarios ...' passes. For each of the three lessons it checks practiceForLesson entries with sim 'procedure' and params.scenario for each scenario, the checklist under pm-to-the-root-table, and no PRACTICE_INDEX problems from planning.launch. 'the launch file and the scenario file agree' also passes."
+     },
+     {
+      "criterion": "Tips (new test beside modules/planning.ts): after the action raising 'hypotension', tipsFor(ctx,20) includes diag-planning-pde5-nitrate; at phase 'setup' includes diag-planning-contrast-allergy; every waiting.ts entry naming the package becomes satisfiable",
+      "met": true,
+      "evidence": "src/simulation/session/modules/planning.tips.test.ts (4 tests) passes. The test uses scenario pde5-24h for the hypotension step: repeated GTN raises 'hypotension' and diag-planning-pde5-nitrate appears in both the table and chart contexts. It uses contrast-allergy-unpremedicated for the setup step. The criterion names doac-recent for both. A vite-node probe in the scratchpad confirmed that in doac-recent the setup context does include diag-planning-contrast-allergy (its trigger is phase 'setup' only). GTN in doac-recent does not raise hypotension, so pde5-24h is the scenario in which this package raises it; the substitution is reasonable. waiting.ts has no WAITING_TIPS or DEFERRED_RETARGETS entry with raisedBy 'proc-chart-planted-problems', and the test asserts both lists are empty, so the 'falls by at least their number' clause is satisfied with zero entries. The test also checks that the raises/PLANNING_EVENTS names are registered LAB_EVENTS."
+     },
+     {
+      "criterion": "Package tests pass and typecheck is clean",
+      "met": true,
+      "evidence": "npx vitest run src/simulation/session/planning.test.ts: 31/31 passed (17.4 s). npx vitest run src/simulation/session/modules/planning.tips.test.ts: 4/4 passed. npx tsc -p tsconfig.app.json --noEmit: exit 0, no output."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/access/ultrasound.ts (renderBMode, BModeExtras), src/simulation/access/site.ts (SiteOverrides), src/simulation/session/scenarios/planning.ts (closure-device-90d)",
+      "problem": "Criterion 5 (browser: closure-device-90d shows the device on ultrasound of that groin) is not implemented and has no verify report or test. The B-mode renderer has no representation of an anchor-and-collagen-plug, and the scenario sets no site feature for it, so the plug groin looks normal on ultrasound. The design says the plug is 'visible on ultrasound'. The two shared access files it needs are not in this package's file list.",
+      "severity": "major",
+      "fix": "This needs files outside the package list, so report it in outOfScope and have the owner either add the two files to this package or schedule a small repair package. Add an optional SiteOverrides/AccessSite field, e.g. closurePlug?: { x: number; side } giving an echogenic intraluminal or anterior-wall footplate and an extravascular collagen bright spot at the old arteriotomy, as a MODEL PARAMETER. Render it in renderBMode beside the existing anterior-wall calcium path (ultrasound.ts ~759-762, ~899). Set it in scenarios/planning.ts closure-device-90d via site: { closurePlug: ... } on the femoral right site, or from the planning module's record (closureDevice.side, daysAgo < 90) through the scenario's site override, so that generated patients with a planted plug show it too. Add a test that renders a frame over the plug x and finds brighter mean echo there than in the same scenario without the plug. Record a browser verify through __caseSession.scenario('closure-device-90d') in the femoral ultrasound view. The plug must not be labelled on the live screen (no ground truth outside guided aids)."
+     },
+     {
+      "where": "src/simulation/session/planning.test.ts ('every elective patient ... an acute one at most one') and docs/curriculum/lab-build-plan.json (proc-chart-planted-problems acceptance[0])",
+      "problem": "The criterion says every generated patient has exactly one planted problem. The implementation and test plant exactly one only for elective (stable-angina) patients; an acute in-patient can carry none. This is a deliberate, sourced design choice (planning.ts lines 16-23), but the test asserts a weaker statement than the written criterion.",
+      "severity": "minor",
+      "fix": "The owner decides. Either amend the acceptance text in lab-build-plan.json and LAB_BUILD_PLAN.md to 'every elective patient ... exactly one; an acute patient at most one, from the in-patient problems', which matches the module text and the design rationale. Or have acute patients always draw one of the in-patient problems (pde5-24h, contrast-allergy-unpremedicated, dnacpr-unsuspended, pregnancy-test where eligible) and tighten the test to exactly one for all seeds. Amending the plan text is the smaller, clinically correct option."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/planning.test.ts (31 passed)",
+     "npx vitest run src/simulation/session/modules/planning.tips.test.ts (4 passed)",
+     "npx vite-node scratchpad/doac_tips.ts (probe: doac-recent setup context includes diag-planning-contrast-allergy = true; GTN in doac-recent raises hypotension = false)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "planning.test.ts: every generated patient in a fixed seed set has exactly one planted problem and the chart states it",
+      "met": false,
+      "evidence": "The test (planning.test.ts:36-72) was relaxed to 'every elective patient ... an acute one at most one'. In planning.ts planFacts(), an acute patient with no PDE-5, no contrast reaction, under MP_PLANNING.dnacprMinAgeY and not of childbearing potential gets planted = null (chartOnlyEligible returns []). A scratch count over 1000 default generatePatient seeds gave 678 acute records, 490 of them with no planted problem, so about half of default full cases have no chart problem. Tests at lines 74-97 and 99-116 assert that empty records exist. This contradicts the criterion and the request pm-planning#2 ('one planted problem per generated patient'). The elective half is correct: every elective record has exactly one problem, and statedBy() appears in the chart item."
+     },
+     {
+      "criterion": "'pde5-24h' with GTN drops true MAP more than the same dose without the flag",
+      "met": true,
+      "evidence": "planning.test.ts 'consequences come from the patient' gtnDrop compares the scenario with a pde5:undefined control. It passes (withPde5 > without, and > 2 mmHg)."
+     },
+     {
+      "criterion": "'doac-recent' with 'hold and delay' records a correct decision and ends the case; missed, the debrief links pm-planning-assessment",
+      "met": true,
+      "evidence": "Two tests pass. In the first, hold-and-delay gives planning-problem correct, state.postponed is set, placeNeedle is refused and act('proceed') returns null. In the second, the case is missed through prepare(), and planning-problem is incorrect with lessonId pm-planning-assessment. The ACT also rises above the no-DOAC control."
+     },
+     {
+      "criterion": "placeNeedle in supervised mode is blocked while SpO2 is unconfirmed",
+      "met": true,
+      "evidence": "The test 'placeNeedle in supervised mode is blocked while SpO2 is unconfirmed' passes. Every other checklist item is confirmed, placeNeedle returns false with the SpO2 stop line, and the needle is allowed once SpO2 is confirmed. Supporting tests cover refusal at 95% on air, the oxygen path and no repeated stop line."
+     },
+     {
+      "criterion": "browser: __caseSession.scenario('closure-device-90d') shows the device on ultrasound of that groin",
+      "met": false,
+      "evidence": "No code renders the plug on ultrasound. src/simulation/access/ultrasound.ts, src/simulation/access/site.ts and src/ui/access/UltrasoundView.tsx contain no closure-device, anchor or collagen-plug state. modules/planning.ts uses the plug only to score the puncture (planning-plug-groin) and to refuse femoralDevice() in that groin. No test or verify report covers the ultrasound display. The plan does not move this criterion to another package."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios doac-recent, warfarin-inr-unchecked, metformin-ckd under lessons pm-planning-assessment, pm-planning-preparation, pm-to-the-root-table (from planning.launch.ts)",
+      "met": true,
+      "evidence": "The planning.test.ts 'links, lessons and tips' tests pass: practiceForLesson lists all three scenarios under all three lessons, with no planning.launch problems, and the launch and scenario files agree. src/ui/content/practiceIndex.test.ts also passes (10 tests)."
+     },
+     {
+      "criterion": "Tips test beside modules/planning.ts: after the action raising 'hypotension' tipsFor(ctx,20) includes diag-planning-pde5-nitrate; at phase 'setup' includes diag-planning-contrast-allergy; waiting.ts entries naming the package satisfiable",
+      "met": true,
+      "evidence": "modules/planning.tips.test.ts passes (4 tests). The PDE-5 tip shows after GTN raises hypotension, in the pde5-24h scenario. The contrast-allergy tip shows at the diagnostic setup context, in the contrast-allergy-unpremedicated scenario. The plan names doac-recent for both, but under the one-problem rule that patient cannot carry a PDE-5 inhibitor or a contrast reaction, so the substitute scenarios were accepted. WAITING_TIPS and DEFERRED_RETARGETS name no entries for this package, so the waiting count condition holds trivially. caseTips.reach.test.ts passes."
+     },
+     {
+      "criterion": "Package tests pass and typecheck clean",
+      "met": true,
+      "evidence": "npx vitest run on planning.test.ts and modules/planning.tips.test.ts: 35/35 passed. npx tsc -p tsconfig.app.json --noEmit exited 0 with no output."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/session/planning.ts planFacts() / chartOnlyEligible() (lines ~404-455); src/simulation/session/planning.test.ts lines 36-116",
+      "problem": "An acute (UA/NSTEMI/STEMI) patient eligible for none of the in-patient problems gets planted = null. That is about 49% of default generated patients, against the criterion 'every generated patient in a fixed seed set has exactly one planted problem' and request pm-planning#2. The tests were rewritten to accept empty records.",
+      "severity": "major",
+      "fix": "In planFacts, when the pool for an acute patient is empty, plant the site problem that matches the planned access. For femoral access, plant 'closure-device-90d' (closureDevice.side 'right'). For radial access, plant 'dialysis-fistula' with fistulaArm on that side. Both are chart-only facts already handled by problemsPresent, the 'other-access' action and the puncture scoring. The acute rules stay as they are (no doac-recent, bloods-old, surgery-planned or hold-and-delay). In planning.test.ts, make the first test expect rec.planted not null for every seed and drop the acute-null branch. Remove expect(none).toBeGreaterThan(0) from the STEMI test. Replace the 'acute session with nothing planted' test with one using a forced null record, or delete it. Update the planning.ts header comment."
+     },
+     {
+      "where": "Ultrasound of the groin: src/simulation/access/ultrasound.ts and/or src/ui/access/UltrasoundView.tsx (outside this package's file list), fed from src/simulation/session/modules/planning.ts",
+      "problem": "Criterion 'browser: __caseSession.scenario('closure-device-90d') shows the device on ultrasound of that groin' is not implemented. Nothing puts the anchor-and-collagen-plug on the femoral ultrasound, and no test or verify report covers it. The design asks for 'a plug visible on ultrasound that forbids a device in that groin'.",
+      "severity": "major",
+      "fix": "Add an optional prior-device marker to the ultrasound scene, for example a field such as priorClosurePlug?: { side, daysAgo } on the femoral site or ultrasound state. It renders as an echogenic plug on the anterior common femoral artery wall in UltrasoundView.tsx. modules/planning.ts sets it at session start when record.facts.closureDevice exists, for femoral:<side> only. Add a test: newCaseSession({scenario:'closure-device-90d'}), then switch to femoral:right and confirm the ultrasound state reports the plug, and confirm femoral:left does not. Those files are outside this package's list, so the orchestrator must either add them to the package or raise a repair package. Then record a browser verify of __caseSession.scenario('closure-device-90d') showing the plug."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/planning.test.ts src/simulation/session/modules/planning.tips.test.ts (35/35 passed)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/ui/access/caseTips.reach.test.ts (13/13 passed)",
+     "npx vite-node scratchpad/count.ts (1000 default seeds: 678 acute, 490 with no planted problem)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no errors)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 1 (closure-device-90d not shown on ultrasound, criterion 5): the finding is correct, but it can't be fixed inside this package. SiteOverrides in src/simulation/access/site.ts has no field for an anchor-and-collagen-plug. renderBMode in src/simulation/access/ultrasound.ts has nothing that draws one. Neither file is on this package's list. The only echogenic stand-in the site already offers is the anterior-wall `calcium` override, and using it would misstate the anatomy and change needle behaviour, so I did not borrow it. outOfScope: either add site.ts and ultrasound.ts to this package or schedule a small repair package. That work would add an optional `closurePlug?: { x: number }` site feature (footplate on the anterior wall plus an extravascular collagen bright spot, as a MODEL PARAMETER), render it unlabelled in renderBMode beside the anterior-wall calcium path, and add a test that the mean echo over the plug x is brighter than in the same scenario without the plug. It would also need a browser check through __caseSession.scenario('closure-device-90d'). Once the field exists, setting it from scenarios/planning.ts closure-device-90d (femoral right) and from the planning record's closureDevice for generated patients is a one-line change in this package.",
+     "Finding 2, the behaviour-change option (every acute patient always gets a problem): not applied. An acute patient with no planted problem is a young man with no PDE-5 inhibitor, no contrast reaction and no do-not-resuscitate order. Planting one would mean either drawing a DNACPR for patients under the model's 65-year draw age, or changing the engine's patient (a PDE-5 inhibitor or contrast allergy), which generatePatient keeps unchanged. Both conflict with the sourced design in planning.ts lines 16-23. The finding's recommended option is to amend the acceptance text in docs/curriculum/lab-build-plan.json (proc-chart-planted-problems acceptance[0]) and LAB_BUILD_PLAN.md. Neither file is on this package's list, so that goes to outOfScope. Suggested wording: 'every elective patient in a fixed seed set has exactly one planted problem and the chart states it; an acute patient has at most one, from the in-patient problems, and none only when it can carry none'."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/planning.test.ts src/simulation/session/modules/planning.tips.test.ts (2 files, 35 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I fixed one of the two findings inside the package. The other needs files outside the package list, so it is reported in outOfScope.\n\n**Finding 2 (applied, test only).** /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/planning.test.ts now pins the rule exactly instead of just 'at most one'. Over the 300 seeds, an acute record with no planted problem must belong to a patient who can carry none of the in-patient problems:\n- no PDE-5 inhibitor inside PDE5_WINDOW_H\n- no previous contrast reaction\n- age below MP_PLANNING.dnacprMinAgeY\n- not of childbearing potential\n\nThe test now imports childbearingPotential, PDE5_WINDOW_H and MP_PLANNING. Planting behaviour is unchanged.\n\n**Still to do outside this package's files:**\n- **Plan wording:** amend the acceptance text in docs/curriculum/lab-build-plan.json and LAB_BUILD_PLAN.md to the elective/acute wording given in the second rejection.\n- **Plug on ultrasound:** build the plug feature in src/simulation/access/site.ts and src/simulation/access/ultrasound.ts, as set out in the first rejection.\n\nAcceptance criterion 5 (the browser check that closure-device-90d shows the device on ultrasound of that groin) is still not met until the plug work is done.\n\nThe builder's earlier outOfScope item still stands: the autopilot test owned by another package fails because the autopilot does not yet act on the planted problem or the checklist."
+   }
+  ]
+ }
+}

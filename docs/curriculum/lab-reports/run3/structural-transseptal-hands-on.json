@@ -1,0 +1,359 @@
+{
+ "package": "structural-transseptal-hands-on",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built structural-transseptal-hands-on. The TEER and LAAO labs no longer use the fossa point-picker: the learner now does the transseptal puncture by hand.\n\n- **Engine:** new file src/simulation/transseptal.ts. FossaPoint, septalHeightCm, assessTransseptal and the TEER height target moved here unchanged, and teer.ts re-exports them. The learner aligns the arrow and side arm and sets the arrow on a clock face (an unaligned arrow points the tip more anterior than it reads). The pull-down from the SVC gives two jumps, atrial ectopics at the superior rim and tenting. Pulling too far drops the tip into the IVC, and the wire must go back to the SVC.\n- **Moving the tent:** rotation alone is stored as torque and does not move the contact point. A slight withdrawal releases it, so clockwise with withdrawal moves the tent posterior and withdrawal alone moves it inferior. The bicaval, short-axis and four-chamber views show the tent and the measured height.\n- **Crossing:** needle, RF or sharp wire. Four confirmations (TOE, aspiration, tip pressure, contrast); the learner names the pressure trace (LA, RA or aortic) and the stage never labels it. Advancing the dilator without all four confirmations, or into the aorta, is critical, and the aorta causes haemopericardium. Then sheath, needle removal with hub low and aspiration (otherwise air), flush, wire to the left superior pulmonary vein.\n- **Heparin and ACT:** the ACT is computed from the doses with the pharmacology.ts constants. A low ACT is flagged once the left atrium is entered.\n- **Complication branches:** aortic puncture (withdraw nothing, call the surgeon); a vagal reflex that settles within minutes with no effusion; air embolism with ST elevation that persists; delayed tamponade after a posterior exit, which declares itself only after the catheters come out unless a wire is left across and watched; a thick septum that overshoots if forced; a sheath that will not follow the dilator, which needs a pulmonary-vein wire before escalating; a floppy septum that loses height. There are also scoring and decision-ledger functions.\n- **Values:** every dose, target and waveform rule cites the module lessons ts-setup and ts-cross. Geometry, timing and haemodynamic sizes are labelled MODEL PARAMETER in the code.\n- **UI:** new src/ui/structural/TransseptalStage.tsx (views, controls, drill debrief). The screen shows only what an operator would see; the fossa map with its target zone and the site assessment appear only with \"Guided aids\" on, never in exams. FossaPicker.tsx now exports its three TOE views and has a map-only mode for that aid.\n- **TEER and LAAO labs:** both use the stage. The secured crossing point is scored by assessTransseptal, scoreTeer and scoreLaao exactly as before; the puncture's decisions go to the run ledger and its critical errors are added to the logbook count. TeerLab also runs the 7 ts-* presets as drills: they open at the transseptal step, end with catheter removal and recovery, and log the drill's own score. They can be chosen from the TEER scenario menu.\n- **Tips and launch:** structuralTips.ts gives the stage its tip context (access with [host, 'transseptal'], position once the tip is on the fossa, complication once one has shown itself). It adds low-act, air and tamponade to `raises`. New transseptal.launch.ts declares the presets ts-standard, ts-thick-septum, ts-floppy-septum, ts-aortic-puncture, ts-vagal, ts-delayed-tamponade and ts-pacing-lead under both transseptal lessons; ts-floppy-septum is also linked to the TEER flail case.\n\n**Two existing tests now fail** because the plan requires the wider `raises`. Both are in the dependency's test files, which I may not edit; the fixes are listed under outOfScope.",
+    "filesChanged": [
+     "src/simulation/transseptal.ts",
+     "src/simulation/transseptal.test.ts",
+     "src/simulation/teer.ts",
+     "src/ui/structural/TransseptalStage.tsx",
+     "src/ui/structural/FossaPicker.tsx",
+     "src/ui/structural/TeerLab.tsx",
+     "src/ui/structural/LaaoLab.tsx",
+     "src/ui/lab/structuralTips.ts",
+     "src/content/lab/presets/structural/transseptal.launch.ts",
+     "src/ui/lab/structuralTips.transseptal.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/transseptal.test.ts (25 tests: pull-down jumps and ectopy; rotation alone vs clockwise with withdrawal; arrow clock and misalignment; IVC drop and repeat; clean puncture; dilator without four confirmations; dilator after an aortic trace -> critical plus haemopericardium and tamponade; needle-only aortic puncture handled correctly; thick septum, RF and forced overshoot; resistant sheath with and without a pulmonary-vein wire; floppy height loss; low-act clears with heparin and an ACT in range; ACT model; air at the hub, flush, embolism; vagal reflex resolves with no effusion; delayed tamponade -> hypotension only in recovery after the catheters are out, and the wire-watch path; pacing-lead wire; golden pre-move assessTransseptal and scoreTeer results; hand-reached site scores in TEER and LAAO as the same picked point; presets)",
+     "src/ui/lab/structuralTips.transseptal.test.ts (11 tests: launch file matches TS_PRESETS and validates; practiceIndex lists every ts-* scenario under ts-setup and ts-cross; TEER, LAAO and PMC contexts; low-act -> structural-ts-heparin-after-crossing and air -> structural-ts-air-hub-low in ts-standard; aortic, vagal, delayed-tamponade and resistant-sheath tips; raises; both waiting.ts entries for this package satisfiable and not without its events; later-package structural tips stay unsatisfiable; render checks for no guided aid in exam and an unlabelled tip-pressure trace)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/transseptal.test.ts -> 25 passed",
+     "npx vitest run src/ui/lab/structuralTips.transseptal.test.ts -> 11 passed",
+     "npx vitest run src/simulation/laao.test.ts src/simulation/teer.test.ts src/simulation/transseptal.test.ts src/content/lab/tips.test.ts src/content/lab/retarget.test.ts src/simulation/tavi.test.ts src/render/xray/deviceTubes.test.ts -> 7 files, 207 passed, 1 skipped",
+     "npx vitest run src/content/content.test.ts src/ui/content/practiceIndex.test.ts -> 71 passed",
+     "npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts src/ui/lab/structuralTips.transseptal.test.ts src/content/lab/reachability.test.ts src/simulation/transseptal.test.ts -> 62 passed, 2 failed. The 2 failures are existing assertions of structural-tips-and-tavi-course that pin its own `raises`: structuralTips.test.ts:197 expects raises.events to equal the TAVI course events only, and structuralTips.scenario.test.ts:177 expects every structural waiting tip outside that package to stay unsatisfiable, which this package's two tips now are not, as the plan intends. reachability.test.ts passes."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors. Also clean for the changed files with --noUnusedLocals.",
+    "acceptance": [
+     {
+      "criterion": "Rotation alone does not move the tent point; clockwise with withdrawal moves it posterior; the pull-down registers two jumps",
+      "status": "met",
+      "evidence": "transseptal.test.ts 'rotation alone does not move the tent point; clockwise with withdrawal moves it posterior' (contact unchanged after rotating 45\u00b0; after a 2 mm pull ap falls by more than 0.3; withdrawal alone moves it inferior only; counter-clockwise moves it anterior) and 'the pull-down registers two jumps' (jumps == ['ra','fossa'], ectopics on the monitor)"
+     },
+     {
+      "criterion": "Advancing the dilator after an aortic-trace confirmation is critical and produces haemopericardium",
+      "status": "met",
+      "evidence": "transseptal.test.ts: ts-aortic-puncture at 5 o'clock gives needle 'aorta' and an aortic trace. After all four checks and reading the trace as aortic, advance-dilator puts 'Dilator advanced into the aorta.' in critical, adds the aortic bleed, and after 60 s pericardialMl > 150 with the tamponade event. The complication is not named before the learner reads the trace."
+     },
+     {
+      "criterion": "The vagal variant resolves without effusion; delayed tamponade raises hypotension later; TEER and LAAO results through the new module are unchanged",
+      "status": "met",
+      "evidence": "transseptal.test.ts: ts-vagal raises st-elevation, bradycardia and hypotension 30 s after crossing; TOE shows no effusion; all clear by the end of the reflex with pericardialMl 0. ts-delayed-tamponade: no hypotension after 300 s on the table or straight after the catheters come out; hypotension in recovery more than 60 s later. Unchanged results: teer.assessTransseptal is the same function as transseptal.assessTransseptal; 15 golden rows from the pre-move code (generated from the snapshot) match; scoreTeer gives 88 as before; a site reached by hand scores identically in assessTransseptal, scoreLaao and assessLaao to the same picked point."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/structural/transseptal.launch.ts under lessons hb-mitral-tricuspid-laa-ts-setup, hb-mitral-tricuspid-laa-ts-cross",
+      "status": "met",
+      "evidence": "structuralTips.transseptal.test.ts 'practiceIndex lists every scenario\u2026' passes (sim teer, params.scenario = preset id); content.test.ts validates every .launch.ts. Note: in the running app, StructuralLab.resolveStructuralLaunch does not yet know ts-* ids, so a practice link opens the TEER tab without the drill. TeerLab already handles the id once passed, and the drills can be picked from the TEER scenario menu. See outOfScope."
+     },
+     {
+      "criterion": "Tips (a new test file beside src/ui/lab/structuralTips.ts): after the action that raises 'low-act', tipsFor(ctx, 20) includes structural-ts-heparin-after-crossing, and after the action that raises 'air' it includes structural-ts-air-hub-low; every waiting.ts entry naming structural-transseptal-hands-on becomes satisfiable, so the reachability waiting count for the structural lab falls by at least their number",
+      "status": "met",
+      "evidence": "src/ui/lab/structuralTips.transseptal.test.ts: in ts-standard, crossing with no heparin raises low-act (phases include position) and the tip appears; removing the needle with the hub high raises air and structural-ts-air-hub-low appears. Both entries for this package are satisfiable from `raises` and neither is without this package's events (count falls by 2). reachability.test.ts passes."
+     },
+     {
+      "criterion": "Hands-on UI in TEER and LAAO, with no ground truth on live screens outside guided aids (checked in the app)",
+      "status": "needs-browser",
+      "evidence": "Typechecks, and server-render tests check that the guided aid and site quality are absent without aids and that the tip-pressure trace is drawn with its numbers but no label. Not run in the browser, as instructed. The plan notes the two-movement mechanics need playtesting; that and window.__lab.structural.state().puncture are for the browser stage."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/lab/structuralTips.test.ts line 197 (owned by structural-tips-and-tavi-course): `expect(raises.events).toEqual([...TAVI_COURSE_EVENTS])` fails now that the plan's transseptal events are raised. Suggested fix: `expect(raises.events).toEqual([...TAVI_COURSE_EVENTS, \"low-act\", \"air\", \"tamponade\"])`, or arrayContaining.",
+     "src/ui/lab/structuralTips.scenario.test.ts around line 175 (owned by structural-tips-and-tavi-course), test 'raises no more than this package builds': it now fails on structural-ts-heparin-after-crossing and structural-ts-air-hub-low, which are meant to become satisfiable. Suggested fix: exclude this package too, `g.raisedBy !== PKG && g.raisedBy !== \"structural-transseptal-hands-on\"`. Its UNION_ONLY list still passes but is now out of date; those 5 tips are shown by the stage contexts (covered in structuralTips.transseptal.test.ts).",
+     "src/ui/sections/StructuralLab.tsx resolveStructuralLaunch: ts-* preset ids resolve to no owner, so lesson practice links to the drills open the TEER tab with no drill. Suggested one-line fix: treat `TS_PRESETS.some((p) => p.id === id)` (from src/simulation/transseptal.ts) as owner \"teer\". TeerLab already turns launch.scenario = ts-* into the drill.",
+     "src/content/manual/cath-handbook/08-mitral-tricuspid-laa.ts, the TEER and LAAO sim blocks around lines 126-134 (lesson ts-setup): the task text still says 'Drag the needle tip on the fossa map'. It should describe the hands-on pull-down. Only the tip-retarget and content-links packages may edit lesson files.",
+     "docs/realism/facts: the model parameters of the puncture (TS_MECH, TS_PATIENT, TS_ACTION_S, TS_TRACES magnitudes, the 60 s on-entry and 5 min ACT windows, RECOVERY_S, the preset thresholds) are labelled MODEL PARAMETER in src/simulation/transseptal.ts but have no docs/realism/facts entry, which this package may not create."
+    ],
+    "notes": "The snapshot is at datasets/tmp/wp-snapshots/structural-transseptal-hands-on/, with .started, holding the 5 listed files that existed before (teer.ts, FossaPicker.tsx, TeerLab.tsx, LaaoLab.tsx, structuralTips.ts). The other 4 listed files are new. No file outside the list was edited apart from the new test file. Scratch scripts are in the session scratchpad.\n\nDesign choices to review:\n- **Rotation as stored torque:** this is how \"rotation alone does not move the tent\" is modelled. The turn is released in proportion to a withdrawal of up to 2 mm, so the order turn-then-pull and a combined `move` action behave the same.\n- **Dilated-root preset:** ts-aortic-puncture moves the aortic threshold to fossa ap \u22120.3. An arrow at 5 o'clock enters the aorta, while 5:30 or a corrective clockwise turn plus pull avoids it.\n- **Large-atrium preset:** ts-delayed-tamponade moves the posterior-exit threshold to \u22120.3, so a usual posterior TEER site exits and only the wire-and-watch strategy catches it on the table.\n- **Low ACT:** low-act is raised only after the left atrium is entered, from a measured ACT below 250 s or from less than 70 U/kg given with no in-range ACT.\n- **Logbook count:** in hosted TEER and LAAO runs the puncture's critical errors are added to `criticalErrors` (TEER and LAAO scores are unchanged).\n\nNot done:\n- The large-atrium needle-curve variant in hb-mitral-tricuspid-laa#0 is not one of the plan's seven presets, so it was not built.\n- PMC and the septal occluder are supported as hosts in the engine and tip context, but have no lab yet.\n- No browser check, as instructed."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Not ready to close yet. Most of the package is built well, but two existing tests now fail, every practice link to a ts-* drill opens the wrong screen, and the live TOE views mislead after an aortic crossing.\n\nChecks I ran:\n- Typecheck (`npx tsc -p tsconfig.app.json --noEmit`) is clean.\n- The package's two test files pass (36 tests).\n- teer, laao, reachability, content, practiceIndex and tips tests pass.\n- structuralTips.test.ts and structuralTips.scenario.test.ts each fail once, as the builder reported.\n\nDiffs against the snapshot:\n- teer.ts only moved the transseptal code and re-exports it. The moved code is byte-identical, and the golden pre-move results match.\n- structuralTips.ts adds the transseptal context and widens `raises`. The TAVI behaviour is unchanged.\n- No shared engine (pharmacology, patientEvents) was edited.\n- The other src/ files changed since .started all belong to the two packages running alongside: diag-lab-drugs (drugs, DrugsTab, labTeam, TableView, diagDrugs) and pci-bench-bifurcation (bifurcation files, technique/steps).\n\nWhat is implemented as designed:\n- **Pull-down:** two jumps, ectopics at the superior rim, slip into the IVC and a repeat from the SVC.\n- **Moving the tent:** rotation is stored as torque and released by a slight withdrawal, which meets the acceptance criterion.\n- **Crossing:** the four confirmations, and the learner names the trace.\n- **Aorta:** the dilator into the aorta gives haemopericardium, then tamponade.\n- **Vagal reflex:** resolves with no effusion.\n- **Delayed tamponade:** appears only after the catheters come out, with a wire-and-watch path.\n- **Thick, floppy and resistant septa:** all modelled.\n- **Heparin:** the ACT comes from pharmacology.ts constants.\n- **Presets and tip context:** all seven presets exist, and the tip context matches the plan.\n- **Sources:** numbers cite the ts-setup and ts-cross lessons or are labelled MODEL PARAMETER.\n- **UI:** Clinical Graphite classes and British English. Nothing runs per frame.\n\nThe tip test proves the low-act and air tips appear, and that the two waiting.ts entries become satisfiable.",
+    "findings": [
+     {
+      "where": "src/ui/sections/StructuralLab.tsx resolveStructuralLaunch (line 58), outside this package's files",
+      "problem": "ts-* preset ids resolve to no owner, so r.scenario is null and onLaunch returns early. Every practice link the index now lists under ts-setup and ts-cross opens the TEER tab on the default TEER case, not the drill. The practiceIndex acceptance test passes, but 'Practice on demand' does not work for any of the 7 presets.",
+      "severity": "major",
+      "fix": "This needs a plan amendment or the owner of StructuralLab.tsx. Import TS_PRESETS from ../../simulation/transseptal and add it to the owner chain: `: TEER_SCENARIOS.some((s) => s.id === id) || TS_PRESETS.some((p) => p.id === id) ? \"teer\" : ...`. TeerLab already turns launch.scenario = ts-* into the drill. Do not close the package until this is scheduled."
+     },
+     {
+      "where": "src/ui/lab/structuralTips.test.ts:197 and src/ui/lab/structuralTips.scenario.test.ts ~line 177 (owned by structural-tips-and-tavi-course)",
+      "problem": "Confirmed red. `raises.events` now has 7 entries but the test expects the TAVI course events only. The 'raises no more than this package builds' test fails on structural-ts-heparin-after-crossing and structural-ts-air-hub-low. The plan requires the wider `raises`, so the assertions are out of date, but the suite cannot be left failing.",
+      "severity": "major",
+      "fix": "The owner, or an amendment, must apply these. In structuralTips.test.ts:197 use `expect(raises.events).toEqual([...TAVI_COURSE_EVENTS, ...TRANSSEPTAL_EVENTS.filter((e) => !(TAVI_COURSE_EVENTS as readonly string[]).includes(e))])`. In structuralTips.scenario.test.ts change the filter to `g.raisedBy !== PKG && g.raisedBy !== \"structural-transseptal-hands-on\"`, and update its UNION_ONLY list."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx TransseptalViews lines 95-101; src/simulation/transseptal.ts cross() line 962",
+      "problem": "After a crossing into the aorta, the live TOE views show a successful septal crossing. cross() sets tentMm = 0 for every crossing, and the views get crossed={across}, so the bicaval and short-axis views drop the tent and draw the needle going straight up into the 'LA' label. The TOE check and the log say the opposite ('the tent has not released into it, and the tip lies towards the aortic root'). The live image misleads the learner into reading the left atrium. I confirmed tentMm 0 with needle 'aorta' by script.",
+      "severity": "major",
+      "fix": "In cross(), set tentMm = 0 only when needle === 'la'; for the aorta keep the current tent. In TransseptalViews pass `crossed={across && s.needle === \"la\"}` to BicavalView and ShortAxisView. When s.needle === \"aorta\", keep the tent and add a needle line in ShortAxisView from (x, y0 - h*0.7) towards the Ao circle, through a new prop such as `towardsAorta`. Add a render test: the aortic state draws no 'crossed' needle into the LA."
+     },
+     {
+      "where": "src/ui/structural/LaaoLab.tsx abandonAtPuncture and debrief/finish effect (lines ~250-260, 190-206); src/ui/structural/TeerLab.tsx endPuncture and the non-drill debrief",
+      "problem": "In hosted TEER and LAAO runs, the puncture's outcome never reaches the learner. Its critical errors (e.g. 'Dilator advanced without the four confirmations.') are only added to criticalErrors, and no debrief shows them or the scoreTransseptal deductions. When the procedure is abandoned (surgeon called after an aortic puncture), both labs open their device debrief. LAAO then scores and logs `devices: ['27 mm plug occluder']` for a device never implanted, records the 'release-criteria' decision and shows a 'Released device' panel. TEER shows 'No device implanted' and its MR risks for a valve never treated.",
+      "severity": "major",
+      "fix": "Keep the step as 'debrief' and add `const abandoned = tsState.stage === \"abandoned\"`. When abandoned, render `<TransseptalDebrief state={tsState} score={scoreTransseptal(tsState, ts)} />` in place of the device debrief. Log r.finish with that score, `passed: false`, `criticalErrors: tsState.critical.length + (ts?.danger ? 1 : 0)` and `devices: []`, and skip the device decisions. In non-abandoned hosted debriefs, add a 'Transseptal puncture' Panel showing scoreTransseptal(tsState, ts).deductions and tsState.critical."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx line 103; src/simulation/transseptal.ts checkFinding/traceKind",
+      "problem": "The tip-pressure trace is drawn only after the 'pressure' check, which is allowed only once the needle has crossed. The right atrial trace (a dominant) is therefore never shown, and 'Right atrial' can never be the correct reading. The design and the lesson (ts-cross 'Read the waveform': a small rise in mean pressure as the needle crosses, and the RA-versus-LA contrast) depend on seeing the trace change on crossing.",
+      "severity": "minor",
+      "fix": "Draw TipPressure from the moment the tip is on the fossa (`s.zone === \"fossa\" || s.crossedAt`) with traceKind(s), which already returns 'ra' there. Keep the 'pressure' check and the learner's naming as the confirmation step. Add a test that the RA trace shows at the fossa and changes to LA after crossing."
+     },
+     {
+      "where": "src/simulation/transseptal.ts transseptalEvents line 755",
+      "problem": "The plan's tip integration says 'low-act until ACT is in range'. The engine clears low-act once 70 U/kg or more has been given, even if no ACT has been measured, so the heparin tip disappears before the ACT is checked.",
+      "severity": "minor",
+      "fix": "After entry to the left atrium, raise low-act unless the last measured ACT is at least TS_HEPARIN.actTargetS and was taken after the crossing: `if (laEntered(s) && !(last && last.s >= TS_HEPARIN.actTargetS && s.crossT !== null && last.t >= s.crossT)) add(\"low-act\")`. Adjust the test at structuralTips.transseptal.test.ts:121 so it still measures the ACT, which it already does."
+     },
+     {
+      "where": "src/ui/structural/TeerLab.tsx line 469 and LaaoLab.tsx line 484 (<TransseptalControls>)",
+      "problem": "TransseptalControls keeps local state (hubLow, aspirate, leaveWire, triedNeedle). It is not reset when the host recreates tsState through 'Restart case' or the scenario menu while still on the transseptal step. A learner's 'hub held low' toggle carries into the next attempt, and 'Push harder' stays enabled.",
+      "severity": "minor",
+      "fix": "Give the hosted controls a key: `<TransseptalControls key={runKey} ... />` in TeerLab. In LaaoLab, use its reset counter (or add one) as the key."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx Monitor lines 186-188",
+      "problem": "The alarm colouring thresholds are literals (hr < 50, map < 65, ST >= 1). They duplicate PATIENT_EVENT_THRESHOLDS without a source and can drift from it.",
+      "severity": "minor",
+      "fix": "Import PATIENT_EVENT_THRESHOLDS from ../lab/patientEvents and use `.bradycardiaHr` and `.hypotensionMapMmHg`. Keep the 1 mm ST threshold commented as in patientVitals (ecg12.ts stemiCriteria)."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx line 419",
+      "problem": "'Close the breach with an occluder' appears only when s.posteriorExit is true. This is hidden state, so the button's appearance after a pericardiocentesis tells the learner the bleed is a posterior exit and not an aortic or atrial-wall source.",
+      "severity": "minor",
+      "fix": "Show the button whenever `s.cathetersOutT !== null && s.drains > 0 && !s.breachClosed`. In transseptalStep 'close-breach', when !s.posteriorExit, log 'No septal breach found on TOE.' and do nothing."
+     },
+     {
+      "where": "src/simulation/transseptal.ts TS_PRESETS ts-vagal title; src/content/lab/presets/structural/transseptal.launch.ts",
+      "problem": "The drill title 'Changes on the monitor after crossing' appears in the scenario menu and the lesson practice list. It tells the learner a complication is coming, which breaks the file's own rule that 'the titles describe the patient, not the complication'.",
+      "severity": "minor",
+      "fix": "Retitle it in both files to something patient-based, e.g. 'Routine TEER work-up, no previous surgery'. The launch test checks the ids, so they stay in sync."
+     },
+     {
+      "where": "src/ui/lab/structuralTips.transseptal.test.ts lines 139 and 164; src/simulation/transseptal.test.ts line 364",
+      "problem": "Some assertions cannot fail:\n- structural-ts-aortic-puncture-hold and structural-ts-resistant-wire-first trigger on phase 'position' alone, and both already show as soon as the tip is on the fossa (checked by script). Asserting them after the aortic read and the resistant sheath proves nothing.\n- 'a site reached by hand scores identically' compares assessTransseptal(p) with assessTransseptal({...p}).",
+      "severity": "minor",
+      "fix": "For the aortic branch, assert the context change: phases gain 'complication', and the haemopericardium state raises 'tamponade' with structural-ts-posterior-delayed-tamponade absent. Drop the resistant-wire-first claim or assert it only alongside a discriminating tip. For the hand-reached site, assert transseptalPoint(hand) deep-equals hand.crossedAt and that scoreTeer for that point equals the snapshot-computed golden score for the same si/ap."
+     },
+     {
+      "where": "src/content/manual/cath-handbook/08-mitral-tricuspid-laa.ts lines 187 and 344; docs/realism/facts (outside this package's files)",
+      "problem": "Two lesson tasks still describe the removed point-picker: line 187 says 'Drag the needle tip on the fossa map', and line 344 says 'place the needle at the anterior edge... read the lab's danger flag', which now shows only with guided aids. The builder reported line 187 but not 344. The puncture's MODEL PARAMETERS have no docs/realism/facts entry: TS_MECH, TS_PATIENT, TS_ACTION_S, TS_TRACES, onEntryS, inRangeWithinS, RECOVERY_S, the preset thresholds aorticAp -0.3 and posteriorExitAp -0.3, and the scoring deductions.",
+      "severity": "minor",
+      "fix": "Queue both task rewrites for tip-retarget-catchup or content-links-backfill: a hands-on pull-down with two movements, and a ts-aortic-puncture drill with the four checks. Queue a docs/realism/facts entry for this package that lists each MODEL PARAMETER constant with its file and line."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 9,
+    "rejected": [
+     "Finding 1 (ts-* presets do not resolve in StructuralLab.tsx resolveStructuralLaunch): correct, but src/ui/sections/StructuralLab.tsx is outside this package's files. Out of scope, needs the owner or a plan amendment: import TS_PRESETS from ../../simulation/transseptal and add `|| TS_PRESETS.some((p) => p.id === id)` to the 'teer' owner test. TeerLab already turns launch.scenario = ts-* into the drill. Until then, 'Practice on demand' opens the default TEER case for all 7 presets.",
+     "Finding 2 (structuralTips.test.ts:197 and structuralTips.scenario.test.ts expect TAVI-only raises): correct and still failing (2 tests), but both files belong to structural-tips-and-tavi-course. Out of scope, the owner must apply the reviewer's assertion updates (raises.events = TAVI_COURSE_EVENTS plus the TRANSSEPTAL_EVENTS not already in it; the scenario test's later-package filter also excludes raisedBy 'structural-transseptal-hands-on', with UNION_ONLY updated).",
+     "Finding 12 (lesson tasks at 08-mitral-tricuspid-laa.ts lines 187 and 344 still describe the point-picker; no docs/realism/facts entry for the MODEL PARAMETERS): correct, but both files are outside this package. Out of scope, queue for tip-retarget-catchup or content-links-backfill: rewrite line 187 as a hands-on pull-down with two movements and line 344 as a ts-aortic-puncture drill with the four checks, and add a docs/realism/facts entry listing TS_MECH, TS_PATIENT, TS_ACTION_S, TS_TRACES, TS_HEPARIN.onEntryS/inRangeWithinS, RECOVERY_S, the preset aorticAp/posteriorExitAp -0.3 and the scoreTransseptal deduction points (all in src/simulation/transseptal.ts)."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/transseptal.test.ts (29 passed)",
+     "npx vitest run src/ui/lab/structuralTips.transseptal.test.ts (13 passed)",
+     "npx vitest run src/simulation/teer.test.ts (30 passed)",
+     "npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts (2 failed, the known out-of-scope failures from finding 2; the rest passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "I applied findings 3 to 11. Three findings need files outside this package (see rejected), and two tests in another package's files still fail until finding 2 is applied.\n\nApplied:\n- **3, aortic crossing on TOE.** In src/simulation/transseptal.ts, cross() now clears the tent only when the needle enters the left atrium. In TransseptalStage.tsx the bicaval and short-axis views get `crossed` only for an LA crossing. In FossaPicker.tsx, ShortAxisView has a new `towardsAorta` prop that keeps the tent and draws the needle from it towards the aortic root. The crossed needles are tagged with `data-needle`. New engine and render tests cover this.\n- **4, abandoned runs and the hosted debrief.** In TeerLab.tsx and LaaoLab.tsx a run stopped at the puncture now opens a 'Procedure stopped at the puncture' panel and TransseptalDebrief, scored by scoreTransseptal. It is logged once with passed false, devices [] and criticalErrors equal to the puncture's critical count plus 1 for a danger site. The device score, the device decisions (including LAAO release-criteria), the risk list, the compression table and the 'Released device' panel are skipped. Completed TEER and LAAO debriefs gain a 'Transseptal puncture' panel (new TransseptalSummary in TransseptalStage.tsx) with the puncture's deductions and critical errors. The site is passed as null there so it is not counted twice against scoreTeer or scoreLaao.\n- **5, tip pressure trace.** It is drawn from the moment the tip is on the fossa, until the needle comes out. It shows the RA trace there and changes to LA on crossing. The learner still names it only after the pressure check. A render test covers this.\n- **6, low-act.** It is now raised after LA entry until an ACT taken since the crossing is at least TS_HEPARIN.actTargetS. Tests check that heparin alone keeps it, and that an in-range ACT taken before the crossing does not clear it.\n- **7, control reset.** TransseptalControls is keyed by runKey in both labs.\n- **8, monitor thresholds.** The HR and MAP colours use PATIENT_EVENT_THRESHOLDS. The 1 mm ST threshold carries a comment pointing to ecg12.ts stemiCriteria.\n- **9, close-breach button.** It now shows after any drained effusion once the catheters are out. Without a posterior exit, the engine logs 'No septal breach found on TOE.' and changes nothing. A test covers this.\n- **10, vagal drill title.** Renamed 'Routine TEER work-up, no previous surgery' in transseptal.ts and transseptal.launch.ts. A test checks that no preset title names its complication.\n- **11, weak assertions.**\n  - The aortic-puncture-hold and resistant-wire-first claims are dropped.\n  - The aortic branch now asserts that tamponade is absent before the dilator, and that the dilator gives tamponade plus the 'complication' phase.\n  - The hand-reached site test now checks that transseptalPoint equals crossedAt, at (0.75, -0.4). It also checks golden values computed with the pre-move teer.ts snapshot: ideal, 4.275 cm, scoreTeer 88.\n\nOut of scope, for whoever owns the tips: I could not assert that structural-ts-posterior-delayed-tamponade is absent during the aortic haemopericardium. Its trigger (phase complication or assess, event hypotension, procedure transseptal, defined at src/content/manual/cath-handbook/08-mitral-tricuspid-laa.ts around line 2032) also fires for the aortic bleed. It needs a narrower trigger, or an `excludes` on tamponade."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened my own tab (tab-59) at http://localhost:5173 and went to Structural heart lab > TEER. I drove the TransseptalStage through its buttons and read state with window.__lab.structural.state()/context()/tips(). Other packages' edits caused repeated Vite full reloads (DrugsTab.tsx, Simulator.tsx fast-refresh invalidations), so I ran each flow in one script.",
+     "TEER P2 flail, hands-on: 'Plan the transseptal puncture' opened the stage (stage setup, zone svc, arrow 12:00). Align, then 11 clockwise clicks, set the arrow to 5:30. On the pull-down the log recorded both jumps: 'A jump as the tip drops from the SVC into the right atrium' and 'A second jump as the tip drops onto the fossa; atrial ectopics on the monitor; tenting on the bicaval view'. The monitor rhythm read 'sinus with atrial ectopics' and the four-chamber view showed the height (4.3 cm).",
+     "Moving the tent: two clockwise clicks (5:30 to 6:30) left contact unchanged at {si .75, ap -.40}. Withdrawing 1 mm then moved it to ap -.58, and a second 1 mm to ap -.67 (posterior). Counter-clockwise then 1 mm withdrawal moved it anterior to ap -.535. Withdrawal alone in LAAO lowered si by 0.06 per mm with ap fixed (inferior only). The acceptance mechanics hold in the app.",
+     "Guided aids off: no site quality, target zone or 'Site (guided aid)' anywhere in the main text. Aids on in LAAO: the 'Site (guided aid)' readout appeared and went poor, acceptable, ideal as I steered. The tip-pressure trace shows only numbers ('a 10, v 13, mean 9 mmHg' after crossing to the LA; 'a 8, v 6, mean 5' in the RA). The trace-reading buttons (Left atrial / Right atrial / Arterial / No trace) carry no answer.",
+     "Crossing in ts-standard: crossing with no heparin raised 'low-act' (ctx phase access, procedures [teer, transseptal], phases [position]) and tipsFor put structural-ts-heparin-after-crossing first. 100 U/kg then gave ACT 344 s. All four checks, read as LA, dilator, sheath. Removing the needle with the hub-low and aspirate toggles off logged 'Bubbles in the sheath hub and side arm', raised 'air' and surfaced structural-ts-air-hub-low. Flushing cleared it. LSPV wire gave stage secured. 'Continue: steer the guide to the valve' handed the hand-made site to TEER: step steer, assessTransseptal gave heightCm 4.21, quality ideal.",
+     "ts-aortic-puncture via the TEER scenario menu: at 5:00 the needle went into the aorta. The log gave 'TOE: no needle tip in the left atrium... tip lies towards the aortic root' and 'contrast streams away upwards along the ascending aorta', and the trace read 124/68 (87) with no label. Read as aortic, then advance dilator: critical ['Dilator advanced into the aorta.'], then 'hypotension','tamponade' by t=204 s, BP 64/43, TOE 'a large pericardial effusion, with right atrial collapse'. On a restart: read aortic, call the surgeon, stage abandoned with nothing withdrawn, and the drill debrief showed.",
+     "ts-vagal: just after the dilator crossed: HR 42, BP 79/43, ST +2.0 mm, events bradycardia/hypotension/st-elevation. TOE: 'no pericardial effusion'; tip structural-ts-vagal-st shown. All vitals back to baseline by about 2 min (t=258 s), with no effusion and no bleed.",
+     "ts-delayed-tamponade: a standard 5:30 site gave an uneventful crossing and stage secured with stable vitals. 'Remove the left atrial catheters' was done without the wire-across toggle, and an immediate TOE showed 'a small pericardial effusion with an atrial wall haematoma'. Send to recovery: BP 84/51, then 75/47 with hypotension and tamponade 30 s later, and tip structural-ts-posterior-delayed-tamponade shown. Pericardiocentesis restored 124/68. Debrief 90/100, -10 'No wire left across...', ledger \u2717 'Wire left across and watched'.",
+     "ts-thick-septum: the needle tented without crossing. 'Push harder' gave 'The septum gave suddenly and the system jumped forward towards the far left atrial wall'. On a restart, Radiofrequency crossed 'with little force'. ts-pacing-lead shows the 'Show LAO' toggle and the check-LAO and re-pass buttons, and re-pass logs 'Wire re-passed to the SVC.' ts-floppy-septum opens and reaches the fossa.",
+     "LAAO windsock: measured 4 angles, then the transseptal stage. Steering with aids reached 'ideal' at {si -.41, ap -.72}. Crossed, secured, then 'Continue: size the device' went to step size with the crossing point kept. The LAAO hook's state().puncture was populated throughout.",
+     "Practice-link routing: I imported /src/state/useUiStore.ts in the page and called openSim('teer', {scenario:'ts-vagal'}). It opened teer-p2-flail at step plan, not the drill. openSim('teer', {scenario:'teer-fmr'}) works.",
+     "Layout at 1366x900: fluoroscopy 313x313 with the monitor beside it, three TOE views 207x95 each, no horizontal document overflow. I took no screenshot because fronting my tab would cover the owner's tab. I reset the viewport to desktop and closed tab-59.",
+     "Console: no errors or warnings from this package. The only messages are Vite debug lines about other packages' files (Simulator.tsx, DrugsTab.tsx, Debrief.tsx, StudyReport.tsx)."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/StructuralLab.tsx resolveStructuralLaunch (line 56-61), outside this package's file list",
+      "problem": "Practice links for every preset in transseptal.launch.ts do not open the drill. openSim('teer', {scenario:'ts-vagal'}) opened the TEER P2 flail case at the TOE plan step: owner resolution only checks TAVI/TEER/LAAO_SCENARIOS, so the ts-* id is dropped and scenario becomes null. The practiceIndex acceptance passes in tests, but the lesson links send learners to the wrong case.",
+      "severity": "major",
+      "fix": "In resolveStructuralLaunch, treat transseptal presets as TEER: import { transseptalPreset } from \"../../simulation/transseptal\" and change the owner expression to `... : TEER_SCENARIOS.some((s) => s.id === id) || transseptalPreset(id) ? \"teer\" : ...`. TeerLab already accepts the preset id as its scenario. This file belongs to another package and needs to be scheduled (the builder listed it in outOfScope)."
+     },
+     {
+      "where": "src/simulation/transseptal.ts scoreTransseptal (about line 1311) and the drill debrief in TeerLab (drillScore = scoreTransseptal(tsState, ts))",
+      "problem": "In ts-aortic-puncture, crossing into the aortic root scored 100/100 with 'No deductions'. The variant's focus tells the learner to read the short-axis view and avoid the anterior fossa, but needle === 'aorta' is never penalised. assessTransseptal('teer', ...) ignores variant.aorticAp, so the site {si .75, ap -.20} counted as acceptable or ideal. The ledger also shows only correct decisions, so the drill gives no feedback on the avoidable mistake.",
+      "severity": "major",
+      "fix": "In scoreTransseptal add `if (s.needle === \"aorta\") d.push({ points: 20 /* MODEL PARAMETER */, reason: \"Crossed where the aortic root lies against the fossa: read the short-axis view and move the tent posterior before crossing.\" });`. Add a ledger entry in transseptalDecisions when s.variant.aorticAp is set or s.needle === 'aorta' (id 'ts-site-vs-aorta', correct: s.needle !== 'aorta', lessonId CROSS, tipIds ['structural-ts-aortic-puncture-hold']). Extend the transseptal.test.ts aortic case to assert the deduction."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx, 'Check the wire in LAO' button (line ~303) and the fluoroscopy component's local `lao` state (line 137)",
+      "problem": "In ts-pacing-lead, 'Check the wire in LAO' gives no visible result. It sets laoChecked and ticks the clock, but it does not switch the fluoroscopy to LAO (a separate 'Show LAO' link does that) and logs nothing. The learner gets no cue to decide whether to re-pass the wire, yet the ledger rewards 'Checked and posterior'.",
+      "severity": "minor",
+      "fix": "Lift the LAO view state into TransseptalStage, or derive it from state as `s.laoChecked && s.stage === 'setup'`, so dispatching check-lao also switches the fluoroscopy to LAO. Alternatively log a neutral line on check-lao, e.g. 'LAO projection: wire and leads on screen.', and keep the interpretation to the image."
+     },
+     {
+      "where": "Tip selection for the transseptal context (src/ui/lab/structuralTips.ts context, plus the tip conditions for structural-ts-pacing-lead-wire and structural-ts-posterior-delayed-tamponade in src/content/lab/tips.ts)",
+      "problem": "The tips panel shows 'Pacing leads: keep the wire posterior to them' in every transseptal case, including the P2 flail case with no pacemaker. After an aortic puncture with haemopericardium, the top tip is 'Posterior puncture: watch for delayed tamponade', which names the wrong mechanism. Both come from tips whose conditions are only phase/procedure/hypotension.",
+      "severity": "minor",
+      "fix": "Expose the variant in the context, e.g. add a procedure tag such as 'pacing-leads' only when s.variant.pacingLeads, and an 'aortic' marker when s.needle === 'aorta'. Then narrow the tip conditions: structural-ts-pacing-lead-wire to that tag, and structural-ts-posterior-delayed-tamponade to s.posteriorExit && cathetersOutT. tips.ts belongs to the tips package, so report this there if the tag cannot be added in structuralTips.ts alone."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx, the 'The tip pressure is' reading buttons",
+      "problem": "After the learner picks Left atrial / Right atrial / Arterial, no button shows the choice as selected (the four confirmation buttons do get a \u2713), so the learner cannot see what they declared before advancing the dilator.",
+      "severity": "minor",
+      "fix": "Mark the chosen button from s.traceRead, e.g. add tone 'accent' or an aria-pressed and \u2713 prefix when s.traceRead === kind. This gives no ground truth, only the learner's own reading."
+     },
+     {
+      "where": "src/ui/structural/TransseptalStage.tsx fluoroscopy aria-label (line 157)",
+      "problem": "With the needle in the aorta, the fluoroscopy aria-label reads 'the tip is across the septum', which is wrong for screen-reader users and is the only place the stage describes the tip position in words.",
+      "severity": "minor",
+      "fix": "Use a neutral description once the needle has advanced, e.g. 'the needle is advanced beyond the tent' when s.needle !== 'none', without naming the chamber."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 1 (practice links for the ts-* presets open the TEER P2 flail case): confirmed, but the fix belongs in src/ui/sections/StructuralLab.tsx resolveStructuralLaunch, which is not in this package's file list. It needs scheduling elsewhere. The fix: import { transseptalPreset } from \"../../simulation/transseptal\" and treat `TEER_SCENARIOS.some((s) => s.id === id) || transseptalPreset(id)` as owner \"teer\". TeerLab already accepts the preset id as its scenario.",
+     "Finding 4 (pacing-lead tip shows in every transseptal case; the posterior delayed-tamponade tip is top after an aortic haemopericardium): confirmed, but it cannot be fixed within this package. Both tips are defined in src/content/manual/cath-handbook/08-mitral-tricuspid-laa.ts (lines about 1931 and 2030), and their only conditions are phase, procedure and event. structuralTips.ts can only report the shared LabContext vocabulary. Adding 'pacing' to procedures would pull in the pacing lab's tips, and no variant-level tag exists in LAB_PROCEDURES (tips.ts). This needs scheduling with the tips and manual package. One option is a new LAB_PROCEDURES tag such as 'pacing-leads' (set by transseptalTipContext when ts.variant.pacingLeads) with structural-ts-pacing-lead-wire narrowed to it. Another is a new event, e.g. 'posterior-exit' (raised by transseptalEvents when s.posteriorExit && s.cathetersOutT !== null), with structural-ts-posterior-delayed-tamponade gated on it instead of on hypotension alone. structuralTips.ts can then pass either one through with a one-line change."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/transseptal.test.ts src/ui/lab/structuralTips.transseptal.test.ts src/simulation/teer.test.ts src/simulation/laao.test.ts (4 files, 102 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I applied 4 of the 6 findings. The other two (1 and 4) are confirmed but need files outside this package; see `rejected`. Tests and typecheck pass.\n\n**Finding 2 (aortic crossing not penalised): applied.** Changes in `/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/transseptal.ts`:\n- **New state field:** `TsState.aorticCrossings` counts crossings into the aortic root. It starts at 0 and goes up by one in `cross()` when the needle enters the aorta.\n- **Why a counter:** the existing check `needle === 'aorta'` resets when the needle is withdrawn. A withdraw-and-recross would then erase the mistake from the score.\n- **Deduction:** `scoreTransseptal` takes 20 points (a model parameter, like the other deduction weights) when `aorticCrossings > 0`. The reason reads \"Crossed where the aortic root lies against the fossa: read the short-axis view and move the tent posterior before crossing.\" It is skipped when the site was already deducted as a danger zone, so the same crossing is not penalised twice.\n- **Ledger entry:** `transseptalDecisions` adds `ts-site-vs-aorta` (lesson CROSS, tip `structural-ts-aortic-puncture-hold`). It is correct only when `aorticCrossings === 0`. It is added when the aorta was entered, or when the variant has a root closer to the fossa than the default (`aorticAp < BASE_VARIANT.aorticAp`) and a crossing was made.\n- **Effect on the drill:** ts-aortic-puncture, crossed at the anterior fossa and then handled correctly (trace read as aortic, surgeon called), now scores below 100 and shows the decision as wrong.\n\n**Finding 3 (LAO check gave no visible result): applied.**\n- **Engine:** `check-lao` now logs a neutral line, \"LAO projection: wire and leads on screen.\" It says nothing about whether the wire is anterior or posterior.\n- **Image:** in `/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TransseptalStage.tsx`, the fluoroscopy component counts those log lines. Each new check switches the image to LAO while the stage is at setup. The Show AP / Show LAO link still overrides the view until the next check.\n- **No host changes:** this keeps the change inside the stage file, so TeerLab and LaaoLab did not need edits.\n\n**Finding 5 (chosen trace reading not shown): applied.**\n- **Was the original claim right?** The `Seg` control did set an active class, but its highlight is very faint (`bg-[#24324d]`). The finding is valid in practice.\n- **Change:** the four reading buttons are now ordinary buttons like the confirmation buttons. The chosen one gets the accent style, a \u2713 prefix and `aria-pressed`. Only the learner's own reading is marked; the stage still never says which trace it is.\n\n**Finding 6 (aria-label wrong with the needle in the aorta): applied.** After crossing, the fluoroscopy aria-label now reads \"advanced beyond the tent at the fossa\" and no longer names a chamber.\n\n**Tests added:**\n- `src/simulation/transseptal.test.ts`: a new test for the aortic deduction and ledger entry, including that withdrawing and re-crossing keeps the deduction. The dilated-root test now also checks that a posterior crossing gets `ts-site-vs-aorta` correct and no deduction.\n- `src/ui/lab/structuralTips.transseptal.test.ts`: two new render tests. One checks that the chosen reading is marked and the old aria-label wording (\"across the septum\") is gone. The other checks that the LAO check switches the image to LAO and that its log line says neither anterior nor posterior.\n\n**Files edited:** `src/simulation/transseptal.ts`, `src/ui/structural/TransseptalStage.tsx`, `src/simulation/transseptal.test.ts`, `src/ui/lab/structuralTips.transseptal.test.ts`."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "Rotation alone does not move the tent point; clockwise with withdrawal moves it posterior; the pull-down registers two jumps",
+      "met": true,
+      "evidence": "src/simulation/transseptal.test.ts 'the pull-down registers two jumps...' (jumps ['ra','fossa'], ectopics at the superior rim) and 'rotation alone does not move the tent point; clockwise with withdrawal moves it posterior' (contact unchanged after rotate; ap falls after pull 2 mm; the combined move does the same; counter-clockwise goes anterior). Both pass."
+     },
+     {
+      "criterion": "Advancing the dilator after an aortic-trace confirmation is critical and produces haemopericardium",
+      "met": true,
+      "evidence": "transseptal.test.ts 'advancing the dilator after an aortic-trace confirmation is critical and produces haemopericardium': critical contains 'Dilator advanced into the aorta.', bleeds include aorta, pericardial volume over 150 mL after 60 s, tamponade event, TOE large effusion, haemopericardium deduction. structuralTips.transseptal.test.ts also checks the tamponade and complication context. Pass."
+     },
+     {
+      "criterion": "The vagal variant resolves without effusion; delayed tamponade raises hypotension later; TEER and LAAO results through the new module are unchanged",
+      "met": true,
+      "evidence": "transseptal.test.ts 'the vagal variant resolves without effusion' (events clear by vagal.endS, pericardialMl 0, TOE shows no effusion); 'delayed tamponade raises hypotension later, only after the catheters come out' (no hypotension at 300 s while the catheters are in; hypotension in recovery, more than 60 s after); describe 'TEER and LAAO results through the new module are unchanged' (re-export identity, 15 golden assessTransseptal rows from the pre-move snapshot, scoreTeer 88, a hand-reached site scores the same as the same point picked on the map in TEER and LAAO). teer.test.ts (30) and laao.test.ts (27) pass. TeerLab and LaaoLab import TransseptalViews and TransseptalControls in place of FossaPicker."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/structural/transseptal.launch.ts under lessons hb-mitral-tricuspid-laa-ts-setup, hb-mitral-tricuspid-laa-ts-cross",
+      "met": true,
+      "evidence": "structuralTips.transseptal.test.ts runs practiceForLesson for both lessons and finds all 7 TS_PRESETS with sim 'teer' and params.scenario set. The launch file declares the 7 ids, buildKnownLaunch reports no problems, and practiceIndex.test.ts and content.test.ts pass."
+     },
+     {
+      "criterion": "Tips: after the action that raises 'low-act' tipsFor(ctx,20) includes structural-ts-heparin-after-crossing; after the action that raises 'air' it includes structural-ts-air-hub-low; every waiting.ts entry naming this package becomes satisfiable, so the structural waiting count falls by their number",
+      "met": true,
+      "evidence": "New test file src/ui/lab/structuralTips.transseptal.test.ts (15 tests, pass). In ts-standard, the crossing without heparin raises low-act and shows the heparin tip; remove-needle with the hub high raises air and shows the air tip. The waiting.ts group for structural-transseptal-hands-on (2 tips) is satisfiable with the new raises and is not satisfiable without them. Tips waiting on later packages stay unsatisfiable. reachability.test.ts passes."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/lab/structuralTips.test.ts:197 (test 'raises > uses the shared vocabulary and declares the procedures, phases and course events')",
+      "problem": "This package widened raises.events in src/ui/lab/structuralTips.ts to add low-act, air and tamponade, as its tip criterion requires. The dependency package's existing test still asserts the old exact list, expect(raises.events).toEqual([...TAVI_COURSE_EVENTS]), so it now fails. The file is not in this package's list, and the change was needed to meet the tip criterion.",
+      "severity": "major",
+      "fix": "Replace line 197 with expect(raises.events).toEqual([...TAVI_COURSE_EVENTS, ...TRANSSEPTAL_EVENTS.filter((e) => !(TAVI_COURSE_EVENTS as readonly string[]).includes(e))]); and import TRANSSEPTAL_EVENTS from '../../simulation/transseptal'. A looser alternative is expect(raises.events).toEqual(expect.arrayContaining([...TAVI_COURSE_EVENTS]))."
+     },
+     {
+      "where": "src/ui/lab/structuralTips.scenario.test.ts:175 (test 'tips in a scenario > raises no more than this package builds...')",
+      "problem": "The 'later packages' filter only excludes structural-tips-and-tavi-course. This package's own waiting tips (structural-ts-heparin-after-crossing, structural-ts-air-hub-low) are now satisfiable, which is the intended result, so the test fails on structural-ts-heparin-after-crossing.",
+      "severity": "major",
+      "fix": "Change the filter on line 175 to WAITING_TIPS.filter((g) => g.lab === \"structural\" && g.raisedBy !== PKG && g.raisedBy !== \"structural-transseptal-hands-on\").flatMap((g) => g.tips). The same check with both packages excluded already passes in structuralTips.transseptal.test.ts."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/transseptal.test.ts src/ui/lab/structuralTips.transseptal.test.ts -> 2 files, 45 tests passed",
+     "npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts src/simulation/teer.test.ts src/simulation/laao.test.ts src/content/lab/tips.test.ts -> 109 passed, 1 skipped, 2 failed (structuralTips.test.ts:197 and structuralTips.scenario.test.ts:177, both stale assertions about raises)",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/retarget.test.ts src/render/xray/deviceTubes.test.ts -> 58 passed",
+     "npx vitest run src/content/content.test.ts -> 61 passed"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output, about 12 s)"
+   },
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "Rotation alone does not move the tent point; clockwise with withdrawal moves it posterior; the pull-down registers two jumps",
+      "met": true,
+      "evidence": "src/simulation/transseptal.test.ts 'pull-down and contact mechanics'. After two rotations the contact stays equal to before while clockH changes. A 2 mm pull after a clockwise turn makes ap fall by more than 0.3 and gains septal height. Withdrawal alone moves the point inferior only, and counter-clockwise with withdrawal moves it anterior. The jumps are ['ra','fossa'], with ectopics at the superior rim. An arrow at noon reaches the IVC with one jump. All pass."
+     },
+     {
+      "criterion": "Advancing the dilator after an aortic-trace confirmation is critical and produces haemopericardium",
+      "met": true,
+      "evidence": "transseptal.test.ts 'advancing the dilator after an aortic-trace confirmation is critical and produces haemopericardium'. The run records the critical error 'Dilator advanced into the aorta.' and bleeds include 'aorta'. After 60 s pericardialMl is above 150, the events include 'tamponade', TOE shows a large pericardial effusion and the score deducts for haemopericardium. The complication is not named until the learner reads the trace. Passes."
+     },
+     {
+      "criterion": "The vagal variant resolves without effusion; delayed tamponade raises hypotension later; TEER and LAAO results through the new module are unchanged",
+      "met": true,
+      "evidence": "The vagal test passes: st-elevation, bradycardia and hypotension appear, TOE shows no effusion, the events clear by vagal.endS and pericardialMl is 0. The delayed-tamponade test passes: no hypotension while the catheters stay in or right after removal, then hypotension in recovery more than 60 s later. The test file pins pre-move results for TEER and LAAO and they still match, including scoreTeer 88. teer.ts re-exports the same function objects. assessTransseptal and septalHeightCm in src/simulation/transseptal.ts are identical to the pre-package teer.ts in datasets/tmp/wp-snapshots/structural-transseptal-hands-on (diff empty). The TeerLab/LaaoLab diffs leave scoreTeer and scoreLaao, and their FossaPoint input, unchanged; the secured point goes through assessTransseptal as the picked point did. teer.test.ts (30) and laao.test.ts (27) pass."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in transseptal.launch.ts under lessons hb-mitral-tricuspid-laa-ts-setup and hb-mitral-tricuspid-laa-ts-cross",
+      "met": true,
+      "evidence": "src/ui/lab/structuralTips.transseptal.test.ts 'practiceIndex lists every scenario...' checks practiceForLesson for both lessons. Each of the 7 TS_PRESETS is listed from presets/structural/transseptal.launch.ts with sim 'teer'. buildKnownLaunch reports no problems. Passes."
+     },
+     {
+      "criterion": "Tips: after the action that raises 'low-act' tipsFor(ctx,20) includes structural-ts-heparin-after-crossing, and after the action that raises 'air' it includes structural-ts-air-hub-low; every waiting.ts entry naming the package becomes satisfiable, so the structural waiting count falls",
+      "met": true,
+      "evidence": "Both checks are in the new test file beside structuralTips.ts and use preset ts-standard. The crossing raises low-act and shows the heparin tip. Removing the needle with the hub high raises air and shows the hub tip. The waiting.ts entry lists [heparin-after-crossing, air-hub-low]; both are satisfiable with the new raises and neither was with TAVI events alone. In src/content/lab/reachability.test.ts (passes), both are now reported as 'ready (waiting, structural-transseptal-hands-on)', so the unsatisfiable structural waiting count fell by 2."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/lab/structuralTips.test.ts:197 and src/ui/lab/structuralTips.scenario.test.ts:174-177 (owned by structural-tips-and-tavi-course, not in this package's file list)",
+      "problem": "Two existing tests now fail. This package correctly extended `raises` in src/ui/lab/structuralTips.ts:171 with TRANSSEPTAL_EVENTS (low-act, air, tamponade), which acceptance criterion 5 requires. structuralTips.test.ts still pins `expect(raises.events).toEqual([...TAVI_COURSE_EVENTS])`. structuralTips.scenario.test.ts 'raises no more than this package builds' still expects every structural waiting tip not raised by structural-tips-and-tavi-course to stay unsatisfiable; it now fails on structural-ts-heparin-after-crossing (and structural-ts-air-hub-low). These are stale pins from the earlier package, not defects in this package's code. Under the plan's rule the package may not edit those files, and this regression should have been reported in outOfScope.",
+      "severity": "major",
+      "fix": "Another package must make this edit; this package's fixer is not allowed to. In src/ui/lab/structuralTips.test.ts:197 replace `expect(raises.events).toEqual([...TAVI_COURSE_EVENTS]);` with `expect(raises.events).toEqual(expect.arrayContaining([...TAVI_COURSE_EVENTS]));`. In src/ui/lab/structuralTips.scenario.test.ts:174 add `&& g.raisedBy !== \"structural-transseptal-hands-on\"` to the `later` filter, i.e. `WAITING_TIPS.filter((g) => g.lab === \"structural\" && g.raisedBy !== PKG && g.raisedBy !== \"structural-transseptal-hands-on\")`. Alternatively, record both in the package's outOfScope so the orchestrator or the owning package applies them. After the edit, run npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/transseptal.test.ts src/ui/lab/structuralTips.transseptal.test.ts src/simulation/teer.test.ts src/simulation/laao.test.ts -> 4 files, 102 tests passed",
+     "npx vitest run src/content/lab/reachability.test.ts -> 5 passed; structural ready list includes structural-ts-heparin-after-crossing and structural-ts-air-hub-low (waiting, structural-transseptal-hands-on)",
+     "npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts src/content/lab/tips.test.ts src/content/lab/retarget.test.ts -> tips.test.ts and retarget.test.ts pass; 1 failure each in structuralTips.test.ts ('raises > uses the shared vocabulary...') and structuralTips.scenario.test.ts ('raises no more than this package builds...'), both stale pins from structural-tips-and-tavi-course broken by this package's required raises extension",
+     "diff of assessTransseptal/septalHeightCm against datasets/tmp/wp-snapshots/structural-transseptal-hands-on/src/simulation/teer.ts -> identical",
+     "diff of TeerLab.tsx and LaaoLab.tsx against the snapshot -> scoreTeer/scoreLaao inputs unchanged",
+     "grep for brand device names and American spellings in TransseptalStage.tsx and transseptal.ts -> none"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (src/ui/lab/structuralTips.test.ts:197): the finding is correct, but I did not apply it because the file is outside this package's edit list. It belongs to structural-tips-and-tavi-course, and the rule is to report such changes in outOfScope rather than edit another package's files. I reproduced the failure: raises.events now has 7 events against the 4 that test expects. I checked the proposed fix in a temporary copy, which I have since deleted, and it passes. Add `import { TRANSSEPTAL_EVENTS } from \"../../simulation/transseptal\";` and change line 197 to `expect(raises.events).toEqual([...TAVI_COURSE_EVENTS, ...TRANSSEPTAL_EVENTS.filter((e) => !(TAVI_COURSE_EVENTS as readonly string[]).includes(e))]);`",
+     "Finding 2 (src/ui/lab/structuralTips.scenario.test.ts:175): the finding is correct, but I did not apply it for the same reason. The file belongs to structural-tips-and-tavi-course and is not in this package's list. I reproduced the failure: structural-ts-heparin-after-crossing is satisfiable, as this package's plan requires. The proposed fix passed in a temporary copy, since deleted. Change line 175 to `const later = WAITING_TIPS.filter((g) => g.lab === \"structural\" && g.raisedBy !== PKG && g.raisedBy !== \"structural-transseptal-hands-on\").flatMap((g) => g.tips);`"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/transseptal.test.ts src/ui/lab/structuralTips.transseptal.test.ts src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts: 66 of 68 passed. The 2 failures are exactly the 2 findings, and the package's own 2 test files pass in full.",
+     "Temporary copies of both dependency test files with the proposed fixes, run with npx vitest run: 23 of 23 passed. The copies were deleted afterwards and no zzTmp files remain."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0, no errors.",
+    "notes": "Both findings are correct, but I applied neither. Each fix is a one-line change in an existing test file that belongs to the dependency package structural-tips-and-tavi-course, and the edit list for this fix (the package's files plus its own new test files) does not include those files. They cannot be resolved inside the package. The plan requires `raises` to include low-act and air (the plan's tip line for this package and its tip acceptance test, lab-build-plan.json:6304 and 6326), and the dependency's tests pin the old, narrower list. outOfScope for whoever owns /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.test.ts and /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.scenario.test.ts: apply the two edits given under rejected. Both were run in temporary copies and pass, and once they are in place all 4 structural tip and transseptal test files should pass. None of the package's own files changed in this pass."
+   }
+  ]
+ }
+}

@@ -1,0 +1,140 @@
+[
+  {
+    "lab": "pacing",
+    "what": "Held-out exam scenarios for temporary pacing that arise inside the catheter lab rather than on the ward: (1) complete heart block with hypotension after an RCA injection in a patient with known right bundle branch block; (2) AV block without escape after intracoronary adenosine that does not resolve after a cough; (3) bradycardia and AV block during amiodarone infusion. Each starts with the choice between waiting, atropine, external pacing and a femoral transvenous wire, then runs the existing insertion and box stages. Exam mode hides the tips.",
+    "learnerDoes": "Gives atropine where appropriate, starts external pacing as the bridge when the pressure is low, places a femoral wire through a sheath larger than the wire, recognises a coronary sinus position on the lateral view, measures the threshold from a high output downwards, and sets demand mode with the output at least three times the threshold.",
+    "success": "Rhythm supported within the scenario's time limit; no coronary sinus position accepted; output at least three times the measured threshold; box left in demand mode; no asynchronous pacing in a patient with an intrinsic rhythm.",
+    "tips": [
+      "bed-pace-sheath-up-femoral",
+      "bed-pace-steer-to-apex",
+      "bed-pace-atrial-loop",
+      "bed-pace-coronary-sinus",
+      "bed-pace-threshold-margin",
+      "bed-pace-demand-sensitivity",
+      "bed-pace-external-bridge"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-pacing"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pacing",
+    "what": "Overdrive pacing for sustained monomorphic VT and transcutaneous pacing as separate exercises. Overdrive: a haemodynamically stable VT at a set rate (with a poorly tolerated variant in which pacing is the wrong choice and synchronised cardioversion is required), a rate control with a '×3' multiplier, output up to 10 V, capture shown by a change in QRS morphology and the rate rising to the paced rate, a chance of acceleration or degeneration to VF that requires a shock, and an optional background pacing rate of 90–110 per minute afterwards. External pacing: pad positions (apex and right parasternal), demand mode at 70 per minute, output raised to electrical capture, and a pulse check that distinguishes mechanical from electrical capture, with a sedation prompt.",
+    "learnerDoes": "Judges whether the VT is tolerated (cardioverts if not), confirms who will deliver a shock, charges the defibrillator first, paces 15–20 per minute above the VT rate, stops abruptly after 5–10 seconds of capture, shocks if the rhythm degenerates; for external pacing, places pads correctly, finds electrical capture and confirms a pulse.",
+    "success": "VT terminated without an unprepared degeneration; pacing stopped within 10 seconds of capture; external pacing confirmed by a pulse, not by the ECG alone.",
+    "tips": [
+      "bed-pace-overdrive-vt",
+      "bed-pace-external-bridge"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-pacing"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pacing",
+    "what": "Units on the pacing box: an option to display output in volts (as on the Oxford box, with sensitivity in millivolts) as well as milliamps, with the threshold and three-times margin recalculated in the chosen unit.",
+    "learnerDoes": "Measures the threshold and sets the margin on a box reading volts, then on one reading milliamps.",
+    "success": "Output set at least three times the threshold in both units.",
+    "tips": [
+      "bed-pace-threshold-margin"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-pacing"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pacing",
+    "what": "A bioptome mode for endomyocardial biopsy reusing the pacing lab's AP and lateral views and right internal jugular route: a 7–9 F bioptome advanced into the right atrium and across the tricuspid valve, imaging presets of 60° LAO and 30° RAO, contact signalled by resistance and ventricular ectopics, the bite sequence (withdraw slightly, open, advance, close, withdraw) with a sample counter and a check of each sample's size, and a perforation event (higher probability when the jaws face the free wall or apex) that develops into tamponade with tachycardia and hypotension over the following minutes. The lab also needs a 'biopsy' event (raised only in this mode) in the tip vocabulary of src/content/lab/tips.ts: the three biopsy points (contact = resistance plus ectopics; the bite sequence and sample check; falling pressure after biopsy = tamponade until proved otherwise) are lesson-only for now, because a tip in the shared 'pacing' phase would also appear in temporary pacing scenarios such as 'Inferior STEMI · CHB' and wrongly blame hypotension from heart block on a biopsy perforation. Once the event exists they should become bedside tips with when: { phase: ['pacing'], requires: ['biopsy'] } (the tamponade tip also with event: ['hypotension']). The bioptome gives no tip electrogram; contact must be shown by resistance and ectopics, not by the pacing lead's current of injury.",
+    "learnerDoes": "Positions the bioptome against the septum in both views, takes four or five adequate samples, inspects each, and when the pressure falls recognises tamponade and calls for echo and pericardiocentesis.",
+    "success": "Four or five adequate samples without free-wall contact; tamponade recognised within two minutes of the first sign; observation period ordered at the end.",
+    "tips": [],
+    "lessonIds": [
+      "hb-additional-procedures-emb"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "tavi",
+    "what": "A stand-alone balloon aortic valvuloplasty pathway, separate from TAVI predilatation: pre-procedure exclusions and a ceiling-of-care prompt; femoral arterial sheath sizing with preclosure above 8 F; a venous pacing wire; heparin to an ACT of 250–300 s; crossing with an AL1 or JR4 (AL2 for a horizontal root) and a straight or hydrophilic wire, with a cerebral embolism risk that rises with crossing time; a pre-shaped stiff wire at the apex (a mitral-apparatus warning in RAO if it sits wrongly); balloon choice against annulus, LVOT and sinotubular junction; rapid pacing at 180–220 per minute with a 3-second inflation; gradients before and after read from simultaneous LV and aortic traces in the haemodynamics lab; and complications (acute aortic regurgitation shown by a rising LVEDP and falling aortic diastolic pressure, annular rupture with oversizing, tamponade from the pacing wire, groin bleeding, stroke, acute kidney injury with a contrast counter).",
+    "learnerDoes": "Excludes contraindications, sizes the balloon to the annulus and below the sinotubular junction, inflates only under rapid pacing and after pressure recovery, stops after a 40–50% fall in peak gradient, and recognises regurgitation on the trace.",
+    "success": "Balloon no larger than the annulus or 10% over the LVOT and smaller than the sinotubular junction; no inflation without pacing; 40–50% peak gradient reduction without new significant regurgitation; definitive TAVI planned at the end.",
+    "tips": [
+      "structural-bav-exclusions-ceiling",
+      "structural-bav-stiff-wire-apex",
+      "structural-bav-balloon-size",
+      "structural-bav-rapid-pacing",
+      "structural-bav-ar-signs"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-bav"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "haemo",
+    "what": "A percutaneous mitral commissurotomy pathway built on the mitral stenosis scenario: a TOE gate (left atrial thrombus present in one variant, which must stop the case), a selection screen listing the 2021 ESC/EACTS unfavourable characteristics (to be checked against the 2025 guideline's Table 8), direct left atrial pressure after transseptal access compared with the wedge (2–3 mmHg lower), stepwise single-balloon inflations from a height-derived starting diameter, and after each inflation the gradient, area and regurgitation grade, with a variant in which a calcified valve tears and regurgitation jumps to grade 3 or more.",
+    "learnerDoes": "Stops for left atrial thrombus, measures the gradient from left atrial and LV pressures over at least 10 beats, steps the balloon up, and stops at Lau's optimal result (used as the stopping point), that is when the area reaches 1.5 cm² or rises by 50% or when regurgitation increases by two grades or reaches grade 3.",
+    "success": "No inflation with thrombus present; an optimal result by Lau's definition without significant regurgitation; correct stopping in the tear variant.",
+    "tips": [
+      "structural-pmc-toe-first",
+      "structural-pmc-stepwise-stop",
+      "haemo-ms-wedge-lv-ten-beats"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-pmc"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci",
+    "what": "An alcohol septal ablation scenario in the fluoroscopic PCI lab, linked to the HOCM gradient in the haemodynamics lab: a temporary wire placed first, guide pressure against LV pressure shown continuously, RAO cranial angiography with one atypically arising septal branch, a short over-the-wire balloon chosen and positioned (dissection if placed in the LAD, reflux if undersized), myocardial contrast echo showing the opacified territory (one branch also lighting a papillary muscle), selective injection to prove the seal, alcohol volume and rate controls with a ten-minute timer, and transient complete heart block after injection. The haemodynamics HOCM scenario also needs a Valsalva provocation. The septal balloon, contrast echo, alcohol and heart-block points are lesson-only for now: the haemodynamics lab has no septal branch step and tipsFor has no scenario filter, so tips in its 'left-heart' phase would appear in every left-heart study (aortic and mitral stenosis included). They need a 'septal-ablation' event raised only by this scenario, then tips gated with requires: ['septal-ablation'].",
+    "learnerDoes": "Places the pacing wire, provokes the gradient, chooses a branch whose echo territory is the basal septum only, seals it, gives about 1 mL per 10 mm of septum at 1 mL per minute, waits ten minutes, handles heart block by confirming capture, and avoids inotropes and nitrates when the pressure falls.",
+    "success": "Alcohol given only into a branch with a correct echo territory and proven seal; dose and timing within the stated rules; capture maintained during block; final angiogram with an occluded septal branch and a patent LAD.",
+    "tips": [
+      "haemo-asa-pacing-first",
+      "haemo-hocm-hypotension-phenylephrine"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-asa"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "laao",
+    "what": "A septal occluder variant of the appendage occluder's deploy, tug and release flow: TOE or intracardiac echo chosen at the start; crossing the defect (with a left atrial saturation for an ASD); for an ASD, balloon sizing in which overstretching is possible and penalised, and a device choice whose erosion risk rises with oversizing, a deficient aortic rim and a high defect; for a PFO, a device size choice linked to residual shunt; deployment of the left atrial disc, waist and right atrial disc; a push–pull test; release only with both discs on their own sides; and a day-one echo variant showing a small effusion that should trigger closer follow-up.",
+    "learnerDoes": "Sizes without overstretching, checks the discs and the push–pull test before release, and responds to a day-one effusion in a high-risk anatomy by arranging close follow-up.",
+    "success": "No release with a disc on the wrong side; no oversized ASD device in a deficient aortic rim; follow-up plan includes endocarditis prophylaxis for six months, rhythm advice and a residual-shunt echo at six months.",
+    "tips": [
+      "structural-septal-occluder-no-overstretch",
+      "structural-septal-occluder-release-check",
+      "structural-septal-occluder-effusion-24h"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-septal-closure"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "structural",
+    "what": "Tip display in the bedside, haemodynamics and structural labs with a procedure tag (pacing, biopsy, valvuloplasty, commissurotomy, septal ablation, septal occluder) added to the lab context, so that tips written for one procedure do not appear in another that shares the same phase names. Today only the diagnostic and PCI labs call tipsFor. Until then the biopsy and septal-ablation points of this module are taught in the lessons only (see the pacing and PCI requests above).",
+    "learnerDoes": "Sees the tips of this module in the lab and at the moment they apply.",
+    "success": "Each tip in this module appears only in its own procedure and phase.",
+    "tips": [
+      "structural-bav-rapid-pacing",
+      "structural-pmc-stepwise-stop",
+      "structural-septal-occluder-release-check"
+    ],
+    "lessonIds": [
+      "hb-additional-procedures-pacing",
+      "hb-additional-procedures-emb",
+      "hb-additional-procedures-bav",
+      "hb-additional-procedures-pmc",
+      "hb-additional-procedures-asa",
+      "hb-additional-procedures-septal-closure"
+    ],
+    "priority": "P2"
+  }
+]

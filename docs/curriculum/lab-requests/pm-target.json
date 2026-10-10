@@ -1,0 +1,156 @@
+[
+  {
+    "lab": "procedure",
+    "what": "A referral triage step before the full procedure: a queue of generated referrals (stable angina with and without limiting symptoms or ischaemia, asymptomatic 'check-up' requests, pre-valve-surgery work-ups over and under 40 with and without risk factors, endocarditis with and without coronary embolism, heart failure of unknown cause, a bus driver or pilot with a borderline test, chest pain soon after revascularisation) each carrying one or more of the handbook's relative contraindications (acute kidney injury, pulmonary oedema, contrast allergy, uncontrolled hypertension, GI bleeding, acute stroke, coagulopathy, unexplained fever) or a refusal of consent.",
+    "learnerDoes": "Accepts, defers or declines each referral and picks the reason (indication category; relative contraindication to correct first; absolute contraindication); opens the previous films where they exist before accepting.",
+    "success": "Refusal of consent is always declined; asymptomatic patients without ischaemia are declined; valve and endocarditis cases follow the handbook's rules; relative contraindications are corrected first in elective referrals but do not block emergencies.",
+    "tips": [
+      "diag-review-previous-films"
+    ],
+    "lessonIds": [
+      "pm-target-indications"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A revascularisation decision step at the end of the existing multi-run patient studies (where the learner already counts diseased vessels), with a clinical vignette attached to each study: symptoms or none, diabetes, previous CABG, LVEF, surgical risk band, ischaemic burden.",
+    "learnerDoes": "Works through Brilakis's stable algorithm in order (symptoms, extent, previous CABG, diabetes, good surgical candidate, complex CAD, benefit against risk, preference) and chooses no revascularisation, PCI, CABG or heart-team referral.",
+    "success": "The chosen branch matches the algorithm for the vignette (for example, asymptomatic single-vessel disease without >10% ischaemia or proximal LAD disease leads to no revascularisation; diabetes with multivessel disease in a good surgical candidate leads to CABG).",
+    "tips": [
+      "pci-plan-name-the-goal",
+      "diag-stop-for-heart-team"
+    ],
+    "lessonIds": [
+      "pm-target-ccs-why",
+      "pm-target-heart-team"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A SYNTAX scoring exercise on a multi-run real patient study: the learner sets dominance (right or left only), marks each lesion of 50% or more in a vessel of at least 1.5 mm by segment, and adds the adverse features (occlusion features, trifurcation, Medina bifurcation and angle, aorto-ostial, tortuosity, length over 20 mm, heavy calcium, thrombus, diffuse small-vessel disease); the lab totals the score and then asks for a heart-team decision.",
+    "learnerDoes": "Scores the study lesion by lesion, then applies the anatomy-specific rules: Brilakis/2018 ESC thresholds (three-vessel disease 0–22 either, above 22 CABG; left main 0–32 either, 33 or more CABG), the 2024 ESC position for three-vessel disease (without diabetes, PCI a class I alternative at low or intermediate complexity if it can match CABG's completeness; with diabetes, CABG over PCI), and diabetes and surgical risk as in Brilakis's algorithm (complexity weighed only in patients without diabetes).",
+    "success": "Score within an agreed tolerance of the expert score, correct rule applied for the anatomy (not the left main threshold for three-vessel disease, diabetes not overridden by a low score), and no ad hoc PCI chosen in unprotected left main or multivessel disease in a stable patient.",
+    "tips": [
+      "diag-stop-for-heart-team"
+    ],
+    "lessonIds": [
+      "pm-target-heart-team"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "An ad hoc versus delayed PCI decision gate at the end of the diagnostic stage of the full procedure, with the contrast used, screening time and air kerma, the consent wording, the centre's capabilities, any diagnostic complication and the time of day shown, and occasional interruptions (a STEMI call while the decision is pending).",
+    "learnerDoes": "Chooses ad hoc PCI or delayed PCI and ticks the deferral reasons that apply (anatomy, dose, site of service, consent, uncertain symptoms or ischaemia without FFR or IVUS, complication, fatigue, scheduling, preparation, preference).",
+    "success": "Defers when any listed reason applies (always for unprotected left main, CTO or multivessel disease in a stable patient, consent that did not cover the risk, or a diagnostic complication); proceeds in ACS with active ischaemia.",
+    "tips": [
+      "diag-ad-hoc-pause",
+      "diag-stop-for-heart-team"
+    ],
+    "lessonIds": [
+      "pm-target-timing"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A multivessel stable scenario with serial lesions in one artery (an ostial lesion that damps the guide plus a distal lesion), lesions in a second artery, a non-critical distal left main with LAD and circumflex lesions, and running contrast, radiation and fatigue counters that can raise the high-contrast-volume and high-radiation-dose events; an optional complication.",
+    "learnerDoes": "Plans and executes the sequence: distal first unless the proximal lesion damps, causes ischaemia or blocks devices; branch lesions before a non-critical left main; RCA first where relevant; stops and stages when dose, complexity, a complication or fatigue says so.",
+    "success": "The order chosen follows Brilakis 7.4 and 17.10; every significant lesion in the target vessel is treated in the same sitting; the session is staged at the dose or complication trigger.",
+    "tips": [
+      "pci-serial-distal-first",
+      "pci-lm-branches-and-rca-first",
+      "pci-stage-on-dose",
+      "pci-stage-after-complication"
+    ],
+    "lessonIds": [
+      "pm-target-timing"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-real",
+    "what": "Pair a 12-lead ECG (STEMI territories and NSTE patterns) with real CADICA runs of the same patient. The learner predicts the culprit territory from the ECG, then finds the culprit on the runs; distractor studies include a chronic occlusion with collaterals beside a hazy acute lesion, and studies with no visible culprit.",
+    "learnerDoes": "States the ECG territory, then marks the culprit and names the features used (thrombus or haze, staining, slow flow, absent collaterals, distal emboli); for studies with no culprit, chooses the next steps (repeat review, ventriculogram or echo, OCT, later MRI).",
+    "success": "Correct culprit in clear cases, chronic occlusion with collaterals not chosen as the culprit, and the correct work-up sequence when no culprit is visible.",
+    "tips": [
+      "diag-culprit-not-obvious",
+      "pci-oct-unclear-culprit"
+    ],
+    "lessonIds": [
+      "pm-target-culprit"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A STEMI mode in the diagnostic cath lab that raises the st-elevation event with an anterior or a non-anterior presentation and scores the engagement order; an option to convert radial to femoral when radial engagement is delayed (for example an aberrant right subclavian artery).",
+    "learnerDoes": "For an anterior STEMI, engages the left main with the guide first and images the RCA afterwards; for a non-anterior STEMI, images the left coronary artery with a diagnostic catheter first, then, if the culprit is in the left, guides into the left main, treats it and images the RCA, or otherwise guides into the RCA; converts access promptly when radial engagement stalls, and chooses femoral access in a patient with previous CABG.",
+    "success": "Engagement order matches Brilakis Fig. 20.1; no RCA culprit is treated before the left coronary anatomy is known in a non-anterior STEMI; access conversion happens before a set delay.",
+    "tips": [
+      "diag-stemi-engagement-order"
+    ],
+    "lessonIds": [
+      "pm-target-culprit"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Two ACS wiring scenarios. (a) An acute, hazy occlusion that fits the ECG, which a soft workhorse wire will not cross but a soft hydrophilic-tipped or soft polymer-jacketed wire will; an option to check the wire position (contralateral injection through a second access, IVUS) before ballooning. (b) The occlusion first attempted is a chronic total occlusion with a tapered stump and bridging collaterals, and the true culprit is a hazy subtotal lesion elsewhere; the wire-not-crossing event fires on the chronic occlusion.",
+    "learnerDoes": "(a) Escalates in Brilakis's order (soft workhorse, soft hydrophilic-tipped, soft polymer-jacketed) and confirms the wire is in the lumen before the first balloon. (b) When the soft-wire sequence fails on a lesion that does not fit the ECG, stops escalating, reviews the runs against the ECG, images the other candidate lesion with OCT, and redirects to the true culprit.",
+    "success": "(a) No stiff polymer-jacketed wire used before the soft options; no balloon advanced with the wire position uncertain. (b) Learner redirects to the culprit without escalating to stiff polymer-jacketed wires on the chronic occlusion.",
+    "tips": [
+      "pci-wire-fails-wrong-vessel",
+      "pci-oct-unclear-culprit"
+    ],
+    "lessonIds": [
+      "pm-target-culprit"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "An ACS context flag for the pressure-wire lab: the learner is told which vessel is the culprit and which lesions are non-culprit; a cardiogenic-shock variant.",
+    "learnerDoes": "Declines to measure the culprit vessel, measures the non-culprit lesion, and in the shock variant recognises that FFR may be unreliable.",
+    "success": "No physiology-based decision on the culprit; non-culprit assessment completed; shock caveat stated.",
+    "tips": [
+      "pci-no-physiology-in-culprit"
+    ],
+    "lessonIds": [
+      "pm-target-culprit",
+      "pm-target-multivessel-stemi"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "An NSTE-ACS triage queue: several generated patients (ongoing pain despite treatment, pain-free confirmed NSTEMI, dynamic ST changes, transient ST elevation, GRACE above or below 140, low-risk troponin-negative chest pain) waiting for lab slots, each with a check step on timing and on P2Y12 pretreatment.",
+    "learnerDoes": "Orders the queue (ongoing ischaemia first and immediately; high-risk features within 24 hours; others selectively), and decides for each whether to pretreat with a P2Y12 inhibitor before the anatomy is known.",
+    "success": "Ongoing ischaemia taken first; high-risk features within 24 hours; no routine pretreatment when early angiography is planned.",
+    "tips": [
+      "pci-acs-culprit-first"
+    ],
+    "lessonIds": [
+      "pm-target-nste"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A multivessel STEMI virtual case: after the culprit is treated, the patient is either stable (with a significant non-culprit lesion, varying contrast used and kidney function) or develops cardiogenic shock (hypotension event); the case ends with the non-culprit plan and, for the stable branch, a non-culprit assessment in the pressure-wire lab.",
+    "learnerDoes": "In the stable branch, chooses immediate or staged (within 45 days) completion guided by angiographic severity and records the plan before finishing (a physiology measurement of a non-culprit lesion is allowed but flagged as not the guideline default); in the shock branch, stops after the culprit and plans staged PCI timed to recovery.",
+    "success": "Stable: complete revascularisation planned now or within 45 days, staged only for a listed reason, no pressure wire in the culprit. Shock: no immediate multivessel PCI; staged plan without a fixed 45-day deadline.",
+    "tips": [
+      "pci-shock-culprit-only",
+      "pci-stemi-nonculprit-plan",
+      "pci-no-physiology-in-culprit"
+    ],
+    "lessonIds": [
+      "pm-target-multivessel-stemi"
+    ],
+    "priority": "P1"
+  }
+]

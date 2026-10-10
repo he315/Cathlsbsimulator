@@ -1,0 +1,139 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Expose the guide extension that the engine already models (src/simulation/pci/guide.ts extensionMm, angioPci.ts setExtension) as a device in the PCI-lab UI: sizes 5, 5.5, 6, 7 and 8 Fr with their inner diameters (Brilakis Table 30.5), cylinder length 25 or 40 cm, a push rod with an on/off 'under towel' state, a proximal collar position relative to the guide tip, and depth into the vessel. Model the lumen left (about 2 Fr below the guide) so that oversized devices (for example a 1.5 mm burr through a 6 Fr extension in a 7 Fr guide) cannot be loaded; a smaller extension than the guide lets a second wire pass outside the cylinder (except where that is intended, as in bifurcation atherectomy); orbital crown trapping blocked with a standard extension in 6–8 Fr guides but allowed through an 8 Fr extension with a built-in trapping balloon; loss of wire or guide position when the extension is pushed; damping as the tip wedges; ACT drift raising thrombus risk; injection while damped causing a hydraulic dissection that can extend into the aortic root; ejection of an unheld extension on forceful injection; and stent deformation at the collar or on withdrawal into the tip.",
+    "learnerDoes": "Chooses a matched extension size, parks the push rod, advances the extension to the guide tip with the collar kept inside the guide, takes it into the vessel over a balloon or microcatheter (inchworming with a 2.0 mm balloon at 6–8 atm, or balloon-assisted tracking) rather than along the bare wire, watching the guide and the distal wire tip, watches the trace, and refuses to inject while it is damped.",
+    "success": "Stent delivered through the extension with no damped-trace injection, no collar outside the guide, no forced stent at the collar, and an intact proximal vessel on the final run.",
+    "tips": [
+      "pci-gx-size-match",
+      "pci-gx-second-wire",
+      "pci-gx-radial-long-cylinder",
+      "pci-unx-extension-collar",
+      "pci-unx-inchworm",
+      "pci-support-extension-wedge",
+      "pci-gx-atherectomy-plan"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-extension-device",
+      "eq-sheaths-guides-extension-use"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A 'stuck stent' scenario that opens at the moment of failure: right radial access, 6 Fr AL1 in a calcified, tortuous RCA, a 3.0 × 22 mm stent stopped at the second proximal bend with the guide backing out (raise stent-uncrossable and poor-guide-support, and subclavian-tortuosity for the radial route). The scenario continues through extension selection and delivery, with branch events for wire wrap at the cylinder entry (loose push rod), dissection from bare-wire advancement, damping, and a failed stent that must be withdrawn into the extension tip and inspected.",
+    "learnerDoes": "Stops pushing, makes the guide coaxial, selects a 6 Fr extension with a 40 cm cylinder, delivers it safely, recognises and corrects wire wrap by removing and reinserting the extension, delivers the stent and inspects the proximal RCA.",
+    "success": "Stent deployed at the lesion without stent loss or deformation and without an extension-related dissection.",
+    "tips": [
+      "pci-gx-radial-long-cylinder",
+      "pci-unx-extension-stent-at-collar",
+      "pci-gx-nested-extensions",
+      "pci-gx-through-proximal-stent"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-extension-use"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Guide extension bail-outs as equipment-entrapment events: (1) an extension tip trapped in a branch after passing through a stent, with shaft fracture on pulling; (2) an entrapped burr or balloon whose shaft can be cut so that an extension is advanced over it; (3) a balloon that will not deflate, punctured with a stiff wire guided through an extension.",
+    "learnerDoes": "For the fractured extension, advances a balloon into the retained cylinder, inflates it and withdraws both; for the entrapped device, cuts the shaft, advances the extension up to it and pulls (or traps it with a trapping-balloon extension).",
+    "success": "Fragment or device retrieved without new vessel injury.",
+    "tips": [
+      "pci-gx-fracture-retrieval",
+      "pci-gx-retrieve-entrapped-device"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-extension-use"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Make sheath choice a real decision at the sheath stage of the Full procedure: French size 4–8 Fr; standard or thin-walled (outer diameters 2.29/2.14, 2.62/2.44, 2.95/2.79 mm at 5, 6 and 7 Fr); length 10, 25, 45 (and 55) cm femorally and 10, 16, 24 or 25 cm radially (a 24 cm sheath reaching the brachial artery as a spasm-prevention option); a sheathless option (dedicated sheathless guide, dilator through a guide, 125 cm diagnostic catheter as dilator, balloon-assisted tracking). Show the artery diameter from the ultrasound step and the occupied fraction (outer diameter ÷ artery diameter, squared). Show the femoral sheath tip on fluoroscopy at the internal iliac origin, the aortic bifurcation or the diaphragm according to length.",
+    "learnerDoes": "Chooses the smallest sheath that carries the planned guide and devices, checks it against the artery, wets a hydrophilic sheath, chooses a long femoral sheath when tortuosity, iliac stents, iliac stenosis, obesity or a need for support call for it, and uses a long radial sheath only for a stated reason (left radial ergonomics, CTO work, or a spasm-prone radial).",
+    "success": "Sheath matched to plan and artery; occupied fraction shown; no routine long radial sheath; aspiration and flushing with separate syringes completed before the guide.",
+    "tips": [
+      "access-sheath-plan-size",
+      "access-sheath-femoral-length-tip",
+      "access-sheath-radial-long-caution",
+      "access-sheath-sheathless-option",
+      "access-sheath-ooze-upsize",
+      "access-sheath-sheathless-spasm"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-sizing",
+      "eq-sheaths-guides-long-sheathless"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A tortuous-iliac femoral variant (also requested by acc-femoral-resistance) in which catheter tip response to hub rotation is damped and kinking occurs after a set amount of unanswered torque, with the remedies modelled: a 25 or 45 cm sheath, a catheter one French smaller than the sheath, a 0.035 in. wire inside the catheter, and the parallel 4 Fr sheath with a stiff wire. When a kink occurs (tip still while the hub turns, trace damped or lost), offer Brilakis's escalation: screen the whole catheter, untwist and pass a 0.035 in. wire, snare the tip from a second access (or a cuff on the upper arm for a radial kink below the brachial artery), pressurise the lumen at 3–4 atm, cut the hub and advance a same-size or 1–2 Fr larger sheath over it, and pull the kink out through the arteriotomy.",
+    "learnerDoes": "Recognises the tip not following the hub, stops torquing, screens the whole catheter, applies one of the remedies before engaging, and recovers a kinked catheter by the stepwise escalation if one occurs.",
+    "success": "Engagement achieved without a kink event.",
+    "tips": [
+      "access-root-iliac-long-sheath",
+      "diag-root-iliac-kink-long-sheath"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-long-sheathless"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Guide length as a planning variable in the mid-RCA CTO scenario and a future graft scenario: 90, 100 or 125 cm guides; balloon and stent shafts of 140–145 cm with 90 and 100 cm shaft marks; a retrograde route through a vein graft whose microcatheter cannot reach a 100 cm antegrade guide; and a guide-shortening workflow (engage, mark at the sheath, cut out the segment, rejoin with a 3–4 cm sleeve of sheath one French smaller flared with a guide-sized dilator, dressing over the joint) that produces a shortened guide with reduced torque transmission, a small chance of separation, and shaft marks that cannot be relied on to keep a trapping balloon inside a short or shortened guide.",
+    "learnerDoes": "Chooses guide length before wiring, uses the correct shaft mark for the guide, shortens a guide correctly when no 90 cm guide is available, and places trapping balloons under fluoroscopy in a 90 cm or shortened guide.",
+    "success": "Equipment reaches the target; no device exits the guide unscreened; the shortened guide stays intact.",
+    "tips": [
+      "pci-guide-reach-distal-target",
+      "pci-guide-short-markers",
+      "pci-guide-shorten-by-hand"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-length"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "impella",
+    "what": "Single-access PCI through the microaxial pump sheath: a 7 Fr sheath passed through the valve of the 14 Fr pump sheath, with the guide's ability to reach the ostia depending on whether the 45 cm sheath can be fully advanced, the guide length (90, 100 or 125 cm) and patient height or aortic tortuosity; forward pump movement if the pump is not held during sheath insertion.",
+    "learnerDoes": "Holds the pump while inserting the sheath, and chooses a 100 or 125 cm guide or a short 7 Fr sheath so that the guide reaches the ostium.",
+    "success": "Guide engages the target without pump migration.",
+    "tips": [
+      "mcs-pump-sheath-guide-reach"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-long-sheathless"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci",
+    "what": "Tip-trigger vocabulary: add LAB_EVENTS 'ostial-lesion' (the PCI target involves a coronary ostium) and 'extension-in-place' (a guide extension is inside the guide), raised by the PCI lab. Today pci-gx-ostial-keep-guide-out is approximated with catheter-too-deep plus a damped trace, and pci-gx-second-wire with stent-uncrossable; both should instead require these events so the ostial advice never shows beside a wedged-extension warning and the second-wire advice shows only once an extension is in.",
+    "learnerDoes": "Sees the ostial extension tip only in an ostial case with a diving guide, and the second-wire tip only when an extension is in place.",
+    "success": "No ostial-extension advice while an extension is already wedged; no second-wire advice before an extension exists.",
+    "tips": [
+      "pci-gx-ostial-keep-guide-out",
+      "pci-gx-second-wire"
+    ],
+    "lessonIds": [
+      "eq-sheaths-guides-extension-device",
+      "eq-sheaths-guides-extension-use"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Support catheters as an alternative to a guide extension in the mid-RCA CTO scenario: a scaffold catheter (self-expanding nitinol scaffold up to 4.5 mm, three lumens or one central lumen), a strut catheter (10 mm nitinol element bowing out under axial compression) and a 5 Fr anchoring catheter with a 6 mm balloon limited to 1 atm. Model the 10 mm proximal landing zone requirement and the inability to remove the scaffold catheters by trapping (a 300 cm wire is needed).",
+    "learnerDoes": "Chooses a support catheter when the proximal vessel gives at least 10 mm of landing zone, and uses a 300 cm wire for its removal.",
+    "success": "Added support without trapping attempts on a scaffold catheter and without landing it in a segment shorter than 10 mm.",
+    "tips": [],
+    "lessonIds": [
+      "eq-sheaths-guides-extension-device"
+    ],
+    "priority": "P3"
+  }
+]

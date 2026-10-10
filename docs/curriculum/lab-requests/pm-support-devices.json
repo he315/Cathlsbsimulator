@@ -1,0 +1,112 @@
+[
+  {
+    "lab": "iabp",
+    "what": "An insertion stage before the IABP console: height entry and balloon size choice (with Brilakis's 30/40/50 cc chart and the 25/34/40/50 mL manufacturer chart Oxford quotes shown side by side), balloon preparation (one-way valve on the gas lumen, vacuum, catheter kept in the tray, stylet out, wire lumen flush, transducer zero), the 0.025 inch kit wire to the arch on fluoroscopy, advancing the balloon with a radio-opaque tip and a carina and left subclavian landmark, securing it, then connecting the central lumen to pressure and the gas lumen to the console.",
+    "learnerDoes": "Picks the balloon from the height, prepares it in the right order, chooses the kit wire (a standard exchange wire is offered and fails to pass the lumen), advances the balloon under fluoroscopy and stops with the tip at the carina, secures it, removes the wire, connects the two lumens to the right ports, starts at 1:2 to check timing, then sets the running ratio (1:1 in Oxford's and the Academy's practice).",
+    "success": "Correct size for the chart in use; one-way valve kept on until the balloon is in the aorta; tip at the carina level on fluoroscopy; wire removed before the pressure line is connected; central and gas lumens connected to the correct ports; timing then checked at 1:2.",
+    "tips": [
+      "mcs-iabp-size-height",
+      "mcs-iabp-vacuum-valve",
+      "mcs-iabp-kit-wire",
+      "mcs-iabp-tip-carina"
+    ],
+    "lessonIds": [
+      "pm-support-devices-iabp-insert"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "iabp",
+    "what": "Troubleshooting presets on the running console, each driven by one of Brilakis's causes: hypovolaemia, a balloon that has migrated low (catheter pulled back), a balloon too small for the aorta, low systemic vascular resistance, a kinked catheter, low delivered volume, incomplete filling, a partly obstructed gas lumen; plus Oxford's pump failures (balloon rupture, empty helium, ECG trigger loss) with a 10–15 minute clock, an irregular tachycardia, and a 'heparin stopped for retroperitoneal bleeding' event.",
+    "learnerDoes": "Freezes a 1:2 trace, names landmarks A to E, identifies the cause from the landmarks plus fluoroscopy, kink and volume checks and the patient's filling, and corrects it; switches to the pressure trigger in irregular tachycardia; changes to 1:1 when heparin is stopped; restarts or removes the balloon within 10–15 minutes after a failure; weans 1:2 then 1:3 while watching the systemic pressure; when the landmarks are correct but augmentation is still poor, works through the non-timing causes.",
+    "success": "Mean pressure and the A to E comparisons restored for each correctable cause; 1:1 selected without anticoagulation; a static balloon never left more than 15 minutes; balloon and sheath removed together at the end.",
+    "tips": [
+      "mcs-iabp-read-1to2",
+      "mcs-iabp-poor-augmentation",
+      "mcs-iabp-no-heparin-1to1",
+      "mcs-iabp-static-balloon",
+      "mcs-iabp-irregular-rhythm",
+      "mcs-iabp-wean-ratio",
+      "mcs-iabp-remove-together",
+      "mcs-iabp-limb"
+    ],
+    "lessonIds": [
+      "pm-support-devices-iabp-run",
+      "pm-support-devices-iabp-insert"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "impella",
+    "what": "A fluoroscopic insertion stage before the depth setting: large-bore access summary (5–6 Fr sheath and angiogram, two pre-close sutures, 8–10–12 Fr dilators, peel-away sheath, limb angiogram, ACT above 250 seconds), then crossing the aortic valve with a choice of pigtail, Amplatz or multipurpose catheter, placing a 260 cm stiff 0.018 inch wire in the ventricle, loading the pump through the red loading lumen, advancing through the sheath (with visible bleeding while the inlet is in the sheath and the outlet outside), tracking through the iliacs and across the valve, setting the inlet depth, and the pre-start checks.",
+    "learnerDoes": "Crosses with a pigtail; when a calcified valve resists, stiffens the pigtail with a 0.035 inch J-wire; loads the pump and removes the red tube completely (or backloads with the wire leaving the outlet on the inner curve along the black line when the tube is missing); advances briskly through the sheath; meets iliac resistance and chooses the long peel-away sheath, iliac angioplasty or lithotripsy rather than force; sets the inlet about 3.5 cm below the valve (optionally with a pigtail in a cusp from a second access); removes the wire; confirms an aortic waveform; starts the pump.",
+    "success": "Pigtail used for crossing (an Amplatz or multipurpose choice increases the chance of a subpapillary position and later suction); no retained loading tube; no forced passage through the iliac; inlet at about 3.5 cm; wire out and aortic waveform before start.",
+    "tips": [
+      "mcs-impella-cross-pigtail",
+      "mcs-impella-loading-lumen",
+      "mcs-impella-brisk-advance",
+      "mcs-impella-iliac-resistance",
+      "mcs-impella-start-check",
+      "mcs-largebore-angiogram-first",
+      "mcs-preclose-two-sutures"
+    ],
+    "lessonIds": [
+      "pm-support-devices-impella-insert"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "impella",
+    "what": "Intraprocedural events on the running pump: a ventricular placement waveform (too deep), the pump pulled back into the aorta after patient movement, a pump that stops (battery out, malfunction or thrombus) and will not restart, and forward movement of the pump while a guide sheath is passed through the pump sheath; then the end-of-case choice between removal and continued support with the repositioning sheath. Add a suction preset caused by tamponade from a coronary perforation (rising RA pressure, effusion on echo) and a haemolysis preset driven by an unstable or rotated pump.",
+    "learnerDoes": "Pulls back for a ventricular waveform; re-advances a pump that has come out under fluoroscopy, or removes it and repeats from the valve crossing; tries a restart and, if it fails, withdraws the pump from the ventricle; holds the pump during sheath insertion; at the end either weans to P2, pulls into the aorta, stops, removes quickly and tightens the sutures, or withdraws the peel-away sheath completely outside the body before splitting it and advances the repositioning sheath. In the tamponade preset, recognises that fluid alone is wrong and looks for the perforation and the effusion; for haemolysis, checks depth and rotation on echo.",
+    "success": "Aortic waveform restored; a non-restarting pump withdrawn from the ventricle (aortic regurgitation avoided); peel-away sheath split only outside the body; sutures tightened at removal.",
+    "tips": [
+      "mcs-impella-ventricular-waveform",
+      "mcs-impella-pulled-back",
+      "mcs-impella-stopped",
+      "mcs-impella-hold-pump",
+      "mcs-impella-peel-outside",
+      "mcs-largebore-removal-sutures",
+      "mcs-impella-haemolysis-position"
+    ],
+    "lessonIds": [
+      "pm-support-devices-impella-run"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "ecmo",
+    "what": "A stepwise cannulation stage before the circuit stage: groin selection (right femoral vein, left femoral artery, with a 'both in one groin' option that congests the leg), femoral arterial angiogram, antegrade perfusion sheath timing (with an option to place it routinely at cannulation), heparin dose, the venous stiff wire (with a scenario in which it falls back into the right atrium), venous cannula to the SVC–atrial junction on fluoroscopy, arterial wire into the thoracic aorta and 15 or 17 Fr cannula, wet connections with an optional bubble on the arterial or venous side, clamps off and pump start, and connection of the antegrade sheath to the arterial cannula's side port. Venous thrombosis and IVC filter presets that require the internal jugular route.",
+    "learnerDoes": "Chooses the groins, places the antegrade sheath before the arterial cannula (or, without one, places it when leg NIRS stays below 50% or more than 15% below the other leg for longer than a brief dip, after examining the leg; include a preset in which a very low venous saturation gives a falsely low leg reading) (or after flow starts in an arrest preset), repositions a venous wire that has fallen into the atrium before advancing the cannula, stops at resistance, keeps the cannula's wide proximal part outside the skin, connects under saline, removes an arterial bubble through the side port, starts the circuit and connects the antegrade sheath after de-airing it by back-bleeding.",
+    "success": "Separate groins; no cannula advanced over a wire in the atrium; venous tip at the SVC–atrial junction; no air reaches the arterial side; antegrade sheath connected; leg NIRS above 50% and within 15% of the other leg.",
+    "tips": [
+      "mcs-ecmo-groins",
+      "mcs-ecmo-antegrade-sheath",
+      "mcs-ecmo-venous-wire-svc",
+      "mcs-ecmo-arterial-cannula",
+      "mcs-ecmo-wet-connection",
+      "mcs-ecmo-bubbles",
+      "mcs-ecmo-leg-rescue"
+    ],
+    "lessonIds": [
+      "pm-support-devices-ecmo-cannulate"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "ecmo",
+    "what": "A weaning-trial stage on the existing circuit, and a vent-choice step: when LV distension is present the learner chooses between a balloon pump, a microaxial pump, left atrial drainage, septostomy and pulmonary artery drainage, with an LV thrombus preset that excludes the microaxial pump; when weaning, the circuit flow is stepped down in 0.5–1 L/min steps with a prompt to increase anticoagulation first, and the console shows CVP, wedge, MAP, lactate, echo LV function and PaO2:FiO2 at each step. Show right radial, left radial and femoral saturations and forehead NIRS; the right radial value should be able to drift slowly (around 80% with adequate flow and haemoglobin is tolerated) or fall sharply. Include a coronary-hypoxaemia preset in which the right radial is normal but the ventricle does not recover, revealed by a brief (under one minute) flow reduction to 1–2 L/min with an arterial gas. Show the pulmonary artery catheter so that low pulsatility from hypovolaemia (low filling pressures) can be told apart from a failing ventricle (high wedge).",
+    "learnerDoes": "Tells hypovolaemia from LV failure on the PA catheter; lowers flow, removes fluid and adds an inotrope and PEEP before venting, and vents at once when those are already in place and the indications are met; picks a vent compatible with the anatomy; for differential hypoxaemia, compares right radial, left radial and femoral saturations, applies the holding measures (ventilator, flow, competing output) and requests a jugular return cannula if it persists; runs a weaning trial and decides whether the patient meets the targets (CVP below 10–15, wedge below 18, MAP 65 or more, lactate 2 or less on minimal support; or cardiac index 2.2 with CVP 12 or less at 1 L/min for 10 minutes and wedge 15 or less on at most one inotrope or vasopressor), and can leave the circuit recirculating with the cannulae flushed for a tenuous patient.",
+    "success": "No microaxial pump chosen with LV thrombus; anticoagulation increased before low flow; wean judged correctly against the targets. Does not act on a stable right radial of about 80% alone; acts on a falling value with falling NIRS; does not choose a microaxial pump with a mechanical aortic valve.",
+    "tips": [
+      "mcs-ecmo-loaded-lv",
+      "mcs-ecmo-vent-choice",
+      "mcs-ecmo-right-radial",
+      "mcs-ecmo-wean-trial"
+    ],
+    "lessonIds": [
+      "pm-support-devices-ecmo-run"
+    ],
+    "priority": "P3"
+  }
+]

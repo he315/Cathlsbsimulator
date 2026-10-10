@@ -1,0 +1,139 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "An LAD-first diagonal bifurcation scenario (Medina 1,1,0; proximal LAD 3.5 mm, distal LAD 3.0 mm, diagonal 2.75 mm, mildly diseased diagonal ostium) run as a provisional strategy, with each step setting the lab state: wire both branches, predilate the LAD, choose and position the LAD stent across the diagonal, prepare and jail the diagonal wire, deploy, POT, assess the diagonal.",
+    "learnerDoes": "Wires the LAD and the diagonal with workhorse wires; predilates the LAD only; chooses the stent diameter and length and positions it so that 8–10 mm lies proximal to the carina; pulls the diagonal wire back so its radio-opaque segment sits just beyond the carina but outside the stent, with a straight tip; deploys; chooses the POT balloon and places its distal marker; decides whether the diagonal is compromised.",
+    "success": "Stent diameter matches the distal LAD and the platform can reach 3.5 mm; at least 6 mm (ideally 8–10 mm) of stent proximal to the carina; diagonal not ballooned; jailed segment short and not over the radio-opaque segment; POT balloon 3.5 mm, no longer than the proximal stent segment, distal marker at the carina; diagonal judged by TIMI flow (<3), stenosis (>70%) and dissection (NHLBI B or worse). Errors produce their consequences: a 3.5 mm stent shifts the carina and dissects the distal LAD; a diagonal balloon dissects the branch; a long or distal POT pinches the diagonal ostium.",
+    "tips": [
+      "pci-bif-wire-both-branches",
+      "pci-bif-no-sb-predilation",
+      "pci-bif-mv-stent-size",
+      "pci-bif-jail-wire-prep",
+      "pci-bif-pot-size-position",
+      "pci-bif-assess-side-branch"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-setup",
+      "cp-bifurcation-provisional-jailed",
+      "cp-bifurcation-provisional-pot",
+      "cp-bifurcation-provisional-sb"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Side-branch rewiring and kissing in the same bifurcation scenario, with the engine tracking which stent cell the new wire crossed (distal, near the carina, or proximal) and whether it passed through or under the struts.",
+    "learnerDoes": "Parks a new wire beyond the carina with the tip aimed at the diagonal, withdraws slowly until it falls into the branch origin, and pushes forward through that cell; optionally confirms the cell with OCT; removes the jailed wire only after the new wire is in; chooses the two kissing balloons; performs the kiss; performs final POT.",
+    "success": "Distal-cell crossing scores full credit and shows a well-scaffolded ostium; proximal-cell crossing shows struts across the ostium. Kissing pair chosen so that 0.678 × (sum of diameters) is close to the proximal LAD diameter (for example 3.0 + 2.5 mm, 3.73 mm, or 2.75 + 2.5 mm, 3.56 mm, for a 3.5 mm proximal LAD); an oversized pair stretches the proximal stent. A final POT, when chosen, corrects the oval proximal stent shown on imaging; skipping it after a good kiss is acceptable, not wrong. The final POT balloon kept proximal to the side-branch takeoff (allowing for its shoulder) leaves the opened cell intact; a balloon across the takeoff, as with the marker at the carina, narrows the cell in front of the branch and can rejail it when a metal carina is present (Andreasen 2020).",
+    "tips": [
+      "pci-bif-rewire-distal-cell",
+      "pci-bif-kissing-size",
+      "pci-bif-pot-size-position"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-sb",
+      "cp-bifurcation-provisional-pot"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Side-branch occlusion after main-vessel stenting (a circumflex-obtuse marginal variant): the branch closes (TIMI 0) with ECG change, rewiring through the struts fails, and the rescue must be done over the jailed wire.",
+    "learnerDoes": "Keeps the jailed wire; tries distal-strut rewiring; when it fails, advances a 1.0–1.5 mm balloon over the jailed wire partly into the branch (or a torquable microcatheter first if no balloon crosses) and inflates it; rewires through the lifted struts with a dual-lumen microcatheter; advances a low-profile balloon over the new wire into the branch before removing the jailed wire; kisses and performs final POT. Alternative path (Brilakis option 2, after balloon inflation over the jailed wire): converts to inverted DK crush.",
+    "success": "Flow restored without losing the jailed wire; the jailed wire is removed only after a low-profile balloon has followed the new wire; a wire that has passed under the stent is detected (a 1.0–1.5 mm low-profile balloon will not follow; IVUS shows it behind the struts), is not ballooned, and the branch is rewired through the stent. Removing the jailed wire early hides the ostium; inflating over a wire under the stent dilates the wrong path and leaves no wire through the stent into the branch.",
+    "tips": [
+      "pci-bif-occluded-sb-rescue",
+      "pci-bif-confirm-inside-struts",
+      "pci-bif-rewire-distal-cell"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-sb",
+      "cp-bifurcation-provisional-jailed"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Jailed-wire entrapment: the jailed wire resists removal, and pulling on it makes the guide intubate deeper and can strike and distort the proximal end of the main-vessel stent (unintended stent deformation).",
+    "learnerDoes": "Applies gentle constant traction only, watching the guide; advances a small balloon or microcatheter over the jailed wire to the point of entrapment and withdraws gently; if still stuck, inflates a small balloon advanced distally over the jailed wire and then repeats POT; rotates the wire with a torquer without over-rotating it; after removal, checks the proximal stent with imaging or enhanced stent visualisation and repeats POT if it is distorted.",
+    "success": "Wire retrieved intact with no guide-induced dissection, POT repeated after any balloon inflation over the jailed wire, and any guide-induced proximal stent distortion detected and corrected by repeat POT. Hard pulling or over-rotation produces fracture or unravelling (with IVUS needed to tell which), a guide-induced dissection, or a deformed proximal stent that is missed unless imaged.",
+    "tips": [
+      "pci-bif-jailed-wire-removal",
+      "pci-bif-jail-wire-prep"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-jailed"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "A bifurcation vessel on the bench (proximal main vessel, distal main vessel, side branch, carina) showing stent geometry: distal versus proximal stent sizing, POT balloon diameter, length and position, distal versus proximal cell recrossing, and the effective diameter of two kissing balloons by Finet's law.",
+    "learnerDoes": "Sizes the stent to the distal main vessel and sees the proximal malapposition; sizes it to the proximal vessel and sees carina shift and distal edge stretch; performs POT with the distal marker at the carina, then too distal and too proximal; chooses kissing balloons and reads the computed effective diameter; performs final POT.",
+    "success": "Learner can state the POT rules (proximal diameter, length within the proximal stent segment, marker at the carina) and choose a kissing pair whose 0.678 × (sum of diameters) is close to the proximal reference diameter.",
+    "tips": [
+      "pci-bif-mv-stent-size",
+      "pci-bif-pot-size-position",
+      "pci-bif-kissing-size"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-setup",
+      "cp-bifurcation-provisional-pot",
+      "cp-bifurcation-provisional-sb"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A Medina drill on library runs that contain bifurcation lesions: the learner scores proximal main vessel, distal main vessel and side branch (1 for a stenosis of 50% or more) and then answers the two algorithm questions (preserve the branch? likelihood of occlusion?).",
+    "learnerDoes": "Chooses the run or projection that separates the two branches, enters the three Medina digits in order, estimates side-branch size against 2 mm, and picks provisional or planned two-stent.",
+    "success": "Medina digits correct in order; strategy consistent with branch size, territory and ostial disease (for example provisional when the side-branch ostium has less than 50% stenosis).",
+    "tips": [],
+    "lessonIds": [
+      "cp-bifurcation-provisional-assess"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Jailed side-branch FFR after main-vessel stenting: an angiographically severe-looking jailed ostium with variable functional significance.",
+    "learnerDoes": "Gives intracoronary nitroglycerin, passes the pressure wire into the jailed branch through the main-vessel stent, measures FFR, and decides.",
+    "success": "Treats only when FFR is 0.80 or less in a branch of at least 2 mm; leaves branches above 0.80 alone even when they look 75% narrowed.",
+    "tips": [
+      "pci-bif-assess-side-branch"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-sb"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci (tip engine)",
+    "what": "A bifurcation signal for the tip engine, plus a side-branch occlusion event. (1) Add 'bifurcation' to LAB_EVENTS in src/content/lab/tips.ts (returned as an academyFix; the same pattern as 'cto'), raised by src/ui/lab/pciTips.ts only in bifurcation scenarios. 'wire-side-branch' cannot stand in for it (pciTips.ts raises it in every PCI case when the wire strays). (2) A 'side-branch-occlusion' event, raised only when a side branch has TIMI 0 flow after main-vessel stenting, distinct from 'side-branch-compromise', which pciTips.ts raises for any overt or prodromal side-branch complication. Current gating until these exist: the planning tips are on phase 'plan', which the angio-pci lab never reports (pciTips.ts lines 41–48), so they are lesson-only and cannot appear in other PCI cases; POT, assessment, rewiring and kissing are on 'side-branch-compromise'; pci-bif-confirm-inside-struts and pci-bif-occluded-sb-rescue are on phase 'plan' with 'side-branch-compromise', a combination that cannot occur, so they are lesson-only; pci-bif-jailed-wire-removal is on 'equipment-entrapment' in phase 'optimise' requiring 'side-branch-compromise'; pci-bif-hard-side-branch-wire is on 'wire-prolapse'. Target triggers once 'bifurcation' exists (each with requires: ['bifurcation']): pci-bif-guide-size phase ['plan','guide']; pci-bif-wire-both-branches ['plan','wire']; pci-bif-no-sb-predilation and pci-bif-atherectomy-two-wires ['plan','lesion-prep']; pci-bif-mv-stent-size ['plan','stent']; pci-bif-jail-wire-prep ['stent']; pci-bif-pot-size-position ['optimise'] with no event, so it shows straight after main-vessel stent deployment whether or not the branch is compromised; pci-bif-assess-side-branch, pci-bif-rewire-distal-cell and pci-bif-kissing-size ['optimise'] with event 'side-branch-compromise'; pci-bif-jailed-wire-removal event 'equipment-entrapment'; pci-bif-hard-side-branch-wire ['wire'] with event 'wire-prolapse'; pci-bif-occluded-sb-rescue and pci-bif-confirm-inside-struts ['optimise'] with event 'side-branch-occlusion'. The lab should not start reporting phase 'plan' before 'bifurcation' exists, or the planning tips would appear in non-bifurcation cases.",
+    "learnerDoes": "Runs a bifurcation case; the guide-size, wiring, preparation and stent-sizing tips appear at the plan step, the wiring tip again while wiring both branches, the jailing tip before deployment, the POT tip after the MV stent, the assessment tip when the side branch narrows, the rewiring and kissing tips once it is judged compromised, the occlusion tips only when it closes, and the jailed-wire removal tip only when the jailed wire is trapped.",
+    "success": "Each pci-bif-* tip appears only in a bifurcation case and at the phase it addresses; none appears in the focal mid-LAD, calcified RCA, LCx STEMI or CTO scenarios, none appears when a wire strays into a side branch in a non-bifurcation case, and the occluded-branch rescue never appears for an open (TIMI 2–3) branch.",
+    "tips": [
+      "pci-bif-guide-size",
+      "pci-bif-wire-both-branches",
+      "pci-bif-no-sb-predilation",
+      "pci-bif-atherectomy-two-wires",
+      "pci-bif-mv-stent-size",
+      "pci-bif-jail-wire-prep",
+      "pci-bif-pot-size-position",
+      "pci-bif-kissing-size",
+      "pci-bif-jailed-wire-removal",
+      "pci-bif-assess-side-branch",
+      "pci-bif-rewire-distal-cell",
+      "pci-bif-confirm-inside-struts",
+      "pci-bif-occluded-sb-rescue",
+      "pci-bif-hard-side-branch-wire"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-provisional-setup",
+      "cp-bifurcation-provisional-jailed",
+      "cp-bifurcation-provisional-pot",
+      "cp-bifurcation-provisional-sb"
+    ],
+    "priority": "P1"
+  }
+]

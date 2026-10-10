@@ -1,0 +1,12 @@
+import { buildAnatomy } from "../../src/simulation/anatomy";
+import { CASE_LIBRARY } from "../../src/simulation/caseGenerator";
+import { buildCoronaryTree } from "../../src/render/xray/coronaryTree";
+import { heartShapes } from "../../src/render/xray/heartShape";
+import { buildThorax, traceAnat, ANAT } from "../../src/render/xray/thorax";
+const c = CASE_LIBRARY[0];
+const H = buildCoronaryTree(buildAnatomy(c), c).heart;
+const th = buildThorax({ resp: 0.7, heart: H, heartShapes: heartShapes(H, { contraction: 0 }) });
+const src = { x: 0, y: 0, z: -800 };
+const ray = (x: number, y: number) => { const t = { x, y, z: 300 }; const d = { x: t.x - src.x, y: t.y - src.y, z: t.z - src.z }; const L = Math.hypot(d.x, d.y, d.z); return traceAnat(th.anat, src, { x: d.x / L, y: d.y / L, z: d.z / L }).lungPath; };
+console.log("heart c", th.anat[ANAT.HEART].c);
+for (const y of [60, 30, 0, -30, -60]) console.log(y, [-60, -45, -34, 30, 45, 60].map((x) => ray(x, y).toFixed(0)).join(" "));

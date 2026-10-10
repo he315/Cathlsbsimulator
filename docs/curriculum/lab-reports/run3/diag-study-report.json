@@ -1,0 +1,337 @@
+{
+ "package": "diag-study-report",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built the finish-of-study step for diag-study-report. Pressing \"Finish study\" now opens a study report over the live monitor, in every mode. The reference monitor stays visible for the stored runs and the learner's own QCA, and in guided mode the attending drawer opens with the finish-phase tips. In the report the learner:\n- assigns each of the 5 LV walls to an artery and the injection that showed it, to a graft from the operation note, or to \"none seen\";\n- gives the dominance;\n- gives, for the left main, each artery and each graft: patency, worst stenosis (by eye or own QCA), SYNTAX segment, best run, and whether the narrowing was spasm that resolved with nitrate;\n- marks runs as non-diagnostic and grades LV and valves (both recorded only, not checked against the case);\n- classifies the MI when the case is an acute coronary syndrome (fifth universal definition);\n- chooses no PCI, ad hoc PCI, heart team or staged PCI, and ticks which of Brilakis's 9 reasons to defer apply;\n- names the PCI target (vessel, AngioCAD segment, own QCA, length) for ad hoc or staged PCI, and optionally for the heart team.\n\nNothing on the form comes from the case truth. The truth is built only on submission, from the case, the patient engine's coronary regions, the tree's segments and the stored runs. The store keeps the report, its comparison and the PciTarget, then finishes the case.\n\nsrc/mentor/report.ts adds the comparison (built on the existing compareReport), the PciTarget builder and validator, the finish events and contexts, and the report's gaps. Every rule cites its lesson or is marked MODEL PARAMETER. src/mentor/debriefChecks/report.ts registers those gaps with the debrief (id study-report), and the new \"Study report\" debrief tab shows the full comparison with lesson links. Opening the report sets the phase to finish. An empty wall raises territory-unsupplied, plus anomalous-origin in an anomalous-origin case, and a CTO case raises cto.\n\nTwo plan items are not done because they need files outside this package. The four scenarios the plan names do not exist. The anomalous-circumflex anatomy cannot be drawn yet either. Instead, the launch file adds two links to existing scenarios that already work for the report.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/StudyReport.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useSimulatorStore.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/Simulator.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/report.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/report.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/debriefChecks/report.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/debrief/ReportSection.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/practice/diag-study-report.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/studyReport.tips.test.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/report.test.ts (17 tests: territory truth from defaultFlowMap regions; anomalous circumflex with the lateral wall on the left injection flagged, on the right injection passes; none-seen walls flagged, while a patent graft or the collaterals beyond a CTO count as accounted for; occluded graft reported patent; spasm reported as fixed; runs cited without contrast or declared non-diagnostic; MI classification; stable LM with ad hoc PCI gives the deferral gap citing Brilakis 7.3 and pm-target-timing; protected LM, ACS and single-lesion cases not flagged, multivessel disease and diagnostic-only consent flagged; ad hoc CTO; PciTarget equals lesionIdOf, passes pciTargetProblem and survives the hand-over store; TARGET_SEGMENTS equals ANGIOCAD_SEGMENTS; finish events and contexts; the debrief check is registered and its gap ranks in buildDebrief)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/studyReport.tips.test.ts (9 tests: on a DiagnosticLabSession, beginFinish plus setFinishStep gives phase finish; an empty lateral wall in an anomalous case raises anomalous-origin and tipsFor(ctx,20) includes diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search; a CTO case raises cto without clearing a scenario's own cto; no waiting.ts entry names diag-study-report; the report renders identically for two cases that differ only in their truth; the lab shows the report over the live monitor in all four modes; reportRuns; submission stores the report and target, finishes the case, and withStudyReport merges the report and its gaps into the debrief; the launch links validate and appear in PRACTICE_INDEX under their lessons)"
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/report.test.ts src/ui/lab/studyReport.tips.test.ts src/ui/lab/lab.test.ts: 38 passed",
+     "npx vitest run src/mentor/mentor.test.ts src/mentor/registries.test.ts src/mentor/ledger.test.ts: 81 passed (mentor.test.ts holds the existing structured-report test)",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/diagnosticContext.test.ts src/simulation/diagnosticScenarios/launch.test.ts src/ui/content/practiceIndex.test.ts: 54 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/simulation/session/handover.test.ts src/simulation/diagnosticScenarios/scenarios.test.ts: 29 passed",
+     "npx vitest run src/state/store.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/lab/integration.test.ts src/ui/sim/sessionModules.test.ts src/mentor/bridgePedal.test.ts: 26 passed",
+     "npx vitest run src/content/content.test.ts: 61 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "acceptance": [
+     {
+      "criterion": "report.test.ts: an anomalous-Cx case with the lateral wall assigned to 'LCx from the left injection' is flagged; assigning it to the RCA injection passes; existing report tests pass",
+      "status": "met",
+      "evidence": "The anomalous circumflex is built from defaultFlowMap regions with the circumflex moved to the right side. Lateral wall as LCx from the left injection gives problem wrong-injection and gap report-territory (lesson pm-interpreting-anomalies, anomalous-circumflex teaching). LCx from the right injection: every wall correct, no territory gap. The existing compareReport test in mentor.test.ts passes, plus a regression test in report.test.ts."
+     },
+     {
+      "criterion": "A stable LM case with decision 'ad hoc PCI' produces the deferral gap citing the Brilakis reasons",
+      "status": "met",
+      "evidence": "report.test.ts: gap report-adhoc-deferral, severity safety, lessonId pm-target-timing. The teaching quotes 'Brilakis's reasons to defer ad hoc PCI (7.3, after the SCAI consensus)' and lists all 9 reasons from the module text, naming unprotected left main. Heart team, ACS and a protected left main are not flagged."
+     },
+     {
+      "criterion": "An ad hoc decision with a target writes a PciTarget that the hand-over contract accepts",
+      "status": "met",
+      "evidence": "pciTargetFor gives {vessel, segment, qcaPct, lengthMm, lesionId, strategy: 'adhoc'}. lesionId equals handover.ts lesionIdOf(lesion), strategy is in PCI_STRATEGIES, and pciTargetProblem returns null. It is typed as HandoverExtensions and survives put/take on useLabHandoverStore. The store keeps it as studyReport.pciTarget."
+     },
+     {
+      "criterion": "browser: finish a study; the drawer shows finish-phase tips; the debrief lists report gaps and never shows truth before submission",
+      "status": "needs-browser",
+      "evidence": "Not checked in a browser, as instructed. Render and session tests show: the report replaces the 'Finish study' button in all modes; the drawer's tips come from the finish-phase contexts; the report HTML is identical for two cases that differ only in truth; the truth is built only on submit; the debrief gets the report and its gaps through withStudyReport and the Study report tab. The dev hook __lab.diagnostic.state().studyReport exposes the open draft."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-territory-check-anomalous-cx, diag-beyond-consent-lm, diag-cto-plan-not-adhoc under lessons pm-acquiring-anatomy, pm-interpreting-pitfalls, pm-interpreting-anomalies (from src/content/practice/diag-study-report.launch.ts)",
+      "status": "not-met",
+      "evidence": "These scenarios exist nowhere, and the package lists no scenario pack. Creating one would mean files in src/simulation/diagnosticScenarios/ outside the list (see outOfScope). The anomalous circumflex also cannot be drawn until diag-anatomy-variants. Instead the launch file links diag-graft-search under pm-interpreting-pitfalls and diag-cto-contralateral-collaterals under pm-target-timing. The second is in effect the CTO-not-ad-hoc case: its own check reads 'The CTO planned as a separate procedure'. Both validate and appear in PRACTICE_INDEX (tested)."
+     },
+     {
+      "criterion": "Tips: in scenario diag-territory-check-anomalous-cx, after the action that raises 'anomalous-origin', tipsFor(ctx, 20) includes diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search; every waiting.ts entry naming diag-study-report becomes satisfiable",
+      "status": "partly",
+      "evidence": "The named scenario does not exist, so the test uses CASE_LIBRARY[0] with the variant anomalous-lcx-from-rca on a real DiagnosticLabSession. Reporting the lateral wall empty raises territory-unsupplied and anomalous-origin in the session's event log. tipsFor(finish context with vessel LCx, 20) includes both tips. No waiting.ts entry names diag-study-report (tested), so that part holds trivially. Both tips are listed there under diag-anatomy-variants. The reachability report does not see this raise, because none of this package's files match its glob."
+     }
+    ],
+    "outOfScope": [
+     "Scenario pack (new files src/simulation/diagnosticScenarios/report.ts and report.launch.ts, not in this package's list): diag-beyond-consent-lm (stable, consent diagnostic-only, LM 70% or more), diag-cto-plan-not-adhoc (or keep using diag-cto-contralateral-collaterals) and diag-minoca-classify (events ['nste-acs'], no stenosis of 50% or more). Link them under pm-acquiring-anatomy, pm-interpreting-pitfalls and pm-interpreting-anomalies, plus pm-target-timing and hb-background-mi. The report already grades all of them.",
+     "diag-territory-check-anomalous-cx needs the anomalous-lcx-from-rca anatomy in the tree and the flow model (circumflex regions on the right side). That belongs to diag-anatomy-variants (wave 21), so the scenario should land with or after it. Plan dependency gap: diag-study-report's anomalous scenario depends on diag-anatomy-variants.",
+     "src/ui/lab/useAttending.ts: assessAttempt should get report: useSimulatorStore.getState().studyReport?.comparison when the case finishes, so the registered check runs inside buildDebrief. Until then Simulator.tsx merges it with withStudyReport (a no-op once useAttending passes it). Any other host that builds a diagnostic debrief needs the same.",
+     "src/content/lab/reachability.test.ts: its glob (ui/lab/*Context.ts, ui/**/*Tips.ts, ui/sim/modules/*.ts) does not read this package's finish-step raises (territory-unsupplied, anomalous-origin, cto at phase finish). Either export `raises` from a matching file (e.g. a session module src/ui/sim/modules/report.ts) or widen the glob. Then diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search (waiting under diag-anatomy-variants) would count as ready at finish.",
+     "docs/realism/facts: record the new MODEL PARAMETERs in src/mentor/report.ts: SIGNIFICANT_PCT = 51 (the existing '51-75' band line), APICAL_LAD_P0 = 0.66, and the wall-to-vessel mapping in wallsOfRegion.",
+     "diag-ohca-post-rosc (core.ts) presents with ST elevation but has no 'stemi' case event, so the report does not ask its MI classification. Adding 'stemi' to its events would."
+    ],
+    "notes": "The snapshot is in datasets/tmp/wp-snapshots/diag-study-report/ with .started. useSimulatorStore.ts, Simulator.tsx and report.ts existed before; the other listed files are new. The only file outside the list is a new test file, src/ui/lab/studyReport.tips.test.ts.\n\nDesign choices:\n- The report sits over the live monitor (z-20) rather than in the lab's modal slot, which covers the whole lab. This keeps the reference monitor (runs, QCA) and the guided drawer usable while reporting.\n- The old guided two-step finish (Keep going / Confirm finish) and the one-click finish in other modes are replaced by \"Finish study\", then the report, then submit. This applies in every mode, including exams and the full case's diagnostic stage. The store's finishCase is unchanged for other callers.\n- Territory truth uses the engine's FlowRegions: the artery is the region's own vessel or the nearest named artery on its path; the injection is the region's side. A wall beyond a CTO also accepts the collateral donor from its own injection, and a graft counts if it is not occluded and lands on the supplying artery.\n- The deferral rules judge only what the lab knows: anatomy (unprotected LM, CTO, multivessel disease), diagnostic-only consent, and a complication (dissection, VF, air). Dose, place, symptoms, people, preparation and choice are offered to the learner but not graded.\n- report.ts reimplements lesionIdOf as targetLesionId so the mentor does not load the engine. A test checks the two agree.\n- report.ts imports debrief.ts types only, so the check registry has no runtime import cycle; registries.test.ts passes.\n- The reachability report printed the same counts as before; no raises export was added to a globbed file."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "The package needs changes before acceptance, because of two major correctness bugs; the rest is solid. Typecheck is clean (npx tsc -p tsconfig.app.json --noEmit, exit 0). The package tests pass: src/mentor/report.test.ts (17) and src/ui/lab/studyReport.tips.test.ts (9). Five neighbouring suites also pass (104 tests): lab.test.ts, mentor.test.ts, registries.test.ts, diagnosticTips.test.ts and practiceIndex.test.ts.\n\nDiffs match the builder's report. The only file outside the package list is the new test file. Other src files changed after .started are access, emergencies and engine.ts, which belong to other packages (access-femoral-*, proc-anaphylaxis-vagal, found-patient-formulary).\n\nThe design is largely implemented:\n- The finish step, StudyReport form and store fields (finishing, studyReport, beginFinish, cancelFinish, submitStudyReport) are in place. finishCase is unchanged for other callers.\n- Truth is built only on submit. The registered debrief check and the Study report debrief tab are present.\n- The phase becomes finish when the report opens. territory-unsupplied, anomalous-origin and cto are raised and cleared correctly, and the anomalous circumflex tips appear in the tests.\n- Clinical text is sourced from the module text: Brilakis 7.3 deferral list, MINOCA wording and \"ideally within 2 weeks\", spasm, complete filling, graft stump. App conventions are labelled MODEL PARAMETER. Recording those in docs/realism/facts is out of scope.\n- The UI uses Clinical Graphite classes and British English. Truth is not shown on live screens, and tips appear only in the guided drawer or after asking for help. Render paths do not allocate per frame.\n\nProbes I ran (scratch vitest in the scratchpad, no repo edits) confirmed two defects:\n1. An isolated left main lesion counts as multivessel disease, so ad hoc PCI on a protected left main is still flagged as a safety gap.\n2. The tree's real septal branch names S1 to S12 are mapped to the anterior wall instead of the septum.\n\nNot met (acknowledged by the builder): the plan's named scenarios and their practice links do not exist, and the browser check was not done.",
+    "findings": [
+     {
+      "where": "src/mentor/report.ts complexAnatomy() (around the `arteries` loop, ~line 610)",
+      "problem": "lesionArteries(LM) returns [LAD, LCx], so any significant left main lesion alone makes arteries.size >= 2 and multivessel = true. A probe confirmed it: protected LM (patent LIMA to LAD) plus ad hoc gives anatomy {unprotectedLm:false, multivessel:true}, adhocAgainstReasons true and deferralApplies ['anatomy'], so a safety gap is raised. For an unprotected isolated LM the advocacy says 'with unprotected left main disease and multivessel disease'. The test 'a protected left main ... is not a deferral gap' asserts only anatomy.unprotectedLm === false, so it hides this.",
+      "severity": "major",
+      "fix": "Count multivessel disease from non-left-main lesions only: `for (const l of sig) if (l.vessel !== \"LM\") for (const a of lesionArteries(l, t.dominance)) arteries.add(a);`. Left main disease is reported separately through unprotectedLm. In report.test.ts, make the protected-LM case assert `adhocAgainstReasons === false` and `deferralApplies` toEqual [], and make the stable-LM ad hoc case assert that the advocacy does not match /multivessel/."
+     },
+     {
+      "where": "src/mentor/report.ts structuredOf() / truthReportOf() / compareStudyReport()",
+      "problem": "The form allows one worst-stenosis row per artery (LM, LAD, LCx, RCA), but truthReportOf passes every fixed lesion, segment by segment, to compareReport. Any second significant lesion on the same artery is therefore always listed under 'Missed' in the debrief's 'Your report' list and counted in meanBias, even when the learner reported the worst lesion correctly. Examples: LAD plus D1, tandem LAD 6 and 7, LCx plus OM, RCA plus PDA.",
+      "severity": "major",
+      "fix": "Build the study's truth report per finding row, keeping only the worst fixed lesion for each row. Rows: LM; LAD (LAD, D*, S*); LCx (LCx, OM*, RAMUS, and PDA/PLV when dominance is left); RCA. Pass that to compareReport. The alternative is to let the form add further lesion rows per artery. Add a test where LAD 80% (seg 7) and D1 70% (seg 9) are both present and the learner reports LAD 80% in seg 7: missed should be [] (or reflect only per-row truth)."
+     },
+     {
+      "where": "src/mentor/report.ts arteryOfVessel() and wallsOfRegion()",
+      "problem": "The tree names septal perforators S1..S12, not SEPT*, so in a real session they fall through to `a === \"LAD\"` and are given ['anterior']. A probe on 40 CASE_LIBRARY cases showed 'S-branch walls: anterior' in every one; the septal tally is only LAD-main and PDA demand. PL2 and PL3 reach 'inferior' through RCA, contradicting the MODEL PARAMETER comment that posterolateral branches supply the lateral wall. SAN and AVN (atrial and nodal branches) are also counted towards LV walls. Truth is still right in the library cases, but only because LAD-main demand outweighs PDA.",
+      "severity": "minor",
+      "fix": "In arteryOfVessel, add /^S\\d+$/ and /^D\\d+$/ to LAD. In wallsOfRegion, return ['septal'] for /^S\\d+$/ (as for SEPT*), ['anterior'] for /^D\\d+$/, ['lateral'] for /^PL(V|B|\\d*)$/, and [] for SAN, AVN and /^RV\\d*$/. Add a report.test.ts case using a real DiagnosticLabSession tree (session.engine.flow.regions) that asserts S1 regions map to septal."
+     },
+     {
+      "where": "src/ui/lab/studyReport.tips.test.ts and the builder's outOfScope note on the anomalous circumflex",
+      "problem": "The tests use the variant 'anomalous-lcx-from-rca', which the tree and flow do not model. In a real session its LCx regions are side 'left', so studyTruth gives lateral = LCx from the left injection, and a learner who answers correctly would be marked wrong. 'anomalous-lcx-right-sinus' is already drawn (coronaryGrowth.ts:1250, anatomy.ts:116), and a probe showed its LCx/OM regions are side 'right', giving lateral = LCx from the right injection. The claim that the anomalous circumflex 'cannot be drawn yet' is therefore partly wrong.",
+      "severity": "minor",
+      "fix": "Run the tips test (and add an end-to-end report test) on CASE_LIBRARY[0] with 'anomalous-lcx-right-sinus' in a real DiagnosticLabSession. Assert that lateral as LCx from the left injection gives wrong-injection and LCx from the right injection is correct. Update the outOfScope note: diag-territory-check-anomalous-cx can be built now with anomalous-lcx-right-sinus. Only the from-RCA variant has to wait for diag-anatomy-variants, and until then no scenario should use it."
+     },
+     {
+      "where": "src/state/useSimulatorStore.ts (SubmittedStudyReport doc comment) / hand-over",
+      "problem": "The PciTarget is stored only as useSimulatorStore.studyReport.pciTarget. Nothing writes it into the full case's SessionHandover/HandoverExtensions; grep finds no reader outside the store and the tests. The comment 'The full case's ad hoc gate and the PCI hand-over read pciTarget' is not true yet.",
+      "severity": "minor",
+      "fix": "Reword the comment to say that the target is kept for the full case's gate and hand-over to read. Add an outOfScope item: src/simulation/session/caseSession.ts (or whatever builds the diagnostic-to-PCI SessionHandover) should set `pciTarget: useSimulatorStore.getState().studyReport?.pciTarget ?? undefined` in HandoverExtensions."
+     },
+     {
+      "where": "src/mentor/report.ts matchTargetLesion()",
+      "problem": "When no lesion lies in the named segment, the function falls back to the most severe lesion anywhere on the artery. D1, D2 and OM targets also match LAD or LCx main-vessel lesions. The hand-over lesionId then names a lesion the learner did not choose, and the debrief shows 'the case lesion there is X%' with matched: true. A wrong-segment target is never reported as such.",
+      "severity": "minor",
+      "fix": "Prefer lesions whose vessel equals the target vessel, then filter by the segment's SYNTAX list. If nothing matches the segment, return null, so that lesionId is `${vessel}@none` and matched is false. Alternatively, return the lesion together with a `segmentMatched` flag and show it in ReportSection. Add a test: a Prox LAD target when the only lesion is in Mid LAD gives matched false (or segmentMatched false)."
+     },
+     {
+      "where": "src/mentor/report.ts studyReportGaps() report-territory gap",
+      "problem": "For a non-anomalous case the teaching quotes the pitfalls lesson ('put the territories together ... an empty territory is an anomaly, a flush occlusion or a vessel not yet injected', 09-interpreting.ts line 587, in pm-interpreting-pitfalls), but the gap's lessonId is always pm-interpreting-anomalies.",
+      "severity": "minor",
+      "fix": "Set `lessonId: anomalousLateral ? \"pm-interpreting-anomalies\" : \"pm-interpreting-pitfalls\"`. In report.test.ts, the 'none seen' case should expect pm-interpreting-pitfalls."
+     },
+     {
+      "where": "src/content/practice/diag-study-report.launch.ts / acceptance",
+      "problem": "Acceptance is not met. The scenarios diag-territory-check-anomalous-cx, diag-beyond-consent-lm, diag-cto-plan-not-adhoc and diag-minoca-classify do not exist, and nothing links them under pm-acquiring-anatomy, pm-interpreting-anomalies, cp-cto-strategy or hb-background-mi. The two substitute links (diag-graft-search under pm-interpreting-pitfalls, diag-cto-contralateral-collaterals under pm-target-timing) validate. The builder reported this.",
+      "severity": "minor",
+      "fix": "Keep the outOfScope item for a scenario pack (src/simulation/diagnosticScenarios/report.ts and report.launch.ts). The anomalous scenario can use 'anomalous-lcx-right-sinus' now. Once the pack lands, add the four links here or in the pack's launch file."
+     },
+     {
+      "where": "src/ui/sim/Simulator.tsx AttendingDrawerWithTips",
+      "problem": "useDiagnosticTips already runs useContextTips(context) internally, and its tips are discarded. The component then runs useContextTips(finishContexts(...)) again, so tips are selected twice on every context change (about 5 Hz).",
+      "severity": "minor",
+      "fix": "Add an option to useDiagnosticTips, or a context-only hook (for example useDiagnosticContext), that returns the LabContext without selecting tips. That would be a change to src/ui/lab/useLabTips.ts, outside this package, so report it. Otherwise accept the cost."
+     },
+     {
+      "where": "src/ui/lab/StudyReport.tsx withStudyReport()",
+      "problem": "The code fabricates a record with `{ snapshots: [] } as unknown as ProcedureRecord` to call completeGap, which is a type escape. Report gaps also get a clip of tWall -6 to +4 s, which is meaningless for a report-level gap; it is harmless only while the lab passes no onSeek.",
+      "severity": "minor",
+      "fix": "Pass the real record (attending.assessment's record) through, or have useAttending pass report: studyReport.comparison into assessAttempt as noted in outOfScope, so that buildDebrief runs the registered check. Then withStudyReport and the cast can be removed."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [
+     "Finding 8 (acceptance: the four named scenarios are missing). Not rejected on the merits, but it cannot be fixed inside this package. The scenarios belong to a scenario pack (src/simulation/diagnosticScenarios/report.ts and its report.launch.ts), and links to scenarios that do not exist would fail validateLaunchLinks. Kept as an outOfScope item. diag-territory-check-anomalous-cx can now be built on 'anomalous-lcx-right-sinus'. Once the pack lands, the four links go under pm-acquiring-anatomy, pm-interpreting-anomalies, cp-cto-strategy and hb-background-mi.",
+     "Finding 10 (the `{ snapshots: [] } as unknown as ProcedureRecord` cast in withStudyReport). Both suggested fixes need files outside the package. Assessment (src/mentor/index.ts) carries no record and useAttending does not expose one. Having buildDebrief run the registered check would mean useAttending passing `report: studyReport.comparison` into assessAttempt (src/ui/lab/useAttending.ts). The only in-package alternative is fabricating a typed record with a fake RecordingMeta, which is no better than the cast. The cast stays local and documented: completeGap reads only snapshots, and the lab passes no onSeek, so the -6 to +4 s clip is never used. Reported as outOfScope."
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/report.test.ts src/ui/lab/studyReport.tips.test.ts (31 passed: 20 + 11)",
+     "npx vitest run src/mentor/mentor.test.ts (59 passed; it uses compareReport)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked each finding against the code before changing anything. A probe of a real DiagnosticLabSession on CASE_LIBRARY[0] confirmed findings 3 and 4. The tree names septals S1..S10, and every one was mapped to the anterior wall. PL2, PL3, AVN, PLV twigs and CONUS twigs went to the inferior wall. With 'anomalous-lcx-right-sinus' the circumflex and OM regions are on the right side, so the truth gives lateral = LCx from the right injection.\n\nApplied (all in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator):\n1. src/mentor/report.ts complexAnatomy: multivessel disease now counts only lesions outside the left main. A protected left main with ad hoc PCI now gives anatomy all false, deferralApplies [] and adhocAgainstReasons false. An isolated unprotected left main no longer says \"multivessel\" in the advocacy. Both are asserted in report.test.ts.\n2. report.ts: new findingRowOf, and truthReportOf(t, learner?) keeps the worst fixed lesion per finding row:\n   - LM;\n   - LAD with D* and S*;\n   - LCx with OM*, RAMUS, and PDA/PLV when dominance is left;\n   - RCA with its branches.\n   It also keeps a lesser lesion when it sits in the segment the learner gave for that row, so that segment is not called normal or a false positive. compareStudyReport passes the report in. New test: LAD 80% (seg 7) plus D1 70% (seg 9), learner gives LAD 80% in seg 7, so missed and falsePositives are [] and meanBias is 0. If the learner instead gives D1 70% as the worst, seg 9 is correct and seg 7 is missed.\n3. arteryOfVessel now maps /^D\\d+$/ and /^S\\d+$/ to the LAD. wallsOfRegion now:\n   - reads the base vessel of '<vessel>-twigN' regions (LAD twigs are anterior);\n   - maps S\\d+ to septal, D\\d+ to anterior and /^PL(V|B|\\d*)$/ to lateral;\n   - gives SAN, AVN, RV\\d* and CONUS no wall.\n   The MODEL PARAMETER comment is updated to match. There is a unit test of the names, and a real-session test that every S\\d+ region maps to septal and the routine case's walls are LAD, RCA and circumflex.\n4. studyReport.tips.test.ts uses 'anomalous-lcx-right-sinus' (the comment now says from-RCA is not modelled and not used). A new end-to-end test on CASE_LIBRARY[0] in a real session checks that lateral = LCx from the left injection gives wrong-injection and the anomalies lesson, and LCx from the right injection is all correct. The synthetic anomalous test in report.test.ts also switched variant.\n5. src/state/useSimulatorStore.ts: the SubmittedStudyReport comment now says pciTarget is kept for the gate and hand-over to read and is not wired yet.\n6. matchTargetLesion requires the target's own vessel, then the named segment's SYNTAX list (no segment named: the most severe on that vessel). Otherwise it returns null, giving lesionId `${vessel}@none` and matched false. ReportSection.tsx now says \"no lesion on that vessel in that segment\". Tests: a Prox LAD target with only a Mid LAD lesion gives LAD@none and matched false; a D1 target gives D1@none. The CTO test's target was corrected to Mid RCA, the segment its fixture lesion is in.\n7. The report-territory gap's lessonId is pm-interpreting-anomalies only for an anomalous lateral wall, else pm-interpreting-pitfalls; the module's Sources header is updated. The none-seen test expects pitfalls; the pitfalls lesson cites Oxford ch 6 and Brilakis 5.7, which matches the teaching.\n9. Partly applied in src/ui/sim/Simulator.tsx: AttendingDrawerWithTips now uses useDiagnosticTips' own tips and runs a second selection only while the report has an empty wall. The rest of the time it passes a null context, which costs nothing. Removing the double selection entirely needs a context-only hook in src/ui/lab/useLabTips.ts (outOfScope).\n\noutOfScope (files outside this package):\n(a) src/simulation/session/caseSession.ts, or wherever the diagnostic-to-PCI SessionHandover is built, should set `pciTarget: useSimulatorStore.getState().studyReport?.pciTarget ?? undefined` in HandoverExtensions. Nothing reads it yet.\n(b) A scenario pack, src/simulation/diagnosticScenarios/report.ts and report.launch.ts, for diag-territory-check-anomalous-cx (buildable now with anomalous-lcx-right-sinus), diag-beyond-consent-lm, diag-cto-plan-not-adhoc and diag-minoca-classify, linked under pm-acquiring-anatomy, pm-interpreting-anomalies, cp-cto-strategy and hb-background-mi. Only 'anomalous-lcx-from-rca' has to wait for diag-anatomy-variants.\n(c) src/ui/lab/useLabTips.ts: a useDiagnosticContext hook, or an option on useDiagnosticTips, that returns the LabContext without selecting tips.\n(d) src/ui/lab/useAttending.ts: pass `report: useSimulatorStore.getState().studyReport?.comparison` into assessAttempt, so buildDebrief runs the registered study-report check. withStudyReport and its ProcedureRecord cast can then be removed.\n\nThe finding 3 change only adds the PL branches' demand to the lateral wall; the circumflex still carries most of it in the probed case, so the truth there did not change. No other importer of report.ts is affected; mentor.test.ts passes."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-46) at http://localhost:5173 and went to Cath lab (Free cath lab, guided practice). The tab is now closed. The dev server kept doing full page reloads because other packages were editing files, so every later flow ran as one javascript_tool call. App store modules were imported at their live ?t= URLs taken from performance entries; a plain import gets a separate copy of the store that the app does not use.",
+     "Recorded a 4 s cine run with setPedal, startInjection, __labStep and __fluoroDraw('cine'). The run reached the series store and appeared on the reference monitor as 'Run 1, AP'.",
+     "Pressed 'Finish study' (routine left coronary case, guided). The button disappeared and the study report opened over the live monitor. The reference monitor stayed visible with stored runs and its QCA button. __lab.diagnostic.context().phase went from 'setup' to 'finish', and __lab.diagnostic.state().studyReport showed the empty draft.",
+     "Drawer in guided mode while the report was open: tips() returned diag-acq-missing-territory, diag-interp-every-territory, diag-stop-for-heart-team, diag-planning-ad-hoc-consent and diag-rad-read-the-dose-panel. Their texts appeared in the Attending drawer ('Before you finish: does every wall have a vessel?', 'Before finishing, account for every territory').",
+     "Truth before submission: the report form text and HTML held no case data. Segment lists are the static SYNTAX lists per vessel. Findings rows are always LM/LAD/LCx/RCA. In the left main 76% case the report overlay had no '76'. No debrief or comparison appeared before submitting; the store's studyReport stayed null until submit.",
+     "Setting the lateral wall to 'None seen' raised territory-unsupplied in events() and context().events. Assigning LCx from the left injection cleared it.",
+     "Anomalous circumflex case (CASE_LIBRARY[0] with variant anomalous-lcx-from-rca, loaded through the live store): a lateral wall left empty raised territory-unsupplied plus anomalous-origin. tips() then led with diag-interp-anomalous-cx-search and diag-anomalous-origin-image-first. finishContexts added an LCx context.",
+     "'Back to the study' closed the report, put the phase back to 'setup', cleared the finish events and brought 'Finish study' back. Reopening kept the draft (lateral still 'none') and raised the events again.",
+     "Stable left main case (generateRandomCase('v1'), LM 76%, no events): I chose ad hoc PCI with target LM, segment LM, my QCA 70% and 12 mm, then submitted. The store showed finished=true and pciTarget {vessel LM, segment LM, qcaPct 70, lengthMm 12, lesionId 'LM@0.600', strategy 'adhoc'}. The comparison showed adhocAgainstReasons=true, deferralApplies ['anatomy'], anatomy.unprotectedLm=true, stable=true, target matched with truthPct 76.",
+     "Debrief after submission (Description, Analysis, Summary and Study report open only after Reactions): Analysis listed 'Ad hoc PCI despite reasons to defer' (Safety). The Study report tab showed the territories table (You / Case / Agrees or Differs), the decision, the reasons the case carried ('Anatomy'), the PCI target with the case lesion at 76%, and the gap. The gap cites Brilakis 7.3 after the SCAI consensus, lists all 9 reasons, and has an Open lesson button. Summary showed the existing base report (dominance correct; left main You 51-75, Actual 76-90).",
+     "In the routine case, submitting with the lateral wall 'None seen' gave the gap 'Missed territory' (Oxford ch 6; Brilakis 5.7) in Analysis and in the Study report tab. The table read 'Lateral or posterolateral: None seen | LCx from the left injection | Differs'.",
+     "Exam mode (loadCase(c,'exam')): the Attending button is gone, 'Finish study' opens the report, the phase goes to 'finish', tips() returns [] and the drawer shows no finish tips.",
+     "Layout at 1440x900: the report fills the live monitor pane (414x589, scroll body 433 px) and is readable. At 800x1030 the report body collapses (details under problems).",
+     "Console: no errors or warnings during any of the flows (onlyErrors and a pattern check both empty). Only Vite connect and HMR debug lines appeared."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/lab/StudyReport.tsx (root layout); src/ui/sim/Simulator.tsx (the overlay `absolute inset-0 z-20` inside LiveMonitor)",
+      "problem": "At narrower viewports the report is limited to the live monitor pane. At 800x1030 that pane is 262x287 px, so the report's scrolling middle (`min-h-0 flex-1 overflow-y-auto`) is only 40 px tall. The territories, findings and decision can barely be reached; mostly only the header and the 'Back to the study' / 'Submit report and finish' footer show.",
+      "severity": "minor",
+      "fix": "In StudyReport.tsx, let the whole panel scroll when space is short. Put `overflow-y-auto` on the root flex column and give the middle section `min-h-[16rem]` (or `shrink-0` below a breakpoint) in place of `min-h-0`, so the header and footer scroll with the content rather than squeezing it. Alternatively, in Simulator.tsx, render the report in the `modal` slot when the live pane is smaller than about 420 px high (keeping the reference monitor visible beside it)."
+     },
+     {
+      "where": "src/ui/lab/StudyReport.tsx, territory selects (the `<label className=\"contents\">` around `select[data-wall]`, around line 184)",
+      "problem": "The five LV-wall selects have no accessible name. The accessibility tree exposes each one as combobox \"Choose\" (its first option), because the wrapping label uses display:contents. A screen-reader user cannot tell anterior from septal from lateral.",
+      "severity": "minor",
+      "fix": "Add an explicit name to each select, e.g. `aria-label={`${LV_WALL_LABEL[w]} wall: supplying vessel`}`, or give the span an id and add `aria-labelledby` on the select."
+     },
+     {
+      "where": "Simulator header case name (pre-existing, outside this package: src/simulation/caseGenerator.ts names generated cases)",
+      "problem": "While the study report is open, the header shows the generated case name, for example 'RCA \u2014 left main'. That names the pathology the report asks the learner to find, so the learner sees ground truth on the live screen during the finish step. It also contains an em-dash. This is not introduced by diag-study-report, but it undercuts the report's 'truth never before submission' rule in Free cath lab random cases.",
+      "severity": "minor",
+      "fix": "Out of scope for this package; report it to the owner of caseGenerator/Simulator header. Give generated cases a neutral live name (e.g. 'Random case 7', with the pathology name shown only in the debrief), or have Simulator.tsx hide caseData.name until `finished`."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 3 (header shows the generated case name, e.g. 'RCA \u2014 left main', during the finish step): rejected as out of scope for diag-study-report, as the finding itself states. The name comes from src/simulation/caseGenerator.ts and Simulator.tsx shows it in the header (line ~349) for the whole case, not only the finish step. Hiding it only while the report is open would be inconsistent, and changing what every case is called on the live screen in every mode is a cross-package decision. It should go to the owner of caseGenerator and the Simulator header: either give generated cases a neutral live name (e.g. 'Random case 7') and show the pathology name only in the debrief, or hide caseData.name until the case is finished. The same owner should remove the em-dash."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/studyReport.tips.test.ts src/mentor/report.test.ts (2 files, 32 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "Fixed 2 of the 3 findings, both in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/StudyReport.tsx.\n\n1. Small-pane layout. The report's outer panel now scrolls as a whole (overflow-y-auto added). The middle section has a minimum height of 16rem in place of min-h-0, and I tagged it data-report-body so the test can find it. In a short pane such as the 262x287 px one, the header, form body and footer now scroll together, so every section can be reached instead of a 40 px strip. In a tall pane nothing changes: the body scrolls inside the panel and the header and footer stay in place. I did not move the report into the modal slot, so Simulator.tsx is unchanged.\n\n2. Wall select names. Each select[data-wall] now has aria-label=\"<wall label> wall: supplying vessel\", for example \"Lateral or posterolateral wall: supplying vessel\". Before this, screen readers announced all five as \"Choose\".\n\nI added one test to /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/studyReport.tips.test.ts. It checks the aria-label on all 5 wall selects, overflow-y-auto on the outer panel, and min-h-[16rem] (not min-h-0) on the body. I also imported LV_WALLS and LV_WALL_LABEL from src/mentor/report.ts into that test.\n\nThat test file changed on disk after my edit, apparently from another source. I did not re-read it, but the run afterwards passed with 12 tests in that file and 20 in report.test.ts."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "report.test.ts: an anomalous-Cx case with the lateral wall assigned to 'LCx from the left injection' is flagged; assigning it to the RCA injection passes; existing report tests pass",
+      "met": true,
+      "evidence": "src/mentor/report.test.ts 'an anomalous circumflex case with the lateral wall assigned to LCx from the left injection is flagged; assigning it to the RCA injection passes' checks problem 'wrong-injection', a report-territory gap with lessonId pm-interpreting-anomalies, and that LCx from the right injection is correct. 'structured report (unchanged)' keeps the earlier compareReport behaviour. studyReport.tips.test.ts repeats the check against a real DiagnosticLabSession's engine regions. report.test.ts: 20/20 pass."
+     },
+     {
+      "criterion": "A stable LM case with decision 'ad hoc PCI' produces the deferral gap citing the Brilakis reasons",
+      "met": true,
+      "evidence": "report.test.ts 'a stable left main case with decision ad hoc PCI produces the deferral gap citing the Brilakis reasons': gap report-adhoc-deferral, severity safety, lessonId pm-target-timing, teaching names Brilakis 7.3 and the list of reasons. DEFERRAL_REASONS in src/mentor/report.ts matches the pm-target-timing lesson text in src/content/manual/pci-manual/10-target.ts. The debrief-check test shows it ranked through buildDebrief with check 'study-report'."
+     },
+     {
+      "criterion": "An ad hoc decision with a target writes a PciTarget that the hand-over contract accepts",
+      "met": true,
+      "evidence": "report.test.ts 'an ad hoc decision with a target writes a PciTarget that the hand-over contract accepts': pciTargetFor gives {vessel, segment, qcaPct, lengthMm, lesionId, strategy:'adhoc'}, pciTargetProblem is null, and it passes through useLabHandoverStore put/take as HandoverExtensions.pciTarget unchanged. studyReport.tips.test.ts shows submitStudyReport storing pciTarget and setting finished. handover.test.ts 10/10 pass."
+     },
+     {
+      "criterion": "browser: finish a study; the drawer shows finish-phase tips; the debrief lists report gaps and never shows truth before submission",
+      "met": true,
+      "evidence": "No verify report exists, but tests cover it. studyReport.tips.test.ts: beginFinish plus setFinishStep moves the tip context to phase 'finish' (diag-interp-every-territory shown). LabScreen renders data-study-report over the reference monitor after 'Finish study' in guided, supervised, independent and exam modes. StudyReport renders the same HTML for two cases that differ only in lesions and graft status, with no 90% or severe-stenosis text. withStudyReport merges the report gaps into the debrief. Simulator.tsx feeds finishContexts(draft) to the drawer (lines 261 and 618). I also ran a throwaway render in the scratchpad: ReportSection with a submitted LM ad hoc report renders data-gap report-territory and report-adhoc-deferral. The package has no test of its own that renders ReportSection."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-territory-check-anomalous-cx, diag-beyond-consent-lm, diag-cto-plan-not-adhoc under lessons pm-acquiring-anatomy, pm-interpreting-pitfalls, pm-interpreting-anomalies (from src/content/practice/diag-study-report.launch.ts)",
+      "met": false,
+      "evidence": "None of the three scenario ids exists anywhere in src. grep finds them only in lab-build-plan.json, and src/simulation/diagnosticScenarios/core.ts and lesions.ts do not define them. diag-study-report.launch.ts links two substitutes instead: diag-graft-search under pm-interpreting-pitfalls and diag-cto-contralateral-collaterals under pm-target-timing. The test asserts exactly that substitute list. Lessons pm-acquiring-anatomy and pm-interpreting-anomalies get no link from this file. The substitute links do validate (validateLaunchLinks returns [] and the practice index lists them)."
+     },
+     {
+      "criterion": "Tips: in scenario diag-territory-check-anomalous-cx, after the action that raises 'anomalous-origin', tipsFor(ctx, 20) includes diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search; every waiting.ts entry naming diag-study-report becomes satisfiable, so the reachability waiting count for the diagnostic lab falls by at least their number",
+      "met": true,
+      "evidence": "Met in substance. The new test file src/ui/lab/studyReport.tips.test.ts, beside the event source in Simulator.tsx and StudyReport, uses CASE_LIBRARY[0] plus the variant anomalous-lcx-right-sinus. With the lateral wall reported 'none', syncFinishEvents raises territory-unsupplied and anomalous-origin, and tipsFor(finishContexts(...)[1], 20) includes both tip ids. The named scenario does not exist (same root cause as the practice-link failure), so the check runs on an inline case, not by scenario id. No WAITING_TIPS or DEFERRED_RETARGETS entry names diag-study-report: the two anomalous tips wait on diag-anatomy-variants, and waiting.ts is unmodified since Oct 8. The waiting clause is therefore vacuously satisfied, and the test asserts that."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/content/practice/diag-study-report.launch.ts (and the assertion at the end of src/ui/lab/studyReport.tips.test.ts, the 'practice links' describe block)",
+      "problem": "The acceptance criterion requires the practice index to list diag-territory-check-anomalous-cx, diag-beyond-consent-lm and diag-cto-plan-not-adhoc under pm-acquiring-anatomy, pm-interpreting-pitfalls and pm-interpreting-anomalies. None of these scenarios exists in the scenario packs. The launch file links diag-graft-search (pm-interpreting-pitfalls) and diag-cto-contralateral-collaterals (pm-target-timing) instead, and the test pins those substitutes. pm-acquiring-anatomy and pm-interpreting-anomalies receive no link. Nothing was reported as outOfScope.",
+      "severity": "major",
+      "fix": "The scenarios belong to src/simulation/diagnosticScenarios/core.ts or lesions.ts, which this package may not edit, so they need a scenario-registry repair package. It would add (1) diag-territory-check-anomalous-cx: the routine right-dominant case with variants ['anomalous-lcx-right-sinus']; (2) diag-beyond-consent-lm: stable presentation, consent for possible ad hoc PCI, severe LM stenosis; (3) diag-cto-plan-not-adhoc: stable presentation with an RCA CTO. Each needs a chart from module text, with no thresholds from memory. Then in diag-study-report.launch.ts add links such as {scenario:'diag-territory-check-anomalous-cx', lessonIds:['pm-acquiring-anatomy','pm-interpreting-anomalies']}, {scenario:'diag-beyond-consent-lm', lessonIds:['pm-interpreting-pitfalls']} and {scenario:'diag-cto-plan-not-adhoc', lessonIds:['pm-interpreting-pitfalls']}. Update the test's expected scenario list to match and have the tips test load diag-territory-check-anomalous-cx by id. The alternative is for the plan owner to amend this criterion in lab-build-plan.json to accept the substitute links."
+     },
+     {
+      "where": "src/ui/mentor/debrief/ReportSection.tsx (no test)",
+      "problem": "No package test renders the debrief's Study report section. The gaps listing is checked only through the model (withStudyReport and buildDebrief). A scratch render showed it works.",
+      "severity": "minor",
+      "fix": "Add a renderToString test in studyReport.tips.test.ts (or a new ReportSection test file): render section.Component with withStudyReport(debrief, comparison) for a stable LM ad hoc report. Assert data-gap='report-adhoc-deferral', assert that section.applies is false without model.report.study, and assert the section is absent before submission."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/report.test.ts src/ui/lab/studyReport.tips.test.ts (2 files, 32 tests passed)",
+     "npx vitest run src/mentor/registries.test.ts src/simulation/session/handover.test.ts src/ui/lab/integration.test.ts src/simulation/diagnosticScenarios/launch.test.ts src/ui/lab/diagnosticContext.test.ts (5 files, 68 tests passed)",
+     "scratchpad-only render check of ReportSection via a temporary vitest config outside the repo (1 test passed; rendered data-gap report-territory and report-adhoc-deferral)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "report.test.ts: an anomalous-Cx case with the lateral wall assigned to 'LCx from the left injection' is flagged; assigning it to the RCA injection passes; existing report tests pass",
+      "met": true,
+      "evidence": "src/mentor/report.test.ts:106 builds studyTruth for a case with variant anomalous-lcx-right-sinus and expects lateral problem 'wrong-injection', gap report-territory linking pm-interpreting-anomalies, and all territories correct with LCx from the right injection. 'structured report (unchanged)' (line 82) keeps the old compareReport behaviour. src/ui/lab/studyReport.tips.test.ts repeats this in a real DiagnosticLabSession (engine flow regions plus tree). npx vitest run src/mentor/report.test.ts: 20/20 passed."
+     },
+     {
+      "criterion": "A stable LM case with decision 'ad hoc PCI' produces the deferral gap citing the Brilakis reasons",
+      "met": true,
+      "evidence": "report.test.ts:231 expects gap report-adhoc-deferral, severity safety, lessonId pm-target-timing, teaching matching \"Brilakis's reasons to defer ad hoc PCI (7.3\" and 'anatomy, dose, place, consent', and advocacy naming unprotected left main; heart-team is not flagged. The reasons are taken from pm-target-timing (src/content/manual/pci-manual/10-target.ts, Brilakis 7.3.1 table and line 594). Passes."
+     },
+     {
+      "criterion": "An ad hoc decision with a target writes a PciTarget that the hand-over contract accepts",
+      "met": true,
+      "evidence": "report.test.ts:287: pciTargetFor gives {vessel, segment, qcaPct, lengthMm, lesionId: lesionIdOf(LAD), strategy 'adhoc'}, PCI_STRATEGIES contains the strategy, pciTargetProblem returns null, and useLabHandoverStore put/take to angio-pci returns it unchanged. studyReport.tips.test.ts 'submission and the debrief' stores the pciTarget through submitStudyReport. handover.test.ts 10/10 passed."
+     },
+     {
+      "criterion": "browser: finish a study; the drawer shows finish-phase tips; the debrief lists report gaps and never shows truth before submission",
+      "met": true,
+      "evidence": "No verify report was found, but tests cover it. src/ui/lab/studyReport.tips.test.ts: beginFinish plus setFinishStep sets phase 'finish' and tipsFor includes diag-interp-every-territory; LabScreen renders data-study-report over the reference monitor in guided, supervised, independent and exam modes; StudyReport renders identically for two cases that differ only in lesions and graft status (no truth); ReportSection applies only to a debrief merged after submission and renders data-gap='report-adhoc-deferral'. Simulator.tsx:211-216 drives session.setFinishStep and syncFinishEvents from the store, and line 261/618 feeds finishContexts to the drawer. 12/12 passed."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-territory-check-anomalous-cx, diag-beyond-consent-lm, diag-cto-plan-not-adhoc under lessons pm-acquiring-anatomy, pm-interpreting-pitfalls, pm-interpreting-anomalies (from src/content/practice/diag-study-report.launch.ts)",
+      "met": false,
+      "evidence": "None of the three scenarios exists anywhere in src (grep finds no diag-territory-check-anomalous-cx, diag-beyond-consent-lm, diag-cto-plan-not-adhoc or diag-minoca-classify). No other package in lab-build-plan.json mentions them, so the plan has not moved them. src/content/practice/diag-study-report.launch.ts links substitutes instead: diag-graft-search under pm-interpreting-pitfalls and diag-cto-contralateral-collaterals under pm-target-timing. No .launch.ts links anything under pm-acquiring-anatomy or pm-interpreting-anomalies. The test pins the substitutes: studyReport.tips.test.ts expects exactly ['diag-graft-search','diag-cto-contralateral-collaterals']."
+     },
+     {
+      "criterion": "Tips (a new test file beside its event source): in scenario diag-territory-check-anomalous-cx, after the action that raises 'anomalous-origin', tipsFor(ctx, 20) includes diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search; every waiting.ts entry naming diag-study-report becomes satisfiable, so the reachability waiting count for the diagnostic lab falls by at least their number",
+      "met": false,
+      "evidence": "The behaviour works, but not in the named scenario. src/ui/lab/studyReport.tips.test.ts uses a hand-built CASE_LIBRARY[0] case with variant anomalous-lcx-right-sinus because diag-territory-check-anomalous-cx does not exist. With that case, an empty lateral wall at the finish step raises territory-unsupplied and anomalous-origin, and tipsFor(finishContexts(...)[1], 20) includes both tips. The waiting.ts part holds vacuously: no WAITING_TIPS or DEFERRED_RETARGETS entry names diag-study-report, and the test asserts this. The two anomalous tips are waiting under raisedBy 'diag-anatomy-variants'."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/content/practice/diag-study-report.launch.ts; src/simulation/diagnosticScenarios/ (missing pack)",
+      "problem": "The scenarios diag-territory-check-anomalous-cx, diag-beyond-consent-lm and diag-cto-plan-not-adhoc (and diag-minoca-classify from lessonAndCaseLinks) do not exist, so the practice index cannot list them under pm-acquiring-anatomy, pm-interpreting-pitfalls or pm-interpreting-anomalies. The launch file links other scenarios (diag-graft-search, diag-cto-contralateral-collaterals) and lessons (pm-target-timing). Nothing is linked under pm-acquiring-anatomy or pm-interpreting-anomalies. Creating the scenarios needs a new pack file, which is outside this package's file list. The builder should have reported it in outOfScope.",
+      "severity": "major",
+      "fix": "The orchestrator has to decide this, because it needs files outside the package. (1) Add a pack src/simulation/diagnosticScenarios/studyReport.ts and src/simulation/diagnosticScenarios/studyReport.launch.ts, either through a repair package or by adding both files to diag-study-report in lab-build-plan.json. The pack exports four DiagScenario entries, and their ids and lessons must agree with the .launch.ts (scenarios.test.ts checks this). diag-territory-check-anomalous-cx: CASE_LIBRARY-style spec with variants including 'anomalous-lcx-right-sinus', stable chart. diag-beyond-consent-lm: stable, severe unprotected LM lesion, consentScope 'diagnostic-and-ad-hoc-pci'. diag-cto-plan-not-adhoc: stable, RCA CTO with collaterals. diag-minoca-classify: troponin-positive ACS with no obstructive lesion. Chart values are MODEL PARAMETERS. (2) In src/content/practice/diag-study-report.launch.ts, add links: { scenario: 'diag-territory-check-anomalous-cx', lessonIds: ['pm-acquiring-anatomy','pm-interpreting-anomalies'] }, { scenario: 'diag-beyond-consent-lm', lessonIds: ['pm-interpreting-pitfalls'] } and { scenario: 'diag-cto-plan-not-adhoc', lessonIds: ['pm-interpreting-pitfalls'] }. Keep or drop the two substitute links. (3) In src/ui/lab/studyReport.tips.test.ts, change the final toEqual(['diag-graft-search','diag-cto-contralateral-collaterals']) to cover the new scenarios, and assert PRACTICE_INDEX.byLesson for each of the three lessons. The other option is to amend the criterion in lab-build-plan.json to the substitutes. That still leaves pm-acquiring-anatomy and pm-interpreting-anomalies with no link."
+     },
+     {
+      "where": "src/ui/lab/studyReport.tips.test.ts ('finish-step tips', first test)",
+      "problem": "The tips criterion names scenario diag-territory-check-anomalous-cx, but the test uses a hand-built anomalous variant of CASE_LIBRARY[0] because the scenario does not exist. The tip behaviour itself is correct.",
+      "severity": "minor",
+      "fix": "Once the pack in the previous fix exists, load the case with g().loadCase(scenarioCase('diag-territory-check-anomalous-cx', 's1'), 'free') (scenarioCase from src/simulation/caseGenerator.ts) instead of the hand-built 'anomalous' case. Keep the same assertions: anomalous-origin is active after the empty lateral wall, and tipsFor(ctxs[1], 20) contains diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/report.test.ts (20/20 passed)",
+     "npx vitest run src/ui/lab/studyReport.tips.test.ts (12/12 passed)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/simulation/session/handover.test.ts src/mentor/registries.test.ts src/simulation/diagnosticScenarios/launch.test.ts (45/45 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 1 (practice links for diag-territory-check-anomalous-cx, diag-beyond-consent-lm, diag-cto-plan-not-adhoc): rejected as out of scope for this package. I checked: none of the three scenario ids exists anywhere in src. The only places they appear are lab-build-plan.json lines 2214, 2238 and 2239. The scenarios would live in src/simulation/diagnosticScenarios/core.ts or lesions.ts, which are not on this package's file list. A launch link to a scenario that does not exist would fail validateLaunchLinks, so diag-study-report.launch.ts cannot add the links on its own. outOfScope: a scenario-registry package must add (1) diag-territory-check-anomalous-cx, the routine right-dominant case with variants ['anomalous-lcx-right-sinus']; (2) diag-beyond-consent-lm, a stable patient consented for possible ad hoc PCI with a severe LM stenosis; (3) diag-cto-plan-not-adhoc, a stable patient with an RCA CTO. Each needs a chart taken from the module text. After that, add to src/content/practice/diag-study-report.launch.ts the links {scenario:'diag-territory-check-anomalous-cx', lessonIds:['pm-acquiring-anatomy','pm-interpreting-anomalies']}, {scenario:'diag-beyond-consent-lm', lessonIds:['pm-interpreting-pitfalls']} and {scenario:'diag-cto-plan-not-adhoc', lessonIds:['pm-interpreting-pitfalls']}. Update the expected scenario list in the practice-links test of src/ui/lab/studyReport.tips.test.ts, and point the anomalous tips test at the scenario by id. The alternative is for the plan owner to amend the criterion in lab-build-plan.json to accept the current substitutes (diag-graft-search under pm-interpreting-pitfalls, diag-cto-contralateral-collaterals under pm-target-timing)."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/studyReport.tips.test.ts src/mentor/report.test.ts (2 files, 32 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no errors)",
+    "notes": "I applied finding 2 (minor) in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/studyReport.tips.test.ts, in the 'submission and the debrief' test, using the stable LM ad hoc report that was already there. The test now asserts:\n- the debrief registry (DEBRIEF_SECTIONS) includes study-report;\n- before submission, section.applies and sectionsFor both leave the tab out;\n- after withStudyReport, both include it;\n- renderToString of section.Component contains data-section=\"study-report\", data-gap=\"report-adhoc-deferral\", the gap's lesson button (data-lesson), data-target=\"LM@0.500\", and a data-wall row for each of the five LV walls.\n\nThe registry is imported from '../mentor/debrief/index', as Debrief.tsx does. '../mentor/debrief' resolves to Debrief.tsx, not the directory index.\n\nNo source file changed; only the test file was edited. Finding 1 needs scenarios in files outside this package; the rejection above sets out the repair."
+   }
+  ]
+ }
+}

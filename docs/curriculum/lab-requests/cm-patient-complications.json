@@ -1,0 +1,185 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A structured hypotension event in every PCI scenario. When the patient engine lowers the arterial pressure, it does so for a hidden cause drawn from Brilakis Fig. 28.1: false readings (open Y-connector valve, air in the transducer line, damping, obstructed guide, bulky device in the guide) or true hypotension (retroperitoneal bleed after femoral access, Amplatz or deep EBU guide holding an aortic cusp open, tamponade after a wire exit, nitroglycerin or intra-arterial verapamil, vasovagal reaction, anaphylaxis, ischaemia or arrhythmia). Each cause has its own signature: heart rate (slow in vasovagal and often in retroperitoneal bleeding, fast in tamponade), waveform (damped, flattened, pulsus paradoxus), the last manoeuvre, a bladder screen image (normal or dented), and an optional right heart catheter giving filling pressure and cardiac output in the Fig. 28.1 pattern. Raise 'hypotension' plus 'bradycardia' or 'bleeding' as appropriate.",
+    "learnerDoes": "Announces the fall, runs the five false-reading checks, looks at the rate and the patient, states the last manoeuvre, places the cause in one of the three groups, supports perfusion (fluid, vasopressor if the mean pressure is below 60 mmHg), and treats the cause: repositions the guide, stops vasodilators, screens the bladder, orders an echo, or measures with a right heart catheter when the cause is unclear.",
+    "success": "False readings corrected without drugs; true hypotension classified correctly and the specific treatment started within the case clock; no vasopressor given before the reading was confirmed; retroperitoneal bleeding considered in every femoral case.",
+    "tips": [
+      "pci-hypo-amplatz-valve",
+      "pci-hypo-rhc-when-unclear",
+      "pci-mon-false-hypotension",
+      "pci-bleed-bladder-screen"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-hypotension"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Hypotension and vasovagal events in the diagnostic lab: a pressure fall when an AL catheter is advanced deep onto the cusp (recovers on withdrawal), a fall after intracoronary nitroglycerin (with optional history of a phosphodiesterase-5 inhibitor or an inferior STEMI with RV involvement), and a vasovagal reaction at arterial puncture or sheath removal (rate falls before pressure, nausea and sweating reported by the patient). A vasovagal episode recovers within a few minutes of legs up, atropine and saline; a disguised retroperitoneal bleed or tamponade does not.",
+    "learnerDoes": "Withdraws the Amplatz, stops vasodilators and gives saline (pressor if severe), treats the vagal reaction with legs up, atropine 0.5–1.0 mg and fast saline, notes the time, and reconsiders if there is no improvement within a few minutes.",
+    "success": "Correct treatment for each cause; a time limit is set for the vagal diagnosis; the mimic is found when the patient does not recover.",
+    "tips": [
+      "diag-hypo-amplatz-valve",
+      "diag-hypo-after-vasodilator",
+      "diag-vagal-sequence"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-hypotension",
+      "cm-patient-complications-vasovagal"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Injection-related and procedure-related arrhythmias in the PCI lab: VF after an injection through a damped or wedged guide or when contrast does not clear from an ostial lesion; complete heart block, then AF, after intracoronary adenosine in the RCA (Brilakis Fig. 3.2); torsades or VF after adenosine with a pause; bradycardia during RCA atherectomy runs; VF at reperfusion of the LCx STEMI scenario. The lab raises 'vf' or 'bradycardia' with the trigger recorded. A defibrillator panel with synchronised and unsynchronised modes, energy selection, lead selection and the sync marker on the R wave.",
+    "learnerDoes": "Shocks VF at once, unsynchronised and at high energy, then disengages the guide so contrast clears; keeps adenosine in the RCA at 100 µg or less; for adenosine AF chooses DC cardioversion (synchronised, sync marker on the R wave, sedation); has the patient cough while the defibrillator charges for adenosine VF; stops an atherectomy run for bradycardia; uses temporary pacing for persistent block without escape.",
+    "success": "Shock delivered within seconds in the right mode; trigger removed before the next injection; no high-dose RCA adenosine; correct choice between waiting, atropine, pacing and cardioversion.",
+    "tips": [
+      "pci-arrhythmia-ecg-baseline",
+      "pci-arrhythmia-reperfusion",
+      "pci-arrest-defib-settings",
+      "pci-arrest-adenosine-cough",
+      "pci-adenosine-rca-dose"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-arrhythmia"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A live radiation model in the long-case scenarios (mid-RCA CTO first): cumulative air kerma, dose-area product and dose rate on screen, driven by frame rate (3.75, 7.5, 15 fps), cine versus fluoro save, magnification, collimation, angulation from AP, table height and receptor height (Brilakis Fig. 28.6 factors 1.0, 1.4, 2.6), and a skin map that shows how much dose each entry point has received. Call-outs every 1 Gy. Raise 'high-radiation-dose' above a configurable threshold (default 5 Gy). The debrief asks for the follow-up decision.",
+    "learnerDoes": "Agrees a stopping dose and call-out interval at the plan step, keeps the dose rate below 20 mGy/min with the levers, moves the entry point, uses fluoro save for inflations, stops or stages at 5–8 Gy, and at the end chooses the follow-up: skin check within a month above 5 Gy; physicist peak skin dose and examination at 2–4 weeks above 10 Gy; 24-hour notification above 15 Gy (US) or radiation protection adviser for a dose greater than expected (UK).",
+    "success": "Final dose within the agreed limit or a staged stop; dose rate kept below 20 mGy/min for most of the case; no single skin area carrying most of the dose; correct follow-up chosen for the final dose.",
+    "tips": [
+      "pci-rad-dose-callouts",
+      "pci-rad-skin-follow-up",
+      "pci-rad-prior-skin-injury",
+      "diag-acq-high-dose-adjust",
+      "pci-acq-fluoro-save-inflations"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-radiation"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A per-patient contrast budget. Each scenario carries weight, eGFR, a single-kidney flag and recent contrast (for example a CT two days earlier). The lab computes and displays the ceilings (3.7 × GFR; below the clearance when eGFR is under 30; Oxford 5–7 mL/kg for comparison), tracks every millilitre (diagnostic runs, test injections, contrast left in the guide when a device is advanced, injector tubing flushes), and raises 'high-contrast-volume' at 50% and 100% of the learner's chosen ceiling. Contrast-sparing actions are available: wire into the ostium instead of a test injection, 2–3 mL injections, diluted contrast, back-bleeding the guide, extra wires as a roadmap, IVUS in live view, guide with or without side holes. The debrief scores the volume against the ceiling.",
+    "learnerDoes": "Sets the ceiling at the plan step from the patient data, subtracts recent contrast, finishes the PCI with the sparing techniques, and stops or stages at the ceiling.",
+    "success": "Ceiling set by the stricter rule; final volume within it; at least three sparing techniques used; zero-contrast cases followed by an echo before and after.",
+    "tips": [
+      "pci-contrast-budget-ckd",
+      "pci-contrast-sparing-tactics",
+      "pci-planning-contrast-ceiling"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-contrast-budget"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "A low-eGFR patient in the full procedure (eGFR 25–30, diabetic, on metformin and an NSAID, ejection fraction normal or reduced). Pre-procedure orders (saline rate and duration, metformin, NSAIDs, statin), choice of contrast agent and catheters (5 Fr without side holes), a contrast budget that carries over into ad hoc PCI at hand-over, and a post-procedure plan (hydration, creatinine dates). Distractor orders include N-acetylcysteine and sodium bicarbonate. If the learner over-hydrates a patient with a reduced ejection fraction or raised LVEDP, the patient develops pulmonary oedema.",
+    "learnerDoes": "Writes the saline order tailored to volume status, holds metformin and the NSAID, states the ceiling at the brief, keeps the diagnostic runs small, reports the remaining budget at hand-over, and arranges creatinine at 48 hours and again around day 4–5.",
+    "success": "Saline only (no acetylcysteine or bicarbonate); ceiling stated and respected; correct metformin plan; creatinine follow-up beyond 48 hours.",
+    "tips": [
+      "diag-caki-prepare",
+      "pci-caki-after-case"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-kidney",
+      "cm-patient-complications-contrast-budget"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "A retroperitoneal bleed after femoral access with the full reversal and transfusion decision. A high or unguided puncture (several attempts) sets the risk; within 3 hours the patient becomes hypotensive with back pain and sweating, often bradycardic, with or without a closure device. Bladder fluoroscopy shows a dented bladder. Contralateral femoral access and iliofemoral angiography show either a large-vessel tear (external iliac) or a small-branch bleed (inferior epigastric or lateral circumflex iliac). Drug state includes heparin dose and time, GP IIb/IIIa or cangrelor infusion, and the oral P2Y12 inhibitor (clopidogrel, prasugrel or ticagrelor). Options: protamine dose and rate, stopping infusions, platelet transfusion, red cell transfusion, low-pressure balloon tamponade, covered stent (balloon-expandable or self-expanding), coils, sealant, surgery, CT for the stable patient. A rapid or uncapped protamine dose triggers a protamine reaction (hypotension 5–10 minutes later). Anticoagulant state can include a DOAC (dabigatran, apixaban or rivaroxaban) with the time of the last dose and renal function, so that the learner can choose idarucizumab, andexanet alfa or prothrombin complex concentrate for life-threatening bleeding as the 2021 EHRA guide describes; for ticagrelor, platelets may fail.",
+    "learnerDoes": "Starts the general measures (large-bore access, saline, crossmatch, haemoglobin, pressure), reverses heparin with a slow protamine dose capped at 50 mg once the diagnosis is made and the coronary is empty, stops IV antiplatelet infusions, screens the bladder, obtains contralateral access, stops the bleeding with a low-pressure balloon, chooses covered stent for a large vessel or coils for a branch, transfuses according to the bleeding and haemodynamics, and plans antiplatelet therapy (de-escalation rather than stopping; platelets only for life-threatening bleeding on an irreversible agent).",
+    "success": "Bleeding controlled in the lab without CT delay in an unstable patient; protamine given correctly; correct device for the vessel type; no platelet transfusion expected to reverse ticagrelor; dual antiplatelet therapy not stopped outright.",
+    "tips": [
+      "pci-bleed-general-measures",
+      "pci-bleed-bladder-screen",
+      "access-bleed-endovascular-control",
+      "pci-bleed-antiplatelet-platelets",
+      "pci-protamine-only-after-equipment-out"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-bleeding"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "access",
+    "what": "Vagal-reaction prevention and management at puncture, sheath insertion and sheath removal: local anaesthetic dose and timing, sedation state, saline running before sheath removal, atropine and fluid ready. Inadequate local anaesthetic or no saline increases the chance of a vagal reaction during the step.",
+    "learnerDoes": "Gives local anaesthetic before the sheath, starts saline before removing a femoral sheath, keeps compressing during a vagal reaction, gives atropine and fluid, and reconsiders after a few minutes without improvement.",
+    "success": "Fewer vagal events when preventive steps are taken; compression maintained; mimic considered when recovery fails.",
+    "tips": [
+      "access-vagal-prevention",
+      "access-vasovagal-or-tamponade"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-vasovagal"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Lab events that do not yet exist in the tip vocabulary: an 'atrial-fibrillation' event (adenosine-induced, right heart catheter irritation, ischaemia) and a 'ventricular-tachycardia' event (pulsed or pulseless, with RV outflow or LV catheter position as triggers), so that cardioversion and AF tips can be shown at the right moment.",
+    "learnerDoes": "Chooses between watchful waiting, synchronised cardioversion (energy, sync marker, sedation; firm pressure if hand-held paddles are used, or well-applied adhesive pads with everyone clear) and drugs, and removes the catheter trigger.",
+    "success": "Correct mode and energy; correct choice for stable versus unstable rhythm.",
+    "tips": [],
+    "lessonIds": [
+      "cm-patient-complications-arrhythmia"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Raise the existing events 'high-contrast-volume' (at 50% and 100% of the learner's contrast ceiling) and 'high-radiation-dose' (above a configurable air kerma, default 5 Gy) during PCI and at the finish step, so that the tips pci-contrast-sparing-tactics, pci-caki-after-case and pci-rad-skin-follow-up can fire. No lab raises either event today. Also report the access route (femoral or radial) in the PCI lab context, and add patient-state events (for example 'ckd' and 'prior-skin-injury') to LAB_EVENTS so that planning tips can be limited to the patients they concern; until then the planning tips pci-contrast-budget-ckd and pci-rad-prior-skin-injury are triggered by the plan phase alone and worded conditionally.",
+    "learnerDoes": "Sees the contrast and dose tips at the moment the thresholds are crossed, and the follow-up tips at the end of a high-dose or high-contrast case.",
+    "success": "Each tip appears only when its event or patient state is present; the femoral bladder-screen tip appears only in femoral cases.",
+    "tips": [
+      "pci-contrast-sparing-tactics",
+      "pci-caki-after-case",
+      "pci-rad-skin-follow-up",
+      "pci-contrast-budget-ckd",
+      "pci-rad-prior-skin-injury",
+      "pci-bleed-bladder-screen"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-contrast-budget",
+      "cm-patient-complications-kidney",
+      "cm-patient-complications-radiation",
+      "cm-patient-complications-bleeding"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A 'vasodilator-given' event (raised for a few minutes after intracoronary nitroglycerin or intra-arterial verapamil), and the systolic pressure shown when the learner chooses the nitroglycerin dose, so that Brilakis's dosing by systolic pressure (200 µg above 120 mmHg, 100 µg at 100–120, 50 µg or none below 100) can be practised and the vasodilator tip shown only after a vasodilator.",
+    "learnerDoes": "Chooses the nitroglycerin dose from the systolic pressure, withholds it in hypotension, suspected right ventricular infarction or recent PDE-5 inhibitor use, and manages a fall in pressure after it.",
+    "success": "Dose matched to the systolic pressure; no nitroglycerin in the contraindicated states; a post-nitrate fall managed with saline, time and a pressor if severe.",
+    "tips": [
+      "diag-hypo-after-vasodilator"
+    ],
+    "lessonIds": [
+      "cm-patient-complications-hypotension"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pacing",
+    "what": "Overdrive pacing of sustained monomorphic VT (Oxford ch 10): a VT rhythm on the monitor, pacing 15–20 per minute above the VT rate, raising the output to 5–10 V where needed, capture shown by a change in QRS shape and the rate rising to the paced rate, pacing stopped after 5–10 seconds of capture, the risk of acceleration into VF needing a shock, and optional background pacing at 90–110 per minute afterwards.",
+    "learnerDoes": "Sets the overdrive rate and output, recognises capture, stops pacing at the right moment, and shocks if the rhythm degenerates.",
+    "success": "VT terminated without VF in most attempts; the defibrillator ready throughout; correct background pacing rate chosen when pauses triggered the VT.",
+    "tips": [],
+    "lessonIds": [
+      "cm-patient-complications-arrhythmia"
+    ],
+    "priority": "P3"
+  }
+]

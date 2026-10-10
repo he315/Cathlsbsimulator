@@ -1,0 +1,190 @@
+[
+  {
+    "lab": "procedure",
+    "what": "Route-decision step before the access stage: a patient card (grafts and LIMA, anticoagulant, bleeding-risk factors, planned complexity, pulses, prior failures, dialysis fistula, CT findings such as arteria lusoria or iliac occlusion) and a choice of site, sheath size and sheath length, scored against the five-step algorithm, with the chosen route carried into the rest of the case.",
+    "learnerDoes": "Reads the card, excludes unusable sites, chooses radial (left or right), distal radial, ulnar or femoral, and a sheath size and length; states the fallback site.",
+    "success": "The choice matches the first deciding step of the algorithm (or an accepted alternative with stated reasons), the sheath fits the plan (for example 7–8 Fr 45 cm femoral for complex PCI) and a fallback is named.",
+    "tips": [
+      "access-site-five-steps",
+      "access-cabg-left-radial",
+      "access-complex-pci-femoral"
+    ],
+    "lessonIds": [
+      "pm-access-site-choice"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Femoral access with the full Brilakis sequence: a draggable metal marker on AP fluoroscopy to find the inferior border of the femoral head and mark it; an ultrasound sweep that shows the bifurcation height (variable per patient preset, including a high bifurcation over the femoral head), anterior-wall calcium and the femoral vein (compressible); needle depth presets (about 2 cm and about 4 cm) where the skin entry and angle must be chosen.",
+    "learnerDoes": "Marks the femoral head, scans up and down, selects a segment above the bifurcation away from calcium, chooses entry point and angle for the depth, punctures bevel up with the probe square.",
+    "success": "Arterial entry over the femoral head and above the bifurcation on the first or second pass; for the deep preset, skin entry moved caudally at about 45° (or a justified steeper angle).",
+    "tips": [
+      "access-femoral-head-marker",
+      "access-femoral-scan-bifurcation",
+      "access-femoral-deep-move-caudal",
+      "access-needle-flashback-check"
+    ],
+    "lessonIds": [
+      "pm-access-femoral-puncture",
+      "pm-access-seldinger"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Scripted needle and wire events at the femoral stage: dark non-pulsatile venous return; no blood return (tip in the wall or plugged needle); 0.018 inch micropuncture wire entering the inferior epigastric (medial), lateral circumflex iliac (lateral) or running down the leg; wire entry above or below the femoral head on screening.",
+    "learnerDoes": "Recognises each event from the hub return or the fluoroscopy image and applies the fix: redirect laterally, reposition or flush the needle, withdraw and redirect the wire, or remove everything, press 1–2 minutes and re-puncture.",
+    "success": "No dilator or sheath advanced over a misplaced wire; wrong-height punctures redone; venous entry corrected without passing a sheath.",
+    "tips": [
+      "access-femoral-vein-redirect",
+      "access-femoral-screen-micro-wire",
+      "access-femoral-repuncture-wrong-height",
+      "access-wire-never-push"
+    ],
+    "lessonIds": [
+      "pm-access-femoral-puncture",
+      "pm-access-femoral-sheath",
+      "pm-access-seldinger"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Micropuncture upsizing and the femoral angiogram: micropuncture dilator, exchange to a 0.035 inch wire, skin nick (allowed over the needle or dilator, blocked with a sheath in place), sheath length choice (10, 25, 45 cm), aspiration and flush with separate syringes, then the femoral angiogram with selectable C-arm obliquity, magnification and contrast volume, and a result image showing puncture height relative to the bifurcation and the inferior epigastric artery.",
+    "learnerDoes": "Upsizes, nicks safely, inserts the sheath, aspirates 3–4 mL and flushes with a second syringe, checks the waveform, keeps a wire in the aorta and images in the ipsilateral oblique (RAO 20–30° right, LAO 20–30° left) with 5–10 mL.",
+    "success": "Correct order, two syringes, wire in place, ipsilateral oblique view and a correct verbal report of the puncture site (above or below the bifurcation, size and disease).",
+    "tips": [
+      "access-sheath-two-syringes",
+      "access-femoral-sheath-angiogram"
+    ],
+    "lessonIds": [
+      "pm-access-femoral-sheath"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Radial access stage with patient presets (normal radial, small radial, younger anxious patient, LIMA graft requiring left radial, patient unable to supinate): arm positioning options, ultrasound at selectable depth, local anaesthetic volume that visibly compresses the artery when excessive, single-wall or through-and-through puncture, and a spasm state triggered by repeated passes or no sedation.",
+    "learnerDoes": "Positions the arm, scans above the styloid at low depth, gives about 1 mL after aspirating, punctures under ultrasound, and if spasm appears gives nitroglycerin and sedation or changes artery.",
+    "success": "Access with no more than two passes in the normal preset; correct response to an over-large anaesthetic bleb (wait 1–2 minutes or move); spasm handled without repeated stabbing.",
+    "tips": [
+      "access-radial-one-ml-local",
+      "access-radial-puncture-spasm"
+    ],
+    "lessonIds": [
+      "pm-access-radial-puncture"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Radial wire and sheath stage: resistance events at the needle tip (needle against the wall, bevel facing the side) and higher in the forearm (tortuosity, loop, spasm) with a forearm angiogram through a catheter advanced below the wire tip; sheath choice (4 Fr, thin-walled 5–7 Fr, standard, long) with spasm risk by size; vasodilator and heparin timing; securing the sheath.",
+    "learnerDoes": "Restores backflow, extends the wrist, changes the angle or turns the bevel; images forearm resistance; chooses the smallest thin-walled sheath; aspirates, gives a vasodilator, decides heparin timing, secures the sheath.",
+    "success": "The wire is never pushed against resistance; sheath size suits the artery; vasodilator given; heparin held until the root only in the extreme-tortuosity preset.",
+    "tips": [
+      "access-radial-wire-resists",
+      "access-radial-thin-sheath-vasodilator"
+    ],
+    "lessonIds": [
+      "pm-access-radial-sheath"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Distal radial (snuffbox) access site in the ultrasound access engine: hand position (thumb held under the other four fingers, hand slightly abducted), probe over the snuffbox, puncture at 30–45° from lateral to medial, smaller artery size limiting the sheath, and a tall-patient preset in which a standard-length catheter cannot reach the aortic root.",
+    "learnerDoes": "Positions the hand, punctures the distal radial artery, chooses a sheath within its size limit, and when the catheter does not reach the root chooses a longer catheter, a long sheath or a change of site.",
+    "success": "Successful distal radial puncture with the correct angle and direction; appropriate response to failure to reach the root.",
+    "tips": [
+      "access-distal-radial-angle"
+    ],
+    "lessonIds": [
+      "pm-access-alternative"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Ultrasound-guided venous access for the right heart, pacing and support cases: femoral vein (medial, compressible) with a heparinised-saline syringe and suction, internal jugular (high and mid approaches with carotid palpation, angle and aim) and subclavian (walking under the clavicle, rotation towards the sternal notch, needle parallel to the bed), with events for a transfixed vein (blood only on withdrawal) and no blood return (flush, head-down tilt, fluid). Make real-time ultrasound the default for the internal jugular vein (compressible vein lateral to the carotid, needle tip followed into it), with Oxford's high and mid landmark approaches available as a fallback when ultrasound is switched off.",
+    "learnerDoes": "Chooses the vein for the indication, punctures with aspiration, recovers a missed pass by slow withdrawal, and passes the wire; in a combined femoral study, punctures artery and vein at different levels and removes the arterial sheath first.",
+    "success": "Venous access without arterial puncture or pneumothorax events; correct sequence of sheath removal; correct vein choice for presets with anticoagulation, iliofemoral clot or a vena cava filter.",
+    "tips": [
+      "access-central-vein-no-blood",
+      "access-artery-vein-same-groin"
+    ],
+    "lessonIds": [
+      "pm-access-venous"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Scripted resistance events during femoral upsizing: micropuncture dilator blocked by scar or by a kinked 0.018 inch wire at the arterial entry (obese preset), sheath blocked by a poorly prepared track, 0.035 inch wire kinking as the sheath is pushed, and a new sheath with no arterial waveform (subintimal).",
+    "learnerDoes": "Stops, screens, and applies the matching fix: nick and spread the track, stiffer dilator, partial wire withdrawal, cutting the kinked segment, exchange through a dilator to a stiffer or supportive wire, dilator alone first, smaller sheath; for the subintimal sheath, changes site.",
+    "success": "Each event resolved with a listed fix and no forced advancement; subintimal sheath not injected through.",
+    "tips": [
+      "access-dilator-will-not-pass",
+      "access-no-waveform-sheath",
+      "access-wire-never-push"
+    ],
+    "lessonIds": [
+      "pm-access-troubleshoot"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "impella",
+    "what": "Large-bore access stage before pump positioning: 5–6 Fr sheath and femoral angiogram with an artery-size readout (including a preset under 5 mm or heavily calcified), pre-close with two suture devices at 10 and 2 o'clock left untied with wire reinsertion between them, sequential 8/10/12 Fr dilatation over a stiff wire, peel-away sheath length choice, a post-insertion limb angiogram, heparin to an ACT above 250 seconds before the dilator is removed; and at the end weaning, quick removal, suture tightening with an optional contralateral iliac balloon.",
+    "learnerDoes": "Runs the access sequence in order, chooses an alternative (iliac treatment, axillary or transcaval referral) for the unsuitable artery preset, and closes with the pre-placed sutures.",
+    "success": "Sutures placed before dilatation, wire access never lost, limb checked, ACT target met before opening the sheath, haemostasis achieved at the end.",
+    "tips": [
+      "mcs-largebore-angiogram-first",
+      "mcs-preclose-two-sutures",
+      "mcs-largebore-removal-sutures",
+      "mcs-largebore-limb-angiogram",
+      "mcs-largebore-limb-check"
+    ],
+    "lessonIds": [
+      "pm-access-large-bore"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "ecmo",
+    "what": "Limb perfusion decision during VA-ECMO: NIRS readings for both legs and the option to place an antegrade perfusion sheath (ultrasound and micropuncture into the common or superficial femoral artery) before or after the arterial cannula; cannula sizes 15–19 Fr; arterial and venous cannulae in different groins.",
+    "learnerDoes": "Places the venous cannula in the right femoral vein and the arterial in the left femoral artery, reads NIRS and decides on a perfusion sheath.",
+    "success": "Perfusion sheath placed when NIRS is below 50% or more than 15% below the other leg; cannulae not in the same groin.",
+    "tips": [
+      "mcs-largebore-limb-check"
+    ],
+    "lessonIds": [
+      "pm-access-large-bore",
+      "pm-access-venous"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "procedure",
+    "what": "Wire the access stage and the microaxial pump and ECMO access stages to the lab tip system: build a LabContext with lab 'access' (phases plan, puncture, wire, sheath, radial, femoral, closure, complication) and lab 'mcs' (select, insert, position, manage, wean, complication) and call tipsFor, as useLabTips.ts already does for the diagnostic lab. Today no UI builds an 'access' or 'mcs' context, so none of this module's tips can appear. Because tipsFor matches a single context phase, report the route ('femoral' or 'radial') as the phase while the learner is at that site, or extend LabContext so that a site and a step can both be reported. Raise route-specific events so that tips fire only when they help: proposed new LAB_EVENTS 'venous-flashback' (dark non-pulsatile return), 'no-flashback' (no blood at the hub), and site events for the femoral, radial and jugular punctures; then attach access-femoral-vein-redirect to venous flashback at the femoral site and access-central-vein-no-blood to no flashback at a jugular or subclavian site.",
+    "learnerDoes": "Performs a radial puncture, then a femoral puncture, then a jugular puncture in the procedure lab, and a large-bore insertion in the microaxial pump lab.",
+    "success": "Only the tips for the current site and event appear: femoral tips never at the wrist, radial tips never at the groin, the neck-vein tip only at a jugular or subclavian puncture without blood return, the limb-ischaemia bailout only when limb ischaemia is raised.",
+    "tips": [
+      "access-needle-flashback-check",
+      "access-femoral-vein-redirect",
+      "access-central-vein-no-blood",
+      "access-femoral-scan-bifurcation",
+      "access-radial-one-ml-local",
+      "mcs-largebore-limb-angiogram",
+      "mcs-largebore-limb-check"
+    ],
+    "lessonIds": [
+      "pm-access-seldinger",
+      "pm-access-femoral-puncture",
+      "pm-access-radial-puncture",
+      "pm-access-venous",
+      "pm-access-large-bore"
+    ],
+    "priority": "P1"
+  }
+]

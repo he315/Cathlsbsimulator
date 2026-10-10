@@ -1,0 +1,259 @@
+{
+ "package": "proc-anaphylaxis-vagal",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built proc-anaphylaxis-vagal, and all five acceptance criteria are met by passing vitest files.\n\n**What the learner can now do in the full case.** A new \"Emergency orders\" section offers the anaphylaxis order set, support, atropine, an echo or bleeding check, prevention before the access steps, and follow-up. It works through a session module, `src/simulation/session/modules/emergencies.ts`. The module applies each order to the patient engine, keeps a record of what was ordered and when, and writes decisions to the ledger.\n\n**Wrong orders have consequences from the patient:**\n- IV adrenaline 1 mg with a pulse causes severe hypertension and a VT drive, and counts as a critical error.\n- Antihistamine and steroid first delay recovery.\n- Atropine during a fast-rate reaction makes the tachycardia worse.\n- More contrast during a reaction makes it worse.\n- An infusion above 10 \u00b5g/min causes VT, which settles once the rate is reduced.\n\n**Engine changes are off unless something turns them on, so the other labs are unchanged:**\n- `forceReaction` lets a scenario start a reaction. It skips the random draw, so random-case incidence is unchanged.\n- An optional pre-arrest variant gives a bradycardia with the skin and airway signs present.\n- A vagal vasodilator lag makes the heart rate fall before the pressure.\n- `forceVagal` and `setEmergencyModel` are new.\n- A `sheath-removal` stimulus draws from its own generator, so no other random draw moves.\n\n**Vagal prevention:**\n- At puncture and sheath insertion, the local anaesthetic dose and its timing scale the vagal chance in every full case. A proper local that has had time to work leaves it as before.\n- The sheath-removal vagal draw and its scored preparation (saline running, atropine or fluid ready) are switched on only by the two prevention scenarios, `vagal-no-local` and `vagal-removal-no-saline`. Switching them on for every case broke two other packages' tests by changing random femoral cases.\n- If a faint has not recovered a few minutes after treatment, the nurse reports the numbers only. In guided mode the attending also asks what else it could be. A look for a mimic is then scored.\n\n**Six scenarios, with launch metadata:** anaphylaxis-asthmatic, anaphylaxis-prearrest-brady, vagal-mimic, vagal-no-local, vagal-removal-no-saline and tamponade-mimic. Doses and time windows cite the lesson text; everything else is labelled MODEL PARAMETER in code.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/emergencies.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/emergencies.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/emergencies.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/engine.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/responses.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/orders/Emergency.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/emergencies.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/emergencies.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/emergencies.tips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/orders/Emergency.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/session/emergencies.test.ts (17 tests: IM vs antihistamine/steroid first; consequences of IV 1 mg, more contrast and atropine; excessive infusion VT and settling; infusion after two doses with help; pre-arrest atropine-only scored wrong; tryptase windows in session and classifyTryptase; vagal-mimic HR before MAP, no itch or flushing, atropine restores HR, recovery without a no-response report; no-recovery nurse line with a hidden pericardial bleed and the scored look; vagal-no-local over 10 seeds; removal preparation and local dose scoring; tamponade-mimic; random-case incidence unchanged (400 Responses seeds plus 30 sessions with and without the module); random case's sheath removal unchanged; engine defaults and snapshot; practice index; launch file matches scenarios)",
+     "src/simulation/session/modules/emergencies.tips.test.ts (3 tests: anaphylaxis-asthmatic tips after contrast-reaction; vagal-mimic access closure tips; raises registered and waiting.ts entries for the package satisfiable)",
+     "src/ui/access/orders/Emergency.test.ts (2 tests: section registered and renders every order; never names the reaction on the live screen)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/emergencies.test.ts src/simulation/session/modules/emergencies.tips.test.ts src/ui/access/orders/Emergency.test.ts -> 22 passed (45.6 s)",
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts src/simulation/session/handover.test.ts src/simulation/session/multiSite.tips.test.ts -> 105 passed",
+     "npx vitest run src/simulation/session/multiSite.test.ts src/simulation/session/planning.test.ts src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts -> 75 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/content/content.test.ts -> 76 passed",
+     "npx vitest run src/simulation/team/team.test.ts src/ui/lab/patientEvents.test.ts -> 51 passed",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts src/simulation/session/modules/planning.tips.test.ts -> 9 passed",
+     "npx vitest run src/simulation/session/caseSession.test.ts -> 14 passed (after the removal-drill change; it had failed once when the removal draw ran in every case)",
+     "npx vitest run src/simulation/session/scenarios.test.ts -> 23 passed, 1 failed: 'session.decide() records ... clean case'. The wrong decision is the planning module's pre-puncture-checklist (the autopilot does not confirm the checklist); the same seed run with the emergencies module excluded gives the same wrong decision, so it is not from this package"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors",
+    "acceptance": [
+     {
+      "criterion": "In 'anaphylaxis-asthmatic' IM adrenaline 0.5 mg within 2 min restores MAP above 65 sooner than chlorphenamine and hydrocortisone first",
+      "status": "met",
+      "evidence": "emergencies.test.ts 'anaphylaxis-asthmatic: IM adrenaline ... sooner' passes. Arm A gives IM about 1 min after the first signs, then fluid and oxygen, with a repeat at 5 min. Arm B gives chlorphenamine and hydrocortisone, reassesses for 3 min, then gives IM. The test asserts B went below 65 and that A's last time below 65 came earlier than B's; it also asserts the first-drug and in-time decisions (correct in A, wrong in B). In a probe, A never fell below 65 (minimum 76) and B fell to 49, recovering about 325 s after recognition."
+     },
+     {
+      "criterion": "'vagal-mimic' shows HR falling before MAP without itch or flushing; atropine restores HR; 'anaphylaxis-prearrest-brady' scores atropine-only wrong",
+      "status": "met",
+      "evidence": "vagal-mimic test (1 s sampling after the femoral pull): HR reaches half its fall before MAP does; itch and flushing are 0 throughout; no contrast-reaction event. Legs raised plus atropine 1 mg during compression lifts HR above max(60, minimum + 15) within 2 min, and with saline the MAP is back to 65 or more with no no-response report. Pre-arrest test: HR below 60 with itch present; atropine only gives anaphylaxis-first-drug false ('...atropine...') and anaphylaxis-adrenaline-in-time false."
+     },
+     {
+      "criterion": "'vagal-no-local' gives a vagal event more often over a seed set than with local and saline; tryptase outside the windows is wrong",
+      "status": "met",
+      "evidence": "The 10-seed test (vnl-0..9) asserts more vagal events without prevention (no local, no saline) than with local 10 mL plus 60 s, a saline drip and atropine drawn up. A 20-seed probe gave 17/20 versus 10/20. Tryptase in session: a sample before onset, before any adrenaline, a second sample at 30 min, and a further sample in the 1-2 h window are each wrong; the first sample after adrenaline and the second at 90 min are right. classifyTryptase also covers after 4 h (wrong) and 24 h after resolution (third, right)."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios anaphylaxis-asthmatic, anaphylaxis-prearrest-brady, vagal-mimic under lessons pm-lab-drugs-contrast-reactions, cm-patient-complications-vasovagal, cm-perforation-tamponade (from src/simulation/session/scenarios/emergencies.launch.ts)",
+      "status": "met",
+      "evidence": "The practice links test checks all nine pairs (each of the three scenarios under each of the three lessons) with practiceForLesson. vagal-no-local is also under the vasovagal lesson and tamponade-mimic under the tamponade lesson, and all six ids are known to PRACTICE_INDEX. content.test.ts and practiceIndex.test.ts pass."
+     },
+     {
+      "criterion": "Tips: in anaphylaxis-asthmatic, after the action that raises 'contrast-reaction', tipsFor(ctx, 20) includes diag-anaphylaxis-im-adrenaline and diag-reaction-or-vagal; every waiting.ts entry naming proc-anaphylaxis-vagal becomes satisfiable, so the diagnostic waiting count falls by at least their number",
+      "status": "met",
+      "evidence": "emergencies.tips.test.ts: before onset the diagnostic phase-less context lacks the tip. After the event, tipsFor(ctx, 20) includes both diagnostic tips, the PCI context includes pci-anaphylaxis-im-adrenaline, and module.events() reports contrast-reaction. waiting.ts has no entry naming this package, so this part holds trivially: none are left waiting (asserted). The test also shows that diag-anaphylaxis-im-adrenaline and diag-reaction-or-vagal (listed under diag-tip-context) can be satisfied from the case's declared raises. reachability.test.ts passes."
+     },
+     {
+      "criterion": "Emergency order section usable in the running app (buttons, infusion rate, local dose input) without revealing the diagnosis",
+      "status": "needs-browser",
+      "evidence": "A static render test shows it is registered, renders every order and never names the reaction. I did not check it in the browser, as instructed."
+     }
+    ],
+    "outOfScope": [
+     "src/simulation/session/caseSession.ts and the access UI (OrdersPanel): femoral compression and band time run as a very fast time-lapse during which session.order() refuses and the generic order buttons are disabled. My emergency orders work during the lapse (given straight to the engine with no extra time), but in the app a faint at sheath removal plays out in about a second. The session needs a way for a module to pause or slow the time-lapse when an emergency begins.",
+     "src/simulation/session/autopilot.ts: to score removal preparation (saline running with atropine or fluid ready) and draw the removal vagal reaction in every femoral case, the autopilot should start saline and draw up atropine before femoral manual compression. caseSession.test.ts 'a femoral sheath pulled early ... delayed bleed' also reads MAP straight after the pull, which a vagal episode at removal disturbs. Until both are dealt with, the removal draw is limited to the two prevention scenarios.",
+     "docs/realism/facts: the new MODEL PARAMETERs (MP_EMERGENCIES, MP_EMERGENCY in responses.ts, MP_VAGAL_PREVENTION in engine.ts) are labelled in code but not recorded in a facts file, which this package does not own.",
+     "Pre-existing failure, not from this package: scenarios.test.ts 'session.decide() records ... clean case' fails on the planning module's pre-puncture-checklist decision (the autopilot does not confirm the checklist). It reproduces with the emergencies module excluded; owners are proc-chart-planted-problems and the autopilot."
+    ],
+    "notes": "Snapshots are in datasets/tmp/wp-snapshots/proc-anaphylaxis-vagal/: engine.ts, responses.ts and .started. The other six listed files were new. The only files I created outside the list are the two new test files.\n\nChoices worth checking:\n- **Infusion threshold.** The lesson gives no rate for the anaphylaxis infusion. Above 10 \u00b5g/min counts as excessive, anchored to the module's 2-10 \u00b5g/min cardiogenic shock range (04-lab-drugs.ts:654). It is labelled MODEL PARAMETER.\n- **Untreated severe reaction.** Left untreated in the engine it reaches MAP of about 5 mmHg with an organised rhythm; there is no arrest mechanism. CPR is offered as an order.\n- **New engine behaviour stays in the full case.** Contrast escalation and the 40 s vagal vasodilator lag are on only in the full case, through `setEmergencyModel` at module attach.\n- **Local anaesthetic scaling.** A puncture or sheath with no effective local raises the vagal chance by up to 1.6 times, on top of the session's own magnitudes. With local given and allowed to work, nothing changes.\n- **Dose-range hint.** The local anaesthetic range is shown only where the policy gives free hints (guided), because the volume is scored.\n- **No-response prompt.** It only covers vagal episodes. A fast-rate hypotension after the pull is scored on whether an echo or bleeding check is ordered within 5 minutes; atropine first is scored wrong.\n- **Machine load.** emergencies.test.ts takes about 43 s; the seed-set test is about 22 s of that."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/simulation/session/modules/emergencies.ts, order() case \"infusion-stop\" (about line 600) together with watch() infusion block (about lines 668-680)",
+      "problem": "If the infusion is stopped outright while the excessive-rate VT is running, the VT never ends. 'infusion-stop' sets st.infusion = null, and the settle logic only runs inside `if (inf)`. forceRhythm('vt') starts a sustained VT (transientUntil null), so nothing ends it. I confirmed this with a vite-node probe on anaphylaxis-asthmatic: setInfusion(20), 80 s later rhythm vt, then 'Infusion stopped.', and the rhythm was still vt at 175 bpm at every minute up to +360 s. Stopping the pump is the most natural response, so the lesson ('reduce it if tachycardia or arrhythmia appear') is broken. Also, if the rate goes back above 10 \u00b5g/min after a reduction while settleSinceT is set, the VT still settles.",
+      "severity": "major",
+      "fix": "Keep the tachyarrhythmia state apart from the running infusion. For example, add `infusionTachy: { settleSinceT: number | null } | null` to EmergenciesState. In 'infusion-stop': `if (st.infusion?.tachy) st.infusionTachy = { settleSinceT: now() };` before setting st.infusion = null. In watch(), settle when `(inf?.tachy && inf.settleSinceT !== null && t - inf.settleSinceT >= infusionSettleS) || (!inf && st.infusionTachy?.settleSinceT != null && t - st.infusionTachy.settleSinceT >= infusionSettleS)`, then forceRhythm('sinus') and clear the state. In setInfusion, when `excess` is true, also set `inf.settleSinceT = null` so a raised rate cancels settling. Add a test in emergencies.test.ts: setInfusion(20), wait infusionTachyAfterS+10 and expect vt, order('infusion-stop'), wait infusionSettleS+10 and expect not vt."
+     },
+     {
+      "where": "src/simulation/session/modules/emergencies.ts onHook('sheath-pull') with removalDrill; src/simulation/session/scenarios/emergencies.ts ARM_REMOVAL",
+      "problem": "The design asks for vagal prevention at sheath removal: saline running, atropine and fluid ready, with engine.stimulus scaling with these. Here the removal vagal draw and its scored preparation run only in vagal-no-local and vagal-removal-no-saline. In every other full case, saline, atropine-ready and fluid-ready do nothing at removal, and no removal faint can happen. The builder disclosed this, giving autopilot and caseSession.test dependencies. There is a second disclosed gap: femoral compression is a fast time-lapse, so in the running app a removal faint plays out in about a second. That makes vagal-mimic, vagal-removal-no-saline and tamponade-mimic barely playable, even though the API-level tests pass. Acceptance 6 ('usable in the running app') is unverified.",
+      "severity": "major",
+      "fix": "Not fixable inside this package's files. Raise follow-ups. (1) autopilot.ts (owner of the autopilot): start the saline drip and draw up atropine before femoral manual compression. Then arm the removal draw in every femoral manual-compression case by removing the `st.prevention.removalDrill &&` guard, and update caseSession.test 'a femoral sheath pulled early ... delayed bleed' to read MAP outside a vagal episode. (2) caseSession.ts (access-closure-femoral-manual or proc-foundation-scenarios-ledger): add a module hook such as `session.holdLapse(reason)`, or slow the lapse while module events include bradycardia or hypotension, so an emergency at removal runs at real time. Until then, mark acceptance 6 as not met and verify it in the browser after the change."
+     },
+     {
+      "where": "src/simulation/session/emergencies.ts echoFinding() (lines 289-294); src/simulation/session/modules/emergencies.ts bleeding-check (haem > 30, lost > 400), watch() (HR < 50 twice, `t - lowMapSince >= 10`, `since > 60` for resolution) and events() (HR < 50)",
+      "problem": "Several clinical-looking thresholds are inline literals. They are neither sourced nor in MP_EMERGENCIES: pericardial 100 mL / 20 mL, blood loss 500 mL, MAP 55, haematoma 30 mL, haemoglobin-fall loss 400 mL, bradycardia HR 50, 10 s low-MAP persistence and 60 s minimum before resolution. The file header says 'Every other number below is a MODEL PARAMETER (MP_EMERGENCIES)', which these break. The project rule is to cite a number or label it MODEL PARAMETER.",
+      "severity": "minor",
+      "fix": "Move them into MP_EMERGENCIES with doc comments, for example `echo: { largeEffusionMl: 100, effusionMl: 20, hypovolaemicLossMl: 500, hypovolaemicMap: 55 }`, `bleedCheck: { haematomaMl: 30, hbFallLossMl: 400 }`, `symptomaticHr: 50`, `fastHypotensionHoldS: 10`, `resolvedMinS: 60`. Reference them from echoFinding, bleeding-check, watch() and events(). Each one is a MODEL PARAMETER; record them in the docs/realism/facts entry the builder listed as out of scope."
+     },
+     {
+      "where": "src/simulation/session/emergencies.test.ts, 'wrong orders have consequences' test, atropine block (about lines 133-143)",
+      "problem": "The atropine assertion is close to tautological. A developing anaphylaxis already raises HR (hrDelta = 30 * circulation), so `hr after atropine > hr0` 20 s later could pass with no atropine at all. The test does not show that atropine adds to the tachycardia.",
+      "severity": "minor",
+      "fix": "Add a control arm: a second anaphylaxis-asthmatic session with the same seed, the same waits and no atropine. Assert `withAtropineHr > controlHr + k` (for example 5 bpm) at the same time point, keeping the decision assertion."
+     },
+     {
+      "where": "src/simulation/session/modules/emergencies.ts order() case 'adrenaline-iv-1mg' (`const v = lastVitals ?? vitals();`)",
+      "problem": "The pulse check reads lastVitals from the previous slow tick, which can be up to 5 s old. If VF or asystole began after that tick, an IV 1 mg given correctly in arrest is scored as 'with a pulse' and counted as a critical error, and the reverse is also possible.",
+      "severity": "minor",
+      "fix": "Read fresh vitals at the top of order(): `const v = vitals();` (it also refreshes lastVitals)."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts MP_VAGAL_PREVENTION.removalMagnitude (line 179)",
+      "problem": "Dead and duplicated parameter. The engine never reads MP_VAGAL_PREVENTION.removalMagnitude (0.55); the module passes MP_EMERGENCIES.removalMagnitude.femoral (0.55) / radial (0.3). The two can drift, and the engine comment says it holds 'the magnitude of a sheath removal by site kind'.",
+      "severity": "minor",
+      "fix": "Delete `removalMagnitude` from MP_VAGAL_PREVENTION and its mention in the doc comment, keeping MP_EMERGENCIES.removalMagnitude as the only source."
+     },
+     {
+      "where": "src/simulation/session/emergencies.ts ANAPHYLAXIS.fluidUpToMl; modules/emergencies.ts fluid-500/fluid-1000",
+      "problem": "The design lists 'crystalloid 500-1000 mL (up to 3-5 L)'. fluidUpToMl is declared and sourced but never used. Cumulative fluid (st.reaction.fluidMl) is neither shown in the record nor checked, so the 'up to 3-5 L' part is not implemented.",
+      "severity": "minor",
+      "fix": "Show the running total in the 'Given and done' record, for example 'Crystalloid 1000 mL as a rapid bolus (2000 mL so far)', using st.reaction.fluidMl or a session-wide total. Optionally log a nurse line with the total once it passes fluidUpToMl[0], without a verdict. Otherwise remove the unused constant."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts stimulus() / src/simulation/session/emergencies.test.ts 'random-case reaction incidence is unchanged'",
+      "problem": "The comment and the report say the puncture/sheath scaling 'is the same draw, so no other random draw moves'. That holds per call, but in a full case with no settled local, a vagal onset that the scaling now triggers takes two more this.rng.next() calls. Later draws on the engine generator, including the first-contrast reaction draw, then shift for that seed. Incidence over many seeds is unchanged, but per-seed outcomes of random full cases can change. The 30-session test only calls engine.contrast straight after construction, so it never exercises the puncture path.",
+      "severity": "minor",
+      "fix": "Correct the comment ('incidence is unchanged; per-seed sequences may shift after a vagal onset the scaling adds'). Alternatively, extend the 30-session test to run prepare-less gainAccess before the first contrast and compare reaction-kind frequencies, not per-seed equality. To keep per-seed equality, draw the scaled extra part from vagalRng: first the unscaled pain() draw on this.rng, then an extra vagalChallenge on vagalRng with magnitude*(k-1)."
+     }
+    ],
+    "verdict": "Needs fixes before acceptance. Most of the design is implemented. The anaphylaxis order set covers doses, tryptase windows and local volumes, all checked against 04-lab-drugs.ts, 05-patient-complications.ts and 05-access.ts. Wrong orders have physiological consequences, the pre-arrest and vagal look-alikes behave as specified, there are six scenarios with launch metadata, and tips are wired through module events and raises. Shared engines keep their defaults: setEmergencyModel and forceReaction are opt-in, the removal draw uses its own generator, and the snapshot carries the new state. The live screen does not name the reaction; the nurse line gives numbers only. The UI uses Clinical Graphite classes and British English. I ran the package tests myself: 22 passed in 44.9 s. npx tsc -p tsconfig.app.json --noEmit gave no errors. Other files under src/ modified after .started (access/site.ts, access/ultrasound.ts, caseSession.ts, scenarios/femoral.ts, femoralPuncture*.test.ts, access.test.ts, AccessFluoroView.tsx, UltrasoundView.tsx) belong to the concurrent access-femoral-puncture package. AssistedDeviceConsole.tsx belongs to a PCI package. This package changed nothing outside its list except the two declared test files. Blocking: a confirmed bug where stopping an excessive adrenaline infusion leaves a sustained VT that never settles (probe: still vt at 175 bpm six minutes after stopping). Major, disclosed and outside this package's files: vagal prevention at sheath removal runs only in two drill scenarios, and the compression time-lapse makes removal emergencies unplayable in the app. Acceptance 6 is unverified. Minor: unlabelled inline thresholds, an atropine test without a control arm, a stale-vitals pulse check, a dead duplicated parameter, the unused 3-5 L fluid ceiling, and an overstated 'no other draw moves' claim."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 7,
+    "rejected": [
+     "Finding 2 (removal vagal draw only in the drill scenarios; fast femoral time-lapse makes removal emergencies hard to play): this needs changes outside the package's files. Follow-up 1: autopilot.ts should start the saline drip and draw up atropine before femoral manual compression. After that, delete the `st.prevention.removalDrill &&` guard in modules/emergencies.ts onHook('sheath-pull') and change caseSession.test 'a femoral sheath pulled early ... delayed bleed' so it reads MAP outside a vagal episode. Follow-up 2: caseSession.ts (owned by access-closure-femoral-manual or proc-foundation-scenarios-ledger) needs a module hook such as session.holdLapse(reason), or a slower lapse while module events include bradycardia or hypotension. Until both are done, acceptance 6 ('usable in the running app') is NOT met for vagal-mimic, vagal-removal-no-saline and tamponade-mimic, and it still has to be checked in the browser."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/emergencies.test.ts (19 passed, 2 new)",
+     "npx vitest run src/simulation/session/modules/emergencies.tips.test.ts src/ui/access/orders/Emergency.test.ts (5 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit shows 3 errors, all in src/mentor/report.test.ts (r.path possibly undefined, and 'pci' not assignable to LaunchSim). That file belongs to another package. No errors in this package's files.",
+    "notes": "Applied:\n(1) The infusion VT now ends if the pump is stopped outright. The arrhythmia is held in a new state field, `EmergenciesState.infusionTachy {t, settleSinceT}`, separate from `st.infusion`, which is now `{rate, startedT, excessSinceT}`. Each event works as follows:\n- 'infusion-stop' starts the settle timer.\n- A rate within range in setInfusion starts the settle timer.\n- A rate above range cancels it.\n- watch() settles the rhythm to sinus whether or not the pump is still running.\nA new test checks two things: stopping the pump gives non-VT after infusionSettleS+10, and reducing then raising the rate again keeps VT.\n\n(3) The inline thresholds moved into MP_EMERGENCIES with doc comments, and echoFinding, bleeding-check, watch() and events() now read them from there:\n- echo: largeEffusionMl, effusionMl, hypovolaemicLossMl, hypovolaemicMap\n- bleedCheck: haematomaMl, hbFallLossMl\n- symptomaticHr\n- fastHypotensionHoldS\n- resolvedMinS\nThe large-effusion MAP test now uses persistMapMmHg (65). OUT OF SCOPE: these new MODEL PARAMETERS still need a docs/realism/facts entry, and that file is not in the package.\n\n(4) The atropine test now has a control arm: same scenario and seed, no atropine, read at the same session time. It asserts the heart rate with atropine is more than control + 5 bpm.\n\n(5) order() now reads fresh vitals with `vitals()` instead of `lastVitals ?? vitals()`.\n\n(6) MP_VAGAL_PREVENTION.removalMagnitude is deleted from engine.ts and its doc comment now says the magnitude comes from the caller (MP_EMERGENCIES.removalMagnitude). Nothing else referenced it.\n\n(7) Fluid now has a session-wide total (`st.fluidTotalMl`, added up in afterFluid, so session fluid orders count too). The record reads, for example, 'Crystalloid 1000 mL as a rapid bolus (2000 mL so far).' The nurse says '<total> mL of crystalloid given so far.' once, when the total reaches ANAPHYLAXIS.fluidUpToMl[0], with no verdict. A new test covers both.\n\n(8) The engine stimulus() comment and the module header now say incidence is unchanged but a seed's later draws can shift after a vagal onset that the scaling adds. The incidence test has a comment that its per-seed check covers only a contrast given before any puncture. I did not move the draw to vagalRng: an added onset changes vagalTarget, which skips later pain() draws anyway, so the same seed would not reproduce its draws regardless.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/emergencies.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/emergencies.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/engine.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/emergencies.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-45) at http://localhost:5173, went to Full procedure, drove the scenarios with window.__caseSession.scenario() and tick(), then closed the tab. The page reloaded once mid-run (navigation type 'reload', probably HMR from another package), so I reopened the scenario. The run was not affected.",
+     "Emergency orders section (Emergency.tsx): it renders in the case's orders column in six groups (Drugs and contrast, Support, Rate, Look, Before the access steps, Follow-up) with 25 order buttons. Labels are generic and dosed. The section never names the reaction, no button text overflows, and the look matches Clinical Graphite (screenshot of the closure workspace).",
+     "anaphylaxis-asthmatic, arm A, clicking the real buttons: the reaction began at t~749 s. I gave stop contrast, call for help, IM adrenaline 0.5 mg, oxygen and 500 mL fluid. MAP went 76 -> 93 -> 103 and HR 104 -> 91. The ledger recorded anaphylaxis-first-drug correct and anaphylaxis-adrenaline-in-time correct, and the log lines read correctly.",
+     "anaphylaxis-asthmatic, arm B: chlorphenamine then hydrocortisone first. MAP fell 64 -> 33 over 3 min. The ledger recorded anaphylaxis-first-drug false and adrenaline-in-time false. Adrenaline 1 mg IV then produced ventricular tachycardia, anaphylaxis-no-iv-arrest-dose false, and criticalErrors went to 1.",
+     "Infusion control: picked 20 \u00b5g/min in the select (form_input) and clicked Start. The module state became rate 20 with excessSinceT set. The UI changed to 'Set rate', showed a Stop button and 'running at 20 \u00b5g/min', and the log read 'Adrenaline infusion 20 \u00b5g/min.'",
+     "Local dose input (vagal-no-local, femoral, chart): typed 15 into the 'Local anaesthetic volume, mL' field and clicked Infiltrate. The input cleared, the note read '15 mL infiltrated.' and the site's local was recorded as given. The guided-only hint '10-20 mL is the usual range here' showed (1-2 mL at the radial site).",
+     "vagal-mimic: opened at closure and pulled the femoral sheath through the closure buttons. Straight after the pull HR was 54 and MAP 55, with nausea 1, itch 0 and flushing 0. The whole episode then ran inside the 15-minute compression time-lapse, which takes 45 rAF frames, about 0.75 s of wall time at 60 fps.",
+     "tamponade-mimic: pulled the sheath and stepped one frame at a time through the compression. Watched MAP and NIBP and read the monitor text on screen.",
+     "anaphylaxis-prearrest-brady: HR 54-58 with itch rising to 1 and dyspnoea 0.5 in the engine. I searched the whole screen text for skin or airway signs.",
+     "practiceIndex in the page (practiceForLesson): pm-lab-drugs-contrast-reactions lists anaphylaxis-asthmatic, anaphylaxis-prearrest-brady and vagal-mimic. cm-patient-complications-vasovagal lists all six scenarios. cm-perforation-tamponade lists the three discrimination scenarios plus tamponade-mimic. The scenario picker lists all six titles.",
+     "The Events debug line ('Events: contrast-reaction, hypotension') is gated by DEV in LabTipsPanel.tsx, so it does not leak in production. In guided mode the tips panel showed 'Anaphylaxis: IM adrenaline now' and 'Fast or slow? Anaphylaxis or vagal' after onset, which is allowed as a guided aid.",
+     "Console: no errors or warnings during the whole run."
+    ],
+    "problems": [
+     {
+      "where": "tamponade-mimic: src/simulation/session/scenarios/emergencies.ts (scriptPericardialBleed 0.5 mL/s, never stopped) and src/simulation/patient/engine.ts pericardial model (P = k(exp(V/v0)-1) applied as external ventricular pressure)",
+      "problem": "After the sheath pull the bleed runs unchecked through the 15-minute compression and reaches about 489 mL in the pericardium. The circulation then diverges instead of failing. MAP went 84 -> 38 -> 13, then rose to 154, 355, 822 and kept climbing to about 1417 mmHg at HR 56 in sinus rhythm. The monitor shows 'NIBP 1060/857', the arterial line reads '-?-' and SpO2 is 64. This is a numerical blow-up visible on the learner's screen.",
+      "severity": "critical",
+      "fix": "In engine.ts, clamp the pericardial pressure or external pressure term to a physiological ceiling, and let a large effusion end in low output or PEA rather than a rising aortic pressure. Add a patient test that runs 0.5 mL/s for 20 min and asserts MAP stays below about 200 and falls. In the scenario, cap the scripted bleed (stop the inflow at a MODEL PARAMETER volume from a module or scenario tick). Also apply the time-lapse hold below, so the learner sees the tamponade build."
+     },
+     {
+      "where": "vagal-mimic and tamponade-mimic in the running app (caseSession.tick: lapsePerTick 20 s per frame; modules/emergencies.ts comment 'orders stay available during a time-lapse')",
+      "problem": "Both scenarios script their emergency at sheath-pull, which starts a 15-minute manual-compression time-lapse. At 60 fps that lapse finishes in 45 frames, about 0.75 s of wall time. The vagal faint (HR 54, MAP 55 for about 3 min of patient time) begins and recovers by itself before the learner can click anything. 'vagal-first-treatment' is then scored false ('Nothing within 3 min') with no chance to act. The vitest probes step the clock manually, so they do not show this.",
+      "severity": "major",
+      "fix": "When a vagal episode, the reaction or fast-rate hypotension begins while s.busy, stop or slow the time-lapse so the emergency plays in real time with the compression still running. This needs a CaseSession method, e.g. holdLapse(reason) that suspends the lapsePerTick slice until released, called from watch() in modules/emergencies.ts. caseSession.ts is outside this package's files, so report it in outOfScope and coordinate. Add an in-app style test that steps tick(1/60) after the pull and asserts the learner gets at least vagalTreatWithinS of wall-rate time before scoring."
+     },
+     {
+      "where": "src/simulation/session/modules/emergencies.ts watch(): vagal episode intake ('if (prev && !prev.done) continue;') and scoring of episodes from the autopilot",
+      "problem": "In vagal-mimic the autopilot's own femoral puncture (vagalTone 0.9) causes a vagal episode at t=460 while the case is being played to its closure start. The learner gets control at t~619 and the episode is still open. At t~640 it is scored 'vagal-first-treatment false, Nothing within 3 min', about 20 s after the learner arrived. Because that episode is still open at the pull, the scripted sheath-pull vagal (telemetry trigger 'scenario') is skipped by the 'continue'. The scenario's own teaching episode is never recorded or scored: state.vagal holds only the puncture episode.",
+      "severity": "major",
+      "fix": "Record when the learner gains control (the first watch() after the scenario's start stage is reached, or a flag from the store's preparation). Close episodes that began before that time without scoring them. For a new 'patient.vagal' telemetry whose trigger is 'scenario' or 'sheath-removal', close any open episode and push a new one instead of continuing. Optionally lower the autopilot puncture vagal draw for vagal-mimic, e.g. give local before the scripted puncture, so the drill starts clean. Add a test: open vagal-mimic at its start, assert no vagal decision exists, pull, and assert an episode with trigger 'scenario' is created and scored on the learner's actions."
+     },
+     {
+      "where": "Full case screen during the reaction and the faint (modules/emergencies.ts watch(); no patient or nurse report of symptoms)",
+      "problem": "The cues that tell the cases apart never reach the learner. During anaphylaxis-asthmatic the engine had itch 1, flushing 0.89 and dyspnoea 0.89, and in anaphylaxis-prearrest-brady itch was 1 with a slow pulse, yet the log, the patient voice and the monitor showed only HR, BP and SpO2. The only mention of flushing, hives or wheeze on the page was tip text. The vagal faint likewise shows no nausea or pallor. Outside guided mode the learner cannot tell anaphylaxis from vagal from pre-arrest anaphylaxis, which is the point of the package. The diagnosis must stay unnamed, but the signs must be observable.",
+      "severity": "major",
+      "fix": "In modules/emergencies.ts watch(), when v.symptoms.itch, flushing or dyspnoea (or reaction.skin and airway) cross a MODEL PARAMETER threshold, log a patient line ('I've come up all itchy', 'I feel hot', reusing the phrasing in src/simulation/team/roles/patient.ts) and a nurse observation ('blotchy red rash on the chest', 'wheeze', 'lips look swollen'), once per sign. Do the same for nausea or pallor in a vagal episode ('I feel sick and faint', 'pale and clammy'). Do not name the reaction. Add a test that these lines appear in s.log after onset in each scenario and never contain 'anaphylaxis' or 'vagal'."
+     },
+     {
+      "where": "src/simulation/session/modules/emergencies.ts giveLocal() (calls s.order(\"local\") and then record(... 'Lidocaine 1% ...'))",
+      "problem": "One Infiltrate click writes two contradictory log lines: 'Given: Lidocaine 2% to the skin and subcutaneous tissue.' (from caseSession's own order) and then 'Lidocaine 1% 15 mL infiltrated at the femoral site.' The standing orders also keep a separate undosed 'Local anaesthetic' button.",
+      "severity": "minor",
+      "fix": "Make the module's record text not state a strength ('15 mL of local anaesthetic infiltrated at the femoral site'), or suppress one of the two lines. Report the hard-coded 2% label at caseSession.ts:1589 in outOfScope, so the session order can take the strength and volume from this module."
+     },
+     {
+      "where": "src/simulation/session/scenarios/emergencies.ts anaphylaxis-asthmatic and anaphylaxis-prearrest-brady (scriptReaction gives 8 mL only to the engine)",
+      "problem": "The scenario premise is a first left coronary run of 8 mL, but the log reads 'Back from the angiography: contrast 0 mL so far.' and the session's contrast totals stay at 0. The 'Stop the contrast' order and the contrast budget therefore disagree with the story.",
+      "severity": "minor",
+      "fix": "In the scenario state() also add FIRST_RUN_ML to the session's contrast total (labTotals or the handover contrast), or reword the arrival so the log reports the 8 mL run."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 6,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/session/emergencies.test.ts src/simulation/session/modules/emergencies.tips.test.ts src/ui/access/orders/Emergency.test.ts (3 files, 31 tests passed)",
+     "npx vitest run src/simulation/pericardiocentesis.test.ts src/simulation/session/handover.test.ts (56 passed)",
+     "npx vitest run src/simulation/patient/patient.test.ts src/ui/lab/patientEvents.test.ts src/simulation/haemo.test.ts (125 passed)",
+     "npx vitest run src/simulation/complications/complications.test.ts src/simulation/angioPci.test.ts src/ui/lab/bedsideTips.scenario.test.ts src/ui/lab/structuralTips.scenario.test.ts (40 passed)",
+     "npx vitest run src/simulation/session/scenarios.test.ts src/simulation/session/femoralPuncture.test.ts src/simulation/session/multiSite.test.ts src/ui/sim/sessionModules.test.ts (62 passed, 1 failed: scenarios.test.ts 'decision ledger' fails on 'pre-puncture-checklist', a planning-module decision from src/simulation/session/modules/planning.ts, not this package)"
+    ],
+    "tsc": "clean: npx tsc -p tsconfig.app.json --noEmit gives no errors. An earlier run showed errors only in src/simulation/session/caseSession.ts, from another package's edit in progress; they had gone by the final run.",
+    "notes": "All six findings were checked against the code and found correct. Five are fully fixed. Finding 2 is only partly fixed, because the full fix needs a file outside this package (see OUT OF SCOPE).\n\n1 (critical, pericardial blow-up): confirmed with a probe. The ventricle volumes went negative from about 200 mL of effusion, and from then on the model created blood. Fixed in src/simulation/patient/engine.ts:\n- New MODEL PARAMETERS in MP_ENGINE: periMaxMmHg 40 caps the external pressure, and ventMinMl 0 is the least volume a ventricle can be squeezed to.\n- Whenever periMl > 0, a ventricle pushed below that floor is set back to it, and the extra volume is returned to the root or the pulmonary artery, so no blood is created or lost.\n- The bleed takes no more than the systemic arteries hold.\n- Below the cap, or with no effusion, behaviour is unchanged. The pericardiocentesis, handover, patient, complications and angioPci tests all still pass.\n- In src/simulation/session/scenarios/emergencies.ts, tamponade-mimic now stops its bleed at TAMPONADE_CAP_ML 155 (a MODEL PARAMETER) through a new module action, capPericardium. 150 mL left the heart rate at 97, below fastHr; 155 mL gives MAP about 24 and a heart rate of 100 to 104.\n- New tests: 0.5 mL/s for 20 min keeps MAP finite and below 200 with no rebound, and ventricle volumes stay at or above 0; tamponade-mimic stays bounded through the frame-rate time-lapse and is capped below 165 mL.\n\n2 (major, the time-lapse hides the emergency): confirmed. The 15-minute compression runs through in 45 frames. Done within scope in src/simulation/session/modules/emergencies.ts:\n- Each vagal episode and each fast-rate hypotension now has a liveT: when the learner can first act at the wall clock, meaning the first watch() after the time-lapse ends.\n- The treat window, the reconsider deadline, episode closure and the fast-hypotension look window all run from liveT.\n- A faint that has passed untreated by liveT is not scored. Instead the nurse gives the numbers only, for example 'Over the last 14 minutes the heart rate fell to 54 and the mean pressure to 55; both have come back up.'\n- Orders given during the time-lapse still count.\n- New tests: one steps tick(1/60) through the time-lapse and then 4 minutes at the wall clock, and asserts no 'Nothing within 3 min' decision; another asserts that a faint met at the wall clock is still scored.\n\n3 (major, the autopilot's episode is scored against the learner): confirmed. The existing vagal-mimic tests had passed only because the learner's orders were credited to the autopilot's puncture episode.\n- New module action learnerControl(), which all five scenarios that open past the chart call from their state() through takeOver().\n- There is also a fallback for other scenarios: the learner has the case once stageNow() reaches s.startStage. stageNow() is the autopilot's stageReached logic, copied inline because importing autopilot would make a circular import.\n- Episodes that begin before the learner has the case are not recorded, and any still open at takeover are closed unscored.\n- Before takeover, prevention is neutral (local 1), so the autopilot's draws are as they were.\n- A 'patient.vagal' with trigger 'scenario' or 'sheath-removal' now closes any open episode and starts a new one.\n- order() now reads new vagal telemetry before it acts.\n- Tests updated: an order now follows a frame, because engine telemetry reaches the session only at the end of advanceClock. They assert that no vagal decision exists at the start, that the episode trigger is ['scenario'], and that it is not left unscored.\n\n4 (major, the signs never reach the learner): fixed. MP_EMERGENCIES.signs is new in session/emergencies.ts: speak 0.5 and itch 0.4, mirroring team/params.ts, plus skin 0.3 and airway 0.3. watch() now logs each sign once:\n- Reaction, patient lines: 'I've come up all itchy.', 'I feel really hot and flushed.', 'I can't catch my breath.'\n- Reaction, nurse lines: 'A blotchy red rash is coming up on the chest and arms.', 'There is a wheeze, and the lips look swollen.'\n- Faint: 'I feel sick and faint.' (patient) and 'Pale and clammy.' (nurse).\n- None of these names the reaction. A test covers both anaphylaxis scenarios and vagal-mimic.\n\n5 (minor, contradictory local anaesthetic lines): the giveLocal line is now '15 mL of local anaesthetic infiltrated at the femoral site.', and a test checks it.\n\n6 (minor, contrast total at 0): the anaphylaxis scenarios now add FIRST_RUN_ML to s.totals, which is consistent with refreshTotals because the engine total includes the run, and log 'First left coronary run: 8 mL of contrast (8 mL so far).' A test checks it.\n\nNo changes were needed to Emergency.tsx, responses.ts or emergencies.launch.ts.\n\nOUT OF SCOPE (needs src/simulation/session/caseSession.ts):\n(a) The real-time hold the finding asks for: a CaseSession.holdLapse(reason) or release() that suspends the lapsePerTick slice in tick(), so the module can play a faint or tamponade during compression at the wall clock. Until that exists, vagal-mimic's teaching faint passes inside the time-lapse in the app. It is now reported fairly and not scored, but the learner cannot treat it live. The module could not do this itself: setting s.pending to 0 would fire pendingDone (afterClosure) early.\n(b) The 'local' order hard-codes the label 'Lidocaine 2% to the skin and subcutaneous tissue' (case \"local\" in the order switch). It should take its strength and volume from this module.\n\nAlso noticed: PatientEngine.vitals() is cached until the next advance(), so contrast() given just before a read is not seen until the engine steps again."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "In 'anaphylaxis-asthmatic' IM adrenaline 0.5 mg within 2 min restores MAP above 65 sooner than chlorphenamine and hydrocortisone first",
+      "met": true,
+      "evidence": "src/simulation/session/emergencies.test.ts, test 'anaphylaxis-asthmatic: IM adrenaline 0.5 mg within 2 min restores MAP above 65 sooner...', passes. It asserts im.restoredAfterS < ah.restoredAfterS, that the antihistamine-first arm went below 65, that the IM dose came within MP_EMERGENCIES.imWithinS (120 s, emergencies.ts:99), and that the anaphylaxis-first-drug and adrenaline-in-time decisions are scored correct for one arm and wrong for the other."
+     },
+     {
+      "criterion": "'vagal-mimic' shows HR falling before MAP without itch or flushing; atropine restores HR; 'anaphylaxis-prearrest-brady' scores atropine-only wrong",
+      "met": true,
+      "evidence": "The 'vagal-mimic: HR falls before MAP, without itch or flushing; atropine restores HR' test passes. It checks itch and flushing stay 0 on every second, HR reaches half its fall before MAP does, and HR rises above max(60, hrMin+15) after atropine-1. The test gives atropine together with legs-up posture, but responses.ts autonomic() applies the vagolysis directly to the vagal HR drop (vag = s.vagal * (1 - fx.vagolysis)), so atropine itself lifts the rate. The 'anaphylaxis-prearrest-brady' test passes: skin signs with HR under 60, atropine-1 alone, then anaphylaxis-first-drug and adrenaline-in-time are both scored false."
+     },
+     {
+      "criterion": "'vagal-no-local' gives a vagal event more often over a seed set than with local and saline; tryptase outside the windows is wrong",
+      "met": true,
+      "evidence": "The 'vagal-no-local gives a vagal event more often over a seed set...' test passes. It runs 10 seeds with and without local 10 mL, saline drip and atropine-ready, and asserts without > withPrevention. The 'tryptase outside the windows is wrong; inside them it is right' test passes: samples before the reaction, before adrenaline, at 30 min and a third in-window sample are scored false, and samples in the first window and at 90 min are scored true. classifyTryptase unit test also passes."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios anaphylaxis-asthmatic, anaphylaxis-prearrest-brady, vagal-mimic under lessons pm-lab-drugs-contrast-reactions, cm-patient-complications-vasovagal, cm-perforation-tamponade (from src/simulation/session/scenarios/emergencies.launch.ts)",
+      "met": true,
+      "evidence": "emergencies.launch.ts lists all three scenarios under all three lessons (REACTIONS, VAGAL, TAMPONADE). The 'practiceIndex lists ...' test checks practiceForLesson for every lesson and scenario pair, and the launch-file-matches-scenario-file test also passes. src/ui/content/practiceIndex.test.ts and src/content/content.test.ts (61 tests, which validate every .launch.ts) both pass."
+     },
+     {
+      "criterion": "Tips test beside modules/emergencies.ts: in anaphylaxis-asthmatic after the action raising 'contrast-reaction', tipsFor(ctx, 20) includes diag-anaphylaxis-im-adrenaline and diag-reaction-or-vagal; every waiting.ts entry naming proc-anaphylaxis-vagal becomes satisfiable, so the diagnostic waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/simulation/session/modules/emergencies.tips.test.ts exists and passes all 3 tests. In the first test, tipsFor(phaseless diagnostic ctx, 20) includes both tips after 'contrast-reaction' is raised, and neither is present before. waiting.ts has no entry with raisedBy 'proc-anaphylaxis-vagal' (checked by grep), so the 'falls by at least their number' clause is satisfied with zero. The test still checks that both diagnostic tips can be satisfied from the declared raises. The module exports raises for access, diagnostic and pci (modules/emergencies.ts:86), reachability.test.ts globs it, and that test passes."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/session/emergencies.test.ts (26/26 passed)",
+     "npx vitest run src/simulation/session/modules/emergencies.tips.test.ts src/ui/access/orders/Emergency.test.ts (5/5 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts (15/15 passed)",
+     "npx vitest run src/content/content.test.ts (61/61 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors."
+   }
+  ]
+ }
+}

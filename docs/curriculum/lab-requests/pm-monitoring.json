@@ -1,0 +1,145 @@
+[
+  {
+    "lab": "pci",
+    "what": "Unannounced monitor changes during PCI-lab scenarios, scored on time to recognition and correct first action: (a) false hypotension from an open Y-connector valve, an open or air-filled transducer line, damping from a large guide or deep engagement, contrast or thrombus in the guide, and a bulky device in a 6 Fr guide; (b) true hypotension from bleeding, a guide holding the aortic cusp open (pressure falls as the guide is pushed in and recovers on repositioning), vasodilation after nitrate or verapamil; (c) pulsus paradoxus with rising heart rate after a distal wire perforation; (d) ECG changes: new ST elevation or depression, bradycardia, new left bundle branch block, ventricular ectopy during wire manipulation, VF; (e) desaturation after sedation. A physiologist voice calls out each event (systolic below 90 mmHg or a significant fall from baseline, damping or ventricularisation of the aortic trace, ST change, block, VT, VF, asystole, 15–20 minute ACT warning). An injection through a damped guide, or flushing a guide that will not aspirate, is scored as an error; a catheter that cannot be aspirated must be withdrawn slightly and re-aspirated, then removed under suction without injection or a wire through it.",
+    "learnerDoes": "Records a baseline before access; on each event names it, runs the five-point false-hypotension check (valve, line, damping, obstruction, equipment) before any drug, then looks for the cause in the three true-hypotension groups; looks at the wire tip and requests echo when a respiratory swing appears; acknowledges every call-out.",
+    "success": "Each event recognised within a set time; no vasopressor given for a false reading; guide repositioned for the cusp scenario; perforation suspected and echo requested for pulsus paradoxus; every physiologist call-out acknowledged.",
+    "tips": [
+      "pci-mon-baseline",
+      "pci-mon-false-hypotension",
+      "pci-mon-pulsus-paradoxus",
+      "pci-mon-st-change",
+      "pci-mon-act-warning"
+    ],
+    "lessonIds": [
+      "pm-monitoring-watch",
+      "pm-monitoring-pressure"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "haemo",
+    "what": "Transducer set-up and fault finding: levelling at the mid-thoracic level (halfway between the front of the sternum and the table), with a scenario in which the transducer has been set level with the V4 electrode so that every pressure under-reads, zeroing to air through the manifold, a table-height change after zeroing with a pole-mounted transducer, and a fast-flush test with three outcomes (a couple of oscillations = normal; none, flat trace and lost dicrotic notch = overdamped from air, kink or clot; several oscillations with systolic overshoot = underdamped from long tubing).",
+    "learnerDoes": "Levels at the mid-thoracic level and zeroes before recording, and corrects a transducer left at V4 height; re-levels after moving the table; runs a fast flush on each channel, identifies the damping state, finds and clears the cause, and records the mean rather than the systolic while the line is faulty.",
+    "success": "Right heart and wedge pressures recorded within 2 mmHg of the model's true values; the mis-levelled transducer is detected after the table move; the overdamped and underdamped lines are correctly named and the overdamped cause cleared.",
+    "tips": [
+      "haemo-mon-zero-level",
+      "haemo-mon-fast-flush"
+    ],
+    "lessonIds": [
+      "pm-monitoring-transducers"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Pressure-wire equalisation with a faulty aortic line: air in the aortic line or an unzeroed transducer prevents equalisation; a loose transducer causes drift.",
+    "learnerDoes": "Flushes the guide and aortic line, zeroes the transducer, equalises with the sensor at the guide tip, and re-equalises after a pullback when drift appears.",
+    "success": "No ratio is recorded until the aortic line is air-free and zeroed and equalisation is achieved; drift is recognised on pullback.",
+    "tips": [
+      "pci-mon-aortic-line-physiology"
+    ],
+    "lessonIds": [
+      "pm-monitoring-transducers"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "Equipment-position events: (a) the guide backs out of the ostium when a stent is pushed hard at a calcified bend, and the wire tip retreats; (b) the guide is sucked into the vessel when a balloon is pulled back before full deflation; (c) during an over-the-wire balloon removal by trapping, a polymer-jacketed wire tip drifts distally into a small apical branch while the field is collimated onto the lesion, followed by a faint blush; (d) after a device is removed the guide is found deep or disengaged before the next injection.",
+    "learnerDoes": "Keeps the guide tip and wire tip in view during every push and pull, stops when either moves, re-engages and readvances, prepares the lesion further; confirms full deflation and partly disengages the guide before withdrawal; opens the collimation to check the wire tip; manages the blush with a balloon inflated proximal to it, keeping the wire access, and plans definitive treatment (fat or coil embolisation through a microcatheter, or a covered stent if the branch cannot be wired) and avoids IIb/IIIa inhibitors and cangrelor; aspirates, flushes and checks engagement before each injection.",
+    "success": "Wire position never lost behind the lesion; no guide-induced dissection; the distal wire drift is detected before the final run; no injection given through a deep or disengaged guide.",
+    "tips": [
+      "pci-mon-watch-both-ends",
+      "pci-mon-guide-backout",
+      "pci-mon-wire-tip-collimation",
+      "pci-mon-check-guide-after-removal",
+      "pci-mon-keep-wire-in-crisis"
+    ],
+    "lessonIds": [
+      "pm-monitoring-position"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "PCI-lab pre-brief, time out and sign out, extending the diagnostic lab's time out: the whole team must be present (one member can be absent and must be waited for); confirm identity, procedure, consent, whiteboard items, equipment ready, IR(ME)R authorisation, who defibrillates, and the plan aloud (access, guide, anticoagulation, bailout kit). Sign out includes an equipment and sharps count, wire integrity (one scenario has a wire missing its tip coil), anything left in place, and the antiplatelet regimen, duration and loading-dose status.",
+    "learnerDoes": "Runs the brief and time out only with all team members present, states each item, and completes the sign out, stopping the patient from leaving when the wire integrity check fails until it is resolved and recorded.",
+    "success": "All checklist items stated; the time out is never run with a team member absent; the damaged wire is caught; the antiplatelet plan is recorded before the patient leaves.",
+    "tips": [
+      "pci-mon-time-out",
+      "pci-mon-sign-out"
+    ],
+    "lessonIds": [
+      "pm-monitoring-checklist"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Verbal team orders for device handling and drugs in the PCI lab, building on the diagnostic lab's team engine: named requests for devices with size and length, drugs with dose and route, radiographer requests for views and dose-reduction changes (collimation, lower frame rate, fluoroscopy saved instead of cine, no magnification), and an ACT reminder from the physiologist 15–20 minutes before it is due.",
+    "learnerDoes": "Addresses each request to a named role with full detail, confirms that the device handed over matches the request, responds to the ACT reminder and to a high-dose warning.",
+    "success": "Every order names the person and the item; mismatched devices are caught before use; the ACT is checked on time; dose falls after the radiographer's advice is taken.",
+    "tips": [
+      "pci-mon-act-warning",
+      "pci-mon-dose-advice"
+    ],
+    "lessonIds": [
+      "pm-monitoring-team"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "Complication scenario run through the team engine and scored on closed-loop communication: VF on reperfusion in the LCx STEMI scenario and a large-vessel perforation. Unaddressed orders ('can someone…') are executed late or not at all, or duplicated; named orders are repeated back by the team member and executed. A scribe role can be assigned. The physiologist shocks only when instructed by name unless named at the brief; in the witnessed, monitored arrest up to three quick successive shocks can be ordered before compressions (ERC 2021 ALS), and VF that resists shocks prompts the options Oxford lists (amiodarone, a different defibrillator, potassium and magnesium); the radiographer moves the C-arm for compressions when asked.",
+    "learnerDoes": "Keeps the wire in place, calls out the problem, gives each order to a named person, waits for the check-back and confirms it, names a scribe, and finishes with a debrief and documentation.",
+    "success": "Time to first shock within a set limit; no duplicated or missed drug; every order closed-loop; wire position maintained; a timeline is recorded.",
+    "tips": [
+      "pci-mon-vf-roles",
+      "pci-mon-closed-loop",
+      "pci-mon-keep-wire-in-crisis"
+    ],
+    "lessonIds": [
+      "pm-monitoring-crisis"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Sterile-field and environment events on the Full procedure table: the patient's hand touches the prepared access site before the puncture; background conversation during wiring and stent delivery (sterile cockpit); gloves and wire becoming sticky with dried blood and contrast so that the wire moves when a balloon is withdrawn; air in the manifold or tubing before the first injection.",
+    "learnerDoes": "Repeats the antiseptic preparation after contamination, asks for quiet during the critical steps agreed at the brief, wipes the wire and gloves with wet gauze on every exchange, removes devices in small movements, and inspects the manifold, tubing and syringes for air before injecting.",
+    "success": "No puncture through a contaminated field; no wire loss during balloon removal; no injection with air in the system; check-understanding questions answered at each event.",
+    "tips": [
+      "pci-mon-sterile-cockpit",
+      "pci-mon-wipe-wire"
+    ],
+    "lessonIds": [
+      "pm-monitoring-sterile"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "access",
+    "what": "Access-site monitoring through the case: pulses at and distal to the access site checked at the start and end, and an evolving haematoma or bleeding during anticoagulation that is visible only if the learner inspects and palpates the site.",
+    "learnerDoes": "Records the pulses before access, inspects and palpates the site during the case, and rechecks pulses at the end.",
+    "success": "The haematoma is found while small; a lost distal pulse is detected before the patient leaves.",
+    "tips": [
+      "access-mon-pulses-site"
+    ],
+    "lessonIds": [
+      "pm-monitoring-watch"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Recovery observations after the case on the Full procedure table: observations every 15 minutes in the first hour, half-hourly in the second, then hourly (non-invasive blood pressure, saturation, respiratory rate, three-lead ECG after a stent); radial wound checks every 15 minutes until the haemostasis device is off, or femoral pulse and wound checks until mobile; a scenario with new chest pain after PCI.",
+    "learnerDoes": "Hands over what the recovery team should watch, sets the observation schedule, recognises a change at the access site, and on chest pain asks for a 12-lead ECG first and alerts the operator.",
+    "success": "Schedule set correctly for the access route; the access-site change is escalated to the nurse in charge; the 12-lead ECG is recorded before any other action for post-PCI chest pain.",
+    "tips": [],
+    "lessonIds": [
+      "pm-monitoring-watch"
+    ],
+    "priority": "P3"
+  }
+]

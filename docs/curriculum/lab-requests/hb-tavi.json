@@ -1,0 +1,133 @@
+[
+  {
+    "lab": "tavi",
+    "what": "Show structural-lab tips in the TAVI lab. TaviLab.tsx does not call the tip registry yet. Raise the lab phase from the current step (plan, access, position, deploy, assess) and the events hypotension and st-elevation when the simulated outcome produces them, and show tipsFor({ lab: 'structural', phase, events }) in a side panel, as the PCI lab's technique panel does. Note the triggers: structural-tavi-lv-wire-pacing belongs to the plan and access phases (the pacing route is chosen before venous access), structural-tavi-pacing-wire-decision to assess.",
+    "learnerDoes": "Sees the planning, access, crossing, pacing, assessment and complication tips at the step where each applies.",
+    "success": "Each tip in this module appears at its phase and not elsewhere; the hypotension tip appears only when the event is raised.",
+    "tips": [
+      "structural-tavi-futility-check",
+      "structural-tavi-plan-second-valve",
+      "structural-tavi-no-nitrate-before-ct",
+      "structural-tavi-annulus-double-oblique",
+      "structural-tavi-access-min-lumen",
+      "structural-tavi-guided-puncture",
+      "structural-tavi-protection-wire",
+      "structural-tavi-cross-valve",
+      "structural-tavi-lv-wire-pacing",
+      "structural-tavi-pacing-wire-decision",
+      "structural-tavi-hypotension-coronary",
+      "structural-tavi-snorkel-limits",
+      "structural-tavi-pvr-mechanism",
+      "structural-tavi-vtc-viv"
+    ],
+    "lessonIds": [
+      "hb-tavi-candidate",
+      "hb-tavi-workup",
+      "hb-tavi-procedure",
+      "hb-tavi-coronary",
+      "hb-tavi-vascular-stroke",
+      "hb-tavi-viv"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "tavi",
+    "what": "Annulus measurement by hand on the planning CT. Let the learner place the three hinge points to define a double-oblique plane, read the long and short diameters, trace the perimeter and get the area, then enter the area-derived (2 × √(area ÷ π)) and perimeter-derived (perimeter ÷ π) diameters themselves before the sizing chart is shown. Include an eccentric annulus in which the two derived diameters differ by more than a size, and a borderline case that prompts a blinded re-measurement.",
+    "learnerDoes": "Defines the plane, measures, derives both mean diameters, and recognises when the result is borderline.",
+    "success": "Derived diameters within 0.3 mm of the true values; borderline cases flagged for re-measurement rather than sized on one number.",
+    "tips": [
+      "structural-tavi-annulus-double-oblique"
+    ],
+    "lessonIds": [
+      "hb-tavi-workup"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "tavi",
+    "what": "Coronary risk reading with leaflet length. Add a leaflet length for each coronary cusp and the sinus width at the level of each ostium to the root CT view, and score the learner's risk call on the combination: low when the leaflet is shorter than the coronary height; high when a low ostium, a leaflet longer than the height and a narrow sinus coincide. Offer coronary protection, surgery referral and leaflet laceration referral as choices, with protection carrying a chance of stent entrapment in the outcome model.",
+    "learnerDoes": "Reads height against leaflet length and sinus width, then chooses no protection, protection, or referral.",
+    "success": "No routine protection in low-risk roots; high-risk roots referred or protected with the costs stated at the debrief.",
+    "tips": [
+      "structural-tavi-snorkel-limits",
+      "structural-tavi-hypotension-coronary"
+    ],
+    "lessonIds": [
+      "hb-tavi-workup",
+      "hb-tavi-coronary"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "tavi",
+    "what": "Access step with both sides measured. On the access CT, show the minimal luminal diameter of the common femoral, external iliac and common iliac arteries on each side, the calcium grade and tortuosity, and the chosen sheath's minimum vessel requirement. Then a puncture sequence: secondary access first, main puncture under fluoroscopic guidance from the contralateral side (score distance from the femoral bifurcation and position on the front wall), two suture devices before dilation, and a protection wire into the superficial femoral artery. At the end, a contralateral check angiogram that can show extravasation, with the bail-out (crossover low-pressure balloon, then covered stent) available. Add femoral angiography before the large sheath (is the artery big enough?) and after insertion (is the leg still perfused?), and a limb check after closure that can show an ischaemic leg from an overtightened double suture closure, managed from the contralateral side (angiography, then balloon, thrombectomy or thrombolysis, then surgery).",
+    "learnerDoes": "Chooses the side from the narrowest lumen, punctures under guidance, pre-closes, parks the protection wire, checks the closure and manages a leak. Checks the leg before and after the sheath and after closure.",
+    "success": "Side with an adequate lumen chosen; puncture clear of the bifurcation; sutures placed before dilation; check angiogram done; any leak controlled by balloon before a covered stent. Limb perfusion checked at both points; ischaemia treated from the contralateral side.",
+    "tips": [
+      "structural-tavi-access-min-lumen",
+      "structural-tavi-guided-puncture",
+      "structural-tavi-protection-wire",
+      "access-cx-iliofemoral-balloon-first",
+      "mcs-cx-crossover-balloon-before-removal"
+    ],
+    "lessonIds": [
+      "hb-tavi-workup",
+      "hb-tavi-procedure",
+      "hb-tavi-vascular-stroke"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "tavi",
+    "what": "Pacing route and conduction plan. At the planning step, offer pacing through the LV wire or a temporary RV wire (with a capture threshold test: target 1 V or lower, output at least three times the threshold). Give some patients right bundle branch block or other predictors of heart block. After deployment, offer the pacing-wire decision: if the wire stays it must be sutured with a skin loop and set to demand mode with the sensitivity adjusted. A patient with predictors whose wire was removed should develop delayed complete heart block in the outcome; a patient with pre-existing right bundle branch block and a new conduction disturbance should prompt an early pacing-team review.",
+    "learnerDoes": "Matches the pacing route to the baseline ECG and the valve, tests capture, and decides whether the temporary wire stays.",
+    "success": "RV wire chosen and kept when predictors are present; LV wire pacing accepted otherwise; capture tested before the valve is in the patient; a retained wire secured and in demand mode; early pacing-team review requested for pre-existing RBBB with new conduction disease.",
+    "tips": [
+      "structural-tavi-lv-wire-pacing",
+      "structural-tavi-pacing-wire-decision"
+    ],
+    "lessonIds": [
+      "hb-tavi-procedure"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "tavi",
+    "what": "Coronary obstruction scenario at the assess step. In a root the learner has judged high risk (or one they misjudged), make the simulated pressure stay low after pacing stops, with ST change, and let a root injection show the left coronary not filling. The learner must inject the root at once and call for rescue PCI and the surgeon; waiting for 'pacing recovery' worsens the outcome.",
+    "learnerDoes": "Recognises persistent hypotension with ECG change as possible obstruction and acts in the right order.",
+    "success": "Root injection within the first minute; rescue started without waiting.",
+    "tips": [
+      "structural-tavi-hypotension-coronary"
+    ],
+    "lessonIds": [
+      "hb-tavi-coronary"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "tavi",
+    "what": "Valve-in-valve mode. A planning case with a failed surgical bioprosthesis: the learner identifies the surgical valve (size, stented or stentless, leaflets inside or outside the frame), places a virtual cylinder the size of the planned transcatheter valve in the surgical frame and measures the virtual valve-to-coronary distance for each ostium; then chooses between standard valve-in-valve, referral for surgery or leaflet laceration, and protection. A small stenotic valve should leave a high residual gradient unless the learner chooses ring fracture or remodelling for a valve whose ring allows it. Distinguish TAV-in-SAV (risk highest with stentless or externally mounted surgical leaflets; neo-skirt against a shallow sinus) from TAV-in-TAV (sinus sequestration, especially after a supra-annular first valve with a high neo-skirt and a narrow junction).",
+    "learnerDoes": "Identifies the valve, measures the VTC, chooses the strategy, and plans for the gradient.",
+    "success": "VTC below 3–4 mm recognised as high risk, with the debrief noting that no safe threshold is validated and the true distance is probably smaller; no standard valve-in-valve in that root; gradient plan made for small stenotic valves.",
+    "tips": [
+      "structural-tavi-vtc-viv"
+    ],
+    "lessonIds": [
+      "hb-tavi-viv"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "tavi",
+    "what": "Paravalvular regurgitation work-up at the assess step. After deployment, show an aortographic jet whose grade on echo can differ from the aortogram, and a mechanism to find (underexpansion, depth, or a calcium nodule). The learner grades with both, names the mechanism, and only then chooses a correction; choosing plug closure before excluding underexpansion and malposition should be marked wrong.",
+    "learnerDoes": "Grades the leak with more than one modality and identifies its mechanism before correcting it.",
+    "success": "Mechanism named before any correction; no plug chosen while underexpansion or malposition remains.",
+    "tips": [
+      "structural-tavi-pvr-mechanism"
+    ],
+    "lessonIds": [
+      "hb-tavi-vascular-stroke"
+    ],
+    "priority": "P3"
+  }
+]

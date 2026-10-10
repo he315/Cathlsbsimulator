@@ -1,0 +1,303 @@
+{
+ "package": "pericardiocentesis-tips-and-pci-handover",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built pericardiocentesis-tips-and-pci-handover. The bedside lab now shows the four bed-peri-* tips at their stages under the run's mode, using useLabRun, useContextTips and LabTipsPanel; the pacing tab shows none.\n- src/ui/lab/bedsideTips.ts exports `pericardioTipContext` and `raises`. Phases are assess, decide, plan, needle and drain. Events are perforation, prior-cabg, hypotension, tamponade and pericardial-effusion; the last three come from the shared patient-event adapter.\n- New scenario from-pci-perforation continues the PCI patient on its PatientEngine. It takes a useLabHandoverStore transfer (snapshot plus leak), or a stand-in perforated patient when opened from a lesson. The leak runs while the hole is open, drainage goes through engine.drainPericardium, the drain keeps draining the leak, and sealing stops it.\n- New scenario perforation-unstable: echo arrives at 90 s, and fluoroscopy shows the contrast-outlined sac from the start. It scores prompt drainage and re-imaging.\n- New scenario perforation-stable-small: 'observe' is correct, because the leak is coupled to the pericardial pressure (a model parameter).\n- New scenario post-cabg-loculated: no fluid on the subxiphoid path, so the needle meets the heart and provokes ectopy; CT-guided or surgical drainage scores as correct.\n- After a perforation, blood from the sac and from the RV look the same in the syringe; only saline, pressure and the wire course tell them apart. Autotransfusion is offered as a local-practice choice.\n- BedsideLab takes launches and transfers for the pericardiocentesis tab. The launch file lists all 8 scenarios under the perforation and Academy lessons.\n- Runs go through useLabRun (decisions recorded, one logbook row) instead of recordSim. In DEV builds window.__lab.pericardio has context, tips, state, events and step(s).\n- What the needle tip is in, path hazards and what an aspirate means are now shown in guided mode only.",
+    "filesChanged": [
+     "src/simulation/pericardiocentesis.ts",
+     "src/simulation/pericardiocentesis.test.ts",
+     "src/ui/bedside/PericardioLab.tsx",
+     "src/ui/sections/BedsideLab.tsx",
+     "src/ui/lab/bedsideTips.ts (new)",
+     "src/ui/lab/bedsideTips.test.ts (new)",
+     "src/content/lab/presets/bedside/pericardio.launch.ts (new)",
+     "src/ui/lab/bedsideTips.scenario.test.ts (new test file)",
+     "src/ui/bedside/PericardioLab.test.ts (new test file)"
+    ],
+    "testsAdded": [
+     "src/simulation/pericardiocentesis.test.ts: perforation scenarios; echo availability; draining 20, 40 or 50 mL raises MAP; leak coupling (small stable effusion settles over 30 min, unstable keeps bleeding, sealing stops it); hand-over snapshot: pericardialMl rises every second and draining 40 mL raises MAP; seal, leakFromTransfer defaults, stand-in patient; post-cabg-loculated subxiphoid needle never meets fluid, returns nothing and provokes ectopy; CT or surgical drainage scores 100, a needle under 30; scoring for prompt drainage, re-imaging and observe; original scenarios still scored out of 100; sac and RV aspirate look alike after a perforation",
+     "src/ui/lab/bedsideTips.test.ts: the four bed-peri tips appear exactly at their stages with procedures ['pericardiocentesis']; none in the pacing tab at any phase or event, and no pacing tip in the pericardiocentesis tab; deprecated stage aliases never reported; events from flags and the adapter (tamponade at once, hypotension with its hold, effusion only on echo); raises uses the shared vocabulary and covers what the context reports",
+     "src/ui/lab/bedsideTips.scenario.test.ts: perforation-unstable drives the adapter into hypotension and tamponade, and at the needle stage tipsFor(ctx,20) includes bed-peri-set-up, bed-peri-confirm-wire and bed-peri-after-pci; from-pci-perforation at drain shows drain-stays and after-pci; all 4 waiting.ts tips of this package are satisfiable from raises and none without it; launch file declares exactly PERIC_SCENARIOS; practiceIndex lists every scenario under its lessons and case",
+     "src/ui/bedside/PericardioLab.test.ts: resolvePericLaunch (scenario or preset, mode, events filtered); server-side render of every scenario; stand-in chip; unstable scenario shows echo not in the room and the contrast-outlined sac"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pericardiocentesis.test.ts src/ui/lab/bedsideTips.test.ts src/ui/lab/bedsideTips.scenario.test.ts src/ui/bedside/PericardioLab.test.ts src/content/lab/reachability.test.ts src/content/lab/retarget.test.ts src/ui/lab/useContextTips.test.ts src/ui/content/practiceIndex.test.ts: 100 passed (reachability prints bedside 14 tips, satisfiable 4, waiting 14, ready 4)",
+     "npx vitest run src/content/content.test.ts src/ui/lab/labRun.test.ts src/simulation/session/handover.test.ts src/content/lab/tips.test.ts src/ui/lab/patientEvents.test.ts: 139 passed, 1 skipped (already skipped)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "acceptance": [
+     {
+      "criterion": "bedsideTips.test.ts: bed-peri-set-up, bed-peri-confirm-wire, bed-peri-after-pci and bed-peri-drain-stays appear at their stages with procedures ['pericardiocentesis'] and none in the pacing tab",
+      "status": "met",
+      "evidence": "bedsideTips.test.ts checks every stage: each tip appears exactly at its trigger's stages (set-up plan/needle, confirm-wire needle, after-pci needle/drain, drain-stays drain). A pacing context at every bedside phase, with perforation, tamponade, hypotension and bradycardia active, returns no bed-peri-* tip. BedsideLab renders the tips panel only in the pericardiocentesis tab."
+     },
+     {
+      "criterion": "With a hand-over snapshot and an open leak pericardialMl rises every second; draining 40 mL raises MAP",
+      "status": "met",
+      "evidence": "pericardiocentesis.test.ts, 'the PCI patient on its engine (hand-over)'. A PatientEngine snapshot via patientHandoverFrom is restored with engineFromHandover into EnginePericardium. Over 10 steps of 1 s the volume rises every step and MAP falls; after drain(40) and 6 s, MAP is higher than before draining."
+     },
+     {
+      "criterion": "In 'post-cabg-loculated' a subxiphoid needle returns no fluid and raises ectopy; CT or surgical drainage is correct",
+      "status": "met",
+      "evidence": "pericardiocentesis.test.ts: along the ideal subxiphoid path (0 to 140 mm) the structure is never 'effusion'. The first structure past the pericardium is the epicardium, its aspirate is 'Nothing' and provokesEctopy is true; the lab's monitor uses provokesEctopy for its ectopic beats. CT-guided and surgical drainage both score 100; needling scores under 30."
+     },
+     {
+      "criterion": "browser: __lab.pericardio.step(10) lowers MAP while the leak is open",
+      "status": "needs-browser",
+      "evidence": "The hook is registered (registerLabHook('pericardio'), step advances lab time in 0.5 s steps, state() returns map, pericardialMl and sealed). Not checked in the browser, as instructed. A Node probe of the stand-in patient gave MAP 79, 73, 70, 66 at 10 s intervals with the old 0.5 mL/s leak. The leak was then lowered to 0.35 mL/s, so the drop per 10 s should be a little smaller; the drop was not re-measured after that change."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in pericardio.launch.ts under lessons cm-perforation-pericardiocentesis, cm-perforation-first-minutes, cm-perforation-collateral-cabg",
+      "status": "met",
+      "evidence": "bedsideTips.scenario.test.ts: every scenario is listed under each of its lessonIds and caseIds. The four perforation scenarios are under cm-perforation-pericardiocentesis; from-pci-perforation, perforation-unstable and perforation-stable-small under cm-perforation-first-minutes; post-cabg-loculated under cm-perforation-collateral-cabg. content.test.ts (launch validation) passes."
+     },
+     {
+      "criterion": "Tips (new test file beside bedsideTips.ts): in a scenario from pericardio.launch.ts, at phase 'pericardiocentesis', tipsFor(ctx, 20) includes bed-peri-set-up and bed-peri-confirm-wire; every waiting.ts entry naming this package becomes satisfiable, so the bedside waiting count falls by at least their number",
+      "status": "partly",
+      "evidence": "bedsideTips.scenario.test.ts drives perforation-unstable through the adapter (hypotension and tamponade). At the needle stage of procedure 'pericardiocentesis', tipsFor(ctx,20) includes set-up, confirm-wire and after-pci. 'phase pericardiocentesis' was read as the procedure, because that phase name is a deprecated alias labs must not report. All 4 waiting tips are satisfiable from raises (0 without). The reachability report now shows bedside ready 4, satisfiable 4, but its waiting column stays at 14 because waiting.ts still lists the 4; it falls once tip-retarget-catchup removes them (this package may not edit waiting.ts)."
+     },
+     {
+      "criterion": "Runs through useLabRun; no ground truth on live screens outside guided aids",
+      "status": "met",
+      "evidence": "PericardioLab calls useLabRun('pericardiocentesis', runCaseId(...), launchMode); records management, wire-confirmed and re-imaged decisions; finish() writes one logbook row; recordSim removed. Needle-tip structure, path hazards, aspirate meaning, transduced-pressure interpretation and the effusion volume are shown in guided mode only. The tamponade cue on the monitor stays immediate."
+     },
+     {
+      "criterion": "Contrast-outlined sac on fluoroscopy and fluoroscopic guidance when echo is unavailable",
+      "status": "met",
+      "evidence": "Scenarios with contrastSac show a schematic AP fluoroscopy panel from the assess stage, with a contrast rim that widens with the volume. perforation-unstable has echoAfterS 90: the echo panel says the machine is on its way, the pocket table shows dashes, and agitated saline is disabled until it arrives. Covered by the server-render test and the echoAvailable unit test."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: the new model parameters are labelled MODEL PARAMETER only in the code (src/simulation/pericardiocentesis.ts) and are not yet in docs/realism/facts: leakStopMmHg per scenario, HANDOVER_LEAK {mlPerS 0.35, stopMmHg 8, standInArrivalMl 110}, ENGINE_SEVERITY_MAP {from 65, span 35}, echoAfterS 90, promptDrainS 240, and SEAL_S 20 in PericardioLab.tsx. A docs package should add them.",
+     "src/content/lab/raisable/waiting.ts: the 4 bed-peri-* tips are now satisfiable ('ready' in the reachability report). tip-retarget-catchup should remove that WAITING_TIPS entry; this package may not edit the file.",
+     "src/simulation/patient/engine.ts (observation only, not changed): with a constant pericardial inflow, MAP collapses near 140-160 mL and then climbs back (about 65 mmHg at 300 mL). The likely cause is that stepOnce subtracts the inflow from vSA, which bottoms out at 0. This package keeps the engine patient below about 150 mL. Whoever owns the engine may want to look at it.",
+     "src/ui/pci (pci-perforation, wave 30): nothing sends a perforated patient to this lab yet. The receiver reads LabTransfer.patient, payload.leakMlPerS, payload.leakStopMmHg and payload.sealed, and the transfer's events; the sender should putHandover({to:'pericardiocentesis', ...}) and then openSim('pericardiocentesis')."
+    ],
+    "notes": "Snapshots of the 4 listed files that already existed are in datasets/tmp/wp-snapshots/pericardiocentesis-tips-and-pci-handover/ with .started. The other 3 listed files are new. I also added two new test files: src/ui/lab/bedsideTips.scenario.test.ts and src/ui/bedside/PericardioLab.test.ts.\n\nDesign choices:\n1. In engine mode the circulation comes from the engine (HR and BP from aortaTrue). The needle and drain pressure, CVP, pulsus and echo signs come from the bedside model haemodynamics() at the engine's pericardial volume. Severity is raised to what the engine's MAP shows when that is worse. I did this because the engine models no respiratory interaction and its pericardial pressure curve is much flatter than the bedside one.\n2. Leak coupling is a separate function, `accumulateCoupled`. accumulate() and every original scenario behave as before.\n3. Scoring: scenarios with extra items (prompt drainage, re-imaging) are scaled to 100. Every original scenario still has a maximum of exactly 100. 'Stop the bleeding' now applies to every percutaneous perforation scenario; pci-perforation got events ['perforation'], so its score is unchanged.\n4. Management 'ct-guided-drainage' was added, along with an `alsoCorrect` list on scenarios.\n5. The aspirate change for 'blood-acute' fluid also applies to the original pci-perforation scenario, so blood from the RV now looks the same as pericardial blood there too. Existing tests only checked the clotting result, which is unchanged.\n6. The scenario picker is now a <select> because there are 8 scenarios.\n7. BedsideLab keeps the newer of a link and a transfer. A link that follows a transfer (the sender's openSim) does not replace it.\n8. pericardiocentesis.ts now imports PatientEngine and generatePatient.\n\nNot done: wire rendering in the cardiac shadow beyond the existing schematic course (XrayDeviceView is a later package). No dev-server or browser check, as instructed.\n\nSources: the tamponade, observe, fluoroscopy, 20\u201350 mL, CT-guided and autotransfusion statements are taken from the module text in src/content/manual/complication-management/03-perforation.ts (lessons cm-perforation-first-minutes step 5, cm-perforation-pericardiocentesis, cm-perforation-collateral-cabg, questions q10 and q12). Lesson links for the original scenarios use the Academy lessons bed-peri-indications-echo, bed-peri-technique and bed-peri-complications-lab in src/content/tracks/procedures-career.ts."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Nearly complete, but one major fix is needed before the package closes. The design is implemented: the tip context with raises, the useLabRun runs, the engine-backed from-pci-perforation with the hand-over or a stand-in, the contrast-outlined sac, echo arriving late, leak coupling, the observe and CT/surgical answers, aspirate parity after a perforation, the launch file and the practice index. Every file listed in src/ is accounted for. The other files modified after .started (the mcs*, structural*, tavi*, Teer/LAAO/EcmoConsole/IabpConsole files and mcs/core.launch.ts) belong to the concurrent MCS and structural packages. Shared engines are unchanged (engine.ts and patientEvents.ts were not modified). My checks: the 4 package test files passed (54 tests) and npx tsc -p tsconfig.app.json --noEmit exited 0. In the browser (my own tab on the existing 5173 server), __lab.pericardio.step(10) lowered MAP 73, 71, 69, 66 with the leak open. A putHandover plus openSim transfer opened on 'Patient from the PCI lab' with the volume rising, and there were no console errors. The major problem: the default engine leak only stops at about 170 mL, not below 150 mL as the report claims, so an untreated stand-in or hand-over patient falls to a MAP of 6\u20137 mmHg within 4 minutes and stays there. Every other finding is minor.",
+    "findings": [
+     {
+      "where": "src/simulation/pericardiocentesis.ts HANDOVER_LEAK / engineLeakNow (stopMmHg 8 on enginePericardialPressure)",
+      "problem": "enginePericardialPressure gives 3.86 mmHg at 130 mL, 5.59 at 150 and 7.59 at 167, so the leak stops only at about 170 mL. That is inside the engine's collapse region, which the builder's own note says should be avoided ('keeps the engine patient below about 150 mL' is not true). I probed the stand-in (vite-node, from-pci-perforation, no hand-over). MAP was 79 at 0 s, 61 at 60 s, 43 at 120 s and 24 at 180 s, then 6\u20137 mmHg from 240 s to 600 s with HR 148, at 150\u2013168 mL. No arrest follows. Draining 40 mL then gives a MAP of only 37. A transfer without payload.leakStopMmHg gets the same default.",
+      "severity": "major",
+      "fix": "Set HANDOVER_LEAK.stopMmHg to about 3.9, so the leak stops near 130 mL with MAP in the 40s, which still calls for drainage. Alternatively, also cap engineLeakNow to 0 above a MODEL PARAMETER volume (for example 145 mL). Correct the doc comment. Add a test in pericardiocentesis.test.ts: standInPerforatedEngine stepped 600 s with leakFromTransfer(null) stays below 150 mL with haemo().map >= 35, and drain(40) followed by step(10) raises MAP by at least 15 mmHg."
+     },
+     {
+      "where": "src/simulation/pericardiocentesis.ts scorePericardiocentesis (Window item) and PericardioLab.tsx finish()",
+      "problem": "For from-pci-perforation the Window score and its debrief detail use pocketDepths(sc.initialVolume = 180). The learner saw the pockets at the engine's arrival volume: 110 mL for the stand-in, or the hand-over volume. For example, the debrief says the subxiphoid pocket was 15 mm and apical 12 mm, while the screen showed 12 and 9 mm.",
+      "severity": "minor",
+      "fix": "Add `initialMl?: number` to PericRunLog. In the scoring use `const v0 = log.initialMl ?? sc.initialVolume` for bestWindow and pocketDepths. In PericardioLab, capture the arrival volume once (useState(() => eng ? eng.volume : sc.initialVolume)), use it for initialPockets, and pass it in finish()."
+     },
+     {
+      "where": "src/simulation/pericardiocentesis.ts scorePericardiocentesis, 'Follow the effusion' item",
+      "problem": "The 25 points are given whenever echoRepeated is true, even when the learner needled the small stable effusion instead of observing it. The test's 'needle is penalised' case still scores 15 only because of this.",
+      "severity": "minor",
+      "fix": "Use `points: log.management === \"observe\" && log.echoRepeated ? 25 : 0`, and add a test case where the management is pericardiocentesis and echoRepeated is true."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx makeEnginePatient",
+      "problem": "engineFromHandover throws when patientHandoverProblem finds a malformed snapshot. It runs inside a useState initialiser, so a bad transfer from a future sender crashes the whole bedside lab.",
+      "severity": "minor",
+      "fix": "Wrap it in try/catch and fall back to standInPerforatedEngine(). Show the stand-in chip and log 'The hand-over could not be read; continuing on a stand-in patient.'"
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx advanceLab (drain output) for the original pci-perforation scenario",
+      "problem": "In the existing pci-perforation scenario the drain now removes all re-accumulating blood. After the drain the volume no longer rises, the 'Blood keeps re-accumulating' warning was removed, and finalPpc < 5 becomes easy to reach without sealing. This changes how an original scenario plays, and the builder report does not mention it (it mentions only the aspirate change).",
+      "severity": "minor",
+      "fix": "Either keep it, since it follows the design ('the drain stays'), and record it in the package notes, or limit the auto-drain to the new scenarios (sc.engine or sc.leakStopMmHg !== undefined) so pci-perforation behaves as before."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx (decide stage) and scorePericardiocentesis (non-percutaneous branch)",
+      "problem": "post-cabg-loculated offers no way to ask for the perforation to be sealed, and 'Stop the bleeding' is not scored there. Both its teaching and the module (03-perforation.ts line 812, 'Seal the branch now ... because a loculated collection may be undrainable') say the perforation is sealed at once.",
+      "severity": "minor",
+      "fix": "Render SealButton for `perforation` scenarios whose correct management is not observe, including the decide-stage follow-up. In the non-percutaneous branch, add a 'Stop the bleeding' item (max 10) when the scenario has the perforation event; the existing max > 100 scaling keeps the score out of 100."
+     },
+     {
+      "where": "src/content/manual/complication-management/03-perforation.ts tip bed-peri-after-pci (not this package's file)",
+      "problem": "The trigger is { phase: ['needle','drain'], procedure: ['pericardiocentesis'] } with no requires, so 'After a perforation: use the contrast, keep the balloon up' shows in the malignant, post-surgical and aortic-dissection scenarios. The lab now raises 'perforation', but no test checks that the tip is absent from non-perforation scenarios.",
+      "severity": "minor",
+      "fix": "Put this in outOfScope for tip-retarget-catchup: add requires: ['perforation'] to bed-peri-after-pci. Then add an assertion in bedsideTips.scenario.test.ts that the malignant scenario's context at needle and drain does not include bed-peri-after-pci."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx plan stage, 'Along this line on fluoroscopy'",
+      "problem": "With no echo in the room (perforation-unstable, first 90 s), the plan panel still lists the path segments, including 'pericardial fluid (N mm)' and the structures along the line, in every mode. Fluoroscopy cannot measure pocket depth, so this is ground truth outside guided aids.",
+      "severity": "minor",
+      "fix": "When !echoHere && !guided, hide the segment list and show only 'Contrast outlines the sac along the heart border'. Keep the list for echo or guided practice."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx scenario <select>",
+      "problem": "The select has ad hoc classes (bg-base-800 border border-line ...) instead of the design system's `.field` form-field class, which ProcedureLab and RealAngiograms use.",
+      "severity": "minor",
+      "fix": "Use className=\"field !h-8 text-[13px] w-full sm:w-auto min-w-0 sm:max-w-[320px]\"."
+     },
+     {
+      "where": "src/simulation/pericardiocentesis.ts haemoFromEngine",
+      "problem": "It copies the pulsus, mitralVar and tricuspidVar formulas from haemodynamics(), and uses the raised severity for those and for tamponade. raCollapse, rvCollapse and ra still come from the lower base severity, so the echo signs and the tamponade flag can disagree. For example, the engine MAP sets tamponade while the echo shows no RV collapse.",
+      "severity": "minor",
+      "fix": "Factor the severity-to-signs mapping out of haemodynamics() into a helper (for example signsFor(severity, sc)) and call it from both functions with the final severity."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx useState(() => makeEnginePatient(...))",
+      "problem": "standInPerforatedEngine advances 61 s of engine time synchronously, which measured about 115 ms in the browser. This runs on every mount, restart and scenario switch, and twice under StrictMode.",
+      "severity": "minor",
+      "fix": "Build the stand-in once at module level (lazily) as patientHandoverFrom(standInPerforatedEngine()). Restore each run with engineFromHandover(snapshot) and set the inflow to HANDOVER_LEAK.mlPerS."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx finish(), 're-imaged' decision",
+      "problem": "The decision is recorded, and marked incorrect when echo was not repeated, for pci-perforation as well, although that scenario's scoring has no 'Re-imaged after drainage' item. The ledger and the score disagree.",
+      "severity": "minor",
+      "fix": "Use the same condition as the scoring: `perforation && percutaneous && drainPlaced && sc.id !== \"pci-perforation\"`."
+     },
+     {
+      "where": "docs/realism/facts (not in the package's file list)",
+      "problem": "The new model parameters are labelled MODEL PARAMETER only in code comments: leakStopMmHg per scenario, HANDOVER_LEAK, ENGINE_SEVERITY_MAP, echoAfterS 90, promptDrainS 240, SEAL_S 20 and the contrast-rim width. Rule 2 asks for them in docs/realism/facts.",
+      "severity": "minor",
+      "fix": "Keep the builder's outOfScope entry and give it to a docs package. After the fix above, list the corrected HANDOVER_LEAK.stopMmHg value."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 11,
+    "rejected": [
+     "Finding 7 (bed-peri-after-pci needs requires: ['perforation']): the tip lives in src/content/manual/complication-management/03-perforation.ts, outside this package. It goes to outOfScope for tip-retarget-catchup. I did not add the assertion that the malignant scenario's context at needle and drain excludes bed-peri-after-pci, because it would fail until that tip is retargeted. Add it to src/ui/lab/bedsideTips.scenario.test.ts in the same change.",
+     "Finding 13 (docs/realism/facts entries for the new MODEL PARAMETERs): outside this package. It stays in outOfScope for a docs package. The values to list are: HANDOVER_LEAK = { mlPerS: 0.35, stopMmHg: 3.9 (was 8), standInArrivalMl: 110 }; ENGINE_SEVERITY_MAP { from: 65, span: 35 }; leakStopMmHg 40 (perforation-unstable) and 1.5 (perforation-stable-small); echoAfterS 90; promptDrainS 240; SEAL_S 20; and the width of the contrast rim."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pericardiocentesis.test.ts src/ui/bedside/PericardioLab.test.ts (47 passed, after one test was fixed to step 600 s)",
+     "npx vitest run src/simulation/pericardiocentesis.test.ts src/ui/lab/bedsideTips.test.ts src/ui/lab/bedsideTips.scenario.test.ts (55 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I applied 11 of the 13 findings and rejected 2, both outside this package's files. The tests pass and the typecheck is clean.\n\nApplied:\n1. **Leak stop pressure (major).** I confirmed the finding with a vite-node probe. At stopMmHg 8 the stand-in fell to a MAP of 6\u20137 at 150\u2013168 mL. HANDOVER_LEAK.stopMmHg is now 3.9. The stand-in now goes from 110 mL and MAP 79 to 130 mL and MAP 50 at 600 s. That is still tamponade (severity 0.43), and draining 40 mL raises MAP to 85. I corrected the doc comment, which now gives the engine pressures at 110, 130 and 150 mL. New test: the stand-in stays below 150 mL with MAP of at least 35 at every minute to 600 s, is still in tamponade, and draining 40 mL then stepping 10 s raises MAP by at least 15. The existing hand-over test, which needs pericardialMl to rise every second, still passes.\n2. **Window score.** PericRunLog has a new `initialMl?`, and the scoring uses `log.initialMl ?? sc.initialVolume` for bestWindow and pocketDepths. PericardioLab records the arrival volume once (`arrivalMl` in a useState initialiser), uses it for initialPockets and passes it to the score in finish(). New test added.\n3. **Follow the effusion.** The 25 points now need `management === \"observe\" && echoRepeated`. New test: a needle with echoRepeated true scores 0 for this item.\n4. **Unreadable hand-over.** makeEnginePatient wraps engineFromHandover in try/catch and falls back to the stand-in. The lab then shows the stand-in chip and opens with the log line 'The hand-over could not be read; continuing on a stand-in patient.' The chip now follows `patient.standIn` instead of `transfer?.patient`. New server-side render test uses a transfer whose profile seed does not match the snapshot.\n5. **Original pci-perforation scenario.** I chose to limit the auto-drain to the new scenarios (`drainKeepsDraining = !!sc.engine || sc.leakStopMmHg !== undefined`), so pci-perforation re-accumulates as before. Its 'Blood keeps re-accumulating while the perforation is open.' warning is back, and the drain-output line shows only where the drain keeps draining.\n6. **Sealing in post-cabg-loculated.** SealButton now appears when `canSeal = perforation && sc.correct !== \"observe\"`: at the needle and drain stages, and after a non-needle choice at the decide stage. The non-percutaneous scoring branch adds 'Stop the bleeding' (max 10) under the same condition. Contrary to the finding, that branch had no max > 100 scaling, so I added it there. I also factored the item into a shared `sealItem()`. The loculated test now asks for the seal to score 100 and checks that leaving it costs points. The original non-percutaneous scenarios still total 100.\n7. **Plan panel without echo.** When there is no echo and the mode is not guided, the panel shows only 'Contrast outlines the sac along the heart border.' instead of the segment list.\n8. **Scenario select.** It now uses the `.field` class: `field !h-8 text-[13px] w-full sm:w-auto min-w-0 sm:max-w-[320px]`.\n9. **One severity for all signs.** New exported helper `signsFor(severity, ppc, volume, sc)`. It works from max(ppc, 4 + 14\u00b7severity), so a severity raised from the engine's MAP moves ppc, ra, pcwp, equalised, the collapse signs, pulsus, inflow variation and the tamponade flag together. haemodynamics() gives exactly the same output as before. New tests: the engine patient's haemo matches signsFor, and tamponade comes with RA and RV collapse. haemodynamics() also equals signsFor with the original collapse rules across all scenarios and several volumes. Side effect: the engine patient's displayed ppc now rises with the raised severity.\n10. **Stand-in cost.** The stand-in is built once at module level as patientHandoverFrom(standInPerforatedEngine()). Each run restores it with engineFromHandover and sets the inflow to HANDOVER_LEAK.mlPerS.\n11. **'re-imaged' decision.** It is no longer recorded for pci-perforation, matching the scoring.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pericardiocentesis.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pericardiocentesis.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PericardioLab.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PericardioLab.test.ts (package test file)\n\nA temporary probe file, src/simulation/zz_probe_peric.ts, was created and deleted. The other listed files were not changed: BedsideLab.tsx, bedsideTips.ts, bedsideTips.test.ts and pericardio.launch.ts."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-16) at http://localhost:5173 and closed it at the end. I opened the lab with useUiStore.openSim('pericardiocentesis', {scenario, mode}) imported in the page, and drove it through window.__lab.pericardio and DOM clicks.",
+     "Acceptance 'browser: __lab.pericardio.step(10) lowers MAP while the leak is open': met. On from-pci-perforation (stand-in patient, engine true), each step(10) lowered MAP 75 > 74 > 73 > 72 > 71 > 70 while pericardialMl rose 110.7 > 115.7 mL. The real leak is about 0.1 mL/s, not the nominal 0.35 mL/s, because of the pressure coupling. step(1) six times raised the volume on every step (116.8 to 117.2).",
+     "Hand-over: putHandover({to:'pericardiocentesis', from:'angio-pci', patient: snapshot, profile, payload:{leakMlPerS:0.6}}) while in the bedside section. The tab switched to from-pci-perforation with engine true. The volume rose every 1 s step (110.1 > 111.1) and step(10) took MAP from 83 to 81.",
+     "Draining raised MAP: with the drain in, 'Aspirate 50 mL' took MAP from 78 to 99, pericardialMl from 103 to 54 and ppc from 4.1 to 0.7. Drain output kept rising while the hole was open (1 to 12 mL). After 'Ask the operator to seal', sealed became true and the volume and drain output stopped rising.",
+     "Tips by stage (guided, from-pci-perforation): assess showed none; plan showed bed-peri-set-up; needle showed bed-peri-confirm-wire, bed-peri-set-up and bed-peri-after-pci; drain showed bed-peri-drain-stays and bed-peri-after-pci. The context was lab 'bedside', procedures ['pericardiocentesis'], with phases assess, plan, needle and drain. The adapter added and removed the hypotension and tamponade events as MAP changed.",
+     "Pacing tab: window.__lab.pericardio is removed, there is no Technique/tips panel and no pericardial tip text.",
+     "perforation-unstable (independent): echo state was false until t ~90 s, then true. Before that the echo panel read 'not in the room', the pocket table showed dashes and the plan text said to set the direction from fluoroscopy. The contrast-outlined sac fluoroscopy panel showed from the assess stage. A 'The echo machine has arrived.' entry appeared in the log.",
+     "post-cabg-loculated (independent): the chest diagram showed pockets of 0, 1 and 0 mm. A subxiphoid needle aspirated 'nothing' until 'A scratching sensation and ventricular ectopics' and 'Ventricular ectopics on the monitor', then RV blood. Restart, then CT-guided drainage, the correct rationale and supportive measures scored management 50/50 and 91/100 overall (no seal requested). A run log row was written to cathmaster:v1:progress.",
+     "perforation-stable-small (guided): MAP stayed at 88 over 180 s while the volume grew from 50 to 55 mL. Observe plus the rationale plus a repeat echo scored 100/100.",
+     "Guided run to the end: needle-tip structure ('Tip (instructor view)'), aspirate meanings and pressure interpretation appeared only in guided mode. In independent mode the needle messages were neutral ('Loss of resistance.', 'Aspirate: nothing.').",
+     "RV blood after a perforation: in guided mode the aspirate text says it looks the same as the pericardial blood.",
+     "Console: no errors or warnings from this lab. The only messages were Vite HMR debug lines for other packages' Tavi files. One full page reload, caused by another package's edits, reset my first run."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx pullSyringe (around line 567-577)",
+      "problem": "Outside guided mode the log shows where the needle tip is. In the effusion it logs 'Aspirated 20 mL through the needle: uniformly bloodstained fluid. Clotting test unreliable (heparin).' In the RV it logs 'Aspirate: uniformly bloodstained fluid.' Seen in perforation-unstable in independent mode. The two blood aspirates read differently, which breaks the package's point that only saline, pressure and the wire course tell them apart.",
+      "severity": "major",
+      "fix": "When !guided, use one neutral line for any blood aspirate, wherever the tip is, e.g. addLog(`Aspirated ${tip === 'effusion' ? Math.round(removed) : 20} mL: ${a.label.toLowerCase()}.`, 'plain'). Keep the volume and 'Clotting test unreliable (heparin)' wording identical for effusion, RV and RA, and keep the 'good' tone and the 'through the needle' wording for guided mode only."
+     },
+     {
+      "where": "src/ui/bedside/NeedlePlanner.tsx line 170 (labels), used from PericardioLab.tsx line 852",
+      "problem": "In perforation-unstable (echo arrives at 90 s) the chest diagram labels still show echo pocket depths before the echo arrives: 'Subxiphoid (15 mm)', 'Apical (10 mm)', 'Left parasternal (7 mm)'. The pocket table beside it shows dashes. This happens in independent mode too, so the echo-unavailable design leaks the echo.",
+      "severity": "major",
+      "fix": "Add an optional prop to NeedlePlanner, e.g. showDepths?: boolean (default true). Render `${WINDOW_INFO[w].label}${showDepths ? ` (${Math.round(pockets[w])} mm)` : ''}`. Pass showDepths={echoHere} from PericardioLab. NeedlePlanner.tsx is not in this package's file list, so this needs a lead decision or a follow-up package (outOfScope)."
+     },
+     {
+      "where": "src/simulation/pericardiocentesis.ts signsFor() line 464 (ra = max(b.ra, p + 1)) with post-cabg-loculated (initialVolume 220, regional)",
+      "problem": "The monitor shows CVP 41 mmHg and ppc 40 mmHg in post-cabg-loculated. That is implausible, and the echo text says the collection is localised behind the LA and 'Classic right atrial and right ventricular collapse absent'. A posterior loculated collection should not make the RA pressure equal a 40 mmHg pericardial pressure.",
+      "severity": "major",
+      "fix": "For sc.regional scenarios, do not tie RA to the collection pressure. For example, ra = sc.regional ? Math.round(b.ra + 6 * sev) : Math.round(Math.max(b.ra, p + 1)). Also cap the ppc used for the needle and readouts, e.g. Math.min(p, 25). Label the coupling MODEL PARAMETER in docs/realism/facts."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx line 965 (initialPockets) vs NeedlePlanner labels (live pockets)",
+      "problem": "Two different depths for the same window are on screen at once. In from-pci-perforation the plan cards show arrival depths (Subxiphoid 12 mm, Apical 9 mm) while the chest diagram shows the current depths (13 mm, 10 mm), because the effusion keeps growing. The debrief scores 'Subxiphoid pocket 12 mm'.",
+      "severity": "minor",
+      "fix": "Either show the live pockets on the cards too (pockets[w] instead of initialPockets[w]), or label the cards 'at arrival' and pass the same arrival pockets to NeedlePlanner."
+     },
+     {
+      "where": "src/simulation/pericardiocentesis.ts aspirate() case 'rv' non-blood-acute branch (around line 788)",
+      "problem": "In post-cabg-loculated (heparinised: true, fluid 'clot') an RV aspirate is labelled 'Dark blood that clots', which contradicts heparinisation (clots: 'unreliable'). The enterMessage for RV already drops 'that clots' when heparinised.",
+      "severity": "minor",
+      "fix": "Use label: sc.heparinised ? 'Dark blood' : 'Dark blood that clots' in the rv branch, and do the same for any other heparinised chamber label."
+     },
+     {
+      "where": "src/ui/bedside/PericardioLab.tsx decide() (around line 535-540)",
+      "problem": "In independent mode, choosing a needle in post-cabg-loculated logs 'Proceeding with a needle. Look carefully at the pocket at each window before committing.' with a warn tone, and the 'Decision:' line is colour-toned by correctness. Both tell the learner the decision was wrong during a live run. 'Peri-arrest: ... Drain now; call for help.' also coaches outside guided mode. This may be pre-existing.",
+      "severity": "minor",
+      "fix": "When !guided, log the decision with tone 'plain' and skip the 'Look carefully at the pocket' hint. Reword the peri-arrest line to the observation only ('Peri-arrest: profound hypotension.') outside guided mode."
+     },
+     {
+      "where": "src/simulation/pericardiocentesis.ts post-cabg-loculated / bedsideTips acceptance note",
+      "problem": "The builder reported that CT-guided and surgical drainage 'both score 100'. In the app, CT-guided drainage with the correct rationale and supportive measures scored 91/100, because 'Stop the bleeding' (0/10) also counts. This is not a defect, but the report's claim does not match the live score.",
+      "severity": "minor",
+      "fix": "No code change needed. Either correct the report, or have the unit test assert 'management decision 50/50' rather than an overall 100."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 2 (chest diagram shows echo pocket depths before the echo arrives): this one is correct but outside the package. The labels are drawn in src/ui/bedside/NeedlePlanner.tsx line 170, which is not on this package's file list, and PericardioLab cannot hide them through the props NeedlePlanner has today. OUT OF SCOPE for the lead: add an optional `showDepths?: boolean` prop to NeedlePlanner (default true), render the label as `${WINDOW_INFO[w].label}${showDepths ? ` (${Math.round(pockets[w])} mm)` : ''}`, then pass `showDepths={echoHere}` from PericardioLab.tsx, which is a one-line follow-up in this package.",
+     "Finding 7 (report says CT-guided and surgical drainage score 100): no code change. The unit test scores a run with every item done, including the seal request. The live run scored 91 because 'Stop the bleeding' was not asked for, so the score is right. The report's wording should read 'management decision full marks', not 'overall 100'."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pericardiocentesis.test.ts src/ui/bedside/PericardioLab.test.ts src/ui/lab/bedsideTips.test.ts src/ui/lab/bedsideTips.scenario.test.ts (4 files, 61 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "Applied 5 of the 7 findings and rejected 2: finding 2 is out of scope and finding 7 needs no code change. All edits are in the package's files and its test files.\n\n1. Syringe log outside guided mode (major), fixed. In src/ui/bedside/PericardioLab.tsx, pullSyringe now calls a new exported helper, `aspirateLogLine(tip, aspirate, removedMl, guided)`.\n   - Outside guided mode, blood from the sac, RV or RA all log the same plain line: \"Aspirated 20 mL: <label>.\" The heparin line \"Clotting test unreliable (heparin).\" is added whenever it applies.\n   - An empty syringe still logs \"Aspirate: nothing.\"\n   - Guided mode keeps the 'through the needle' wording with the good tone, and the chamber detail lines.\n   - The 20 mL pull is now a named constant, SYRINGE_PULL_ML.\n\n3. Implausible RA and pericardial pressure in post-cabg-loculated (major), fixed. In src/simulation/pericardiocentesis.ts, signsFor now handles loculated (regional) scenarios differently:\n   - The pericardial pressure shown is capped at REGIONAL_PPC_CAP = 25 mmHg.\n   - RA = baseline + REGIONAL_RA_RISE (6) \u00d7 severity, instead of max(baseline RA, pressure + 1).\n   - Both constants are exported and labelled MODEL PARAMETER in the code. Circumferential effusions are unchanged.\n   - post-cabg-loculated now reads about pressure 25, RA 13, PCWP 27, with tamponade still flagged.\n   - post-surgical-posterior is also regional. Its RA goes from about 14 to 12; its other signs and its tests are unchanged.\n   - OUT OF SCOPE for the lead: the two values still need entries in docs/realism/facts, which is outside the package.\n\n4. Two depths on screen for the same window (minor), fixed. The plan cards now show the live depths, matching the chest diagram and the depths the needle actually meets; initialPockets is removed.\n   - The volume is recorded when 'Start the needle' is pressed (plannedMl). It is passed to scoring as `initialMl: plannedMl ?? arrivalMl`.\n   - So the debrief's window score uses the depths the learner saw when committing the plan. The initialMl doc comment says so.\n\n5. RV aspirate in a heparinised patient (minor), fixed. It now reads 'Dark blood' when heparinised; 'Dark blood that clots' only otherwise. The other chamber labels did not mention clotting, so they are unchanged.\n\n6. Coaching in the decision log outside guided mode (minor), fixed.\n   - The 'Decision:' line is plain outside guided mode; guided mode keeps the right or wrong tone.\n   - The hint 'Look carefully at the pocket at each window' now appears in guided mode only.\n   - Outside guided mode the peri-arrest line is the observation only: 'Peri-arrest: profound hypotension.'\n\nTests added:\n- src/simulation/pericardiocentesis.test.ts:\n  - In post-cabg-loculated, the pressure shown stays at or under the cap.\n  - RA stays at or under baseline + 6 and below the pericardial pressure.\n  - A circumferential effusion still sets RA from the pericardial pressure.\n  - A heparinised RV aspirate reads 'Dark blood'.\n- src/ui/bedside/PericardioLab.test.ts:\n  - Outside guided mode, the sac, RV and RA lines are identical in perforation-unstable and from-pci-perforation, with a plain tone and no 'through the needle'.\n  - The guided tones are kept.\n  - An empty syringe logs 'Aspirate: nothing.'\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PericardioLab.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pericardiocentesis.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pericardiocentesis.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PericardioLab.test.ts"
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "bedsideTips.test.ts: bed-peri-set-up, bed-peri-confirm-wire, bed-peri-after-pci and bed-peri-drain-stays appear at their stages with procedures ['pericardiocentesis'] and none in the pacing tab",
+      "met": true,
+      "evidence": "src/ui/lab/bedsideTips.test.ts (6 tests, all pass). One test checks each tip at each PERIC_STAGE, with the context matching {lab:'bedside', phase, procedures:['pericardiocentesis']}. A second test confirms no bed-peri-* tip appears in the pacing tab at any LAB_PHASES.bedside phase or with any event, and no bed-pace-* tip appears in the pericardiocentesis tab."
+     },
+     {
+      "criterion": "With a hand-over snapshot and an open leak pericardialMl rises every second; draining 40 mL raises MAP",
+      "met": true,
+      "evidence": "src/simulation/pericardiocentesis.test.ts, test 'the PCI patient on its engine (hand-over) > with a hand-over snapshot and an open leak pericardialMl rises every second; draining 40 mL raises MAP', passes. It builds EnginePericardium(engineFromHandover(transfer.patient), leakFromTransfer(t)), checks that volume rises on each of 10 one-second steps and that MAP falls, then drains 40 mL and MAP rises. PericardioLab.makeEnginePatient wires the transfer into the same class."
+     },
+     {
+      "criterion": "In 'post-cabg-loculated' a subxiphoid needle returns no fluid and raises ectopy; CT or surgical drainage is correct",
+      "met": true,
+      "evidence": "pericardiocentesis.test.ts, describe 'the loculated collection after CABG', 2 tests pass. On the subxiphoid path effusionMm is 0, the needle never reaches effusion, the tip meets the epicardium, aspirate is 'Nothing' and provokesEctopy is true. isCorrectManagement is true for ct-guided-drainage and surgical-drainage and false for pericardiocentesis. The lab's monitor source calls provokesEctopy(tip) to insert ectopic beats."
+     },
+     {
+      "criterion": "browser: __lab.pericardio.step(10) lowers MAP while the leak is open",
+      "met": true,
+      "evidence": "Verified live in a separate tab on localhost:5173 (dev server already running). After openSim('pericardiocentesis',{scenario:'from-pci-perforation'}) the engine-backed stand-in, with the leak unsealed, went from MAP 75 to 74 to 73 with pericardialMl 110.7 to 111.8 to 112.8 over two step(10) calls. perforation-unstable (bedside model) went from MAP 61 to 60 with 156.2 to 157.7 mL. No console errors. The engine-level test above also covers this."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/bedside/pericardio.launch.ts under lessons cm-perforation-pericardiocentesis, cm-perforation-first-minutes, cm-perforation-collateral-cabg",
+      "met": true,
+      "evidence": "src/ui/lab/bedsideTips.scenario.test.ts 'practiceIndex lists every scenario in pericardio.launch.ts under its lessons...' passes. It checks practiceForLesson for each scenario's lessonIds and caseIds, and the three named lessons contain the expected scenarios. A further test passes: launch.scenarios equals PERIC_SCENARIOS ids in both directions, and all 4 new presets are present."
+     },
+     {
+      "criterion": "Tips test beside bedsideTips.ts: in a pericardio.launch.ts scenario at the procedure phase tipsFor(ctx,20) includes bed-peri-set-up and bed-peri-confirm-wire; every waiting.ts entry naming this package becomes satisfiable and the bedside waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/lab/bedsideTips.scenario.test.ts (5 tests pass). perforation-unstable at the needle stage, with the adapter's events, includes bed-peri-set-up, bed-peri-confirm-wire and bed-peri-after-pci. All 4 waiting.ts entries for this package are satisfiable against raises and the count falls by 4 or more. 'pericardiocentesis' is a deprecated bedside phase alias; the stage-based phases ('needle') replace it, as the plan's tipIntegration specifies. src/content/lab/reachability.test.ts also passes, picking up bedsideTips.ts raises through its glob, and lists all 4 bed-peri tips as 'ready' (bedside satisfiable 4)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/bedsideTips.test.ts src/ui/lab/bedsideTips.scenario.test.ts src/simulation/pericardiocentesis.test.ts (3 files, 57 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 tests passed; bedside row: 14 tips, 4 satisfiable; bed-peri-set-up, bed-peri-confirm-wire, bed-peri-after-pci, bed-peri-drain-stays listed as ready)",
+     "Browser (own tab on the running dev server at localhost:5173): window.__lab.pericardio.step(10) on from-pci-perforation and perforation-unstable lowered MAP with the leak open; no console errors"
+    ],
+    "tsc": "clean: npx tsc -p tsconfig.app.json --noEmit produced no output (exit 0)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,277 @@
+{
+ "package": "pci-device-catalogue",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built the sourced PCI equipment catalogue in src/simulation/pci/equipment.ts. It now has 45 device specs across 14 classes: balloons (semi-compliant, non-compliant, scoring, IVL, small 1.0\u20131.5 mm, microdilation, OTW, cutting, wire-alongside scoring, very-high-pressure, DCB, trapping, ostial flaring); DES 2.25\u20135.0 \u00d7 8\u201348 mm; two covered stent designs (the two-layer PTFE one replaces the old covered spec); six microcatheter types (large, small, angulated, deflectable, dual-lumen, plaque modification), 135/150 cm; guide extensions 5\u20138 Fr with Table 30.5 inner diameters, 25/40 cm, plus a version with a trapping balloon and a 5-in-6 catheter-in-catheter system; aspiration catheters 6/7 Fr; rotational and phased-array IVUS and OCT; rotational burrs 1.25\u20132.5 mm with Table 19.1 guide limits; the orbital crown; laser 0.9\u20132.0 mm; coronary and aortic snares; two filters; 0.014 and 0.018 coils; and the re-entry balloon and crossing catheter. Each spec has `sources` (lesson id plus the place in the module text, docs/SIM_FACTS.md, docs/realism/facts/S7.md, or \"inherited:\") and a `modelParam` list.\n\nGuides: 18 shapes (EBU 3.0\u20134.5, JL3.5/4/5, AL1/2, AR1/2, JR4, IKL, IKR, Williams right, hockey stick, MP), 5\u20138 Fr lumens from Table 30.4, lengths 90/100/125 cm and side holes. WireKind now has 9 kinds covering Brilakis's seven categories, with lengths, crossing rules, and tip loads inside the ranges the module text gives (the tip load values themselves are labelled MODEL PARAMETER). New helpers: `fitsThrough`, `lumenLeftMm`, `trappingBalloonFor`, `canTrapIn`, `smallestGuideForMm`, `burrMinFrench`. `boxLabel` now prints a use-by date on every box and returns `expired` without printing it. `deviceTipEvents` and `deviceImaging` map the active device to tip events (atherectomy-rotational and -orbital, laser-active, ivl-active, extension-in-place, epd-deployed, snare-in-use, balloon-uncrossable, balloon-undilatable, stent-underexpanded) and to an imaging modality.\n\nguide.ts: `GuideState.french` now accepts 5|6|7|8. I added optional side, lengthCm and sideHoles (absent by default, so existing guide states behave exactly as before). `backupForce` uses a side-specific back-up value only when the side is set; AL2 is the only guide with one.\n\nTo keep the UI and engine compiling, the engine's `BalloonKind` stays at the four inflation behaviours; a new `balloonType` field holds the catalogue category. docs/realism/facts/pci-equipment.md lists every value with its source and kind.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/equipment.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/guide.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/equipment.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/facts/pci-equipment.md",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/equipment.tips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/guide.catalogue.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/pci/equipment.test.ts (23 tests: chart monotonicity, NC vs SC growth, provenance with the lesson ids checked against src/content/manual, no product names, burr and guide limits, Table 30.4/30.5 values, fitsThrough, covered stents, trapping, microcatheters, imaging, box label pressures and expiry, wire categories, guide list and catheterFamily mapping, back-up grading, device tip events)",
+     "src/simulation/pci/equipment.tips.test.ts (3 tests: calcified RCA scenario, stalled NC balloon gives balloon-uncrossable at lesion-prep; NC balloon at RBP with a waist gives balloon-undilatable and pci-eqb-know-the-chart in tipsFor(ctx,20); no waiting.ts entry names this package)",
+     "src/simulation/pci/guide.catalogue.test.ts (4 tests: back-up rises 5 to 8 Fr for every guide, original ordering kept, side-specific back-up, length and side holes)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/equipment.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/guide.catalogue.test.ts src/simulation/pci/guide.test.ts -> 4 files, 35 tests passed",
+     "npx vitest run src/simulation/pci/indeflator.test.ts src/simulation/pci/facade.test.ts (with guide.test.ts) -> passed (18 tests)",
+     "npx vitest run src/simulation/angioPci.test.ts src/simulation/pci/coronaryWire.test.ts src/simulation/pci/pressureWire.test.ts -> 33 passed",
+     "npx vitest run src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/tips.test.ts src/simulation/complications/complications.test.ts src/simulation/pci/stentGeometry.test.ts src/simulation/pci/ivus.test.ts src/simulation/pci/lesionAssessment.test.ts -> 53 passed",
+     "npx vitest run src/progress/progress.test.ts src/mentor/mentor.test.ts src/content/lab/reachability.test.ts -> 126 passed, 1 failed: mentor.test.ts 'each diagnostic card resolves to a start state' (over-rotation: resolveDiagnosticStart returned null). That test exercises the diagnostic engagement host (LegacyDiagnosticHost, resolveDiagnosticStart) and imports nothing from the PCI equipment code. I believe the cause is outside this package, but I did not confirm it by running the test against the snapshot."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "acceptance": [
+     {
+      "criterion": "equipment.test.ts: chartDiameter is monotone in pressure for every balloon; NC grows less per atm than SC; every DeviceSpec has sources or modelParam",
+      "status": "met",
+      "evidence": "Tests 'chartDiameter is monotone...' (every inflatable spec, at every diameter, 0 to RBP+4 atm in 0.25 atm steps, label size reached at nominal), 'a non-compliant balloon grows less per atm than a semi-compliant one' (2.0\u20134.0 mm, plus the very-high-pressure balloon), and 'every DeviceSpec has sources or modelParam...' (also covers GuideSpec and WireSpec; each source's lesson id must exist in src/content/manual and each docs/ path must exist). All pass."
+     },
+     {
+      "criterion": "A 2.0 mm burr reports minGuideFr 7; extension inner diameters match the table; covered stents offer exactly the listed diameters",
+      "status": "met",
+      "evidence": "rota.minFrench(2.0) === 7. The full Table 19.1 (1.25\u20131.75 mm: 6 Fr, 2.15\u20132.25 mm: 8 Fr, 2.38 and 2.5 mm: null) is cross-checked against the Table 30.4 lumens. EXTENSION_ID_IN and EXTENSION_ID_MM equal Table 30.5 and the box prints them. Sandwich covered stent: exactly [2.8, 3.5, 4.0, 4.5, 4.8] mm with 6/7 Fr, at least 15 atm and 1.6 mm shortening per end. Polyurethane: exactly [2.5\u20135.0] mm in 0.5 mm steps with 5/6 Fr and the 3.50/4.65/5.63 mm post-dilatation limits. The request's example also holds: a 1.5 mm burr will not pass a 6 Fr extension in a 7 Fr guide."
+     },
+     {
+      "criterion": "boxLabel shows nominal, RBP and expiry for each class",
+      "status": "met",
+      "evidence": "The 'box label' test loops over every class and every device: a 'Use by' line on every box; nominal and rated burst pressure lines plus a chart on every inflatable device; no RBP line on non-inflatable ones. The expired flag works for a planted date and is not printed on the box."
+     },
+     {
+      "criterion": "guide.test.ts ordering (EBU > JL, 7 Fr > 6 Fr) still holds",
+      "status": "met",
+      "evidence": "The unchanged guide.test.ts passes (5 tests). The new guide.catalogue.test.ts also passes: back-up rises 5 < 6 < 7 < 8 Fr for every guide, and the original ordering is unchanged."
+     },
+     {
+      "criterion": "Tips: in a scenario that exercises it, at phase 'lesion-prep', tipsFor(ctx, 20) includes pci-eqb-know-the-chart and pci-eqb-standard-first; every waiting.ts entry naming pci-device-catalogue becomes satisfiable",
+      "status": "partly",
+      "evidence": "equipment.tips.test.ts uses the rca-calcified scenario with an AL1 guide. pciTipContext gives phase 'lesion-prep' and the test adds the deviceTipEvents output. (1) An NC 3.0 balloon held at its 20 atm RBP with a waist raises balloon-undilatable, and pci-eqb-know-the-chart is in tipsFor(ctx, 20). (2) An NC balloon that stalls at a 92% calcified lesion raises balloon-uncrossable, but pci-eqb-standard-first ranks 21st of 49: about 20 other PCI tips have the same or a higher score in that context, and ties keep registry order. It is reachable but not inside tipsFor(ctx, 20); the test asserts rank < 25. (3) No WAITING_TIPS or DEFERRED_RETARGETS entry names pci-device-catalogue (both tips wait on pci-tip-context), so this condition holds trivially and the waiting count falls by 0. Not met as written: there is no event source to put the test beside. src/ui/lab/pciEvents/ (the registry with its `raises` export) does not exist yet; the test drives src/ui/lab/pciTips.ts instead."
+     }
+    ],
+    "outOfScope": [
+     "src/simulation/pci/actions/devices.ts (requestDevice): its class-to-DeviceKind mapping sends every class except stent, covered-stent, ivus and extension to 'balloon'. The new classes (microcatheter, aspiration, oct, atherectomy, laser, snare, embolic-protection, coil, re-entry) would open as balloons if requested; nothing requests them yet. pci-device-delivery or pci-wire-microcatheter should map them. state.ts DeviceKind and Device.balloon would also need a catalogue type or kind tag.",
+     "src/ui/lab/pciEvents/ event source (pci-tip-context): put the active device's spec (cls/kind/balloonType) into the snapshot, call deviceTipEvents() and deviceImaging(), set LabContext.catheter = catheterFamily(st.guide.id), and export raises including DEVICE_EVENTS. The tip acceptance test should then move beside that event source.",
+     "src/content/lab/tips.ts or the tips registry owner (found-tip-retarget / tip-retarget-catchup): with only balloon-uncrossable at lesion-prep, pci-eqb-standard-first ranks 21st of 49 because ties keep registry order. A tie-break or a narrower trigger is needed if the plan wants it inside tipsFor(ctx, 20).",
+     "src/ui/sections/AngioPci.tsx lists Object.keys(WIRE_SPEC) in its wire selector, so the four new wire kinds (polymer-tapered, support-waved, atherectomy, externalisation) now appear there. Their behaviour comes only from WireSpec parameters; scoring them (for example, crossing with an atherectomy or waved support wire) is for a later package. The browser stage should confirm the selector still renders.",
+     "src/simulation/pciBench.ts BALLOON_SPEC is still separate; deriving it from this catalogue is pci-bench-imaging-unify's job.",
+     "src/mentor/mentor.test.ts 'each diagnostic card resolves to a start state at the moment of the error' fails (over-rotation card: resolveDiagnosticStart returns null). It runs the diagnostic engagement code, which imports nothing from the PCI catalogue; this was not confirmed against the snapshot. Likely caused by another package in flight."
+    ],
+    "notes": "The snapshot is in datasets/tmp/wp-snapshots/pci-device-catalogue/: src/simulation/pci/equipment.ts and guide.ts, plus .started. The other two listed files did not exist before.\n\nSourcing: every new value comes from the module text, docs/SIM_FACTS.md (\u00a715 rota speeds, \u00a716 IVL pressures) or docs/realism/facts/S7.md #15 (Ikari 2005, PMID 16327043, which now backs the guide ordering), or is labelled MODEL PARAMETER. The earlier file's FDA-label values (DES Table 14-1 chart, SC/NC/scoring pressures, RX 0.056 in minimum) cited a facts file, C3.md, that is not in the repository. I kept them, tagged them \"inherited:\", and listed them as unverified in pci-equipment.md. They have not been checked against the labels.\n\nThe old covered stent (3.0\u20134.5 mm, 6 F to 3.5 mm, 14 atm) was replaced: the module text gives 2.8/3.5/4.0/4.5/4.8 mm, 6 Fr to 4.0 mm and at least 15 atm. Its RBP of 18 atm, the very-high-pressure balloon's nominal 10 atm, and the tip OD/lumen of every microcatheter are MODEL PARAMETERS. The box label prints them, the microcatheter OD/lumen marked as teaching values; for the RBPs only the chart note says the chart is a teaching model.\n\nFor 2.38 and 2.5 mm burrs, minFrench is null (\"Larger than 8 F\"). The module text gives no guide for them, and neither fits the 2.29 mm 8 Fr lumen.\n\nExisting engine behaviour is unchanged for the old ids: sc, nc, scoring, ivl, des, ivus and extension keep their ids; the IVL crossing profile now follows the printed 0.043\u20130.046 in; DES gained 2.25, 4.5 and 5.0 mm diameters and longer lengths. guide.ts edits are additive.\n\nNo browser check was done (as instructed)."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "I recommend accepting with minor fixes. Acceptance criteria 1 to 4 are met. Criterion 5 is only partly met, and the gap is outside this package. Package tests: 4 files, 35 tests, all pass. `npx tsc -p tsconfig.app.json --noEmit` exits 0. Adjacent tests also pass (indeflator, facade, angioPci: 82 of 83 with mentor). The one failure is mentor.test.ts 'each diagnostic card resolves to a start state'. It comes from src/mentor/skillCards.ts (last modified 10:06, before this package's .started at 11:04), which imports only diagnostic engagement, anatomy and pressure code and nothing from pci. So it is not this package's fault. guide.ts diff: the changes are additive. GuideState.french widened to GuideFrench, and side, lengthCm and sideHoles are optional and absent by default. backupForce gives the old value whenever side is unset. equipment.ts: the old ids (sc, nc, scoring, ivl, des, covered, ivus, extension) still resolve through deviceFor. WIRE_SPEC physics values for the five old kinds are unchanged. Spot checks against the module text matched: Table 30.4 lumens, Table 30.5 extension inner diameters, Table 19.1 burr limits, the covered-stent table in cm-perforation-large-vessel, Table 18.1 filter sizing, wire lengths and tip-load ranges, guide lengths 90/100/125 cm, and laser sizes. Other files under src/ newer than .started (src/ui/pci/launch.ts, src/simulation/pci/geometry.ts, scenarios/*, actions/scenario.ts, content/mentor/catalogue.ts, session/*, ProcedureLab.tsx) are all listed files of pci-scenario-registry or proc-foundation-scenarios-ledger, so they are plausibly another package's work. No unlisted file was changed by this package; the two added files are new tests. No per-frame allocation was added: chartDiameter's chart allocation is the same as before. Box labels never print `expired`. UI strings are British English and generic. Remaining issues: the tip acceptance check is weakened to rank below 25; the new wire kinds reach the live wire selector, where their crossing rules are not enforced; and there are some smaller correctness and provenance points (findings below).",
+    "findings": [
+     {
+      "where": "src/simulation/pci/equipment.tips.test.ts:52-55 (acceptance 5, pci-eqb-standard-first)",
+      "problem": "The plan requires pci-eqb-standard-first in tipsFor(ctx, 20). It ranks 21st because many tips tie on phase+event (balloon-uncrossable appears in 36 tip triggers) and ties keep registry order. The test now asserts indexOf < 25. That number is arbitrary and the acceptance criterion is not met. The fix needs the tips registry or pci-tip-context, which this package does not own, so the gap is legitimate, but the test hides it.",
+      "severity": "major",
+      "fix": "Replace the `< 25` assertion with one that pins the real claim: `const top = Math.max(...LAB_TIPS.map(t => tipScore(t, ctx) ?? -1)); expect(tipScore(LAB_TIPS.find(t => t.id === 'pci-eqb-standard-first')!, ctx)).toBe(top);`. Add `it.todo('pci-eqb-standard-first inside tipsFor(ctx, 20) once the tips registry breaks ties (found-tip-retarget / tip-retarget-catchup)')`. Keep acceptance 5 marked 'partly' and send the tie-break request to the tips registry owner. Move the test beside src/ui/lab/pciEvents/ once pci-tip-context (wave 8) builds it."
+     },
+     {
+      "where": "src/ui/sections/AngioPci.tsx:521 (data from src/simulation/pci/equipment.ts WIRE_SPEC)",
+      "problem": "The selector lists Object.keys(WIRE_SPEC), so the live PCI lab now offers four new wire kinds: polymer-tapered, support-waved, atherectomy and externalisation. Nothing enforces their sourced `crossing` rules. A learner can cross a lesion with the waved support wire, which the module calls 'not a crossing wire', with no consequence. This changes a live lab screen through a file outside the package.",
+      "severity": "major",
+      "fix": "The AngioPci owner (or pci-wire-microcatheter) should filter the selector until crossing is scored: `(Object.keys(WIRE_SPEC) as WireKind[]).filter(k => WIRE_SPEC[k].crossing === 'yes' && !['polymer-tapered'].includes(k))`, or simply restrict it to the five original kinds. Add this to the package's outOfScope list as a required follow-up, not optional."
+     },
+     {
+      "where": "src/simulation/pci/equipment.tips.test.ts:79-84",
+      "problem": "The third test is largely tautological. Its comment says 'every device event the catalogue can produce is a name of the tip vocabulary', but it only asserts DEVICE_EVENTS.length > 0. The waiting.ts check passes trivially because no entry names this package.",
+      "severity": "minor",
+      "fix": "Import LAB_EVENTS from src/content/lab/tips and assert `for (const e of DEVICE_EVENTS) expect(LAB_EVENTS).toContain(e)`. Optionally also assert that pci-eqb-know-the-chart and pci-eqb-standard-first appear in WAITING_TIPS under raisedBy 'pci-tip-context', so the dependency is recorded."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:1629 (deviceTipEvents, stent-underexpanded)",
+      "problem": "`stent-underexpanded` fires whenever a stent has a waist and `active` is true, at any pressure. A stent being inflated through 2 to 6 atm, before reaching nominal, would raise underexpansion tips mid-deployment. The test only checks 14 atm.",
+      "severity": "minor",
+      "fix": "Change the condition to `(spec.cls === 'stent' || spec.cls === 'covered-stent') && a.waist && (a.inflatedBefore || (a.active && (a.atm ?? 0) >= spec.nominalAtm(a.diameter)))`. Add a test that a DES at 4 atm with a waist and inflatedBefore false raises nothing."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:1549-1552 (boxLabel 'Guide' line)",
+      "problem": "Balloon and stent boxes print '6 F (inner diameter at least 0.056 in)'. The catalogue now offers a 5 Fr guide with a 0.058 in lumen (GUIDE_LUMEN[5]), which meets the stated 0.056 in minimum. The label now contradicts the catalogue.",
+      "severity": "minor",
+      "fix": "Print `${minF} F or larger` for every class, dropping the RX_MIN_GUIDE_ID_IN clause. Alternatively, derive balloon and stent minFrench from RX_MIN_GUIDE_ID_IN (smallest fr with GUIDE_LUMEN[fr].idIn[0] >= RX_MIN_GUIDE_ID_IN) and list it as inherited and unverified in pci-equipment.md. Update the facts row either way."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:391 (WIRE_SPEC.pressure.sources) and docs/realism/facts/pci-equipment.md (Coronary wires table)",
+      "problem": "The pressure sensor 3 cm from the tip is tagged 'inherited, unverified', but the module text states it in lesson pm-physiology-setup (src/content/manual/pci-manual/14-physiology.ts:232, Oxford and Brilakis).",
+      "severity": "minor",
+      "fix": "Replace INHERITED(...) with `src('pm-physiology-setup', \"'The wire': pressure sensor about 3 cm from the tip, where the radiopaque tip meets the shaft\")`. Change the facts row to Module text with that lesson id."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:1240 (laser minFrench)",
+      "problem": "`Math.max(6, smallestGuideForMm(d) ?? 8)` returns 8 Fr for a catheter that fits no 5 to 8 Fr guide. burrMinFrench returns null in the same case, so the two are inconsistent. The derivation also uses zero clearance between catheter outer diameter and guide lumen (1.7 mm into 1.78 mm), and the box then prints the result as a requirement. It is labelled a MODEL PARAMETER, but neither the facts file nor the box says it is derived.",
+      "severity": "minor",
+      "fix": "Use `(d) => (d <= 0.9 ? 6 : (() => { const fr = smallestGuideForMm(d); return fr === null ? null : (Math.max(6, fr) as GuideFrench); })())`. In pci-equipment.md, state that minFrench for the 1.4 to 2.0 mm catheters is derived from the Table 30.4 lumens with no clearance allowance."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:1044, 1068, 1454-1458 (innerDiameterIn, lumenLeftMm)",
+      "problem": "For an extension size missing from Table 30.5 (e.g. 6.5), innerDiameterIn silently falls back to the 6 Fr row and lumenLeftMm falls back to the whole guide lumen. fitsThrough then passes devices it should reject.",
+      "severity": "minor",
+      "fix": "In lumenLeftMm, return 0 (or throw) when EXTENSION_ID_MM[String(extensionFr)] is undefined. Make innerDiameterIn return the exact row or throw for unknown sizes. Add a test: fitsThrough(DEVICE_BY_ID.rota, 1.25, 7, 6.5) === false."
+     },
+     {
+      "where": "src/simulation/pci/guide.ts:66-71 with src/simulation/pci/state.ts:203 and src/simulation/pci/actions/guide.ts:15",
+      "problem": "AL2's right-side back-up (backupBySide.right) only takes effect when GuideState.side is set. Neither state.ts nor selectGuide passes side, and selectGuide rebuilds the guide with initialGuide(id, false, french), which drops side, lengthCm and sideHoles. An AL2 on the RCA therefore gets the left value. Default behaviour is preserved, but the feature is unreachable.",
+      "severity": "minor",
+      "fix": "Out of scope here. Record it for pci-guide-engagement: pass `{ side: s.side }` in state.ts initialGuide, and carry side, lengthCm and sideHoles across in actions/guide.ts selectGuide."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:1036-1039 (extension diameters in Fr, lengths in cm) vs src/simulation/pci/actions/devices.ts:18-43",
+      "problem": "For extensions the catalogue's diameters and lengths are now Fr and cm, signalled by sizeUnit and lengthUnit. The engine's Device.diameter and lengthMm are mm, and requestDevice logs `${diameter.toFixed(2)} \u00d7 ${lengthMm} mm`. A tray that passes spec.diameters[0] and spec.lengths[0] would open an extension as '5.00 \u00d7 25 mm' and give it a 25 mm length. requestDevice also maps every new class to 'balloon' (the builder already flagged this).",
+      "severity": "minor",
+      "fix": "Out of scope. Add to the notes for pci-device-delivery and pci-equipment-tray: requestDevice must read spec.sizeUnit and spec.lengthUnit (log via a sizeText-style helper, convert cm to mm for lengthMm) and map microcatheter, aspiration, oct, atherectomy, laser, snare, embolic-protection, coil and re-entry to their own DeviceKind."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:927 and 936 (DES dilatationLimit and modelParam)",
+      "problem": "The 5.75 mm post-dilatation limit is sourced only for the 5.0 mm stent ('largest 5.0 mm expandable to 5.75 mm'). The code applies it to 4.5 mm as well, and modelParam does not list that.",
+      "severity": "minor",
+      "fix": "Add 'dilatationLimit for 4.5 mm' to the DES modelParam list and to the DES row of pci-equipment.md."
+     },
+     {
+      "where": "src/simulation/pci/equipment.ts:1565 (boxLabel chartNote for source 'ifu')",
+      "problem": "The DES box tells the learner 'In vitro chart from a published label'. The package's own facts file lists that chart as inherited and unverified (the C3.md facts file is missing). The on-screen provenance claim is stronger than the evidence held in the repository.",
+      "severity": "minor",
+      "fix": "Until a package re-verifies the FDA P070015 Table 14-1 rows, either soften the note (e.g. 'In vitro chart carried from a published label (to be re-verified); lesion resistance not included') or set DES_TABLE charts to source 'model'. Record the choice in pci-equipment.md."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 11,
+    "rejected": [
+     "Finding 9 (AL2 side back-up unreachable): not applied here. The finding is correct, but the fix belongs in src/simulation/pci/state.ts and src/simulation/pci/actions/guide.ts, which this package does not own. Follow-up for pci-guide-engagement: pass { side } to initialGuide in state.ts, and carry side, lengthCm and sideHoles across in selectGuide (actions/guide.ts:15). guide.ts needed no change.",
+     "Finding 10 (extension Fr/cm units versus Device mm in requestDevice): not applied here. The finding is correct, but src/simulation/pci/actions/devices.ts is outside the package. Follow-up for pci-device-delivery and pci-equipment-tray: requestDevice must read spec.sizeUnit and spec.lengthUnit, log the size through a sizeText-style helper, convert cm to mm for lengthMm, and map microcatheter, aspiration, oct, atherectomy, laser, snare, embolic-protection, coil and re-entry to their own DeviceKind instead of 'balloon'."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/equipment.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/guide.catalogue.test.ts src/simulation/pci/indeflator.test.ts: 4 files passed, 37 tests passed, 1 todo"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked every finding against the code and the plan. Eleven were applied, fully or partly. Two (9 and 10) are correct but need files outside this package, so they are recorded as follow-ups. Files changed: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/equipment.ts, .../src/simulation/pci/equipment.test.ts, .../src/simulation/pci/equipment.tips.test.ts and .../docs/realism/facts/pci-equipment.md. guide.ts and guide.catalogue.test.ts are unchanged.\n\n1 (standard-first rank, major): I removed the arbitrary `< 25` assertion. The reviewer's suggested assertion (score equals the top score) is wrong in detail. The top score in that context is 5.5, because caution and bailout tips get a +0.5 tone bonus (tipScore). pci-eqb-standard-first is a 'do' tip and scores 5 (phase +1, event +4). The test now checks two things: no tip beats it once the tone bonus is taken off, and it scores exactly 5. I added it.todo('pci-eqb-standard-first inside tipsFor(ctx, 20) once the tips registry breaks ties (found-tip-retarget / tip-retarget-catchup)'). Acceptance 5 is still only partly met: tie-breaking is a change for the tips registry owner. The test can move beside src/ui/lab/pciEvents/ once pci-tip-context builds that folder.\n\n2 (new wire kinds in the live selector, major): the finding is correct. The live PCI lab selector (src/ui/sections/AngioPci.tsx:521) lists Object.keys(WIRE_SPEC), so it now offers the waved support, externalisation and atherectomy wires. Their crossing rules are not enforced. Within the package I added and tested an exported `CROSSING_WIRE_KINDS`, the kinds whose sourced crossing rule is 'yes', and listed it in the facts file. Required follow-up, outside this package (AngioPci owner or pci-wire-microcatheter): build the selector from CROSSING_WIRE_KINDS (or the original five kinds) until the engine scores crossing. If polymer-tapered should be held back too, filter it as the reviewer suggests.\n\n3 (tautological test): applied. It now checks that every DEVICE_EVENTS entry is in LAB_EVENTS, and that pci-eqb-know-the-chart and pci-eqb-standard-first are listed in WAITING_TIPS under raisedBy 'pci-tip-context'.\n\n4 (stent-underexpanded mid-deployment): applied. The event is raised only after an earlier inflation (inflatedBefore), or while inflated at or above nominal pressure. New tests: a DES at 4 atm with a waist raises nothing, and a DES with a waist after an earlier inflation raises the event.\n\n5 (box guide line contradicts 5 Fr): applied as the reviewer's first option. Every class now prints '<N> F or larger'. RX_MIN_GUIDE_ID_IN is kept in code but no longer printed; its facts row says why. Tested for the semi-compliant balloon and the DES.\n\n6 (pressure wire source): applied. The sensor position is now sourced to pm-physiology-setup, 'The wire'; I confirmed the wording in src/content/manual/pci-manual/14-physiology.ts. I added SRC.physiologySetup. The facts row now reads Module text, and a test checks there is no inherited tag.\n\n7 (laser minFrench): applied through an exported `laserMinFrench`. It returns null when no 5 to 8 Fr guide takes the catheter. The facts file now says the 1.4 to 2.0 mm values are derived from the Table 30.4 lumens with no clearance allowance. Tests: 1.4, 1.7 and 2.0 mm give 6, 6 and 7 Fr; 2.4 mm gives null.\n\n8 (unlisted extension size): applied. An exported `extensionInnerDiameterIn` throws an informative error for any size Table 30.5 does not list; both extension specs use it. lumenLeftMm returns 0 for such a size. Tests: fitsThrough(rota, 1.25, 7, 6.5) is false, lumenLeftMm(7, 6.5) is 0, and the 6.5 Fr look-up throws.\n\n11 (DES 4.5 mm dilatation limit): applied. 'dilatationLimit for 4.5 mm (the sourced 5.75 mm is for the 5.0 mm stent)' is in the DES modelParam list. The facts file no longer files the 4.5 mm use under Module text; it is in the MODEL PARAMETER row. Tested.\n\n12 (chart note overstates provenance): applied the softer wording: 'In vitro chart carried from a published label (to be re-verified); lesion resistance not included.' I kept chart source 'ifu' because indeflator.test.ts depends on it, and recorded the choice in the facts file. Tested.\n\nOther uses of the changed functions: the only other files that mention these names do so for the 'stent-underexpanded' event name in tip content or other tests. None of them calls deviceTipEvents, boxLabel or lumenLeftMm, so they are unaffected."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "equipment.test.ts: chartDiameter is monotone in pressure for every balloon; NC grows less per atm than SC; every DeviceSpec has sources or modelParam",
+      "met": true,
+      "evidence": "src/simulation/pci/equipment.test.ts 'compliance charts' runs every inflatable spec (at least 16) at every size from 0 to RBP+4 atm in 0.25 atm steps and checks monotonicity and nominal-size agreement. 'a non-compliant balloon grows less per atm than a semi-compliant one' checks 2.0 to 4.0 mm, NC_FRAC_PER_ATM and VHP. 'every DeviceSpec has sources or modelParam' covers DEVICES, GUIDES and WIRE_SPEC and checks that each source names a real manual lesson or an existing docs file. All pass."
+     },
+     {
+      "criterion": "A 2.0 mm burr reports minGuideFr 7; extension inner diameters match the table; covered stents offer exactly the listed diameters",
+      "met": true,
+      "evidence": "'a 2.0 mm burr reports minimum guide 7 Fr' asserts rota.minFrench(2.0) === 7 and checks the 6/8/null limits. 'extension inner diameters match Table 30.5' asserts EXTENSION_ID_IN/MM equal the values in src/content/manual/equipment/01-sheaths-guides.ts (5, 5.5, 6, 7, 8 Fr; 25 and 40 cm). 'covered stents offer exactly the listed diameters' asserts sandwich [2.8,3.5,4.0,4.5,4.8] and PU [2.5..5.0], French 6/7 and 5/6, at least 15 atm, 1.6 mm shortening and 8 Fr block-and-deliver. These match the cm-perforation#3 request text. All pass."
+     },
+     {
+      "criterion": "boxLabel shows nominal, RBP and expiry for each class",
+      "met": true,
+      "evidence": "'box label > shows nominal, rated burst pressure and expiry for every class' loops over every class in DEVICES. It asserts a 'Use by' line, Nominal pressure and Rated burst pressure lines plus a chart for inflatable specs, no RBP line for non-inflatable ones, and a Guide line. A further test covers the expiry flag not being printed. All pass."
+     },
+     {
+      "criterion": "guide.test.ts ordering (EBU > JL, 7 Fr > 6 Fr) still holds",
+      "met": true,
+      "evidence": "src/simulation/pci/guide.test.ts (5 tests) passes, including 'back-up follows the published ordering'. The new src/simulation/pci/guide.catalogue.test.ts (4 tests) also passes. It covers EBU > JL, 7 Fr > 6 Fr, monotonic back-up over 5 to 8 Fr for every guide and an unchanged default GuideState."
+     },
+     {
+      "criterion": "Tips: in a scenario that exercises it, at phase 'lesion-prep', tipsFor(ctx, 20) includes pci-eqb-know-the-chart and pci-eqb-standard-first; every waiting.ts entry naming pci-device-catalogue becomes satisfiable, so the reachability waiting count for the pci lab falls by at least their number",
+      "met": false,
+      "evidence": "src/simulation/pci/equipment.tips.test.ts (rca-calcified scenario) shows tipsFor(ctx,20) includes pci-eqb-know-the-chart at lesion-prep with balloon-undilatable. pci-eqb-standard-first is not shown in tipsFor(ctx,20). The test only checks that its tipScore (5) equals the top score net of tone bonus, and the inclusion is left as it.todo. I reproduced the test's context with vite-node (scratchpad rank.ts): phase lesion-prep, events ['balloon-uncrossable']. pci-eqb-standard-first is at index 20 of 49 matching tips, the 21st, so it falls just outside the top 20. Ties with the pci-unx-* tips keep registry order. On the waiting side, no WAITING_TIPS or DEFERRED_RETARGETS entry has raisedBy 'pci-device-catalogue' (asserted in the test), so that clause holds trivially (a drop of 0). Both eqb tips stay under raisedBy 'pci-tip-context'. src/ui/lab/pciEvents/ does not exist yet, so there is no event source with a raises export, and LabContext.catheter = catheterFamily(guide id) is not wired in src/ui/lab/pciTips.ts. Both belong to pci-tip-context (wave 8), not this package (wave 6)."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/pci/equipment.tips.test.ts (it.todo 'pci-eqb-standard-first inside tipsFor(ctx, 20)...'); trigger in src/content/manual/equipment/02-balloons-stents-cart.ts:1548-1550; ranking in src/content/lab/tips.ts tipsFor/tipScore",
+      "problem": "Acceptance 5 requires tipsFor(ctx, 20) at lesion-prep to include pci-eqb-standard-first. In the rca-calcified stalled-NC context it ranks 21st of 49 (index 20). It ties at score 5 (phase +1, event +4) with the pci-unx-* tips on balloon-uncrossable, and caution/bailout tips outrank it by their tone bonus. The test downgrades this to an it.todo, so the criterion is not met.",
+      "severity": "major",
+      "fix": "Neither fix is in this package's file list, so it is out of scope here. Option (a), in tips.ts via found-tip-retarget or tip-retarget-catchup: break score ties in tipsFor by trigger specificity or by lessonId matching the active device class, rather than registry order. Option (b): give pci-eqb-standard-first a more specific trigger. Add a device-kind event to the LabEvent vocabulary (e.g. 'nc-balloon-active', raised by deviceTipEvents when spec.balloon === 'non-compliant'), then set when.requires: ['nc-balloon-active'] for +1, which puts it above the tied pci-unx tips. After either fix, replace the it.todo with expect(tipsFor(ctx, 20).map(t => t.id)).toContain('pci-eqb-standard-first') in equipment.tips.test.ts and rerun npx vitest run src/simulation/pci/equipment.tips.test.ts."
+     },
+     {
+      "where": "tipIntegration (lab-build-plan.json): src/ui/lab/pciEvents/ (absent), src/ui/lab/pciTips.ts",
+      "problem": "The planned tip integration is not in place. No PCI event source exports raises for the reachability report, the active device class/kind and imaging are not in the snapshot, and LabContext.catheter is not set from catheterFamily(guide id). The catalogue only provides the helpers (deviceTipEvents, DEVICE_EVENTS, deviceImaging). This is not a separate acceptance criterion, but it is why acceptance 5 relies on the trivially met waiting clause.",
+      "severity": "minor",
+      "fix": "Leave to pci-tip-context, which owns src/ui/lab/pciEvents/index.ts, base.ts and pciTips.ts. In base.ts, call deviceTipEvents(...) for the active device, set ctx.imaging = deviceImaging(spec) and ctx.catheter = catheterFamily(state.guide.id), and export raises containing DEVICE_EVENTS. Then move pci-eqb-know-the-chart and pci-eqb-standard-first out of WAITING_TIPS (found-tip-retarget / tip-retarget-catchup)."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/equipment.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/guide.test.ts src/simulation/pci/guide.catalogue.test.ts -> 4 files passed, 37 tests passed, 1 todo",
+     "npx vite-node scratchpad/rank.ts (rebuilds the equipment.tips.test.ts stalled-NC context in rca-calcified) -> phase lesion-prep, events [balloon-uncrossable], pci-eqb-standard-first at index 20 of 49 in tipsFor, score 5"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "equipment.test.ts: chartDiameter is monotone in pressure for every balloon; NC grows less per atm than SC; every DeviceSpec has sources or modelParam",
+      "met": true,
+      "evidence": "src/simulation/pci/equipment.test.ts 'compliance charts' checks monotonicity in 0.25 atm steps from 0 to RBP+4 for all 16 or more inflatable specs at every size, plus nominal-size agreement. A separate test shows NC per-atm growth below SC at 2.0 to 4.0 mm, and VHP below SC too. 'provenance' checks sources or modelParam on every DEVICES, GUIDES and WIRE_SPEC entry, and each source must resolve to a manual lesson id or an existing docs/ file. All 25 tests pass."
+     },
+     {
+      "criterion": "A 2.0 mm burr reports minGuideFr 7; extension inner diameters match the table; covered stents offer exactly the listed diameters",
+      "met": true,
+      "evidence": "Tests confirm rota.minFrench(2.0) is 7, 1.25 to 1.75 mm give 6, 2.15 and 2.25 give 8, and 2.38 and 2.5 give null. EXTENSION_ID_IN/MM equal the Brilakis Table 30.5 rows in src/content/manual/equipment/01-sheaths-guides.ts lines 399-403 (5, 5.5, 6, 7 and 8 Fr). I checked these values by hand. The covered stents are exactly 'covered' [2.8,3.5,4.0,4.5,4.8] with Fr [6,6,6,7,7], and 'covered-pu' [2.5..5.0 in 0.5 steps] with Fr [5,5,5,5,6,6]. Nominal is at least 15 atm and shortening is 1.6 mm per end, all matching docs/curriculum/lab-requests/cm-perforation.json request #3."
+     },
+     {
+      "criterion": "boxLabel shows nominal, RBP and expiry for each class",
+      "met": true,
+      "evidence": "equipment.test.ts 'box label' loops over every device class. Each label must have 'Use by' with the given date and a 'Guide' line. Inflatable specs must also show 'Nominal pressure' and 'Rated burst pressure' with the spec values and a non-empty chart. Non-inflatable specs carry no RBP line. The expired flag is computed but never printed. Passes."
+     },
+     {
+      "criterion": "guide.test.ts ordering (EBU > JL, 7 Fr > 6 Fr) still holds",
+      "met": true,
+      "evidence": "src/simulation/pci/guide.test.ts passes unchanged (5 tests). src/simulation/pci/guide.catalogue.test.ts also asserts EBU3.5 > JL4 and 7 Fr > 6 Fr, back-up rising monotonically from 5 to 8 Fr for every guide, and the default initialGuide state unchanged. 4 tests pass. GuideState.french is GuideFrench (5|6|7|8)."
+     },
+     {
+      "criterion": "Tips (a new test file beside its event source): in a scenario that exercises it, at phase 'lesion-prep', tipsFor(ctx, 20) includes pci-eqb-know-the-chart and pci-eqb-standard-first; every waiting.ts entry naming pci-device-catalogue becomes satisfiable, so the reachability waiting count for the pci lab falls by at least their number",
+      "met": false,
+      "evidence": "src/simulation/pci/equipment.tips.test.ts has three parts. (1) pci-eqb-know-the-chart is asserted inside tipsFor(ctx, 20) for an NC balloon at RBP with a waist in rca-calcified at lesion-prep, and it passes. (2) The test for pci-eqb-standard-first asserts only that tipScore equals the top non-tone-bonus score (5). The tipsFor(ctx, 20) inclusion it needs is an it.todo. (3) No waiting.ts or DEFERRED_RETARGETS entry names pci-device-catalogue, so the waiting-count clause holds trivially (0), and reachability.test.ts passes. I ran a scratch probe of the same scenario: stalled NC balloon, phase lesion-prep, events ['balloon-uncrossable']. pci-eqb-standard-first came 21st (index 20) of 49 in tipsFor(ctx, 500), one place outside tipsFor(ctx, 20). Ten caution/bailout tips score 5.5 and ten 'do' tips tied at 5 come earlier in registry order. So the criterion as written is not met."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/pci/equipment.tips.test.ts (it.todo line 'pci-eqb-standard-first inside tipsFor(ctx, 20)...'); root cause in src/content/lab/tips.ts tipsFor tie ordering",
+      "problem": "Acceptance 5 requires tipsFor(ctx, 20) to include pci-eqb-standard-first at lesion-prep in an exercising scenario. In the rca-calcified stalled-NC context it ranks 21st. It ties at score 5 with ten earlier-registered 'do' tips (pci-calc-laser-uncrossable, pci-laser-warm-up, pci-unx-small-long-balloon, pci-unx-balloon-wedge, pci-unx-grenadoplasty, pci-unx-microcatheter-across, pci-unx-wire-cutting, pci-unx-inchworm, pci-unx-combine, pci-gx-size-match), and ten 5.5-scored caution/bailout tips come before those. The package's tests leave this as it.todo, so the criterion is unmet.",
+      "severity": "major",
+      "fix": "This is outside this package's files, so route it to found-tip-retarget / tip-retarget-catchup, or to whichever package owns src/content/lab/tips.ts. One option is to break score ties in tipsFor by trigger specificity, for example fewer when.phase plus when.event entries ranking first. pci-eqb-standard-first (1 phase, 1 event) would then rank about 15th, ahead of inchworm, gx-size-match, calc-laser-uncrossable, microcatheter-across, laser-warm-up and combine. The other option, matching the tipIntegration note that device class and kind go into the snapshot, is to add a device-kind trigger such as when.deviceKind ['non-compliant']. That needs a new LabContext field in tips.ts and the trigger set on pci-eqb-standard-first in src/content/manual/equipment/02-balloons-stents-cart.ts, so the tip scores above the ties. After either change, replace the it.todo in equipment.tips.test.ts with expect(tipsFor(ctx, 20).map((t) => t.id)).toContain('pci-eqb-standard-first') in the existing stalled-NC test, and re-run equipment.tips.test.ts, tips.test.ts and reachability.test.ts by file. The plan owner could instead amend acceptance 5 to accept 'tipScore equals the top score' until the registry tie-break lands."
+     },
+     {
+      "where": "src/ui/lab/pciTips.ts (pciTipContext); not a file of this package",
+      "problem": "The tipIntegration note says LabContext.catheter = catheterFamily(guide id). In the probe, pciTipContext returned catheter undefined for an AL1 guide. catheterFamily itself is correct for every catalogue guide (tested in equipment.test.ts). Separately, src/ui/lab/pciEvents/ does not exist yet, so device events are exported as DEVICE_EVENTS/deviceTipEvents from equipment.ts and not from an event source, and the tips test sits beside equipment.ts. This is not an acceptance criterion, so it does not block on its own.",
+      "severity": "minor",
+      "fix": "In the pci-tip-context package, set catheter: catheterFamily(st.guide.id) in pciTipContext and merge deviceTipEvents(...) for the active device into its events. Once the pciEvents registry exists, move the device event source there with its raises export."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/equipment.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/guide.test.ts src/simulation/pci/guide.catalogue.test.ts -> 4 files passed, 37 tests passed, 1 todo",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/tips.test.ts -> 2 files passed, 28 passed, 1 skipped",
+     "Scratch probe (scratchpad/probe/probe.test.ts with a scratch vitest config; no project files edited): rca-calcified stalled NC balloon at lesion-prep -> pci-eqb-standard-first at rank index 20 of 49, not in tipsFor(ctx, 20); ctx.catheter undefined"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (major, pci-eqb-standard-first outside tipsFor(ctx, 20)): I confirmed it against the code. In the stalled-NC rca-calcified context (events ['balloon-uncrossable'], vessel RCA), 49 tips match and this one is at index 20 with a score of 5 (phase +1, event +4). It ties with nine other 'do' tips that have the same trigger, and tipsFor in src/content/lab/tips.ts:459 breaks ties by registry order. Ten caution/bailout tips sit above it on the 0.5 tone bonus. tipScore takes nothing from the device, and the competing tips use the same event, so equipment.ts, guide.ts and the facts doc cannot move it. Both proposed fixes edit files outside this package. Option (a) changes tie-breaking in src/content/lab/tips.ts. Option (b) adds a new event to LAB_EVENTS in tips.ts and a when.requires to the tip in src/content/manual/equipment/02-balloons-stents-cart.ts. Adding 'nc-balloon-active' to deviceTipEvents alone would also break the package test that every DEVICE_EVENT is in LAB_EVENTS. Out of scope; it.todo kept. Owner: found-tip-retarget / tip-retarget-catchup, then turn the todo in src/simulation/pci/equipment.tips.test.ts into expect(tipsFor(ctx, 20).map(t => t.id)).toContain('pci-eqb-standard-first').",
+     "Finding 2 (minor, tip integration through src/ui/lab/pciEvents/ and pciTips.ts not wired): I confirmed it. The catalogue exports deviceTipEvents, DEVICE_EVENTS, deviceImaging and catheterFamily, but nothing sets ctx.imaging or ctx.catheter or exports raises. Those files belong to pci-tip-context and are not in this package's file list. Out of scope; no change."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/equipment.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/guide.catalogue.test.ts src/simulation/pci/guide.test.ts (4 files: 37 passed, 1 todo)",
+     "temporary ranking probe src/simulation/pci/zz_rank.probe.test.ts (run once to check finding 1, then deleted)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I made no edits to the package. I added a temporary probe test to rank the tips and deleted it after one run. Acceptance 5 is still half met. pci-eqb-know-the-chart is inside tipsFor(ctx, 20) when the balloon is held at rated pressure with a waist. pci-eqb-standard-first applies and nothing scores it as a closer match (score 5, tied), but it comes 21st on registry order. outOfScope: (1) src/content/lab/tips.ts: tipsFor tie-break by trigger specificity or device class, or a new device-kind LabEvent such as 'nc-balloon-active'. In the second case the catalogue's deviceTipEvents would then raise it in a later pass, and src/content/manual/equipment/02-balloons-stents-cart.ts would give pci-eqb-standard-first when.requires: ['nc-balloon-active']. (2) src/ui/lab/pciEvents/base.ts and src/ui/lab/pciTips.ts (pci-tip-context): call deviceTipEvents for the active device, set ctx.imaging = deviceImaging(spec) and ctx.catheter = catheterFamily(guide id), export raises containing DEVICE_EVENTS, then take both pci-eqb tips out of WAITING_TIPS."
+   }
+  ]
+ }
+}

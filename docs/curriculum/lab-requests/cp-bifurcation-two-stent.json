@@ -1,0 +1,204 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A two-stent bifurcation scenario family in the fluoroscopic PCI lab: a distal left main (LAD/circumflex, Medina 1,1,1, angle about 60°) and an LAD/diagonal bifurcation, each with adjustable side-branch angle, branch diameters and Medina pattern, two wires that the learner places and tracks, and a technique selector (DK crush, culotte, T-stenting, TAP, reverse crush, mini-crush, V-stenting, SKS). The scenario must model each wire's path (true lumen through a named strut cell, jailed behind a stent, or under a stent) and the protruding, crushed and overlapping stent segments.",
+    "learnerDoes": "Chooses the technique from the angle, sizes and Medina pattern; chooses guide size (6, 7 or 8 Fr) and access; wires both branches; prepares both branches; then performs the chosen technique step by step.",
+    "success": "Technique matches the algorithm (Medina 0,1,1 → V; emergency → SKS; 70°–90° → T or TAP; under 70° → DK crush or culotte); V-stenting and SKS refused with a 6 Fr guide; both branches wired with workhorse wires and prepared before any stent in a planned case.",
+    "tips": [
+      "pci-twostent-guide-size",
+      "pci-twostent-prepare-both",
+      "pci-twostent-workhorse-wires",
+      "pci-vstent-sks-guide"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-choosing"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "DK crush run as seventeen scored steps in the distal left main scenario, each step setting the lab state: MV balloon parked, SB stent position (protrusion in mm shown on enhanced stent visualisation), SB deployment pressure, SB angiogram, crush, POT after a crush with a distally sized balloon, first rewiring (strut chosen), SB balloon delivery, two-step first kiss, MV stent, POT, second rewiring, two-step second kiss, final POT, final angiography and IVUS.",
+    "learnerDoes": "Sets SB stent protrusion, deploys at a chosen pressure and post-dilates with the pulled-back balloon, takes the SB angiogram, chooses whether to remove the SB wire before the crush, positions the crush balloon, picks the strut for each rewiring, runs each kiss as one-step or two-step, places each POT balloon.",
+    "success": "SB stent protrudes 2–3 mm; deployment 10–12 atm then 20 atm with the balloon pulled back (a higher deployment pressure raises the chance of a distal edge dissection, which must be treated before the crush); a proximally sized crush balloon kept proximal to the carina (passing it beyond causes a distal MV dissection); first rewiring through a proximal strut and second through a distal strut (wrong strut shown on IVUS as poorer ostial scaffolding); first kiss SB 20 atm then both 10–12 atm; second kiss each balloon at high pressure then both 12–14 atm; POT balloon 1:1 to the proximal MV with its distal edge at the carina.",
+    "tips": [
+      "pci-dkcrush-mv-balloon-first",
+      "pci-dkcrush-sb-protrusion",
+      "pci-dkcrush-sb-deploy-pressure",
+      "pci-dkcrush-crush-balloon",
+      "pci-dkcrush-first-rewire-proximal",
+      "pci-twostent-two-step-kiss",
+      "pci-dkcrush-second-rewire-distal",
+      "pci-twostent-kiss-sequence",
+      "pci-twostent-final-pot"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-dk-crush"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A 'balloon will not enter the side branch through struts' event during DK crush and the other crush techniques, with the escalation devices available as choices.",
+    "learnerDoes": "Responds to the uncrossable balloon by choosing from a very small (1.0 mm) balloon, an anchor balloon in the MV, a specialised crossing balloon, a microcatheter to create a track, or rewiring; forcing the balloon is also offered.",
+    "success": "Escalates through the listed options without force; forcing the device produces guide backout or deep intubation with a damped trace that must be corrected.",
+    "tips": [
+      "pci-dkcrush-sb-balloon-wont-go"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-dk-crush"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Culotte in a bifurcation with similar-sized side branch and distal main vessel: first stent in the more angulated branch, evaluation, POT, distal-cell rewiring of the other branch with jailed-wire removal, strut dilatation, second stent, second POT, rewiring of the first branch, sequential kiss, optional final POT.",
+    "learnerDoes": "Chooses the first branch and a platform for each stent (with its labelled post-dilatation limit shown), performs each POT, chooses the cell for each rewiring, dilates the struts before the second stent, and performs the three-stage kiss.",
+    "success": "First stent in the more angulated branch (or MV first, accepted as the Oxford variant); POT before each rewiring; distal cell at the carina; struts opened before the second stent; kiss with each balloon at high pressure in turn then both at 12–14 atm. Advancing the second stent over the jailed wire is detected as a stent deployed behind the first stent's struts. A stent whose post-dilatation limit is below the proximal MV diameter is shown deformed after the POT.",
+    "tips": [
+      "pci-culotte-first-branch",
+      "pci-culotte-pot-before-rewire",
+      "pci-twostent-kiss-sequence"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-culotte"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Bail-out TAP after provisional LAD stenting of an LAD/diagonal bifurcation at about 80°, where the diagonal stays compromised after rewiring, kissing and re-POT; also planned T-stenting at 85°.",
+    "learnerDoes": "Rewires through a distal strut, kisses and re-POTs; then places the SB stent and an MV balloon, sets protrusion, deploys, pulls the SB balloon back, kisses and chooses which balloon to deflate first, and places the final POT balloon.",
+    "success": "TAP protrusion 1–2 mm (none leaves an uncovered ostium seen on stent enhancement; long protrusion lengthens the neocarina); MV balloon deflated first (SB-first deflation pushes struts into the SB ostium); final POT distal marker just proximal to the neocarina. Planned T-stent: proximal marker at the SB origin with slight protrusion, 10–12 atm then 20 atm.",
+    "tips": [
+      "pci-tap-protrusion",
+      "pci-tap-deflate-mv-first",
+      "pci-tap-final-pot",
+      "pci-tstent-proximal-marker"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-t-tap"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Reverse crush as a bail-out at an angle under 70°, and mini-crush for an ostial side-branch lesion at under 70° without main-vessel disease.",
+    "learnerDoes": "Reverse crush: rewires the SB, decides when to bring in the MV balloon, dilates the SB, positions and deploys the SB stent, crushes with the SB wire jailed, rewires the SB stent, removes the jailed wire, kisses and POTs. Mini-crush: wires both, predilates the SB, positions SB stent and MV balloon, deploys, crushes, rewires through a chosen strut, delivers both balloons and chooses when to remove the jailed wire.",
+    "success": "Reverse crush: MV balloon advanced before SB dilatation, or a strut-blocked MV balloon event follows. Mini-crush: proximal-strut rewiring; jailed wire removed only after both balloons are in place (early removal makes balloon delivery harder).",
+    "tips": [
+      "pci-revcrush-mv-balloon-early",
+      "pci-minicrush-rewire-proximal"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-crush-variants"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Emergency simultaneous kissing stents in an iatrogenic distal left main dissection involving the bifurcation, in an unstable patient, with a 7 or 8 Fr guide; and an elective Medina 0,1,1 bifurcation for V-stenting. In the dissection scenario, a stable patient offers surgery as the reference option (Oxford Table 10.1), and wire position in the true lumen is checked with IVUS rather than OCT.",
+    "learnerDoes": "Chooses SKS only in the emergency, positions both stents to cover the bifurcation, deploys them simultaneously; in the elective case chooses V-stenting with each stent protruding 1–2 mm from its ostium.",
+    "success": "SKS refused or penalised in elective cases; both techniques require at least 7 Fr; V-stenting refused when the proximal MV is diseased.",
+    "tips": [
+      "pci-sks-emergency-only",
+      "pci-vstent-sks-guide"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-crush-variants"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Atherectomy in a bifurcation with both wires in: choice between removing the side-branch wire, a guide extension over the atherectomy wire, a protective microcatheter on the other wire, or accepting the risk.",
+    "learnerDoes": "Chooses guide size, extension size and burr or crown size, and the protection strategy.",
+    "success": "Guide extension arrangements match the manual (7 Fr guide with 6 Fr extension for a 1.25 mm burr or crown; 8 Fr with 7 Fr for a 1.5 mm burr); protective microcatheter only with an 8 Fr guide and moved slowly during each run; an unprotected second wire carries a small risk of wire damage.",
+    "tips": [
+      "pci-twostent-atherectomy-two-wires"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-choosing"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "A bifurcation bench view (cross-section and longitudinal) showing strut cells at the side-branch ostium, protruding and crushed stent segments, double layers, the neocarina, and the effect of one-step versus two-step kissing and of POT position, for each two-stent technique.",
+    "learnerDoes": "Steps through each technique on the bench and inspects ostial coverage, apposition and the carina after each inflation.",
+    "success": "Two-step kissing visibly clears more metal from the side-branch ostium than one-step; POT placed at the carina corrects the oval shape after kissing; POT beyond the carina overstretches the distal MV.",
+    "tips": [
+      "pci-twostent-two-step-kiss",
+      "pci-twostent-final-pot"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-dk-crush",
+      "cp-bifurcation-two-stent-culotte",
+      "cp-bifurcation-two-stent-crush-variants"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Infrastructure: a bifurcation-technique field in the PCI lab's LabContext (for example technique: provisional | dk-crush | culotte | t-stent | tap | reverse-crush | mini-crush | v-stent | sks, and step number) and matching trigger fields in TipTrigger, so these tips appear only in bifurcation scenarios at the right step. pciTipContext never reports phase 'plan' and has no lesion or technique field; 'wire-side-branch' means a wire that has strayed off the target route and 'side-branch-compromise' means a failed provisional result, so neither can stand in for a planned technique step. Until the field exists, 18 planned-technique tips are gated on phase 'plan' only, so they are taught in the lessons and do not show in the lab (they had been appearing in any LM, LAD or LCx case, and the crush rewiring and DK crush kissing tips beside the provisional distal-cell tips after a failed provisional result). Re-gate them as follows when the field exists: pci-twostent-guide-size, pci-twostent-workhorse-wires, pci-twostent-prepare-both, pci-twostent-atherectomy-two-wires (any planned two-stent technique; guide, wire and lesion-prep); pci-vstent-sks-guide (v-stent, sks; plan and guide); pci-dkcrush-mv-balloon-first, pci-dkcrush-sb-protrusion (dk-crush, steps 1-2); pci-dkcrush-sb-deploy-pressure (dk-crush step 3, t-stent step 3); pci-dkcrush-crush-balloon (dk-crush step 6); pci-dkcrush-first-rewire-proximal (dk-crush step 7, mini-crush step 6); pci-twostent-two-step-kiss (dk-crush steps 9 and 15); pci-dkcrush-second-rewire-distal (dk-crush step 14); pci-twostent-final-pot (dk-crush step 16, with tap step 7 and culotte step 10 exceptions); pci-twostent-kiss-sequence (dk-crush step 15, culotte step 10); pci-culotte-first-branch (culotte step 1); pci-culotte-pot-before-rewire (culotte steps 4-5 and 8-9); pci-tstent-proximal-marker (t-stent step 2); pci-minicrush-rewire-proximal (mini-crush steps 6-7). The TAP and reverse crush bail-out tips (pci-tap-protrusion, pci-tap-deflate-mv-first, pci-tap-final-pot, pci-revcrush-mv-balloon-early) stay on side-branch-compromise and should move to technique tap or reverse-crush; pci-dkcrush-sb-balloon-wont-go stays on balloon-uncrossable with side-branch-compromise required and should move to dk-crush steps 8 and 15. Minimum first step (round 3 checker finding): a LAB_EVENTS entry \"bifurcation\" in src/content/lab/tips.ts, raised by pciTipContext (src/ui/lab/pciTips.ts) only in bifurcation scenarios, so that this module's tips can carry requires: [\"bifurcation\"] and move from the never-reported 'plan' phase to the phase where each step happens: set-up tips (guide size, prepare both, workhorse wires, atherectomy with two wires, DK crush MV balloon first, SB protrusion, culotte first branch, T-stent proximal marker, V-stent guide) stay at plan; pci-dkcrush-sb-deploy-pressure and pci-dkcrush-crush-balloon at stent; pci-dkcrush-first-rewire-proximal, pci-dkcrush-second-rewire-distal, pci-culotte-pot-before-rewire and pci-minicrush-rewire-proximal at wire and optimise; pci-twostent-two-step-kiss, pci-twostent-kiss-sequence and pci-twostent-final-pot at optimise and finish; pci-dkcrush-sb-balloon-wont-go at optimise and stent with event balloon-uncrossable and requires bifurcation instead of side-branch-compromise (in a planned DK crush the side branch is usually not compromised when the balloon will not enter it).",
+    "learnerDoes": "Not applicable (lab capability).",
+    "success": "Each tip in this module appears only during the technique and step it refers to, and no crush-rewiring (proximal strut) tip is ever shown at the same moment as the provisional distal-cell rewiring tip.",
+    "tips": [
+      "pci-culotte-first-branch",
+      "pci-dkcrush-crush-balloon",
+      "pci-dkcrush-mv-balloon-first",
+      "pci-dkcrush-sb-deploy-pressure",
+      "pci-dkcrush-sb-protrusion",
+      "pci-sks-emergency-only",
+      "pci-twostent-atherectomy-two-wires",
+      "pci-twostent-final-pot",
+      "pci-twostent-guide-size",
+      "pci-twostent-kiss-sequence",
+      "pci-twostent-prepare-both",
+      "pci-twostent-workhorse-wires",
+      "pci-vstent-sks-guide",
+      "pci-dkcrush-first-rewire-proximal",
+      "pci-twostent-two-step-kiss",
+      "pci-dkcrush-second-rewire-distal",
+      "pci-culotte-pot-before-rewire",
+      "pci-minicrush-rewire-proximal",
+      "pci-tstent-proximal-marker",
+      "pci-dkcrush-sb-balloon-wont-go",
+      "pci-tap-protrusion",
+      "pci-tap-deflate-mv-first",
+      "pci-tap-final-pot",
+      "pci-revcrush-mv-balloon-early"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-choosing",
+      "cp-bifurcation-two-stent-dk-crush",
+      "cp-bifurcation-two-stent-culotte",
+      "cp-bifurcation-two-stent-crush-variants",
+      "cp-bifurcation-two-stent-t-tap"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Stepwise two-stent bench states, so the sim blocks in this module can practise more than POT: side-branch stent protruding into the main vessel (2–3 mm for DK crush and reverse crush, 1–2 mm for TAP), crushed side-branch stent, kissing balloon pair (with the Finet effective diameter shown), culotte double layer, and the TAP neocarina, each settable in the order the technique requires.",
+    "learnerDoes": "Builds DK crush, culotte, TAP and reverse crush on the bench one step at a time, choosing protrusion, crush balloon size and position, the strut for each rewiring, one-step or two-step kisses and each POT position, then inspects ostial coverage and apposition on IVUS or OCT.",
+    "success": "Each step sets the next bench state; wrong choices (too little protrusion, proximally sized crush balloon past the carina, wrong strut, POT across the TAP neocarina) are shown on imaging. Until this exists, every sim task in the module is labelled 'POT practice only'.",
+    "tips": [
+      "pci-dkcrush-sb-protrusion",
+      "pci-dkcrush-crush-balloon",
+      "pci-dkcrush-first-rewire-proximal",
+      "pci-twostent-two-step-kiss",
+      "pci-tap-protrusion",
+      "pci-tap-final-pot",
+      "pci-culotte-pot-before-rewire",
+      "pci-twostent-final-pot"
+    ],
+    "lessonIds": [
+      "cp-bifurcation-two-stent-choosing",
+      "cp-bifurcation-two-stent-dk-crush",
+      "cp-bifurcation-two-stent-culotte",
+      "cp-bifurcation-two-stent-t-tap",
+      "cp-bifurcation-two-stent-crush-variants"
+    ],
+    "priority": "P1"
+  }
+]

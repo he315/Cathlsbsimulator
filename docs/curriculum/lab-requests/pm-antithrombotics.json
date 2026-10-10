@@ -1,0 +1,124 @@
+[
+  {
+    "lab": "pci",
+    "what": "Device-specific ACT targets and a recheck clock. The PCI lab's ACT gate is a single 250 s threshold today. Let the lab (or case) declare its ACT device: Hemochron (goal 300–350 s with heparin alone) or HemoTec (250–300 s); 200–250 s whenever a GP IIb/IIIa inhibitor or cangrelor is running (Brilakis gives this as a Hemochron figure; neither manual gives a HemoTec equivalent, so the lab should apply it to the Hemochron setting and flag the HemoTec case as not specified); above 300 s (antegrade) or 350 s (retrograde) for CTO scenarios on a Hemochron. Show the time since the last heparin dose and last ACT, and raise a reminder (from the nurse or physiologist, as in the Oxford team model) when 20–30 minutes have passed. Let the existing low-ACT thrombus model fire when the learner works on a stale ACT.",
+    "learnerDoes": "Reads each ACT against the target for the declared device and drug combination, checks it about 5 minutes after each bolus, rechecks every 20–30 minutes, and keeps devices in the guide until the ACT is therapeutic.",
+    "success": "No device leaves the guide on an unmeasured or subtherapeutic ACT; no interval between ACTs exceeds 30 minutes during device work; a Hemochron value of 250–300 s is treated as low.",
+    "tips": [
+      "pci-act-before-coronary-devices",
+      "pci-act-device-targets",
+      "pci-thrombus-check-act-first",
+      "pci-guide-extension-watch-act"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-heparin"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Carry heparin and ACT state through the hand-over from the full procedure (diagnostic) to ad hoc PCI: the access heparin dose and its time, a dose-dependent fall in effect (half-life about 30 min after 25 U/kg, 60 min after 100 U/kg), and a decision point at the hand-over where the learner sets the PCI dose (70–100 U/kg, or 50–70 U/kg if an IV antiplatelet agent is planned) and measures the ACT. Include an optional event in which the IV cannula has tissued, so the bolus does not reach the circulation and the ACT barely rises.",
+    "learnerDoes": "Gives and times the radial heparin (or delays it until the catheter reaches the root in a very tortuous arm), sets the PCI dose at hand-over, measures the ACT, recognises a failed line and redoses through the arterial sheath.",
+    "success": "PCI dose chosen from weight and what was already given; failed line recognised from a flat ACT and a swollen cannula site; redose given via the arterial sheath and ACT repeated before wiring.",
+    "tips": [
+      "access-radial-heparin-timing",
+      "diag-delay-heparin-tortuous-arm",
+      "pci-low-act-redose"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-heparin"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Protamine as an order with timing, dose and reaction modelling: dose from heparin given and time elapsed (Brilakis 1–1.5 mg per 100 U; Oxford 1 mg per 80–100 U within 15 minutes, less later), capped at 50 mg, given slowly (no faster than 5 mg/min or over 10 minutes). Model a reaction 5–10 minutes after a fast or large dose (systemic hypotension with pulmonary vasoconstriction), more likely after isophane insulin, fish allergy or vasectomy. Giving protamine with equipment still in the coronary raises stent and guide thrombosis risk; after a perforation it is held, in most cases, until equipment is out and the pericardium drained. Protamine is not routine after an uncomplicated case: its tip fires only on bleeding, perforation or haematoma events.",
+    "learnerDoes": "Decides whether to reverse, waits until all coronary equipment is out, calculates and caps the dose, gives it slowly, and manages hypotension if it occurs.",
+    "success": "No protamine with equipment in the coronary; dose never above 50 mg; rate within the limit; reaction recognised within the 5–10 minute window.",
+    "tips": [
+      "pci-protamine-only-after-equipment-out",
+      "pci-bleeding-reverse-correctly",
+      "pci-perforation-stop-iv-antiplatelet"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-heparin",
+      "pm-antithrombotics-iv"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "A case in which heparin cannot be used: a patient with a platelet count that has fallen several days into heparin treatment (suspected type 2 HIT). The pre-case chart shows the platelet trend and lets the learner score the 4Ts and order the HIT antibody test (ASH 2018); suspected HIT switches every saline flush, pressure-line flush infusion and the radial cocktail to heparin-free; the order list adds bivalirudin (0.75 mg/kg bolus; infusion 1.75 mg/kg/h, 1 mg/kg/h below creatinine clearance 30 mL/min, 0.25 mg/kg/h on haemodialysis; half-life 25 minutes; ACT 300–350 s; no antidote; the 4-hour run-on applies at the normal-renal-function rate). At the end of the case the learner must order continued non-heparin anticoagulation for the HIT at a treatment dose set with haematology (aPTT-guided and far lower than the PCI infusion if bivalirudin is kept; carrying on the PCI infusion rate or stopping all anticoagulation after the run-on are scored errors), and choose clopidogrel rather than a potent P2Y12 inhibitor when the patient is at very high bleeding risk (severe renal impairment, platelets below 100 × 10⁹/L, age over 75). Include a disconnected infusion event that lowers the ACT within minutes and triggers thrombus on the equipment, and a bleeding event that protamine does not correct.",
+    "learnerDoes": "Recognises suspected HIT from the platelet trend and timing, scores the 4Ts, refuses all heparin including flushes and cocktail, orders renally dosed bivalirudin, monitors the ACT, finds the disconnected line when the ACT falls, stops the infusion for bleeding instead of giving protamine, and continues non-heparin anticoagulation after the case.",
+    "success": "No heparin from any source; correct infusion rate for the renal function; low ACT traced to the infusion; protamine not used for bivalirudin bleeding; non-heparin anticoagulation continued after the PCI; no potent P2Y12 inhibitor at very high bleeding risk.",
+    "tips": [
+      "pci-hit-use-bivalirudin",
+      "pci-low-act-redose",
+      "pci-bleeding-reverse-correctly"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-alternatives"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Patients generated on oral anticoagulants, with explicit pre-procedure decisions on the chart: drug, last dose, INR (warfarin) or creatinine clearance (DOAC), indication and its risk (low-risk AF, higher-risk AF, mechanical or other prosthetic valve, rheumatic mitral disease, laminar or non-laminar intracardiac thrombus, recurrent VTE). For AF, interruption without bridging (BRIDGE) is scored as correct alongside continuation with radial access; bridging is kept for the valve and thrombus indications on Oxford's list. The learner chooses hold (with duration: Brilakis Table 1.2 by drug and clearance, or Oxford's 24 h with 72 h for dabigatran in renal impairment; warfarin 5 days or 3–5 days), continue, or bridge with IV heparin; chooses the access (after the algorithm's earlier checks for unsuitable sites and prior CABG, radial by default; femoral only with ultrasound and fluoroscopy); and writes the restart time. Arriving with an active anticoagulant for an elective case offers postponement.",
+    "learnerDoes": "Sets the hold or bridge for each patient, picks radial access, guides any femoral puncture, and records when the anticoagulant restarts and the post-PCI antiplatelet partner (clopidogrel, short aspirin, proton pump inhibitor).",
+    "success": "No unbridged interruption in mechanical-valve, rheumatic mitral or non-laminar thrombus patients; no routine bridging in AF; hold length matches the chosen manual's rule for the drug and clearance; radial access unless a stated reason; no prasugrel or ticagrelor with the anticoagulant.",
+    "tips": [
+      "access-anticoagulated-go-radial",
+      "access-crossover-anticoagulated-care"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-oac"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Antiplatelet orders on the full procedure chart, scored against the indication and timing: aspirin given or not; P2Y12 inhibitor choice (clopidogrel for stable disease or with an oral anticoagulant; prasugrel or ticagrelor for ACS), load and maintenance dose, and timing (planned elective PCI: preload, clopidogrel 600 mg ideally at least 6 hours before, aspirin loaded if not already taken; with an oral anticoagulant, clopidogrel only and aspirin peri-procedurally; NSTE-ACS: no routine pretreatment before early angiography; STEMI: before or at PCI). The chart carries contraindication flags to screen: previous stroke or TIA, previous intracranial haemorrhage, age over 75, weight under 60 kg, strong CYP3A inhibitors or inducers, high-dose simvastatin or lovastatin, opioids given before arrival (delayed absorption). At discharge the learner sets the DAPT duration from the presentation and bleeding risk (Brilakis: 6 months stable, 12 months ACS, 3 or 6 months when PRECISE-DAPT is 25 or more; Oxford Table 8.8), with the current ESC durations taught in the post-procedure module as the scoring reference.",
+    "learnerDoes": "Confirms aspirin, chooses and times the P2Y12 inhibitor, avoids contraindicated agents, and switches to an IV agent when opioids make oral absorption unreliable in STEMI. Sets a DAPT duration at discharge.",
+    "success": "Agent and timing match the presentation; no prasugrel after stroke or TIA, no ticagrelor after intracranial haemorrhage or with strong CYP3A drugs; correct handling of opioid-delayed absorption.",
+    "tips": [
+      "pci-check-oral-loading"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-oral"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Cangrelor added to the PCI lab orders beside the GP IIb/IIIa inhibitors (eptifibatide and tirofiban with their boluses and infusions, tirofiban halved at creatinine clearance 60 mL/min or less, eptifibatide halved below 50 mL/min (product information; Brilakis uses 60 for both) and blocked in a patient dependent on dialysis; cangrelor 30 µg/kg then 4 µg/kg/min for at least 2 hours or the procedure). Starting either should switch the ACT goal to 200–250 s and the heparin dose to 50–70 U/kg; neither has an antidote. Include, in the thrombus scenario, one lesson step per drug, a perforation event that requires stopping them, a CTO or SCAD or vein-graft context in which starting one is penalised, and an end-of-case transition in which clopidogrel or prasugrel must be loaded immediately after cangrelor stops (ticagrelor at any time).",
+    "learnerDoes": "Uses an IV antiplatelet agent only for large thrombus, thrombotic complications or unabsorbed oral drugs, adjusts heparin and the ACT target, doses for renal function, stops it at a perforation, and times the oral load after cangrelor.",
+    "success": "No IV antiplatelet agent in CTO, SCAD or routine vein-graft PCI; ACT not pushed above 250 s while one runs; infusion stopped within the perforation step; oral load correctly timed after cangrelor. Eptifibatide never ordered for a dialysis patient.",
+    "tips": [
+      "pci-gpi-cangrelor-bailout",
+      "pci-perforation-stop-iv-antiplatelet",
+      "pci-cangrelor-to-oral",
+      "pci-svg-no-routine-gpi",
+      "pci-cto-anticoagulant-choice"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-iv",
+      "pm-antithrombotics-alternatives"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "access",
+    "what": "Sheath removal tied to anticoagulation: femoral sheath pulled with manual pressure only once the ACT is below 180 s (Brilakis) or below 150–200 s or after 3–4 hours (Oxford), closure devices allowed at higher ACT (perhaps not above 300 s); radial sheath removed at the end of the case whatever the ACT, even with an IV antiplatelet agent running, or else flushed and transduced. Radial-to-femoral crossover in an anticoagulated patient carries a higher bleeding risk unless the puncture is ultrasound and fluoroscopy guided.",
+    "learnerDoes": "Chooses when and how to remove each sheath given the ACT and drugs running, and performs a guided femoral puncture after failed radial access in a heparinised patient.",
+    "success": "No femoral sheath pulled above the chosen ACT threshold without a closure device; radial sheath removed at the end; crossover puncture guided.",
+    "tips": [
+      "access-femoral-sheath-act",
+      "access-crossover-anticoagulated-care"
+    ],
+    "lessonIds": [
+      "pm-antithrombotics-heparin",
+      "pm-antithrombotics-oac"
+    ],
+    "priority": "P3"
+  }
+]

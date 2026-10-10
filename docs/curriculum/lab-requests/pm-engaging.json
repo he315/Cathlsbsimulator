@@ -1,0 +1,204 @@
+[
+  {
+    "lab": "diagnostic",
+    "what": "Pressure-trace realism and a timed recognition drill: free aortic (matching the baseline), damped (falls away from baseline in height and shape, or lost), ventricularised (systolic dip, diastolic pressure low and rising through diastole, presystolic a wave), catheter-tip spasm (ventricularises then falls a few seconds after engagement, recovers only on withdrawal), aortic stenosis parvus et tardus that only looks damped, true hypotension (after nitrate or radial verapamil, vasovagal, hypovolaemia) that stays low with the tip free in the root, and side-hole catheters, including the Tiger, that keep a normal trace while the end hole is wedged. Add transducer faults (air bubble, switched off, disconnected) that damp every trace, and a physiologist call-out when systolic pressure falls significantly (below about 90 mmHg).",
+    "learnerDoes": "Names each trace before every test puff and cine run, and either injects or works the damping steps (withdraw, aspirate, check transducer, screen for kink, remove under suction, aspirate sheath); when the trace stays low off the ostium, checks the transducer and treats the patient.",
+    "success": "No injection is given into a damped or ventricularised trace; the correct first action is chosen for each pattern within a time limit; the AS trace is not mistaken for damping.",
+    "tips": [
+      "diag-damped-stepwise",
+      "diag-ventricularised-stay-out",
+      "diag-test-puff-then-recheck",
+      "diag-ostial-spasm-withdraw-nitrate"
+    ],
+    "lessonIds": [
+      "pm-engaging-trace",
+      "pm-engaging-damping"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Aspiration as an explicit action after the wire is removed, with outcomes: free blood; no blood because the tip is against the wall (often the cause; resolved by easing back a few millimetres); no blood because the catheter is plugged by thrombus picked up from the sheath. Show aspirated material on a white gauze (thrombus, usually from the sheath, or glistening aortic plaque). Failed aspiration from a catheter too large or badly shaped for the ostium is fixed by a different catheter or a hand-reshaped tip. Flushing or passing a wire through a plugged catheter triggers an embolic event (ST elevation or a neurological symptom).",
+    "learnerDoes": "Aspirates 2–3 mL, inspects it, makes a wet connection, and when aspiration fails follows ease back, screen for kink, remove under suction, aspirate the sheath.",
+    "success": "Plugged catheter is removed under suction without flushing or wiring; the sheath is aspirated before the next catheter.",
+    "tips": [
+      "diag-aspirate-before-engaging",
+      "diag-damped-stepwise"
+    ],
+    "lessonIds": [
+      "pm-engaging-trace",
+      "pm-engaging-damping"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Catheter kinking from over-torque in tortuous subclavian or iliac anatomy, which the engagement engine does not model yet: torque absorbed along the shaft so the tip stops following the hub, then a kink with a damped or lost trace and failed aspiration, visible on fluoroscopy of the whole catheter. The same must work for guide catheters in the PCI lab (guide phase). Kinks from extra rotation stay where they formed (for example the subclavian); a kinked catheter pulled back can bring the kink into the forearm. Recovery actions: untwist in the opposite direction, pass a 0.035 inch wire, snare from a second access, brachial cuff for a forearm kink below the brachial artery, inflation device at 3–4 atm, cut and encase in a sheath. Keeping the wire inside during manipulation, a long sheath and a catheter 1 Fr smaller than the sheath reduce the risk.",
+    "learnerDoes": "Rotates with a back-and-forth movement, stops when the tip no longer follows the hub, screens the catheter, and recovers the kink in the manual's order.",
+    "success": "Kink recognised before further torque is applied; no injection or flush through the kinked catheter; recovery steps chosen in order.",
+    "tips": [
+      "diag-kink-untwist",
+      "pci-guide-kink-untwist"
+    ],
+    "lessonIds": [
+      "pm-engaging-torque"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Radial artery spasm as a live state: catheter drag on advance, withdrawal and rotation, patient forearm pain, narrowing on a side-arm puff, worsened by repeated exchanges, large catheters, anxiety and no vasodilator. Orders: intra-arterial nitroglycerin or verapamil (intravenous if the side arm will not aspirate), subcutaneous nitroglycerin around the artery, more sedation (propofol for severe entrapment), warming the forearm, lubricious solution, sublingual nitroglycerin, nerve block or general anaesthesia for severe entrapment, upper-arm cuff above systolic for 5 minutes. Intra-arterial lidocaine should be refused (seizures). Forceful withdrawal causes radial avulsion or rupture with a forearm haematoma.",
+    "learnerDoes": "Prevents spasm at the start (ultrasound check of radial size with ulnar or femoral access for a very small artery, sedation and local anaesthetic before puncture, smallest thin-walled sheath, vasodilator after the sheath, few exchanges), recognises spasm, and releases an entrapped catheter or sheath without traction.",
+    "success": "Equipment removed after spasm is released, with no forceful pull and no radial injury; forearm checked at the end.",
+    "tips": [
+      "diag-radial-spasm-release",
+      "access-radial-spasm-no-traction"
+    ],
+    "lessonIds": [
+      "pm-engaging-spasm"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "access",
+    "what": "Sheath removal blocked by radial spasm in the full-procedure lab, with the same release orders as the diagnostic lab. If traction is used: a forearm haematoma graded I to V (Bertrand chart), managed with compression or an extra bracelet, ice, sling elevation, analgesia, blood pressure control, stopping or reversing anticoagulation and, for larger (grade III–IV) haematomas, a cuff below systolic (Oxford up to 15 mmHg below; Bertrand 20 mmHg below, deflated every 15 minutes); progression to compartment syndrome (pain on passive stretch, pallor, pulselessness, paralysis, paraesthesia) requires an urgent vascular surgical call for fasciotomy, and further compression is then wrong.",
+    "learnerDoes": "Stops pulling, gives vasodilator and sedation, warms the arm, uses the upper-arm cuff for 5 minutes, then removes the sheath, inspects the forearm and manages any haematoma by grade.",
+    "success": "Sheath out without traction; haematoma treated by grade; compartment syndrome escalated to vascular surgery at once rather than compressed.",
+    "tips": [
+      "access-radial-spasm-no-traction"
+    ],
+    "lessonIds": [
+      "pm-engaging-spasm"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Femoral left main engagement over a J-wire looped on the aortic valve: the catheter tip parked 2–3 cm above the floor of the right cusp folds into the left cusp as the wire is withdrawn; a tip pushed down into the right cusp only goes deeper when advanced. Small rotations near the ostium should move the tip visibly in two projections: the left main usually lies posteriorly, so Brilakis may add an anticlockwise turn, while one Oxford line labels the directions the other way round, so the lab must show the true movement in two views. A small-root event should offer the JL3.5.",
+    "learnerDoes": "Positions the tip relative to the looped wire, withdraws the wire, and lets the JL, EBU or XB fold into the left main.",
+    "success": "Left main engaged coaxially with a free trace without forcing the catheter; the right-cusp error is recognised and corrected by repositioning.",
+    "tips": [
+      "diag-jl-femoral-wire-loop",
+      "diag-small-root-shorter-jl"
+    ],
+    "lessonIds": [
+      "pm-engaging-left"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Held-out radial left engagement set: right radial JL3.5 and Tiger (anticlockwise in the left sinus, then gentle clockwise to seat; deep breath helps engagement but can pull the catheter out during an injection; the Tiger's side hole keeps the trace looking normal when the end hole is obstructed), left radial JL4, short left main where the JL selectively enters the LAD and a one-size-larger JL reaches the Cx, separate LAD and Cx ostia, and an anomalous Cx from the right sinus or RCA (lateral wall without a supplying vessel; dot sign on the ventriculogram).",
+    "learnerDoes": "Engages the left system from each radial route and handles the short left main and separate ostia.",
+    "success": "Coaxial engagement with a free trace in every case; the Cx is imaged in the short left main by changing size rather than by deeper engagement.",
+    "tips": [
+      "diag-tig-left-anticlockwise",
+      "diag-short-lm-size-up",
+      "diag-anomalous-origin-image-first"
+    ],
+    "lessonIds": [
+      "pm-engaging-left"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "RCA anatomy set: large dominant RCA where the JR4 or Tiger dives deep (backed out by withdrawal or anticlockwise rotation); conus branch entry in which the trace damps as the tip enters, so the learner must withdraw before any test puff (a full injection causes VF requiring defibrillation; staying in the conus also causes ischaemia); catheter-tip spasm after over-engagement of a small non-dominant RCA (raise the ostial-spasm event); shepherd's crook origins needing AR MOD, Williams 3DRC, IMA or hockey stick; dilated root with an anterior RCA needing AR1–2 or AL1–2; guide support ranking for RCA PCI (JR4, AR1–2, hockey stick or AL1–2).",
+    "learnerDoes": "Engages with two-handed clockwise rotation, corrects dives, withdraws from the conus before injecting, and chooses the shape from a sinus injection.",
+    "success": "No injection into a deep, damped or conus position; RCA engaged with the appropriate shape after the ostium is located.",
+    "tips": [
+      "diag-jr-two-hand-torque",
+      "diag-rca-dive-back-out",
+      "diag-conus-withdraw",
+      "diag-shepherds-crook-shapes",
+      "diag-ostial-spasm-withdraw-nitrate"
+    ],
+    "lessonIds": [
+      "pm-engaging-rca"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Failed-engagement scenarios that exercise all five steps: non-selective cusp injection and pigtail aortogram (60 mL over 3 seconds) to find an anomalous or high ostium (raise the anomalous-origin event) or a flush ostial occlusion with collaterals; manoeuvrability fixes (wire inside the catheter, long sheath, diagnostic catheter instead of a guide, 1 Fr smaller than the sheath, change access); curve size changes and a guide extension; telescoping a 4 Fr diagnostic through a 6 Fr AL3 guide in a very dilated root; and a stop decision with a running contrast total in an elective patient.",
+    "learnerDoes": "Works through the five questions in order and stops when appropriate in a non-emergency.",
+    "success": "Ostium located before shapes are cycled; stop chosen in the elective scenario after a large contrast load; not chosen in STEMI.",
+    "tips": [
+      "diag-engage-fail-ladder",
+      "diag-dilated-root-sizing",
+      "diag-anomalous-origin-image-first"
+    ],
+    "lessonIds": [
+      "pm-engaging-fail"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Exchange-length 0.035 inch wire option (300 cm) for radial exchanges after a loop, tortuous subclavian or aneurysm has been crossed, with the wire tip held in the aortic root (ventricular ectopy or arrhythmia if it enters the LV), and long sheath options: 45 cm at least 1 Fr larger than the catheter, and a 24 cm radial sheath reaching the brachial artery.",
+    "learnerDoes": "Chooses a 300 cm wire after a difficult crossing and exchanges catheters without losing the route.",
+    "success": "Route kept through every exchange; the wire tip never enters the LV; each new catheter is aspirated and its trace checked.",
+    "tips": [
+      "diag-radial-exchange-long-wire",
+      "diag-aspirate-before-engaging"
+    ],
+    "lessonIds": [
+      "pm-engaging-exchange"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "Guide exchange over an exchange-length (300 cm) supportive 0.014 inch wire: engage with a diagnostic catheter when the guide will not seat, wire the vessel, remove the diagnostic catheter and advance the guide over the wire. Also a microcatheter-assisted guide exchange to a more supportive shape.",
+    "learnerDoes": "Exchanges from a diagnostic catheter to a guide, or between guides, without losing distal wire position.",
+    "success": "Guide engaged coaxially over the wire with the wire still distal; trace checked before the first injection.",
+    "tips": [
+      "diag-engage-fail-ladder"
+    ],
+    "lessonIds": [
+      "pm-engaging-exchange",
+      "pm-engaging-fail"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Trapping balloon: choose balloon size for the guide (2.5 mm for 6–7 Fr, 3.0 mm for 7–8 Fr, at least 20 mm long), insert beside the wire, position near the primary curve beyond the device's distal marker, inflate to 15–20 atm (guide trace damps), withdraw the microcatheter or over-the-wire balloon, deflate, and back-bleed the Y-connector. Skipping the back-bleed causes coronary air embolism on the next injection; polymer-jacketed wires can slip with aggressive withdrawal. Also a guide extension with a built-in trapping balloon (best with 135 cm microcatheters), and the 6 Fr limits (no over-the-wire balloon; low-profile microcatheters only with a 0.071 inch inner diameter).",
+    "learnerDoes": "Removes an over-the-wire device while keeping the wire still, then back-bleeds before injecting.",
+    "success": "Wire position maintained; no air embolism; the correct balloon size chosen for the guide.",
+    "tips": [
+      "pci-trap-then-backbleed"
+    ],
+    "lessonIds": [
+      "pm-engaging-exchange"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Aorto-ostial lesion with damping on guide engagement: 6 Fr guide, avoid deep engagement, wire the vessel and engage only intermittently, disengage by torquing the guide to a non-coaxial position rather than pulling back (which loses the wire); injection into the damped guide causes aorto-coronary dissection with aortic wall staining. Add the other options: a floating wire in the aortic root, a device that holds the guide outside the ostium, a small guide extension so the guide can be backed out, less aggressive shapes (JR4; IM for a shepherd's crook), non-selective angiography when damping is severe, and side-hole guides with their costs (more contrast, poorer images, never in an unprotected left main).",
+    "learnerDoes": "Keeps the guide off the ostium with a wire in place, engages briefly for equipment and injections, and disengages by rotation.",
+    "success": "No injection into a damped guide; wire never lost during disengagement.",
+    "tips": [
+      "diag-ventricularised-stay-out"
+    ],
+    "lessonIds": [
+      "pm-engaging-damping"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "access",
+    "what": "Radial access planning in a patient at high risk of spasm (radial smaller than average on ultrasound, woman, smoker, anxious; a very small radial should switch to ulnar or femoral): choice of radial, ulnar or femoral access; sedation and local anaesthetic before the puncture; sheath size and type; intra-arterial vasodilator (verapamil 2.5 mg and/or nitroglycerin 100–200 mcg) and heparin after the sheath, with spasm becoming more likely later in the case if these are skipped.",
+    "learnerDoes": "Assesses the artery, chooses the access site and equipment, and gives sedation and the radial cocktail at the right moments.",
+    "success": "No large sheath in a small radial artery without vasodilator and sedation; the spasm risk shown in the debrief reflects the choices made.",
+    "tips": [
+      "diag-radial-spasm-release",
+      "access-radial-spasm-no-traction"
+    ],
+    "lessonIds": [
+      "pm-engaging-spasm"
+    ],
+    "priority": "P2"
+  }
+]

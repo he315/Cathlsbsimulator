@@ -1,0 +1,103 @@
+[
+  {
+    "lab": "procedure",
+    "what": "A scored hand-over and report step at the end of the full procedure case. After closure the learner writes (or assembles from structured fields) the ward hand-over note and a short operator's report. The scorer checks the four hand-over items (procedure and operator; difficulties or complications; drugs given including heparin and sedation; access sites, closure device and every line with its removal time) and the report fields (indication, anatomy, steps, equipment with stent number, type, diameter and length, complications and their management, final result in two orthogonal views with the wire out, post-procedure plan, radiation dose when the 1 Gy warning was given). Scenarios include one with a venous sheath left in place and one where incomplete filling should be reported as non-diagnostic.",
+    "learnerDoes": "Completes the hand-over note and the report before the patient leaves the lab; for each lesion records flow grade, percent stenosis from the worst least-foreshortened view, length, thrombus, calcium, ostial or bifurcation involvement.",
+    "success": "All four hand-over items present; every stent described with size and length; complications and dose recorded when they occurred; the incompletely filled artery reported as non-diagnostic rather than normal.",
+    "tips": [
+      "diag-post-ward-handover",
+      "pci-post-report-stents",
+      "diag-post-nondiagnostic",
+      "diag-post-radiation-record",
+      "pci-post-ecg-complex",
+      "pci-post-ecg-bifurcation"
+    ],
+    "lessonIds": [
+      "hb-after-the-procedure-report"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Scheduled recovery observations in the full procedure lab. After transfer to recovery, a time-accelerated ward runs Oxford's routine (pulse and blood pressure on arrival, quick neurological check, observations every 15 minutes for the first hour, every 30 minutes for the second, then hourly; radial site every 15 minutes until the band is off; femoral site and femoral, popliteal and pedal pulses every 15 minutes until mobile). Events appear at set times for the learner to recognise and act on: forearm haematoma under a radial band, chest pain after PCI, tachycardic hypotension after a perforation (tamponade), a homonymous visual field defect hours after the case (stroke), and a rising creatinine.",
+    "learnerDoes": "Sets the observation schedule and mobilisation plan for the access route (about 1 hour after radial or a closure device; flat 1 hour and walking at 2½ hours after removal of a 6 F femoral line), reviews each set of observations, and chooses the first action for each event (12-lead ECG then the operator for chest pain; senior help and fluids while looking for the reversible causes, with echo for suspected tamponade; airway, breathing and circulation, time of onset, stroke team, neurological examination and documentation, CT with CT angiography for stroke; hydration and repeat creatinine at 48–72 hours or later).",
+    "success": "Schedule and mobilisation plan match the access route; every event recognised at the observation where it first appears; chest pain answered with an ECG before nitrate; hypotension after a perforation not attributed to dehydration alone; the stroke team called without waiting for the deficit to resolve.",
+    "tips": [
+      "access-post-pulses-start-end",
+      "access-post-radial-obs",
+      "access-post-femoral-mobilise",
+      "pci-post-chest-pain-ward",
+      "pci-post-contrast-kidney"
+    ],
+    "lessonIds": [
+      "hb-after-the-procedure-monitoring"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "A scored discharge-prescription step at the end of a PCI case in the full procedure lab. Scenario variables: stable disease or ACS; ARC-HBR status (with the inputs shown: age, eGFR, haemoglobin by sex, platelets, previous bleeding, stroke or intracranial haemorrhage, cancer, NSAIDs or steroids, planned surgery); atrial fibrillation on an oral anticoagulant; a planned elective or time-sensitive operation. The learner builds the antithrombotic plan; the scorer checks it against the manuals' durations and the 2023 ESC ACS guideline.",
+    "learnerDoes": "Classifies bleeding risk (one major or two minor ARC-HBR criteria), chooses the P2Y12 inhibitor and DAPT duration, adds a proton pump inhibitor where gastrointestinal bleeding risk is raised (always considered with an anticoagulant), warns a patient on ticagrelor about breathlessness in the first week, writes stop dates, and for anticoagulated ACS patients prescribes triple therapy with clopidogrel for up to 1 week (up to 1 month when ischaemic risk dominates), then the anticoagulant with clopidogrel for up to 12 months, then the anticoagulant alone; advises on timing of surgery (elective after 6 months for elective PCI or 12 months for ACS, time-sensitive after at least 1 month; aspirin continued).",
+    "success": "No prasugrel or ticagrelor in triple therapy; no de-escalation within 30 days of ACS without bleeding; anticoagulant kept at the stroke-prevention dose; stop dates written for every antiplatelet drug; surgery advice consistent with the 2022 ESC guideline.",
+    "tips": [
+      "pci-post-dapt-plan",
+      "pci-post-oac-clopidogrel",
+      "pci-post-bleeding-dapt"
+    ],
+    "lessonIds": [
+      "hb-after-the-procedure-dapt"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "A scored explanation step after a full procedure case, with a variant after a complication (a sealed distal perforation or a coronary dissection) and a variant with a high air kerma dose. The learner chooses the timing, setting and content of the conversation from structured options, and the virtual patient may decline details or ask questions.",
+    "learnerDoes": "Waits until sedation has worn off, chooses a quiet setting, confirms who the patient wants present, explains in plain words, gives the timeframe of any referral and reviews medicines; after a complication, discloses promptly without waiting for an investigation, explains what happened and the short- and long-term effects, apologises personally, gives a contact, records the conversation and reports the incident; after a dose above 5 Gy, explains the skin risk and books review within a month.",
+    "success": "No results given under sedation or in an open bay; disclosure includes what happened, what is being done about it and what will be done to prevent recurrence; a wish not to know is explored, respected and recorded; skin follow-up arranged above 5 Gy.",
+    "tips": [
+      "diag-post-sedated-results",
+      "pci-post-complication-candour",
+      "pci-post-radiation-follow-up"
+    ],
+    "lessonIds": [
+      "hb-after-the-procedure-communication"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "A discharge-summary step at the end of the full procedure case: the learner completes the discharge note and the typed summary and gives discharge advice. The patient's licence group (car or lorry), renal function, metformin, anticoagulant and the case's contrast volume and air kerma are scenario variables.",
+    "learnerDoes": "Writes diagnosis, date and summary of the procedure, management plan, full medicine list with changes and follow-up; advises someone at home that evening, a telephone number, 48-hour restrictions, and driving by DVLA licence group; arranges creatinine for at least 48 hours, the metformin restart, the anticoagulant restart date and anticoagulation bloods where relevant, a reportable-event check when the peak skin dose exceeds 15 Gy, and skin review after a high dose.",
+    "success": "All five summary fields complete; driving advice correct for the licence group; every procedure-generated follow-up item present.",
+    "tips": [
+      "pci-post-radiation-follow-up",
+      "pci-post-contrast-kidney",
+      "pci-post-dapt-plan"
+    ],
+    "lessonIds": [
+      "hb-after-the-procedure-discharge"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "End-of-case triggers in the fluoroscopic PCI lab: when the case finishes with a complication event (perforation, dissection, no-reflow, acute closure, stent loss, entrapment), a high radiation dose or a high contrast volume, raise the matching events in the finish phase so that the post-procedure tips appear, and carry the flags into the full procedure lab's recovery and discharge steps. The CTO and bifurcation scenarios should keep raising their 'cto' and 'bifurcation' events at finish, because the complex-PCI ECG tips (pci-post-ecg-complex, pci-post-ecg-bifurcation) are triggered by them.",
+    "learnerDoes": "Sees the relevant tips at the finish phase and plans the follow-up (disclosure, skin review, creatinine) before leaving the lab.",
+    "success": "Each flagged event produces its tip at finish and a corresponding item in the discharge step.",
+    "tips": [
+      "pci-post-complication-candour",
+      "pci-post-radiation-follow-up",
+      "pci-post-contrast-kidney",
+      "pci-post-chest-pain-ward",
+      "pci-post-ecg-complex",
+      "pci-post-ecg-bifurcation"
+    ],
+    "lessonIds": [
+      "hb-after-the-procedure-communication",
+      "hb-after-the-procedure-discharge",
+      "hb-after-the-procedure-monitoring",
+      "hb-after-the-procedure-report"
+    ],
+    "priority": "P3"
+  }
+]

@@ -1,0 +1,341 @@
+{
+ "package": "pacing-in-lab-scenarios-and-tips",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built pacing-in-lab-scenarios-and-tips. All 5 acceptance criteria are met and the typecheck is clean, but one assertion in another package's test file now fails, and that file isn't on my list to edit. In src/ui/lab/bedsideTips.test.ts, line 85 still expects `raises.procedures` to equal [\"pericardiocentesis\"] only. It now also contains \"pacing\" and \"tcp\", because the pacing tab declares what it raises in the same export; that file's own header said the pacing package would do this. The fix is in outOfScope.\n\nWhat was built:\n- **Three in-lab scenarios** in src/simulation/pacing.ts:\n  - inlab-rca-chb-rbbb: block after an RCA injection in known RBBB, slow broad escape, low pressure.\n  - inlab-adenosine-avb: adenosine block with no escape rhythm.\n  - inlab-amiodarone-avb: block during an amiodarone infusion.\n  - Each opens with a choice of waiting (30 s), atropine, a cough, stopping the infusion (amiodarone only), external pacing or a femoral wire, then runs the existing insertion and box stages.\n  - The course is pure engine code: applyInitialAction, inLabTick, effectiveScenario (atropine speeds the atrial rate) and rhythmSupported.\n- **Exam versions:** each in-lab scenario has a held-out \"exam\" variant with a different patient. The adenosine scenario also has a \"persistent\" / \"transient\" practice pair. getPacingScenario(id, variant) merges the variant in.\n- **Pass criteria** (inLabCriteria / inLabPassed): rhythm supported within the scenario's time limit; no coronary sinus position accepted; output at least 3 times the measured threshold (Oxford ch 9, from the lesson text); box left in demand mode; no asynchronous pacing while the patient has a rhythm of their own.\n- **Scoring:** scorePacing handles the in-lab runs. The ward scenarios score exactly as before (both versions add up to 100). Scenarios can override the access verdict: femoral is preferred in the lab.\n- **Volts or milliamps:** the box output can read either. The engine still works in mA and converts through LEAD_IMPEDANCE_OHM (model parameter). The in-lab scenarios open on a box reading volts, as Oxford's does.\n- **Sheath fit:** a sheath the same size as the wire damps rotation (TIGHT_SHEATH_TORQUE).\n- **Tips** (src/ui/lab/bedsideTips.ts): pacingTipContext reports phase by stage (assess, access, position, test, troubleshoot), procedures pacing plus tcp while external pacing is on, and bradycardia, hypotension and av-block from the shared patient-events adapter. It also reports the old \"pacing\" phase, because the bed-pace-* tips still trigger on it until tip-retarget-catchup moves them.\n  - Meanwhile refinePacingTips applies their recorded new triggers (from waiting.ts) at display time, so each tip shows at its own stage and the overdrive VT tip stays out of bradycardia runs.\n  - pacingTips returns nothing in exams.\n  - `raises` is now the union of the two tabs; PERIC_RAISES and PACING_RAISES are exported separately.\n- **Launch file:** pacing.launch.ts lists all 7 scenarios under hb-additional-procedures-pacing (the four ward scenarios also under the Academy pacing lessons). Each in-lab scenario is the practice twin of its held-out exam variant. There is one practice link for the transient adenosine variant.\n- **PacingLab.tsx:**\n  - Opens links itself through useLabLaunch(\"pacing\"); a held-out variant always runs in exam mode.\n  - Runs through useLabRun with one logbook row; this replaces recordSim.\n  - Shows the mode bar, the tips panel, the initial-management panel with the time since onset, the sheath choice, the V/mA switch, and a pass-criteria panel in the debrief.\n  - Outside guided practice the screens show only what an operator would see: no tip location, rhythm label, checklist ticks, route verdicts, \"Show me the fix\" or verdicts in the log.\n  - In DEV builds window.__lab.pacing exposes the context, tips and state, and can step the rhythm.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pacing.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pacing.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PacingLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/bedsideTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/bedside/pacing.launch.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pacing.inlab.test.ts (11 tests: in-lab scenarios and variants, persistent adenosine acceptance, transient variant, atropine, failing criteria, initial-management scoring, V/mA conversion and volt dial, volts-at-3x acceptance, sheath fit)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/pacingTips.scenario.test.ts (11 tests: context by stage, adapter events, bradycardia/external-bridge and sheath-up acceptance, test-stage/exam acceptance, tips shown by stage, every bed-pace tip reachable, raises vocabulary, waiting.ts entries satisfiable and waiting count fall, launch/variants consistency, practice index acceptance)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PacingLab.test.ts (5 tests: launch resolution incl. held-out forced to exam, perceived lead messages, server-side render of every scenario and variant in guided and exam, exam hides tips panel, tip location and rhythm label, ward scenario still opens in mA)",
+     "src/simulation/pacing.test.ts (edited: the existing scoring test now runs only on the ward scenarios, since the in-lab ones score differently)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pacing.test.ts src/simulation/pacing.inlab.test.ts src/ui/lab/pacingTips.scenario.test.ts src/ui/bedside/PacingLab.test.ts -> 4 files, 60 passed",
+     "npx vitest run src/ui/lab/bedsideTips.test.ts src/ui/lab/bedsideTips.scenario.test.ts src/content/lab/reachability.test.ts src/content/lab/retarget.test.ts -> 39 passed, 1 failed: bedsideTips.test.ts:85 expects raises.procedures to be ['pericardiocentesis'] only (now also has pacing and tcp; see outOfScope). Reachability report: bedside 14 tips, 14 satisfiable, 14 waiting, 13 ready (the 9 bed-pace retargets plus 4 bed-peri)",
+     "npx vitest run src/content/content.test.ts src/ui/bedside/PericardioLab.test.ts src/content/lab/tips.test.ts -> 96 passed, 1 skipped",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/ui/lab/labRun.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/useContextTips.test.ts -> 54 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors. I confirmed it catches errors by adding a deliberate type error, which it reported, then removed it.",
+    "acceptance": [
+     {
+      "criterion": "In the persistent 'inlab-adenosine-avb' variant waiting 30 s and a cough do not restore conduction; transvenous pacing at 3x threshold in demand mode passes",
+      "status": "met",
+      "evidence": "pacing.inlab.test.ts 'acceptance: in the persistent ...': after a 30 s wait and a cough the block is still there (no ventricular beat in 40 s, HR 0, rhythm not supported). A femoral wire at the RV apex with output 3x the threshold in VVI gives a supported rhythm, all 5 pass criteria are met and inLabPassed is true."
+     },
+     {
+      "criterion": "Output entered in volts at 3x threshold passes in both unit displays",
+      "status": "met",
+      "evidence": "pacing.inlab.test.ts 'acceptance: output entered in volts at 3x threshold passes in both unit displays': checked at 1000 and 500 ohm. The output-margin criterion passes with the run shown in V and in mA, the detail reads '3.0 times' in each unit, and 2.9x fails in both."
+     },
+     {
+      "criterion": "At stage 'test' bed-pace-threshold-margin appears; in exam mode no tips are returned",
+      "status": "met",
+      "evidence": "pacingTips.scenario.test.ts 'acceptance: at stage test ...': the tip is returned by tipsFor(ctx, 20) and by the lab's own pacingTips (at most 5 tips). Exam mode returns []; independent mode returns [] until the learner asks for help. PacingLab.test.ts also checks the exam render has no tips panel."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/bedside/pacing.launch.ts under lessons hb-additional-procedures-pacing",
+      "status": "met",
+      "evidence": "pacingTips.scenario.test.ts 'acceptance: practiceIndex lists every scenario ...': all 7 scenarios appear under hb-additional-procedures-pacing and under every other lesson they name. The transient practice link is listed; no held-out exam variant is."
+     },
+     {
+      "criterion": "Tips: in a scenario from pacing.launch.ts, after the action that raises 'bradycardia', tipsFor(ctx, 20) includes bed-pace-external-bridge, and at phase 'pacing' it includes bed-pace-sheath-up-femoral; every waiting.ts entry naming this package becomes satisfiable, so the bedside waiting count falls by at least their number",
+      "status": "met",
+      "evidence": "pacingTips.scenario.test.ts: driving inlab-rca-chb-rbbb through the shared adapter raises bradycardia, av-block and hypotension; at assess tipsFor(ctx, 20) includes bed-pace-external-bridge; the access context carries phase 'pacing' and includes bed-pace-sheath-up-femoral. All 9 waiting.ts entries naming this package are satisfiable with the new raises and none with the pericardiocentesis raises alone; the bedside still-waiting count falls by at least 9. The reachability report lists all 9 as ready."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/lab/bedsideTips.test.ts line 85 (owned by pericardiocentesis-tips-and-pci-handover) is the one failing test: `expect(raises.procedures).toEqual([\"pericardiocentesis\"])`. Now that the pacing tab declares its part, change it to `expect(PERIC_RAISES.procedures).toEqual([\"pericardiocentesis\"])` and import PERIC_RAISES from ./bedsideTips. That file's own header said the pacing package would add this.",
+     "docs/realism/facts needs a pacing entry (for example docs/realism/facts/pacing.md) listing this package's model parameters:\n- LEAD_IMPEDANCE_OHM = 1000, chosen so the model's 1 mA anchor (SIM_FACTS 17) and Oxford's 1 V / 3 V anchors describe the same lead.\n- TIGHT_SHEATH_TORQUE = 0.35.\n- IN_LAB_MODEL: waitS 30, coughEffectS 2, atropineOnsetS 20.\n- Per-scenario timeLimitS (180 / 60 / 300 s), atropineAtrialFactor, the transient variant's resolvesAfterS (12 s), and the rhythm numbers of the three in-lab scenarios and their exam variants.\nThey are labelled model values in pacing.ts, but the facts docs are not on this package's file list.",
+     "src/ui/sections/BedsideLab.tsx: its header and subtitle still say the pacing tab is unchanged. Also, a pacing link only switches tabs when simTab changes value. If simTab is already 'pacing' while the pericardiocentesis tab is showing, the request waits until the learner opens the pacing tab. BedsideLab could listen for 'pacing' launches the way it does for pericardiocentesis.",
+     "tip-retarget-catchup: when it applies the 9 bed-pace retargets and removes the 'pacing' alias, it should also drop PACING_ALIAS_PHASES from src/ui/lab/bedsideTips.ts. The cast keeps the file compiling even if the alias leaves the vocabulary first, and refinePacingTips becomes a pass-through once the entries are gone."
+    ],
+    "notes": "- **Snapshots:** datasets/tmp/wp-snapshots/pacing-in-lab-scenarios-and-tips/ holds the 4 listed files that existed before (pacing.ts, pacing.test.ts, PacingLab.tsx, bedsideTips.ts) plus .started. pacing.launch.ts is new. No browser was used.\n\n- **Sources:** the in-lab clinical content (atropine 1 mg may improve AV conduction, a cough after adenosine, stopping amiodarone, external pacing as the bridge, the femoral route, a sheath larger than the wire, at least 3 times the threshold, demand mode) is taken from lesson hb-additional-procedures-pacing and cites Oxford ch 9/10 and Brilakis 3.7/12.2 in the text. Every rhythm and timing number is a model value.\n\n- **Two output margins:** the in-lab scenarios require 3 times the measured threshold (Oxford, from the lesson). The ward scenarios keep 2 to 3 times (SIM_FACTS 17, which marks a \"3 x threshold\" rule as unverified from other sources). Both are shown in the UI with their source.\n\n- **1000 ohm impedance:** at this value volts and milliamps read the same number. I chose it so the sourced 1 mA and 1 V anchors agree; the conversion code handles any impedance and the tests also run at 500 ohm. If the owner wants the unit switch to change the numbers on screen, lowering the impedance does it but makes the 1 mA and 1 V acceptability anchors disagree.\n\n- **Tip hook:** the plan named a signature `pacingTipContext(stage, lead, box, faults, flags)`. The built one is `(stage, flags, vitals, prev)`, matching pericardioTipContext, because the context only needs the stage, external pacing on or off, and the monitor's patient events. The lab picks tips with useTipsModule + tipsVisible + pacingTips rather than useContextTips, so it can show each bed-pace tip at its stage while the retargets wait. The visibility rule is the same one.\n\n- **Reachability side effect:** because the context reports the old 'pacing' phase, bed-pace-overdrive-vt now counts as satisfiable in the reachability report. The pacing lab hides it (refinePacingTips) until pacing-overdrive-and-tcp raises 'vt' with procedure 'overdrive'.\n\n- **Behaviour changes that also affect the ward scenarios:**\n  - A sheath fit (one size larger / same size) must now be chosen before \"Sheath in\".\n  - The scenario picker is a select box.\n  - Supervised, independent and exam runs hide the teaching aids (tip location, rhythm label, checklist ticks, route verdicts, Show me the fix, verdicts in the log).\n  - A run writes its logbook row through useLabRun.finish (source 'pacing', so it still maps to the same EPAs) instead of recordSim.\n  - Guided practice looks as it did, apart from the units switch and the sheath choice.\n\n- **Small points:**\n  - Atropine here is a scenario action that changes the model's atrial rate. The pacing lab has no PatientEngine, so giveDrug and pharmacology.ts are not involved.\n  - The in-lab 'femoral wire' action is recorded when the femoral route is chosen; a learner can still switch to the jugular route in the access stage."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Pass with fixes. The package needs two fixes to its own files, and two edits to files it doesn't own, before it closes. The design is fully built. The 4 package test files pass (60/60) and `npx tsc -p tsconfig.app.json --noEmit` is clean, both run by me.\n\nWhat checks out:\n- The engine diffs match the plan: three in-lab scenarios with the initial-management course, held-out exam variants plus the persistent and transient adenosine pair, all 5 pass criteria, volts or milliamps through a labelled lead impedance, and the sheath fit.\n- Ward scoring still adds up to 100, so dividing by the maximum changes nothing there.\n- The tip context and raises are wired, refinePacingTips hides the overdrive tip, and practiceIndex lists every scenario and the transient link but no held-out variant.\n- Every clinical statement I checked against src/content/manual/cath-handbook/06-additional-procedures.ts is in the lesson text. That covers atropine 1 mg, the cough, adenosine doses above 100 mcg in the RCA, the 3 V start, a threshold of 1 V or less, at least three times the threshold, a sheath larger than the wire, the femoral route, amiodarone (Brilakis 3.7), and isoprenaline seldom improving conduction.\n- The other files under src/ that are newer than .started are bench, closure and access files from other packages; none touch pacing.\n\nRemaining problems:\n- One test in another package's file now fails: bedsideTips.test.ts:85.\n- One ground-truth leak remains on the live exam screen, in the test checklist.\n- In-lab actions disappear once the femoral wire is chosen.\n- Pressing External pacing earns credit without any pacing.\n- There is no docs/realism/facts entry for the model parameters.\n- One header comment is stale.\n- Some acceptance tests are weaker than they look.",
+    "findings": [
+     {
+      "where": "src/ui/lab/bedsideTips.test.ts:85 (owned by pericardiocentesis-tips-and-pci-handover; not on this package's list)",
+      "problem": "I confirmed this failure by running it. `expect(raises.procedures).toEqual([\"pericardiocentesis\"])` fails because `raises` now joins both tabs and also contains \"pacing\" and \"tcp\". Its stage loop at line 79 also feeds the joined `raises.events` into pericardioTipContext. That still passes, but it no longer tests the pericardiocentesis tab on its own.",
+      "severity": "major",
+      "fix": "The coordinator or the owning package should make this edit. In src/ui/lab/bedsideTips.test.ts, import PERIC_RAISES from \"./bedsideTips\". Replace lines 73-85 so each check reads PERIC_RAISES instead of raises: lab, phases, events, procedures, and the loop over `pericardioTipContext(stage, { events: [...PERIC_RAISES.events] })`. End with `expect(PERIC_RAISES.procedures).toEqual([\"pericardiocentesis\"])`, then add `expect(raises.procedures).toEqual(expect.arrayContaining([\"pericardiocentesis\", \"pacing\", \"tcp\"]))`."
+     },
+     {
+      "where": "src/ui/bedside/PacingLab.tsx TestChecklist, around lines 1455-1470 (`scenarioDependent ? ... : ...` and the `sensOk` row)",
+      "problem": "This leaks ground truth onto live screens outside guided practice. `scenarioDependent={!sensingTestable(sc, faults)}` reads model truth (sc.dependent and the intrinsic rate) and, in exam, supervised and independent runs, shows the row 'Pacing dependent: do not turn the rate down to test sensing' with an Acknowledge button. That gives away the scored sensing decision: sensingSkippedDependent earns points in scorePacing. In inlab-adenosine-avb and its exam variant it also announces that there is no escape rhythm. The sensOk row also shows the computed advice `(${recommendedSensitivity(sensingMeasured)} mV or lower)` in every mode, although the builder hid the same 'half =' hint in the box panel outside guided practice.",
+      "severity": "major",
+      "fix": "Use the dependent or testable split only when `guided`. Outside guided practice, render one neutral sensing row: 'Sensing: if the patient has an intrinsic rhythm above the lowest box rate, turn the rate below it and find where the SENSE light stops; if the patient is pacing dependent, do not turn the rate down.' Show the Acknowledge ('Pacing dependent: sensing not tested') button whenever `!sensingSkipped && sensingMeasured === null`, so the learner makes the call. Wrap the recommendedSensitivity text in `guided && ...`. In PacingLab.test.ts, assert that the exam render of inlab-adenosine-avb~exam does not contain 'Pacing dependent'."
+     },
+     {
+      "where": "src/ui/bedside/PacingLab.tsx: initialAction 'femoral-wire' (setStage(\"access\")) and the `stage === \"assess\"` block that alone renders InLabChoices",
+      "problem": "InLabChoices renders only in the assess stage. Pressing 'Femoral venous wire', or 'Prepare' through the access flow, moves to the access stage. From then on atropine, the cough and 'Stop the amiodarone infusion' can no longer be chosen for the rest of the run. In inlab-amiodarone-avb, `expected` is [\"stop-infusion\", \"femoral-wire\"]. A learner who starts the wire first, which is reasonable, can never stop the infusion and loses 10 of the 20 initial-management points. Clinically, stopping an infusion or giving atropine while the wire goes in is normal. The 'Conducted rhythm back: finish the case' button also exists only in assess, so a transient block that recovers during the access stage cannot end the run there.",
+      "severity": "major",
+      "fix": "Keep the in-lab actions available until the debrief. For example, render a compact InLabChoices panel (the time since onset, atropine, the cough, stopping the infusion, external pacing, and the finish button when restored) whenever `sc.inLab && inLab && stage !== \"debrief\"`. Hide only 'Wait' and 'Femoral venous wire' once the stage has passed assess. Add a pacing.inlab.test or PacingLab.test case: in inlab-amiodarone-avb, record femoral-wire at t=12 and then stop-infusion at t=20, and check that the initial-management item scores 20."
+     },
+     {
+      "where": "src/ui/bedside/PacingLab.tsx initialAction(\"external-pacing\") (calls recordAction(a) before the branch that only sets pads)",
+      "problem": "Pressing the 'External pacing' button records the expected action, and scorePacing gives its share of the initial-management points. That happens even if transcutaneous pacing is never started or never captures, because the button only ticks the pads box. changeTcp already records the action when TCP is actually switched on, so the button double-counts and overstates the credit.",
+      "severity": "minor",
+      "fix": "In initialAction, skip `recordAction(a)` for \"external-pacing\". Keep setPads(true) and the log line, and let changeTcp (t.on) record the action. Alternatively, have scorePacing award the external-pacing share only when `log.tcpUsed` is true. Add a test that pads without TCP earns no external-pacing share."
+     },
+     {
+      "where": "docs/realism/facts (no pacing entry; not on this package's file list)",
+      "problem": "LAB_BUILD_PLAN rule 27 requires every unsourced value to be labelled MODEL PARAMETER in docs/realism/facts. The new model values are labelled only in code comments in pacing.ts, so they are unaudited. The values are LEAD_IMPEDANCE_OHM = 1000, TIGHT_SHEATH_TORQUE = 0.35, IN_LAB_MODEL (waitS 30, coughEffectS 2, atropineOnsetS 20), timeLimitS 180/60/300, atropineAtrialFactor 1.2/1.2/1.1, the transient resolvesAfterS of 12, and the rhythm numbers of the three in-lab scenarios and their exam variants.",
+      "severity": "major",
+      "fix": "The coordinator should assign docs/realism/facts/pacing.md, created as the builder's outOfScope entry describes. List each value above as MODEL PARAMETER with its reason, for example: 1000 ohm chosen so that the SIM_FACTS 17 '<1 mA' anchor and Oxford's '<=1 V' anchor agree. Then reference that file from the comments in pacing.ts."
+     },
+     {
+      "where": "src/ui/lab/bedsideTips.ts header lines 18-19; PACING_ALIAS_PHASES",
+      "problem": "The header still says 'The deprecated stage aliases \"pacing\" and \"pericardiocentesis\" are never reported (DEPRECATED_LAB_PHASES)', but pacingTipContext now reports `phases: [\"pacing\"]` at every stage. That also cuts against the comment on DEPRECATED_LAB_PHASES in src/content/lab/tips.ts ('no lab should report them in new code'). Reporting the alias is needed to meet the acceptance criterion that tipsFor(ctx, 20) returns the bed-pace tips before tip-retarget-catchup runs. Side effect: the reachability report now counts bed-pace-overdrive-vt as satisfiable, although the lab hides it. The `\"pacing\" as string as LabPhase` cast removes the compiler's guard, so if the alias leaves the vocabulary first, this file will report an unknown phase without any warning.",
+      "severity": "minor",
+      "fix": "Rewrite lines 18-19 to say that the pericardiocentesis tab never reports a deprecated alias, and that the pacing tab reports 'pacing' as a transitional alias until tip-retarget-catchup, as described below. Drop the double cast and type it as `readonly LabPhase[] = [\"pacing\"]`. The compiler then forces tip-retarget-catchup to remove the alias here when it leaves the vocabulary. Record in the report that the catchup must also delete PACING_ALIAS_PHASES and refinePacingTips."
+     },
+     {
+      "where": "src/simulation/pacing.inlab.test.ts 'acceptance: output entered in volts at 3x threshold...' and the persistent adenosine acceptance",
+      "problem": "The volts acceptance test is close to tautological. At the default 1000 ohm, volts and mA are the same number. The output-margin criterion compares two mA values, so it does not depend on the units. In the 500 ohm loop, inLabCriteria still formats with the default impedance, so the test never checks the displayed values. Nothing exercises the path the lab actually uses: Knob in volts, then stepOutputIn, then outputFrom, then changeOutput, then capture-loss threshold detection. In the persistent adenosine test, supportedAt is set by hand (`tPace + 2`) instead of coming from rhythmSupported over the run. The exam-render test checks the tips panel only through aria-label=\"Technique\". As a design note, at 1000 ohm the V/mA switch changes only the unit label, which weakens the 'read the units' teaching point.",
+      "severity": "minor",
+      "fix": "Add a test that drives the real conversion. With units \"V\", start the dial at 3 V, step down with stepOutputIn(v, -1, \"V\") and outputFrom, and advance the rhythm at each step until capture is lost. Take the last captured value as the threshold, as changeOutput does, then set 3 times it with the volt dial and assert capture plus the output-margin criterion. Repeat in mA. In the adenosine acceptance, find supportedAt by stepping advanceRhythm in 0.25 s increments until rhythmSupported first returns true. In PacingLab.test.ts, assert that the exam render lacks the LabTipsPanel section's own aria-label/title."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 1 (src/ui/lab/bedsideTips.test.ts:85 expects raises.procedures to be ['pericardiocentesis']): I checked it and it is correct, but I can't make the change. That file belongs to pericardiocentesis-tips-and-pci-handover and is not on this package's list. It still fails 1 of its 11 tests. The coordinator or the owning package should switch lines 73-85 to PERIC_RAISES, which is already exported from ./bedsideTips. The final assertion should become expect(raises.procedures).toEqual(expect.arrayContaining(['pericardiocentesis','pacing','tcp'])).",
+     "Finding 5 (docs/realism/facts has no pacing entry): this is also correct but outside my list of files. The coordinator should create docs/realism/facts/pacing.md and list these as MODEL PARAMETER values: LEAD_IMPEDANCE_OHM 1000, TIGHT_SHEATH_TORQUE 0.35, IN_LAB_MODEL (waitS 30, coughEffectS 2, atropineOnsetS 20), timeLimitS 180/60/300, atropineAtrialFactor 1.2/1.2/1.1, transient resolvesAfterS 12, and the rhythm numbers of the three in-lab scenarios and their exam variants. The comments in pacing.ts can then point to that file."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pacing.inlab.test.ts (12/12 pass)",
+     "npx vitest run src/ui/bedside/PacingLab.test.ts src/simulation/pacing.test.ts src/ui/lab/pacingTips.scenario.test.ts (51/51 pass: 7 + 33 + 11)",
+     "npx vitest run src/ui/lab/bedsideTips.test.ts src/content/lab/reachability.test.ts (reachability 5/5 pass; bedsideTips.test.ts 10/11, the one failure is the out-of-scope line-85 assertion from finding 1)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit reported no errors)",
+    "notes": "I applied five of the seven findings. The other two (1 and 5) need files outside this package and are listed under rejected for the coordinator. The package's own tests pass and the typecheck is clean. One test in another package's file still fails: bedsideTips.test.ts line 85 (finding 1).\n\nFinding 2 (pacing dependence shown on live screens), in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PacingLab.tsx:\n- The test checklist now says \"Pacing dependent: do not turn the rate down\" only in guided practice.\n- In exam, supervised and independent runs it shows one neutral sensing row instead. Its button, \"Pacing dependent: sensing not tested\", is offered whenever sensing has been neither tested nor skipped, so the learner makes the call.\n- The \"mV or lower\" sensitivity advice now shows only in guided practice.\n- Extra change: offering the button in every scenario would have let a learner earn the sensing points by skipping where sensing could be tested. To stop that, the lab notes when the button is pressed whether the patient really was pacing dependent at that moment. The log's sensingSkippedDependent is true only in that case, so a wrong skip earns no credit.\n- TestChecklist and InLabChoices are now named exports so they can be rendered directly in tests.\n\nFinding 3 (in-lab actions locked after the assess stage):\n- After assess, a compact in-lab panel stays on screen in every stage until the debrief. It shows the time since onset, atropine, the cough, stopping the infusion, external pacing, and the finish button once conduction is back. Wait and the femoral wire are hidden.\n- Tests: in pacing.inlab.test.ts, the femoral wire at t=12 then stopping the infusion at t=20 scores 20 for initial management. In PacingLab.test.ts, the compact amiodarone panel renders the stop-infusion button.\n\nFinding 4 (the External pacing button earned credit by itself):\n- Pressing the button now only puts the pads on; the action is recorded when transcutaneous pacing is switched on (changeTcp).\n- The button is disabled while the pads are on.\n- scorePacing (src/simulation/pacing.ts) counts external pacing only when log.tcpUsed is true (pacing that captured).\n- Test: with tcpUsed false, the external-pacing share is not awarded.\n\nFinding 6 (bedsideTips.ts header and the alias cast):\n- The header now says the pericardiocentesis tab never reports a deprecated alias, and the pacing tab reports \"pacing\" until tip-retarget-catchup.\n- PACING_ALIAS_PHASES is typed `readonly LabPhase[] = [\"pacing\"]` with no cast. Its comment says tip-retarget-catchup must delete PACING_ALIAS_PHASES and refinePacingTips.\n\nFinding 7 (weak tests):\n- New test in pacing.inlab.test.ts that drives the real dial in three settings: volts at 1000 ohm, mA, and volts at 500 ohm. It steps down from 3 with stepOutputIn and outputFrom, advancing the rhythm at each step. It takes the threshold the way changeOutput does and checks that every non-refractory spike above it captured. It then turns the same dial up to three times the threshold and checks capture, rhythmSupported and the output-margin criterion. One dial step short of the target fails.\n- In the persistent adenosine test, supportedAt now comes from stepping 0.25 s until rhythmSupported first returns true.\n- On the tips-panel check: aria-label=\"Technique\" is already LabTipsPanel's own default title. I added a second check that the exam render lacks \"Ask for a tip\".\n- I did not act on the reviewer's design note: at the default 1000 ohm, switching between V and mA changes only the unit label.\n\nFiles edited: src/simulation/pacing.ts, src/ui/bedside/PacingLab.tsx, src/ui/lab/bedsideTips.ts. Tests edited: src/simulation/pacing.inlab.test.ts, src/ui/bedside/PacingLab.test.ts."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-54) at http://localhost:5173 and went to Pacing \u00b7 pericardium > Temporary pacing. window.__lab.pacing is there (context, tips, state, events, step); its keys are non-enumerable, so Object.keys(window.__lab) returns []. Closed the tab at the end and reset the viewport to desktop.",
+     "Note on method: another package's edits to src/ui/access/panels*.tsx made Vite fully reload the page several times while I worked. Fast Refresh was invalidated with the message 'clock' export is incompatible. Each reload sent the lab back to inferior-chb, so I re-ran each check as a single javascript call. These reloads have nothing to do with this package.",
+     "Default ward scenario (inferior-chb, guided): context is lab bedside, phase assess, phases [pacing], procedures [pacing], events [av-block, bradycardia]; tips show bed-pace-external-bridge.",
+     "Launch link (useLabLaunchStore.request('pacing', {scenario:'inlab-adenosine-avb', variant:'persistent'})) opened the persistent variant in guided mode with the box reading V. HR 0, ABP 12/12. hypotension was added to events after the 10 s hold. The initial-management panel showed all five choices plus the clock since onset and the 1:00 limit.",
+     "Acceptance 1, part 1: Wait and watch (30 s) followed by stepping 31 s gave HR 0, conductionReturned false, restoredAt null. Ask the patient to cough followed by 15 s gave HR 0 and the label 'Long pause / ventricular standstill'. The guided log showed the Brilakis 12.2 advice after each action.",
+     "Acceptance 1, part 2, driven through the UI: femoral venous wire, then a sheath one size larger, then IVC to the end of the RA. Rotating lateral formed a loop (the log says the lead buckles and forms a loop); rotating back to tricuspid and advancing reached the RV apex. I connected the box, stepped the output down until loss of capture (measured threshold 1.6 V; 0.7 V on an earlier run), set 5.0 V and handed over. Debrief: Pass criteria passed, all 5 ticks; 'Output 5 V is 3.1 times the measured threshold of 1.6 V'; score 77/100.",
+     "Acceptance 2: the same run with the box switched to mA before hand-over also passed, and the detail read 'Output 5 mA is 3.1 times the measured threshold of 1.6 mA'.",
+     "Negative check: I reached the hand-over with the lead still in the SVC. Debrief: not passed, 'The threshold was not measured', Lead position 0/20, 'Wire secured in the superior vena cava'.",
+     "Acceptance 3: at stage test the tips were bed-pace-demand-sensitivity, bed-pace-threshold-margin and bed-pace-skin-loop. In the exam variant (inlab-adenosine-avb/exam, and inlab-amiodarone-avb/exam opened through openSim) mode was exam, tips() returned [], there was no tips panel, no rhythm label on the monitor, no time-limit line, no route explanations and no tip-location label. The vignette was a different patient.",
+     "Sheath fit: with a same-size sheath, 8 clockwise clicks only reached 'Posterior-medial', and the log said the wire binds in the sheath. With the larger sheath, 5 clicks reached lateral.",
+     "Tip phases: at access the tips were bed-pace-external-bridge and bed-pace-sheath-up-femoral, with phases [pacing]. At position they were bed-pace-coronary-sinus, steer-to-apex, atrial-loop and sock-shape.",
+     "RCA scenario (inlab-rca-chb-rbbb): atropine was logged with its Oxford ch 10 source, and the block persisted (HR 34). After External pacing, pads, analgesia, current 90 and Start pacing: tcpCapture, HR 70, procedures [pacing, tcp], supportedAt recorded, bradycardia cleared from events.",
+     "Amiodarone exam variant: the 'Stop the amiodarone infusion' choice is present and tips are [].",
+     "Acceptance 4 in the app: importing /src/ui/content/practiceIndex.ts, practiceForLesson('hb-additional-procedures-pacing') returned all 7 scenarios plus the transient adenosine link. No exam variant was listed.",
+     "Link routing: with Bedside showing the Pericardiocentesis tab, openSim('pacing', {...}) left the pacing request pending and stayed on Pericardiocentesis (see problems). Clicking Temporary pacing then picked up the pending link and opened the amiodarone exam.",
+     "Phone width (375 px): the sidebar stays open, so main is 127 px wide and has horizontal scroll. The overflow comes from the BedsideLab tab switch and the monitor's 9rem readout column, which this package did not add.",
+     "Console: no errors or warnings from the app. The only messages were Vite Fast Refresh invalidations in other packages' access files."
+    ],
+    "problems": [
+     {
+      "where": "src/simulation/pacing.ts LEAD_IMPEDANCE_OHM = 1000 (line ~746) with outputIn/formatOutput; PacingLab V/mA switch",
+      "problem": "At 1000 ohm the conversion is 1 V per mA, so switching between V and mA changes only the unit label: 5.0 V reads 5.0 mA, and a threshold of 1.6 V reads 1.6 mA. The on-screen note 'read the units before you quote a threshold' therefore teaches nothing, and the units lesson cannot be seen in the app.",
+      "severity": "major",
+      "fix": "Choose a model lead impedance that makes the two readings differ (for example 500 ohm, which the builder's own test already covers), keep it labelled MODEL PARAMETER, and check that the in-lab anchors (Oxford: start at 3 V, threshold 1 V or less) still hold. Alternatively give each in-lab scenario its own impedance so the two dials differ."
+     },
+     {
+      "where": "src/simulation/pacing.ts line 699 (inLabCriteria detail)",
+      "problem": "The criterion detail lower-cases the zone label, so the debrief reads 'Wire secured in the rv apex.' (and would read 'rv septum' or 'rvot').",
+      "severity": "minor",
+      "fix": "Use ZONE_LABEL[log.finalZone] without .toLowerCase(), or add a sentence-case label map that keeps RV/RVOT/SVC in capitals."
+     },
+     {
+      "where": "src/ui/bedside/PacingLab.tsx line ~482 (blind-move warning)",
+      "problem": "In exam mode the log still coaches the learner: 'Moving the lead without screening. Use fluoroscopy whenever the lead moves inside the heart.' The builder's report says no verdicts or coaching appear outside guided practice.",
+      "severity": "minor",
+      "fix": "In exam mode, log a neutral line or nothing (e.g. `if (runRef.current.mode === \"guided\") addLog(...)`), and keep the blind-move count for the debrief."
+     },
+     {
+      "where": "src/ui/sections/BedsideLab.tsx (not in this package's file list)",
+      "problem": "If Bedside is open on the Pericardiocentesis tab and simTab is already 'pacing' (after an earlier pacing link), a new pacing link from openSim does not switch tabs. PacingLab is not mounted, so the request stays pending until the learner clicks Temporary pacing. The useEffect on simTab does not fire because the value has not changed.",
+      "severity": "minor",
+      "fix": "In BedsideLab, subscribe to pacing requests and switch tab without taking the request, e.g. useEffect(() => useLabLaunchStore.subscribe((st, prev) => { if (st.pending.pacing && st.pending.pacing !== prev.pending.pacing) setTab(\"pacing\"); }), []). PacingLab's useLabLaunch then takes the request when it mounts. This file belongs outside this package, so report it to the owner rather than editing it."
+     },
+     {
+      "where": "docs/realism/facts (no entry); src/simulation/pacing.ts IN_LAB_MODEL, LEAD_IMPEDANCE_OHM, TIGHT_SHEATH_TORQUE, timeLimitS 180/60/300, atropine effect",
+      "problem": "The new model parameters are labelled MODEL PARAMETER only in code comments. The rule asks for an entry in docs/realism/facts, and the code comment itself says an entry was 'requested in the package report'. None exists.",
+      "severity": "minor",
+      "fix": "Add a docs/realism/facts entry (or ask its owner to add one) listing waitS 30, coughEffectS 2, atropineOnsetS 20, the per-scenario time limits, LEAD_IMPEDANCE_OHM, TIGHT_SHEATH_TORQUE and the atropine atrial-rate effect, each as MODEL PARAMETER with its rationale."
+     },
+     {
+      "where": "src/simulation/pacing.ts in-lab adenosine persistent course",
+      "problem": "Realism: after more than 60 s of ventricular standstill (HR 0, ABP 12/12) the patient is still 'asked to cough, and coughs', and nothing changes in the patient's consciousness or condition. This conflicts with the realism-first goal.",
+      "severity": "minor",
+      "fix": "Before adding consciousness or deterioration behaviour to the in-lab course, source it from the module text (Brilakis 12.2 already mentions brief CPR). For example, after a sourced or MODEL PARAMETER interval of standstill, log that the patient is unresponsive and make the cough unavailable."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 4 (BedsideLab tab does not switch for a new pacing link when simTab is already 'pacing'): I checked it and it is right, but the fix belongs in src/ui/sections/BedsideLab.tsx, which is not one of this package's files, so I did not touch it. Out of scope for the owner: in BedsideLab add useEffect(() => useLabLaunchStore.subscribe((st, prev) => { if (st.pending.pacing && st.pending.pacing !== prev.pending.pacing) setTab('pacing'); }), []). This switches the tab without taking the request, and PacingLab's useLabLaunch('pacing') then takes it when it mounts.",
+     "Finding 5 (no docs/realism/facts entry for the new model parameters): right, but docs/realism/facts is not one of this package's files, so I could not add the entry. Out of scope, entry requested from its owner. Every item is a MODEL PARAMETER: IN_LAB_MODEL.waitS 30 s (how long the Wait choice watches); coughEffectS 2 s (how soon a cough acts where it resolves block, Brilakis 12.2 cough after adenosine block); atropineOnsetS 20 s; atropineAtrialFactor 1.2 on the atrial rate; unresponsiveAfterS 20 s (new: time without a ventricular beat before the patient stops responding and cannot cough; the module text says coughing can keep the patient conscious and treats persistent standstill as an unconscious patient); timeLimitS 180 s (RCA/RBBB), 60 s (adenosine, no escape), 300 s (amiodarone); LEAD_IMPEDANCE_OHM 500 (now changed from 1000 so that V and mA read differently; keeps SIM_FACTS item 17 below 1 mA = below 0.5 V inside Oxford ch 9 threshold ideally 1 V or less); TIGHT_SHEATH_TORQUE 0.35 (fraction of a rotation reaching the tip through a same-size sheath; Oxford ch 9 asks for a sheath larger than the wire). The code comments already say the entry was requested in the package report."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pacing.inlab.test.ts src/simulation/pacing.test.ts src/ui/bedside/PacingLab.test.ts src/ui/lab/pacingTips.scenario.test.ts (4 files, 66 tests passed)",
+     "npx vitest run src/ui/bedside/PacingLab.test.ts after adding the cough render test (8 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied four of the six findings and rejected two, both because their fixes sit in files outside this package. All package tests pass and the typecheck is clean.\n\n1. V/mA switch changed only the unit label (major, applied). In src/simulation/pacing.ts I changed LEAD_IMPEDANCE_OHM from 1000 to 500. It is still labelled MODEL PARAMETER, and the comment now gives the reason. The two dials now read differently: 1.6 mA reads 0.8 V, and the default 5 mA reads 2.5 V.\n   - Oxford's anchors still hold. The acceptable threshold (below 1 mA) reads below 0.5 V, which is inside 'ideally 1 V or less'. 3 V is within the volt dial, and the apex threshold of every in-lab scenario reads 1 V or less.\n   - At 500 ohm the volt dial's lower limit came out at 0.05 V, which the 0.1 V steps cannot reach. outputLimits now rounds the volt limits onto the dial: 0.1 to 10 V. The milliamp limits are unchanged.\n   - Tests in src/simulation/pacing.inlab.test.ts: I updated the impedance and \"2.5 V\" assertions and added a test that the two readings differ and the anchors hold.\n\n2. Lower-cased zone label (minor, applied). inLabCriteria now writes 'Wire secured. Final position: RV apex.' using ZONE_LABEL unchanged. A new test checks it.\n\n3. Coaching on unscreened moves in exam mode (minor, applied). In src/ui/bedside/PacingLab.tsx the live warning now appears only in guided practice. Every move made without fluoroscopy is counted in a blindMoves ref. Outside guided practice the debrief log reports the count ('N lead moves were made without screening...').\n\n4. Patient still coughs after long standstill (minor, applied).\n   - Engine: a new MODEL PARAMETER, IN_LAB_MODEL.unresponsiveAfterS = 20 s. The comment cites the module text: coughing can keep the patient conscious, and persistent standstill is treated as an unconscious patient. A new function, patientResponsive(rhythm, inLabState, t), compares the time since the last ventricular beat (or the onset) with that interval. A beat of any origin (escape, conducted, paced or external) restores it.\n   - PacingLab: the 250 ms tick logs 'The patient no longer responds.' or 'The patient is responding again.' on each change. In guided adenosine runs it also logs Brilakis's brief-CPR advice. The cough button is disabled and marked '(no response)'. If initialAction('cough') is still called, it logs that the patient does not respond and records nothing.\n   - Effect on the plan's acceptance test: the engine test 'waiting 30 s and a cough do not restore conduction' still passes. In the app, though, a learner who waits the full 30 s first can no longer cough. That matches the module text's point that waiting passively in an unconscious patient is wrong.\n   - I added no CPR action; it would need its own design.\n   - New tests: an engine test of responsiveness (lost after 20 s of standstill, regained with capture, never lost in the RCA scenario with an escape rhythm or outside an in-lab run) and a render test of the disabled '(no response)' cough button in src/ui/bedside/PacingLab.test.ts.\n\nUnresolved from the builder's report: the assertion in src/ui/lab/bedsideTips.test.ts line 85 (raises.procedures now also contains 'pacing' and 'tcp') still needs its owner to update it. I did not rerun that file.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pacing.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PacingLab.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pacing.inlab.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bedside/PacingLab.test.ts\n\nI did not check the changes in the running app."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "In the persistent 'inlab-adenosine-avb' variant, waiting 30 s and a cough do not restore conduction; transvenous pacing at 3x threshold in demand mode passes",
+      "met": true,
+      "evidence": "src/simulation/pacing.inlab.test.ts, test 'acceptance: in the persistent ... variant' passes. It waits IN_LAB_MODEL.waitS (30 s), coughs, and checks that restoredAt stays null with no QRS and hr 0. It then places a femoral wire at the RV apex with VVI at 3x the threshold: rhythmSupported holds within timeLimitS, all five inLabCriteria are met and inLabPassed is true."
+     },
+     {
+      "criterion": "Output entered in volts at 3x threshold passes in both unit displays",
+      "met": true,
+      "evidence": "pacing.inlab.test.ts, 'acceptance: output entered in volts at 3x threshold passes in both unit displays' passes for units V and mA, and 2.9x fails in both. 'Turning the dial down from 3 finds the threshold...' also passes: it steps the real dial in V and mA and shows capture at 3x. LEAD_IMPEDANCE_OHM (500) is labelled MODEL PARAMETER in pacing.ts. PacingLab.tsx drives the dial through outputIn, outputFrom and stepOutputIn in the box's units."
+     },
+     {
+      "criterion": "At stage 'test' bed-pace-threshold-margin appears; in exam mode no tips are returned",
+      "met": true,
+      "evidence": "src/ui/lab/pacingTips.scenario.test.ts, 'acceptance: at stage test ...' passes: the tip is in tipsFor and in pacingTips under guided, and the result is [] under tipsVisible({mode:'exam'}). PacingLab.tsx:891-894 wires pacingTipContext, tipsVisible(run) and pacingTips from useLabRun. PacingLab.test.ts 'an exam shows no tips panel, tip location or rhythm label' passes."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in pacing.launch.ts under lesson hb-additional-procedures-pacing",
+      "met": true,
+      "evidence": "pacingTips.scenario.test.ts 'acceptance: practiceIndex lists every scenario...' passes: every launch scenario is under the lesson with no variant, the transient link is listed, and nothing held out is listed. The test 'pacing.launch.ts declares every scenario of PACING_SCENARIOS and every variant...' also passes. src/ui/content/practiceIndex.test.ts passes."
+     },
+     {
+      "criterion": "Tips test beside bedsideTips.ts: after the bradycardia-raising action tipsFor(ctx,20) includes bed-pace-external-bridge, and at phase 'pacing' bed-pace-sheath-up-femoral; every waiting.ts entry naming the package becomes satisfiable and the bedside waiting count falls by at least their number",
+      "met": true,
+      "evidence": "In src/ui/lab/pacingTips.scenario.test.ts (a new file), both acceptance tests pass. In inlab-rca-chb-rbbb, the untreated monitor run through PatientEventAdapter raises bradycardia; the assess context includes bed-pace-external-bridge, and the access context (phases ['pacing']) includes bed-pace-sheath-up-femoral. All 9 DEFERRED_RETARGETS entries naming the package can be satisfied by `raises` but not by PERIC_RAISES, and stillWaiting falls by at least 9. src/content/lab/reachability.test.ts passes."
+     },
+     {
+      "criterion": "Typecheck clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit exited with no output."
+     },
+     {
+      "criterion": "Package's tests pass (including existing tests of the package's files)",
+      "met": false,
+      "evidence": "src/ui/lab/bedsideTips.test.ts fails 1 of its tests: 'raises uses the shared vocabulary and covers what the context can report' (line 85). By design this package added 'pacing' and 'tcp' to the joined `raises` in src/ui/lab/bedsideTips.ts. The older assertion still expects raises.procedures to equal ['pericardiocentesis']. All other tests pass: pacing.inlab, pacing, pacingTips.scenario, PacingLab, bedsideTips.scenario, reachability, retarget, tips, labRun and practiceIndex."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/lab/bedsideTips.test.ts:85 (the 'raises uses the shared vocabulary and covers what the context can report' test, written by pericardiocentesis-tips-and-pci-handover)",
+      "problem": "This is a regression: the package changed `raises` in src/ui/lab/bedsideTips.ts to join both tabs, as its design requires, so raises.procedures is now ['pericardiocentesis','pacing','tcp']. The existing test still asserts toEqual(['pericardiocentesis']) and fails. The file is outside this package's listed files, so the build agent should have reported it in outOfScope rather than leaving it broken.",
+      "severity": "major",
+      "fix": "In src/ui/lab/bedsideTips.test.ts, add PERIC_RAISES to the import from './bedsideTips'. Replace line 85 `expect(raises.procedures).toEqual([\"pericardiocentesis\"]);` with `expect(PERIC_RAISES.procedures).toEqual([\"pericardiocentesis\"]); expect(raises.procedures).toEqual(expect.arrayContaining([\"pericardiocentesis\", \"pacing\", \"tcp\"]));`. The orchestrator has to approve this edit, or hand it to a repair package, because the file is not in this package's list. Then re-run npx vitest run src/ui/lab/bedsideTips.test.ts."
+     },
+     {
+      "where": "docs/realism/facts (no entry yet) for IN_LAB_MODEL, LEAD_IMPEDANCE_OHM, TIGHT_SHEATH_TORQUE, and per-scenario atropineAtrialFactor and timeLimitS in src/simulation/pacing.ts",
+      "problem": "These are labelled MODEL PARAMETER in code comments that say 'docs/realism/facts entry requested in the package report'. No facts entry exists yet. This is not an acceptance criterion; it is a follow-up under the project rule.",
+      "severity": "minor",
+      "fix": "Add a section to docs/realism/facts (for example S9.md, which already covers pacing model parameters) listing IN_LAB_MODEL.waitS 30, coughEffectS 2, atropineOnsetS 20 and unresponsiveAfterS 20; LEAD_IMPEDANCE_OHM 500; TIGHT_SHEATH_TORQUE; and each in-lab scenario's atropineAtrialFactor and timeLimitS, each marked MODEL PARAMETER. The package that owns that file should do this."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pacing.inlab.test.ts src/simulation/pacing.test.ts src/ui/lab/pacingTips.scenario.test.ts (59 passed)",
+     "npx vitest run src/ui/bedside/PacingLab.test.ts src/ui/lab/bedsideTips.test.ts src/ui/lab/bedsideTips.scenario.test.ts src/content/lab/reachability.test.ts (23 passed, 1 failed: bedsideTips.test.ts raises procedures assertion)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/content/lab/retarget.test.ts src/content/lab/tips.test.ts src/ui/lab/labRun.test.ts (83 passed, 1 skipped)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "In the persistent 'inlab-adenosine-avb' variant waiting 30 s and a cough do not restore conduction; transvenous pacing at 3x threshold in demand mode passes",
+      "met": true,
+      "evidence": "src/simulation/pacing.inlab.test.ts covers this in 'acceptance: in the persistent inlab-adenosine-avb variant...'. The test waits IN_LAB_MODEL.waitS (30 s), then coughs; restoredAt stays null, there are no QRS complexes and HR is 0. A femoral apex wire at 3x the consistent threshold in VVI is then supported within timeLimitS, and all five inLabCriteria pass (supported-in-time, no-cs-accepted, output-margin, demand-mode, no-async-with-intrinsic). The file passes (15/15)."
+     },
+     {
+      "criterion": "Output entered in volts at 3x threshold passes in both unit displays",
+      "met": true,
+      "evidence": "pacing.inlab.test.ts 'acceptance: output entered in volts at 3x threshold passes in both unit displays' checks the V and mA displays at LEAD_IMPEDANCE_OHM; 2.9x fails in both. The dial walk-down test 'turning the dial down from 3 finds the threshold...' covers V and mA end to end. LEAD_IMPEDANCE_OHM (500) is labelled MODEL PARAMETER in src/simulation/pacing.ts:758. The 3 V start, the 1 V threshold and the 3x margin come from the module text in src/content/manual/cath-handbook/06-additional-procedures.ts:1246 and 1947."
+     },
+     {
+      "criterion": "At stage 'test' bed-pace-threshold-margin appears; in exam mode no tips are returned",
+      "met": true,
+      "evidence": "src/ui/lab/pacingTips.scenario.test.ts 'acceptance: at stage test...': tipsFor and pacingTips include bed-pace-threshold-margin in guided mode. With tipsVisible({mode:'exam'}) the result is []. PacingLab.test.ts 'an exam shows no tips panel, tip location or rhythm label' passes, and PacingLab.tsx:1047 gates the zone label to guided practice."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/bedside/pacing.launch.ts under lessons hb-additional-procedures-pacing",
+      "met": true,
+      "evidence": "pacingTips.scenario.test.ts 'acceptance: practiceIndex lists every scenario...': practiceForLesson('hb-additional-procedures-pacing') contains every launch scenario without a variant, plus the transient link, and no held-out exam variant. The launch file declares all PACING_SCENARIOS and PACING_VARIANTS with matching heldOut flags, which a test checks both ways."
+     },
+     {
+      "criterion": "Tips test beside bedsideTips.ts: in a launch scenario, after the action that raises 'bradycardia', tipsFor(ctx,20) includes bed-pace-external-bridge, and at phase 'pacing' bed-pace-sheath-up-femoral; every waiting.ts entry naming this package becomes satisfiable, so the bedside waiting count falls by at least their number",
+      "met": true,
+      "evidence": "pacingTips.scenario.test.ts (new file beside bedsideTips.ts): in inlab-rca-chb-rbbb the untreated rhythm raises bradycardia through the shared adapter. tipsFor(assess,20) contains bed-pace-external-bridge, and the access context with alias phase 'pacing' contains bed-pace-sheath-up-femoral. The waiting acceptance test finds all 9 DEFERRED_RETARGETS for this package satisfiable under `raises`, none under PERIC_RAISES alone, and the bedside not-yet-satisfiable count falls by at least 9. The reachability.test.ts run lists all 9 bed-pace-* entries as 'ready (retarget, pacing-in-lab-scenarios-and-tips)'; the file passes (5/5)."
+     },
+     {
+      "criterion": "Package tests pass",
+      "met": false,
+      "evidence": "pacing.inlab.test.ts 15/15, pacing.test.ts 33/33, pacingTips.scenario.test.ts 11/11, PacingLab.test.ts 8/8, bedsideTips.scenario.test.ts 5/5, reachability/tips/retarget 60 passed. One existing test of the package's own bedsideTips.ts now fails: src/ui/lab/bedsideTips.test.ts:85, 'raises uses the shared vocabulary...', expects raises.procedures toEqual ['pericardiocentesis'] but receives ['pericardiocentesis','pacing','tcp'], because this package now joins PACING_RAISES into `raises`."
+     },
+     {
+      "criterion": "Typecheck clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit exited with no diagnostics."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/lab/bedsideTips.test.ts:85 (test 'pericardioTipContext > raises uses the shared vocabulary and covers what the context can report')",
+      "problem": "This package added the pacing tab to bedsideTips.ts and now joins PACING_RAISES into `raises`, so raises.procedures is ['pericardiocentesis','pacing','tcp']. The earlier pericardiocentesis package's test still asserts raises.procedures toEqual ['pericardiocentesis'] and fails. The regression is in an existing test file that is not in this package's file list, and the package report should have flagged it in outOfScope.",
+      "severity": "major",
+      "fix": "In src/ui/lab/bedsideTips.test.ts, add PERIC_RAISES to the import from './bedsideTips' and replace line 85 `expect(raises.procedures).toEqual([\"pericardiocentesis\"]);` with `expect(PERIC_RAISES.procedures).toEqual([\"pericardiocentesis\"]); expect(raises.procedures).toEqual([\"pericardiocentesis\", \"pacing\", \"tcp\"]);`. This keeps the pericardiocentesis tab's own declaration pinned and records the union. The file belongs to pericardiocentesis-tips-and-pci-handover, so the orchestrator must approve the edit (or the plan must add the file to this package) before the fix agent touches it. Then re-run: npx vitest run src/ui/lab/bedsideTips.test.ts"
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pacing.inlab.test.ts (15 passed)",
+     "npx vitest run src/simulation/pacing.test.ts (33 passed)",
+     "npx vitest run src/ui/lab/pacingTips.scenario.test.ts (11 passed)",
+     "npx vitest run src/ui/bedside/PacingLab.test.ts (8 passed)",
+     "npx vitest run src/ui/lab/bedsideTips.scenario.test.ts (5 passed)",
+     "npx vitest run src/ui/lab/bedsideTips.test.ts (5 passed, 1 failed: raises.procedures expectation at line 85)",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/tips.test.ts src/content/lab/retarget.test.ts (60 passed, 1 skipped; bedside: 9 bed-pace retargets listed as ready)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no diagnostics)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (src/ui/lab/bedsideTips.test.ts:85, major) is a real regression but needs an orchestrator decision; I did not edit the file. The test fails because it still expects raises.procedures to equal ['pericardiocentesis'], and it is now ['pericardiocentesis','pacing','tcp']. The change to raises is what the package's design requires: it is now the union of the two tabs, and the file's own header says the pacing package would do this. So the test needs changing, not the code. That test file belongs to pericardiocentesis-tips-and-pci-handover and is not on this package's list. Suggested edit for the orchestrator or a repair package: import PERIC_RAISES from './bedsideTips'. Replace line 85 with expect(PERIC_RAISES.procedures).toEqual(['pericardiocentesis']); expect(raises.procedures).toEqual(expect.arrayContaining(['pericardiocentesis','pacing','tcp'])). PERIC_RAISES is exported at src/ui/lab/bedsideTips.ts:225, so the edit works as written.",
+     "Finding 2 (docs/realism/facts, minor) is a valid follow-up but outside this package's files; nothing was edited. No facts file mentions LEAD_IMPEDANCE_OHM, TIGHT_SHEATH_TORQUE or IN_LAB_MODEL; a grep of docs/realism/facts/* found none. docs/realism/facts/S9.md is the natural home. The section should list IN_LAB_MODEL (waitS 30, coughEffectS 2, atropineOnsetS 20, unresponsiveAfterS 20), LEAD_IMPEDANCE_OHM 500, TIGHT_SHEATH_TORQUE, and each in-lab scenario's atropineAtrialFactor and timeLimitS, each marked MODEL PARAMETER. The values must be copied from src/simulation/pacing.ts, not from memory. Whichever package owns the facts docs should add it."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pacing.test.ts src/simulation/pacing.inlab.test.ts src/ui/lab/pacingTips.scenario.test.ts src/ui/bedside/PacingLab.test.ts src/ui/lab/bedsideTips.test.ts: 72 of 73 tests passed in 5 files. The 4 package test files all pass. The 1 failure is the expected assertion at bedsideTips.test.ts:85, in another package's file (finding 1)."
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0, no output)",
+    "notes": "I changed nothing; both findings point at files outside this package's list. The package's own code and tests are correct: its 4 test files pass and the typecheck is clean. Two items are left for the orchestrator. (1) Approve the one-line assertion change in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/bedsideTips.test.ts, or hand it to a repair package; the replacement is in the rejected list. Until then that test file keeps failing on the procedures check. (2) Assign the docs/realism/facts/S9.md MODEL PARAMETER entries for the constants in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pacing.ts to whichever package owns the facts docs."
+   }
+  ]
+ }
+}

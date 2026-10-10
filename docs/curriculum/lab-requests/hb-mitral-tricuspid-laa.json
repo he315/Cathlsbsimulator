@@ -1,0 +1,74 @@
+[
+  {
+    "lab": "teer",
+    "what": "A hands-on transseptal pull-down before the fossa picker: the learner holds the needle arrow and sheath side arm aligned, sets the arrow on a clock face (about 5 to 6 o'clock with noon to the ceiling and 6 o'clock to the floor, 6 for a more posterior target), withdraws from the SVC and sees the two jumps (into the right atrium, then into the fossa), supraventricular ectopics as the tip catches the superior rim, and tenting in the bicaval view. Moving the contact point must need two movements at once: rotation alone spins the sheath without moving the tent; clockwise plus slight withdrawal moves it posterior; slight withdrawal moves it inferior; clockwise gains height for TEER. Pulling too far drops the tip into the IVC on AP fluoroscopy. A large-atrium variant needs extra needle curve and a lower, less posterior site; a floppy-septum variant loses height during steering unless the puncture is higher; a thick-septum variant does not cross with force and overshoots towards the far LA wall unless RF or a sharp wire is chosen.",
+    "learnerDoes": "Orients and pulls down the system, reads bicaval, short-axis and four-chamber views, corrects an anterior tent with combined movements, and sets the height for the scenario's MR type (puncture to annular plane at least 4 cm in degenerative MR, 3 cm accepted by Russo in functional MR; puncture to coaptation point about 4.0–4.5 cm), with the two measurements labelled separately.",
+    "success": "Tent posterior and at target height in all three views without dragging the tip across the septum or dropping into the IVC; correct tool chosen for a thick or floppy septum.",
+    "tips": ["structural-ts-pulldown-orient", "structural-ts-two-movements", "structural-teer-height-coaptation", "structural-ts-pacing-lead-wire"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-ts-setup", "hb-mitral-tricuspid-laa-ts-cross"],
+    "priority": "P1"
+  },
+  {
+    "lab": "teer",
+    "what": "Crossing and its complications as events: after the needle crosses, the lab shows the tip pressure (left atrial trace with the v wave slightly taller than the a wave; right atrial trace with the a wave dominant; aortic trace with a dicrotic notch), aspiration and a contrast puff. Branches: aortic puncture (the learner must not advance the dilator, must withdraw nothing once confirmed, and must call the surgeon; advancing the dilator causes haemopericardium); a Bezold–Jarisch-like reflex (inferior ST elevation, bradycardia, hypotension, sweating, no effusion) that resolves within minutes; persisting ST elevation that turns out to be air; a posterior exit through the pericardium that declares itself only after the left atrial catheters are removed (delayed tamponade, atrial haematoma on TOE) unless the learner leaves a wire across and watches for a few minutes; sheath resistance at the dilator–sheath step that needs a wire parked deep in a pulmonary vein before a stiff wire or 4 mm balloon. Heparin timing and ACT (target at least 250 s; 250–300 s) are tracked, with a low-ACT event if heparin is late.",
+    "learnerDoes": "Confirms the left atrium four ways before advancing, gives heparin on entry, de-airs (thumb on hub, hub low, aspirate as the dilator comes out), parks a wire in the left superior pulmonary vein, and manages each complication branch.",
+    "success": "No dilator advanced without four confirmations; correct response to aortic puncture, vagal reflex, delayed tamponade and resistant crossing; ACT in range within minutes of crossing.",
+    "tips": ["structural-ts-four-confirmations", "structural-ts-heparin-after-crossing", "structural-ts-air-hub-low", "structural-ts-resistant-wire-first", "structural-ts-aortic-puncture-hold", "structural-ts-vagal-st", "structural-ts-posterior-delayed-tamponade"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-ts-cross"],
+    "priority": "P1"
+  },
+  {
+    "lab": "teer",
+    "what": "Steering and assessment mechanics in the existing steer, grasp and assess steps: an x-plane showing the intercommissural view (50–70°) and the LVOT view (140–160°); push, pull and flex of the steerable catheter move the implant medial or lateral (intercommissural view); clockwise rotation moves it posterior and counter-clockwise anterior (LVOT view); flexing the guide corrects an 'aorta-hugger' or loses height; posterior guide rotation gains height. A 3D 'cardiologist's view' (aorta at 6 o'clock) toggle against the surgeon's view. A fluoroscopy panel where the learner turns the C-arm until the implant arms superimpose. In Assess: left atrial pressure and v wave before and after each grasp, colour Doppler and pulmonary vein flow, a CW mean gradient that under anaesthesia can read low while 3D planimetry of the orifices shows an area under 1.5 cm²; leaflet optimisation (reopen arms with grippers closed, lift one gripper to check and deepen insertion) and staged capture. Device choice by Hausleiter Table 4 (leaflet length under or over 9 mm, gap, area under 4.5 cm², commissural jet, short tethered posterior leaflet) with an area budget (implants remove about half the area, most at A2/P2; two distant devices need about 6 cm²).",
+    "learnerDoes": "Chooses the implant, steers with the right movement in the right view, aligns fluoroscopy to the arms, grasps, optimises insertion, judges the result by MR, LA pressure and planimetered area, and decides on a second (lateral) device.",
+    "success": "Final MR reduced, planimetered area at least 1.5 cm², insertion quantified on both leaflets before release; no grasp from a skewed or aorta-hugging position.",
+    "tips": ["structural-teer-area-budget", "structural-teer-steer-views", "structural-teer-gantry-arms", "structural-teer-planimetry", "structural-teer-la-vwave", "structural-teer-second-device"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-teer-select", "hb-mitral-tricuspid-laa-teer-procedure"],
+    "priority": "P2"
+  },
+  {
+    "lab": "teer",
+    "what": "A tricuspid variant of the TEER lab (the coverage map's proposed build): leaflet morphology from the transgastric short-axis view (types I to IV, with the four-leaflet type IIIB common), coaptation gap, jet location (anteroseptal or not), pacing-lead interaction and the 'valentine' versus attitudinal orientation. Gap over 7–10 mm or a jet outside the anteroseptal commissure lowers the chance of success and raises single-leaflet attachment risk (about 7% with the first system). The planning screen should include the responder profile (TAPSE/PASP above 0.31 mm/mmHg, no pre-capillary pulmonary hypertension on right heart catheterisation, which the 2025 ESC/EACTS guideline makes mandatory before intervention) and the option to stop and return the patient to the Heart Team.",
+    "learnerDoes": "Selects the patient, identifies the leaflets and the target commissure, grasps, and recognises anatomy unfavourable for TEER (gap over 7–10 mm, jet outside the anteroseptal commissure).",
+    "success": "TR reduced to moderate or less without single-leaflet attachment, or a correct decision not to proceed.",
+    "tips": ["structural-tteer-diurese-first"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-tricuspid"],
+    "priority": "P2"
+  },
+  {
+    "lab": "laao",
+    "what": "Device-specific deployment mechanics for the two families already offered in the LAAO lab. Plug occluder: a marker pigtail leading the access sheath into the deepest lobe, the distal marker 5 mm behind the tip kept at least 5 mm from the wall, the pigtail left in until the device is ready, fluid-to-fluid connection, deployment by holding the cable and withdrawing the sheath with ventilation held, PASS with numbers (more than half the device beyond the ostium; tug with the catheter tip 2–4 cm from the hub; at least 8% shoulder compression in every plane for the earlier-generation device in the 2020 consensus; seal with any leak under 3 mm in all four planes), the access sheath's four marker bands (distal band 5 mm from the tip; three proximal bands for the 21, 27 and 33 mm devices), and the recapture rules (partial only up to the barbs; never push a too-proximal device forward). Lobe-and-disc occluder: landing zone 10 mm (devices of 25 mm or less) or 12 mm (28 mm or more) inside the ostium; the 'ball', then pushing the cable with the sheath fixed to open the lobe (pulling the sheath instead makes it slip proximally), pulling the sheath to open the disc, the football-shaped tug, the four shape criteria, release only with no device leak, a few minutes' wait before release; partial recapture without the anchors entering the sheath; the sandwich technique for a landing zone shorter than about 15–20 mm.",
+    "learnerDoes": "Implants each device family with its own technique, applies its release criteria, and recaptures correctly after a deliberate positioning error.",
+    "success": "Both devices released only after their criteria are met; no transfer of one device's deployment movement to the other; anchors never pulled into the sheath.",
+    "tips": ["structural-laao-pigtail-leads", "structural-laao-plug-unsheathe", "structural-laao-plug-pass", "structural-laao-disc-ball-push", "structural-laao-disc-criteria", "structural-laao-anchors-in-sheath"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-laao-implant"],
+    "priority": "P1"
+  },
+  {
+    "lab": "laao",
+    "what": "Filling and modality effects on sizing, and CT-based puncture planning: a mean left atrial pressure display after crossing, with a fluid challenge (250–1,000 mL by LV function) that enlarges the ostium by about 2 mm; a CT measurement 1–3 mm larger than 2D TOE and 2–4 mm larger than fluoroscopy; measurement sites that differ by device family. A reverse chicken-wing or posteriorly bent appendage in which an inferior-posterior puncture gives a non-coaxial sheath and an inferior-central or inferior-anterior site works; sheath curve choice by body direction. Post-implant follow-up screen at 6–12 weeks with device-related thrombus (to be anticoagulated until resolved) or a leak (small leaks re-imaged, since later data link even leaks of 5 mm or less to modestly more thromboembolism; 5 mm or more: anticoagulation or leak closure at the operator's discretion).",
+    "learnerDoes": "Loads to a mean LA pressure above 12 mmHg before final measurement, sizes from the largest valid measurement, picks the puncture site from the CT, and manages the follow-up finding.",
+    "success": "Device sized from loaded, largest valid measurements; coaxial sheath; correct follow-up action.",
+    "tips": ["structural-laao-fill-before-sizing", "structural-laao-largest-measurement", "structural-laao-puncture-from-ct", "structural-laao-drt-anticoagulate"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-laao-plan", "hb-mitral-tricuspid-laa-laao-implant"],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "A severe secondary tricuspid regurgitation scenario: right atrial trace with large v waves (and large c and v waves with loss of the x descent), pulmonary pressures, wedge and PVR that can be pre- or post-capillary, an echo pulmonary pressure that differs from the invasive value by more than 10 mmHg, and TAPSE for a TAPSE/PASP coupling calculation (below 0.31 mm/mmHg poor). The debrief asks whether the patient fits the responder profile for tricuspid intervention or the futility features.",
+    "learnerDoes": "Records the right heart study, classifies the pulmonary hypertension, calculates coupling, and states whether tricuspid intervention is likely to help.",
+    "success": "Correct classification and selection decision with reasons.",
+    "tips": ["structural-tteer-diurese-first"],
+    "lessonIds": ["hb-mitral-tricuspid-laa-tricuspid"],
+    "priority": "P3"
+  },
+  {
+    "lab": "teer",
+    "what": "End-of-case septal assessment: after guide removal, TOE of the iatrogenic ASD with size and shunt direction; the learner decides on closure (bidirectional or right-to-left shunt, or larger than 8 mm, per Russo) or observation (a left-to-right defect: closure did not improve outcomes in the MITHRAS trial, but these patients need close follow-up), and chooses venous closure (figure-of-eight suture with a pressure dressing, or a suture-mediated device).",
+    "learnerDoes": "Assesses the defect and closes the access.",
+    "success": "Closure decision matches the criteria; access closed.",
+    "tips": [],
+    "lessonIds": ["hb-mitral-tricuspid-laa-ts-cross", "hb-mitral-tricuspid-laa-teer-procedure"],
+    "priority": "P3"
+  }
+]

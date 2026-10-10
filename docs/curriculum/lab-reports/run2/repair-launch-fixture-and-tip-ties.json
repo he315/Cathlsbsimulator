@@ -1,0 +1,252 @@
+{
+ "package": "repair-launch-fixture-and-tip-ties",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I made all three repairs. The four acceptance test files pass and the typecheck is clean. One test file outside this package now fails: src/ui/access/caseTips.reach.test.ts, which a different package owns. That failure is the expected result of moving the two cold-leg tips; its own comment says it should fail when they move. I left it alone and describe the fix under outOfScope.\n\n(1) Launch fixture tests in src/content/content.test.ts. The fixture lesson, module and case are now added to the full TRACKS and PUBLISHED_CASES instead of replacing them with a one-lesson track. The real .launch.ts files are therefore checked against the whole curriculum, and any error a fixture test sees comes from the fixture. I added two tests:\n- With the fixture lab file loaded and no fixture content, the full curriculum gives no errors.\n- A bad .launch.ts that names an unknown lesson, an unknown case and an unknown scenario produces exactly those four errors. The same file also names the last lesson of the last track, and that reference is accepted, which shows the check uses the full TRACKS.\n\n(2) Tie-break in src/content/lab/tips.ts. I added an exported tipSpecificity(tip, ctx), which returns two counts:\n- conditions: one for each trigger field that is set, plus one for every required event.\n- breadth: the total number of entries in the trigger's lists (phase, event, catheter and so on), plus the number of steps in a step range. Borrowed tips are measured by the phases of their alsoIn entry.\n\ntipsFor now sorts by score first. Equal scores go by more conditions, then fewer alternatives, then caution or bailout ahead of do, then registry order. The tone bonus stays in the score, so a warning tip still always beats a do tip it outscores. tipsForAll sorts by score, then the context where the tip scored best, then specificity, then registry order, and with one context it gives the same result as tipsFor. Both docstrings describe the rule.\n\npci-eqb-standard-first now ranks 14th in the equipment test's own calcified-RCA scenario context (it was 20th, just outside the top 20), 14th for lesion-prep with balloon-uncrossable alone (was 20th), and 19th for the hand-made calcified RCA context (was 25th).\n\n(3) In src/content/lab/raisable/waiting.ts, I moved access-cx-cold-leg-six-ps and access-closure-cold-leg from the proc-tip-context group to the access-cx-endovascular-control group, with a note saying why. The file's format is unchanged and reachability.test.ts passes.\n\nBefore editing, I snapshotted the four files under datasets/tmp/wp-snapshots/repair-launch-fixture-and-tip-ties/ and created the .started marker there.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/content.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/raisable/waiting.ts"
+    ],
+    "testsAdded": [
+     "content.test.ts: 'the full curriculum with the fixture lab file and no fixture content validates'",
+     "content.test.ts: 'a .launch.ts naming an unknown lesson, case or scenario is rejected; one naming any real lesson passes'",
+     "content.test.ts: the six existing fixture tests rewritten to add the fixture to the full TRACKS/PUBLISHED_CASES (same assertions)",
+     "tips.test.ts describe 'tie-break on equal scores': tipSpecificity counts; narrower phase/event list first; more conditions first; caution/bailout ahead of do (tone bonus outranks specificity); identical triggers keep registry order; on the registry pci-eqb-standard-first inside tipsFor(ctx,20) at lesion-prep + balloon-uncrossable (plain, RCA, calcified RCA) with scores non-increasing; on the registry no do tip precedes a caution/bailout tip of equal score and specificity",
+     "tips.test.ts tipsForAll: one-context equality extended to a tie-heavy lesion-prep context; 'breaks a tie within one context by specificity before registry order'",
+     "tips.test.ts: the legacy-algorithm guard now compares the same tip set and the same score sequence at limits 4/5/6/100 rather than tie order; the fingerprint-gated snapshot test (skipped, fingerprint differs) now compares the tip set and the scores"
+    ],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts -> 4 files passed, 103 passed, 1 skipped (fingerprint-gated snapshot). Before the change: 6 failed, all in content.test.ts",
+     "npx vitest run src/content/lab/retarget.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/scenarios/tips.test.ts src/simulation/session/handover.test.ts src/simulation/session/multiSite.tips.test.ts src/ui/access/caseTips.reach.test.ts src/ui/access/caseTips.test.ts src/ui/lab/diagnosticContext.test.ts -> 96 passed, 1 todo, 1 failed: caseTips.reach.test.ts 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips' (expected; see outOfScope). All 8 passed before the waiting.ts move",
+     "npx vitest run src/ui/lab/diagnosticTips.test.ts src/ui/lab/haemoTips.test.ts src/ui/lab/labRun.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/physiologyTips.test.ts src/ui/lab/useContextTips.test.ts src/ui/sim/modules/script.test.ts src/ui/lab/integration.test.ts src/ui/lab/lab.test.ts -> 9 files passed, 106 tests"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no output. A first run flagged Array.prototype.at in the new content test, so I replaced it with index access.",
+    "acceptance": [
+     {
+      "criterion": "content.test.ts: real launch files validated against the full TRACKS; a fixture test proves an unknown lessonId or scenario is rejected",
+      "status": "met",
+      "evidence": "All 61 tests in content.test.ts pass (the 6 fixture tests failed before). The new test gets exactly four errors: unknown lesson, unknown case, unknown scenario for haemo, and unknown lesson in link 1. The last lesson of the last track, named in the same file, is accepted."
+     },
+     {
+      "criterion": "tips.ts tipsFor: documented tie-break preferring the more specific trigger, then stable order; caution and bailout ahead of do at equal specificity",
+      "status": "met",
+      "evidence": "Added tipSpecificity and compareTied, with docstrings on tipSpecificity, compareTied, tipsFor and tipsForAll. pci-eqb-standard-first moved from 20th to 14th at lesion-prep with balloon-uncrossable, and is 14th in the equipment test's own scenario context. Synthetic tests cover the narrower lists, more conditions, tone and stable-order rules."
+     },
+     {
+      "criterion": "Existing tip tests and the diagnostic lab's tip ordering tests still pass",
+      "status": "met",
+      "evidence": "tips.test.ts: 31 passed, 1 skipped. The legacy-algorithm comparison was changed to compare the same tips and scores, because tie order is deliberately different now. These all pass: diagnosticTips, diagnosticContext, script, useContextTips, labRun, physiologyTips, haemoTips, patientEvents, retarget, equipment.tips, scenarios/tips, handover, multiSite.tips and caseTips."
+     },
+     {
+      "criterion": "waiting.ts: access-cx-cold-leg-six-ps and access-closure-cold-leg moved from proc-tip-context to the access-cx-endovascular-control group, keeping the file's format and its tests",
+      "status": "met",
+      "evidence": "The diff touches only those two list lines plus the target group, which gained the two ids and a note. reachability.test.ts passes. The plan's access-cx-endovascular-control tipIntegration lists both tips with limb-ischaemia."
+     },
+     {
+      "criterion": "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts all pass",
+      "status": "met",
+      "evidence": "4 files passed: 103 passed, 1 skipped"
+     },
+     {
+      "criterion": "tsc clean",
+      "status": "met",
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit gives no errors"
+     }
+    ],
+    "outOfScope": [
+     "src/ui/access/caseTips.reach.test.ts (owned by proc-tip-context) now fails one test: 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise'. The cold-leg tips are no longer in the proc-tip-context group, so notYet is [] while SCENARIO_ONLY still lists them, and the `fresh` count is off by SCENARIO_ONLY.size. The file's own comment says this guard should fail once waiting.ts moves the two entries. Fix: in the proc-tip-context check, expect notYet to equal [] (or filter SCENARIO_ONLY to ids still in the group), and drop the '- SCENARIO_ONLY.size' term from the `fresh` count. The separate test 'the cold-leg tips are satisfiable once a scenario raises limb-ischaemia' still holds and can stay.",
+     "src/simulation/pci/equipment.tips.test.ts (owned by pci-device-catalogue) has it.todo('pci-eqb-standard-first inside tipsFor(ctx, 20) once the tips registry breaks ties'). That todo can now become a real test: in its stalled-balloon context, tipsFor(ctx, 20) puts pci-eqb-standard-first 14th (checked with a scratch script). The comment above it about ties keeping registry order is out of date."
+    ],
+    "notes": "The tie-break never overrides the score, so a caution or bailout tip still beats any do tip it outscores. The explicit tone key only matters if a future weight change makes a warning and a do tip tie on score.\n\ntipsForAll keeps \"context first, then specificity\" so that it still follows caseTips.ts's documented merge order (score, then context, then registry). I did not change caseTips.ts, which belongs to another package. If that file merges tips itself, its order within a tie may now differ from tipsForAll's, but caseTips.test.ts still passes.\n\nThe fingerprint-gated snapshot test in tips.test.ts is still skipped, because the tip data no longer matches the recorded fingerprint. I reworded it to compare the tip set and scores so it stays correct if the fingerprint ever matches again.\n\nI did not use the browser or start a dev server. The scratch scripts I used to check rankings are in the session scratchpad, not the project."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/access/caseTips.reach.test.ts:91-108 (owned by proc-tip-context, not in this package)",
+      "problem": "The waiting.ts move breaks this test: 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise' now fails with \"expected [] to deeply equal ['access-closure-cold-leg', ...]\". I confirmed the failure by running the file. The file's comment says this guard should fail once the two entries move, and the builder reported it under outOfScope. Until it is fixed, a test outside this package's acceptance list stays red.",
+      "severity": "major",
+      "fix": "Ask the owner of proc-tip-context, or the coordinator, to make this change in caseTips.reach.test.ts. Line 97: expect(notYet).toEqual([]). Line 108: expect(fresh.length).toBe(group!.tips.length - already.length), dropping '- SCENARIO_ONLY.size'. Add expect(group!.tips.filter((id) => SCENARIO_ONLY.has(id))).toEqual([]) so the move stays guarded. Keep the test 'the cold-leg tips are satisfiable once a scenario raises limb-ischaemia' as it is. Update the comment above SCENARIO_ONLY to say the two entries now wait on access-cx-endovascular-control."
+     },
+     {
+      "where": "src/ui/access/caseTips.ts:237-260 (owned by proc-tip-context, not in this package)",
+      "problem": "The full-case tips panel merges tips with its own sort, b.score - a.score || a.ci - b.ci || a.ri - b.ri. Its docstring says this follows tipsForAll's order, but that order now puts specificity before registry index. Inside a tie, the case panel therefore still uses registry order and does not get the new tie-break. caseTips.test.ts passes, but the two orders have quietly drifted apart.",
+      "severity": "minor",
+      "fix": "Follow-up for proc-tip-context. Add tipSpecificity to the TipsModule pick, store spec: mod.tipSpecificity(tip, ctx) beside score, ci and ri at the best score, and sort by b.score - a.score || a.ci - b.ci || (b.spec.conditions - a.spec.conditions) || (a.spec.breadth - b.spec.breadth) || a.ri - b.ri. Simpler still: export compareTied from tips.ts and call it. Then update the docstring."
+     },
+     {
+      "where": "src/content/lab/tips.test.ts, 'on the registry, every caution or bailout tip comes before every do tip of the same specificity and score' and 'caution and bailout tips stay ahead of do tips'",
+      "problem": "Both tests are close to tautological. Every score weight in tipScore is an integer and the tone bonus is +0.5, so a caution or bailout tip can never tie on score with a do tip. The registry-wide double loop never compares a warning with a do tip, so it cannot fail. The synthetic test passes because of the score bonus, not the tone key in compareTied. That key cannot be reached with today's weights, and no test exercises it.",
+      "severity": "minor",
+      "fix": "Replace the registry-wide loop with an assertion of the property that actually guarantees the ordering. For every ctx in the list and every matching tip: (tipScore(t, ctx)! % 1 === 0.5) === (t.tone !== 'do'). Then for each consecutive pair in tipsFor(ctx, 1000) where out[i].tone === 'do' and out[i+1].tone !== 'do', expect tipScore(out[i]) to be greater than tipScore(out[i+1]). Rename the synthetic test to say the ordering comes from the tone bonus in the score, or keep it and add a line to compareTied's docstring that the tone key is defensive and unreachable under current weights."
+     },
+     {
+      "where": "src/simulation/pci/equipment.tips.test.ts:51-63 (owned by pci-device-catalogue, not in this package)",
+      "problem": "it.todo('pci-eqb-standard-first inside tipsFor(ctx, 20) once the tips registry breaks ties') can now be a real assertion. The comment above it still says ties keep registry order, which is no longer true.",
+      "severity": "minor",
+      "fix": "Follow-up for pci-device-catalogue. Replace the todo with expect(tipsFor(ctx, 20).map((t) => t.id)).toContain('pci-eqb-standard-first'), using the same stalled-balloon ctx. Edit the comment to say ties on score are broken by specificity (tipSpecificity) and then by registry order."
+     },
+     {
+      "where": "src/content/lab/raisable/waiting.ts:5-6 (header comment)",
+      "problem": "The header says only found-tip-retarget, tip-retarget-catchup and content-links-backfill-p2 edit this file. This repair package has now edited it too, so the ownership note is out of date. This is cosmetic, and the data change itself is correct: both cold-leg tips have phase 'complication', event limb-ischaemia and FEMORAL, which matches the access-cx-endovascular-control tipIntegration in the plan.",
+      "severity": "minor",
+      "fix": "Optional: add 'and repair-launch-fixture-and-tip-ties (the cold-leg move)' to the list of editors in the header."
+     }
+    ],
+    "verdict": "Approve, with follow-ups outside this package. All three repairs are implemented completely and correctly.\n\n(1) content.test.ts now checks the real .launch.ts files against the full TRACKS and PUBLISHED_CASES, with the fixture content added on top. A new fixture test shows that an unknown lesson, case or scenario is rejected, with exactly four errors. It also shows that the last lesson of the last track is accepted, so the check really uses the full curriculum (TRACKS has more than ten tracks).\n\n(2) tips.ts adds an exported tipSpecificity and a documented compareTied. Sort order: score, then more conditions, then fewer alternatives, then caution or bailout ahead of do, then registry index. tipsForAll keeps the context key before specificity. Score always comes first, so the shared engine's default limit and scoring are unchanged and only the order within a tie changes. The cost is a few array reads per matching tip per call, not per frame. Registry tests show pci-eqb-standard-first inside the top 20 at lesion-prep with balloon-uncrossable.\n\n(3) waiting.ts moves only the two cold-leg ids, into the existing access-cx-endovascular-control group, with a note that keeps the file's format. The tips' triggers (phase including 'complication', event limb-ischaemia, femoral) match that package's tipIntegration in the plan.\n\nVerified myself: the four acceptance files pass (103 passed, 1 skipped), and npx tsc -p tsconfig.app.json --noEmit exits 0. Downstream tip consumers all pass: retarget, scenarios/tips, equipment.tips, handover, multiSite.tips, caseTips, diagnosticContext, diagnosticTips, haemoTips, labRun, patientEvents, physiologyTips, useContextTips and script. The one exception is src/ui/access/caseTips.reach.test.ts, which fails one test as the builder predicted. It belongs to proc-tip-context and needs a two-line fix.\n\nOther src files modified after .started: mentor/*, simulation/access/route.ts, ui/access/AccessFluoroView.tsx, UltrasoundView.tsx, AccessPicker.tsx, session/caseSession.ts, autopilot.ts, multiSite.test.ts, sections/Settings*, physics/types.test.ts. All plausibly belong to other packages (route.ts and AccessFluoroView.tsx to access-cx-endovascular-control, caseSession.ts to proc-tip-context), and none is attributable to this package.\n\nThe package adds no clinical numbers, UI or live-screen ground truth. The test weaknesses are minor: the tone tie-break test cannot fail, because the 0.5 tone bonus makes warning and do scores impossible to tie, and caseTips.ts's own merge does not yet use the new tie-break."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 1 (src/ui/access/caseTips.reach.test.ts fails after the cold-leg move): not rejected on the merits. I confirmed it is right, but the file belongs to proc-tip-context and is outside this package. Its owner or the coordinator needs to make the fix as written: expect(notYet).toEqual([]); expect(fresh.length).toBe(group!.tips.length - already.length); add expect(group!.tips.filter((id) => SCENARIO_ONLY.has(id))).toEqual([]); update the SCENARIO_ONLY comment to say the two tips now wait on access-cx-endovascular-control.",
+     "Finding 2 (src/ui/access/caseTips.ts merge sort does not use the new specificity tie-break): right, but outside this package (proc-tip-context). Suggested follow-up: add tipSpecificity to the TipsModule pick, store spec beside score, ci and ri at the best score, and sort by score, ci, conditions descending, breadth ascending, then ri. Or export compareTied from tips.ts and call it. Then fix the docstring.",
+     "Finding 4 (src/simulation/pci/equipment.tips.test.ts it.todo can become a real assertion, and its comment is stale): right, but outside this package (pci-device-catalogue). The tie-break now places pci-eqb-standard-first 14th in that context, so the todo can become expect(tipsFor(ctx, 20).map((t) => t.id)).toContain('pci-eqb-standard-first'). The comment should say that score ties are broken by tipSpecificity and then by registry order."
+    ],
+    "testsRun": [
+     "npx vitest run src/content/lab/tips.test.ts src/content/lab/reachability.test.ts (36 passed, 1 skipped: the existing fingerprint-gated snapshot)",
+     "npx vitest run src/content/content.test.ts src/content/manual.test.ts (67 passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0)",
+    "notes": "I applied two findings.\n\nFinding 3 (the tone tests could not fail): this was correct. Every term in tipScore is a whole number except the +0.5 tone bonus, so a caution or bailout tip can never tie a do tip on score. The tone key in compareTied therefore never takes effect under today's weights. I made three changes in src/content/lab/tips.test.ts and src/content/lab/tips.ts:\n- I replaced the registry-wide double loop with a test of the property that actually guarantees the order. For every matching tip in each context, the score ends in .5 exactly when the tone is not 'do'. For each adjacent pair in tipsFor(ctx, 1000) where a do tip comes just before a warning, the do tip has the strictly higher score. The test also asserts that at least one such pair exists, so this second check is not empty.\n- I renamed the synthetic test to say the ordering comes from the tone bonus in the score.\n- I added a line to the compareTied docstring saying the tone key is defensive and cannot be reached under the current weights. It keeps the rule if the weights change.\n\nFinding 5 (src/content/lab/raisable/waiting.ts header): I added repair-launch-fixture-and-tip-ties (the cold-leg move) to the list of packages that edit the file. The data is unchanged and reachability.test.ts still passes.\n\nFindings 1, 2 and 4 are correct, but they are in files owned by other packages, so I did not touch them. The fixes are under rejected, for the coordinator to pass on. Finding 1 matters most: src/ui/access/caseTips.reach.test.ts stays red until proc-tip-context updates it.\n\nFiles changed in this fix pass:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/raisable/waiting.ts"
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "(1) content.test.ts lab launch links: real .launch.ts files validated against the full TRACKS, with a fixture test proving an unknown lessonId or scenario is rejected",
+      "met": true,
+      "evidence": "src/content/content.test.ts lines 102-209: 'existing content and every .launch.ts validate' runs validateLaunchLinks({tracks: TRACKS, cases: PUBLISHED_CASES}, launchKnown()); withFixture() now appends the fixture lesson/module/case to the full TRACKS and PUBLISHED_CASES instead of replacing them; the test 'a .launch.ts naming an unknown lesson, case or scenario is rejected; one naming any real lesson passes' uses the last lesson of the last track and asserts exactly the four expected errors. All 61 content tests pass (1 describe skipped by design: skipIf(!haveLibrary) for the local angiogram library)."
+     },
+     {
+      "criterion": "(2) tipsFor tie-break: documented, prefers more specific trigger (more conditions, narrower lists), then stable order; caution/bailout ahead of do at equal specificity",
+      "met": true,
+      "evidence": "src/content/lab/tips.ts: tipSpecificity() (conditions, breadth) and compareTied() (conditions desc, breadth asc, warning before do) with doc comments; tipsFor sorts by score, compareTied, then registry index; tipsForAll uses score, context index, compareTied, registry index. tips.test.ts 'tie-break on equal scores' covers narrower phase/event first, more conditions first, warnings ahead via tone bonus, identical triggers keep registry order, and on the registry pci-eqb-standard-first is in tipsFor(ctx, 20) at lesion-prep with balloon-uncrossable (plain, RCA, calcified RCA)."
+     },
+     {
+      "criterion": "(2) existing tip tests and the diagnostic lab's tip ordering tests still pass",
+      "met": true,
+      "evidence": "Passed: src/ui/lab/diagnosticTips.test.ts, src/ui/lab/diagnosticContext.test.ts, src/ui/access/caseTips.test.ts, src/simulation/pci/scenarios/tips.test.ts, src/content/lab/retarget.test.ts (79 tests), and src/ui/lab/haemoTips.test.ts, physiologyTips.test.ts, useContextTips.test.ts, src/simulation/pci/equipment.tips.test.ts, src/simulation/session/multiSite.tips.test.ts all pass. (The one failing tip-related test is caused by item 3, see below.)"
+     },
+     {
+      "criterion": "(3) waiting.ts: access-cx-cold-leg-six-ps and access-closure-cold-leg moved from proc-tip-context to a group raisedBy 'access-cx-endovascular-control', format and tests kept",
+      "met": false,
+      "evidence": "The move itself is done: src/content/lab/raisable/waiting.ts lines 511-518 hold a group raisedBy 'access-cx-endovascular-control' (lab access) listing both tips with a note; they no longer appear in the proc-tip-context group (line 106); header updated; reachability.test.ts passes. But the move breaks an existing test that reads waiting.ts: src/ui/access/caseTips.reach.test.ts 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise' fails at line 97 (expected notYet to equal ['access-closure-cold-leg','access-cx-cold-leg-six-ps'], received []). The test's own comment (lines 60-64) says it is meant to fail once 'waiting.ts moves the two entries', so it needs updating alongside this move."
+     },
+     {
+      "criterion": "Acceptance: npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts all pass",
+      "met": true,
+      "evidence": "Test Files 4 passed (4); Tests 103 passed | 1 skipped (104). The skip is the library-dependent describe.skipIf(!haveLibrary) in content.test.ts, not part of this package."
+     },
+     {
+      "criterion": "tsc clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit exited 0 with no output."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/access/caseTips.reach.test.ts lines 91-117 (owned by proc-tip-context, outside this package's file list)",
+      "problem": "Moving the two cold-leg tips out of the proc-tip-context group in waiting.ts breaks the test 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise'. Line 97 expects notYet to equal SCENARIO_ONLY ['access-closure-cold-leg','access-cx-cold-leg-six-ps'] but now gets []. Line 106 (fresh.length === group.tips.length - already.length - SCENARIO_ONLY.size) would also be off by 2 once line 97 is fixed. The package report should have listed this in outOfScope, and the orchestrator must make the edit.",
+      "severity": "major",
+      "fix": "In src/ui/access/caseTips.reach.test.ts: (a) line 97: replace with `expect(notYet).toEqual([]);` and add `for (const id of SCENARIO_ONLY) expect(group!.tips, id).not.toContain(id); expect(WAITING_TIPS.find((g) => g.raisedBy === \"access-cx-endovascular-control\")?.tips).toEqual(expect.arrayContaining([...SCENARIO_ONLY]));`; (b) line 106: change to `expect(fresh.length).toBe(group!.tips.length - already.length);`; (c) rename the test to 'every waiting.ts entry naming proc-tip-context becomes satisfiable; the cold-leg tips wait on access-cx-endovascular-control' and update the SCENARIO_ONLY comment (lines 58-64) to say waiting.ts now lists them under access-cx-endovascular-control. Keep the 'cold-leg tips are satisfiable once a scenario raises limb-ischaemia' test as is. Then rerun npx vitest run src/ui/access/caseTips.reach.test.ts src/content/lab/reachability.test.ts."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts (4 files passed; 103 passed, 1 skipped)",
+     "npx vitest run src/ui/lab/diagnosticTips.test.ts src/ui/lab/diagnosticContext.test.ts src/ui/access/caseTips.test.ts src/simulation/pci/scenarios/tips.test.ts src/content/lab/retarget.test.ts (5 files passed; 79 tests)",
+     "npx vitest run src/ui/lab/haemoTips.test.ts src/ui/lab/physiologyTips.test.ts src/ui/lab/useContextTips.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/session/multiSite.tips.test.ts src/ui/access/caseTips.reach.test.ts (5 passed, 1 failed: caseTips.reach.test.ts)",
+     "npx vitest run src/ui/access/caseTips.reach.test.ts (1 failed, 2 passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0, no errors)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "(1) content.test.ts validates the real .launch.ts files against the full TRACKS, not a one-lesson fixture track",
+      "met": true,
+      "evidence": "src/content/content.test.ts lines 104-112: LAUNCH_FILES are globbed and validated with validateLaunchLinks({ tracks: TRACKS, cases: PUBLISHED_CASES }, launchKnown()) and the result is []. The fixture helper withFixture (lines 124-141) now adds the fixture lesson, module and cases to the full TRACKS and PUBLISHED_CASES instead of replacing them. All 61 content tests pass."
+     },
+     {
+      "criterion": "(1) A fixture test still proves that an unknown lessonId, case or scenario in a .launch.ts is rejected",
+      "met": true,
+      "evidence": "content.test.ts lines 185-208: a BAD launch file naming ct-no-such-lesson, ct-no-such-case, ct-no-such-scenario and ct-no-such-lesson-2 gets exactly four errors. A link to the deepest real lesson (the last lesson of the last track) passes. The unknown scenario, start and mode tests and the held-out tests are kept."
+     },
+     {
+      "criterion": "(2) tipsFor has a documented tie-break: more specific trigger first (more conditions, then narrower lists), then a stable order",
+      "met": true,
+      "evidence": "src/content/lab/tips.ts: tipSpecificity (about lines 445-478) counts conditions and breadth, with a doc comment. compareTied (lines 480-497) orders by conditions descending and then breadth ascending. tipsFor sorts by score, then compareTied, then registry index ri. tipsForAll uses the same keys after the context index. tips.test.ts 'tie-break on equal scores' covers the specificity counts, conditions beating breadth, and registry order on identical triggers, including when the input is reversed."
+     },
+     {
+      "criterion": "(2) Caution and bailout tips stay ahead of do tips at equal specificity",
+      "met": true,
+      "evidence": "compareTied's third key places warnings first. The +0.5 tone bonus in tipScore also means a warning and a do tip never tie on score. tips.test.ts covers both: 'caution and bailout tips stay ahead of do tips...' and 'on the registry, a warning never ties a do tip on score...'."
+     },
+     {
+      "criterion": "(2) pci-eqb-standard-first is inside tipsFor(ctx, 20) at lesion-prep with balloon-uncrossable",
+      "met": true,
+      "evidence": "tips.test.ts line 411 checks this for three registry contexts (plain, with RCA, and with calcified RCA), and also checks that the list is still in score order. It passes."
+     },
+     {
+      "criterion": "(2) Existing tip tests and the diagnostic lab's tip-ordering tests still pass",
+      "met": true,
+      "evidence": "tips.test.ts passes. npx vitest run src/ui/lab/diagnosticTips.test.ts src/ui/lab/diagnosticContext.test.ts src/content/lab/retarget.test.ts: 54/54 pass. caseTips.test.ts, haemoTips, useContextTips, physiologyTips, pci scenarios/tips, equipment.tips, script.test and multiSite.tips also pass."
+     },
+     {
+      "criterion": "(3) waiting.ts: access-cx-cold-leg-six-ps and access-closure-cold-leg move from proc-tip-context to a group raisedBy access-cx-endovascular-control, keeping the file's format and its tests",
+      "met": false,
+      "evidence": "The move is done. waiting.ts lines 511-518 add an access-cx-endovascular-control group (lab access) with the two tips and a note, and neither tip is in the proc-tip-context group any more. reachability.test.ts passes. However, src/ui/access/caseTips.reach.test.ts also tests WAITING_TIPS and now fails: 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise' expected notYet = [access-closure-cold-leg, access-cx-cold-leg-six-ps] but received []. The test's own comment (lines 60-64) says this equality is meant to fail once waiting.ts moves the two entries. So the move left one of waiting.ts's tests failing, and the update it needs is in a file outside this package."
+     },
+     {
+      "criterion": "Acceptance: npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts all pass",
+      "met": true,
+      "evidence": "4 files passed: 103 tests passed and 1 skipped (a library-dependent skipIf block); 0 failed."
+     },
+     {
+      "criterion": "Typecheck clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit produced no output."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/access/caseTips.reach.test.ts lines 60-65 and 91-111 (owned by proc-tip-context, outside this package's files)",
+      "problem": "Moving the two cold-leg tips out of the proc-tip-context group in src/content/lab/raisable/waiting.ts makes this test fail. It still expects them to be the group's only unsatisfiable members (expected [access-closure-cold-leg, access-cx-cold-leg-six-ps], received []). The test was written to fail on exactly this move, so its expectations are now out of date. They need updating, not the move reverting.",
+      "severity": "major",
+      "fix": "Update caseTips.reach.test.ts. The builder must report this as outOfScope so the orchestrator can authorise the edit or hand it to the proc-tip-context owner. (a) In the proc-tip-context test, replace `expect(notYet.sort()).toEqual([...SCENARIO_ONLY].sort())` with `expect(notYet).toEqual([])`. Also assert that the cold-leg tips are no longer in that group: `for (const id of SCENARIO_ONLY) expect(group!.tips).not.toContain(id)`. (b) Change `expect(fresh.length).toBe(group!.tips.length - already.length - SCENARIO_ONLY.size)` to `toBe(group!.tips.length - already.length)`. (c) Rename the test to 'every waiting.ts entry naming proc-tip-context becomes satisfiable'. Update the SCENARIO_ONLY comment to say the cold-leg tips now wait on access-cx-endovascular-control in waiting.ts. Keep the 'cold-leg tips are satisfiable once a scenario raises limb-ischaemia' test as it is. Then run npx vitest run src/ui/access/caseTips.reach.test.ts src/content/lab/reachability.test.ts and confirm both pass."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts (4 files, 103 passed, 1 skipped)",
+     "npx vitest run src/ui/lab/diagnosticTips.test.ts src/ui/lab/diagnosticContext.test.ts src/content/lab/retarget.test.ts (54 passed)",
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts src/ui/lab/haemoTips.test.ts src/ui/lab/useContextTips.test.ts src/ui/lab/physiologyTips.test.ts src/simulation/pci/scenarios/tips.test.ts src/simulation/pci/equipment.tips.test.ts (1 failed: caseTips.reach.test.ts proc-tip-context group expectation; 64 passed, 1 todo)",
+     "npx vitest run src/ui/access/caseTips.reach.test.ts (failure detail)",
+     "npx vitest run src/ui/sim/modules/script.test.ts src/simulation/session/multiSite.tips.test.ts src/ui/access/caseTips.test.ts (38 passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (src/ui/access/caseTips.reach.test.ts lines 91-117): the problem is real. The test 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise' now fails with 'expected [] to deeply equal [ access-closure-cold-leg, ...(1) ]' because the move in waiting.ts was intended. I did not apply the fix because that file belongs to proc-tip-context and is not in this package's edit list (content.test.ts, tips.ts, tips.test.ts, raisable/waiting.ts). The orchestrator needs to make the proposed edit: (a) line 97 becomes expect(notYet).toEqual([]), plus checks that group.tips holds neither SCENARIO_ONLY id and that the access-cx-endovascular-control group contains both; (b) line 106 becomes expect(fresh.length).toBe(group!.tips.length - already.length); (c) rename the test and update the SCENARIO_ONLY comment at lines 58-64. The 'cold-leg tips are satisfiable once a scenario raises limb-ischaemia' test stays as it is. Then rerun npx vitest run src/ui/access/caseTips.reach.test.ts src/content/lab/reachability.test.ts."
+    ],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts src/ui/access/caseTips.reach.test.ts: the 4 acceptance files pass (content 61, tips 32 with 1 skipped, reachability 5, manual 6). caseTips.reach.test.ts has 1 failure: the cross-package test that expects the cold-leg tips in the proc-tip-context group."
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0, no output)",
+    "notes": "I changed no files in this fix pass. The package's three repairs pass their acceptance checks and the typecheck is clean. The one finding is correct, but its fix belongs in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.reach.test.ts, which another package owns, so it is listed under rejected for the orchestrator to apply. The move itself is in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/raisable/waiting.ts at lines 515-517. Both cold-leg tips are now under the access-cx-endovascular-control group, with a note."
+   }
+  ]
+ }
+}

@@ -1,0 +1,302 @@
+
+ RUN  v2.1.9 /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator
+
+ ✓ src/input/input.test.ts (78 tests) 21ms
+(node:62295) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/render/xray/xray.test.ts (49 tests) 1731ms
+stdout | src/mentor/mentor.test.ts > deterministic replay > replays a scripted case with an identical event sequence and the tip pose within 0.1 mm
+[S11] scripted replay: 29 host events identical, worst tip error 6.4e-3 mm over 233 frames
+
+stdout | src/mentor/mentor.test.ts > deterministic replay > seeks to any time and reproduces the recorded state; seek cost on a 10-minute case is bounded
+[S11] 10-min record: 6002 frames, 61 snapshots, 599 kB; worst seek 1.4 ms (591 steps), worst tip error 7.7e-3 mm
+
+stdout | src/mentor/mentor.test.ts > view coverage > works on the real coronary tree with SYNTAX labels
+[S11] coverage on the real tree: 15 segments x 6 views in 10.8 ms; seen 5,6,7,8,9,10,11,12a,12b,13
+
+(node:62297) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/render/xray/thorax.test.ts (38 tests) 2191ms
+   ✓ thorax shapes > consumes the heart-shape stream's fitted primitives by name without duplicates or limit overflow 315ms
+   ✓ thorax genome > across 8 seeds the water-equivalent path through the chest varies with habitus and no two thoraces match 410ms
+   ✓ C1 anatomy refit (wave 2) > projects the epicardial vessels over the heart shadow in every reference view 571ms
+stdout | src/mentor/mentor.test.ts > review fixes: shared parameters, live foreshortening, benchmarks, recording index > segmentForeshortening gives the live value the foreshortened-view rule reads
+[S11] segmentForeshortening on the real tree (segment 7): 4.4 µs per call
+
+stdout | src/mentor/mentor.test.ts > per-frame cost > attending step and recorder sampling are cheap enough for every frame
+[S11] attending step 1.1 µs, recorder sample 0.26 µs
+
+ ✓ src/mentor/mentor.test.ts (55 tests) 1667ms
+   ✓ simulator store bridge > records a timeline from store changes and feeds the attending 661ms
+   ✓ mentor UI components > render with real data and never show a score during the case 323ms
+ ✓ src/simulation/dose.test.ts (44 tests) 518ms
+ ✓ src/simulation/pacing.test.ts (33 tests) 34ms
+ ✓ src/simulation/tavi.test.ts (34 tests) 67ms
+(node:62292) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/content/content.test.ts > answer-length cue > an always-pick-the-longest strategy scores close to chance
+always-longest 17.0% vs chance 23.1% over 1099 items
+
+stdout | src/content/content.test.ts > case branching > at least 30% of case steps branch to different consequences
+475 of 1304 case steps branch (36.4%)
+
+stdout | src/audio/audio.test.ts > pulse tone > each sinus R wave gets exactly one beep, within 20 ms of the R wave on the audio clock (60 s, jittered frames)
+[C4] sinus: 86 R waves, worst beep-to-R-wave offset 1.43 ms, late beeps 0
+
+stdout | src/audio/audio.test.ts > pulse tone > each af R wave gets exactly one beep, within 20 ms of the R wave on the audio clock (60 s, jittered frames)
+[C4] af: 53 R waves, worst beep-to-R-wave offset 1.44 ms, late beeps 0
+
+stdout | src/audio/audio.test.ts > devices and voices > costs little per frame (JavaScript side)
+[C4] LabAudio.frame: 0.5 µs per frame (fake context, Node)
+
+ ✓ src/audio/audio.test.ts (16 tests) 759ms
+(node:62350) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/render/xray/segments/segments.test.ts > union integral against ray marching > random vessel trees (chains with taper, bends and branches): geometry exact, concentration attribution small
+union vs ray marching (constant concentration): 194 rays, median 0.000 %, p95 0.002 %, p99 0.098 %, worst 0.141 %
+union vs ray marching (drifting concentration): 194 rays, median 0.000 %, p95 0.063 %, p99 1.863 %, worst 2.040 %
+
+stdout | src/simulation/team/team.test.ts > determinism and the debrief > costs little per frame
+[C4] Team.advance per 60 Hz frame: 0.6 µs
+
+ ✓ src/simulation/team/team.test.ts (32 tests) 3472ms
+   ✓ closed-loop orders > the ACT result comes when the sample has clotted, and matches the engine 1294ms
+stdout | src/render/xray/realism.test.ts > anatomy gates (plan measurementTargets; owner S3b) > records the LAD and LCx climb over their first 20 mm (plan: at most the bifurcation + 3 mm)
+proximal climb above the LM bifurcation (mm, world y head-wards): LAD 0.0, LCx 0.0 (plan target <= 3)
+
+stdout | src/render/xray/realism.test.ts > anatomy gates (plan measurementTargets; owner S3b) > records the LM bifurcation Finet ratio (Finet 2008: Dm = 0.678 (Dd1 + Dd2), mean of 173 bifurcations)
+LM bifurcation: Finet ratio 0.610 (literature mean 0.678; no spread in the abstract, so not asserted), Murray cube ratio 1.10
+
+stdout | src/render/xray/realism.test.ts > anatomy gates (plan measurementTargets; owner S3b) > checks the capture's mm per px against the library's 6F scale (0.3077 mm per 512-px analysis px)
+capture: 0.1867 mm per canvas px at the iso-centre = 0.2802 mm per 512-px analysis px (library 6F scale 0.3077)
+
+stdout | src/render/xray/realism.test.ts
+realism gap gates (report only; REALISM_STRICT=1 asserts the bands):
+  GAP   LAD mid cross-vessel range                      11.35  band 15.94-31.2  (S3a)
+  GAP   LAD mid largest step                             4.46  band 6.25-10.71  (S3a)
+  GAP   RCA mid cross-vessel range                      74.71  band 27.81-45.55  (S3a)
+  GAP   RCA mid largest step                            28.12  band 10.22-14.24  (S3a)
+  pass  catheter tip cross range (shaft target)         19.03  band 10.36-30.83  (S7)
+  pass  first appearance (10%) frame                     7.00  band 1-11.2  (S5/S10)
+  pass  rise 10-90% (frames)                            17.00  band 11.6-32.2  (S5)
+  pass  end-of-run level (fraction of peak)              0.32  band 0.071-0.8534  (S5)
+  pass  contrast arrival, 30% of rise (s)                0.60  band 0.4-1.06  (S5/S10)
+  pass  contrast present in the first frame (0/1)        0.00  band 0-0  (S5/S10)
+  pass  LAD landmark displacement P10-P90 (mm)           9.48  band 3.9446-15.483  (S3a)
+  pass  LAD landmark speed, median (mm/s)               19.69  band 9.96-26.34  (S3a)
+  pass  RCA landmark displacement P10-P90 (mm)           9.62  band 9.4215-29.3477  (S3a)
+  pass  RCA landmark speed, median (mm/s)               20.59  band 16.9892-87.1569  (S3a)
+
+ ✓ src/render/xray/realism.test.ts (49 tests | 14 skipped) 1679ms
+   ✓ capture invariants > is deterministic: the same spec gives identical scenes and noise seeds 361ms
+ ✓ src/physics/rod.test.ts (24 tests) 7011ms
+   ✓ torque transmission > a released wound catheter turns its hub back (spin-back) and unloads 504ms
+   ✓ lumens and contact > a catheter pushed up from the femoral artery reaches the root without leaving the lumen 487ms
+   ✓ radial route and breathing > a radial universal catheter over a J wire reaches the root from the right radial artery 899ms
+   ✓ nested rods and exchange > exchange over an exchange-length wire left in the root: the new catheter tracks the wire 3303ms
+ ✓ src/simulation/injection.test.ts (20 tests) 13ms
+(node:62296) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > unstratified base rates would reward guessing
+base rates: right dominant 77.3%, LCA 71.8%, CADICA run with no or <20% lesion 46.3%, borderline views 34.7%
+
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > borderline acceptance raises the constant-answer baseline above chance, and the report says so
+view drill with borderline acceptance: best constant answer above chance in 20 of 20 sets
+
+ ✓ src/simulation/teer.test.ts (30 tests) 6ms
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > occlusion and collaterals: positives and negatives come from the same image set and artefact stratum
+occlusion: 216 positives, 72 negatives, matched pairs 13 {"dominance-main|artefact=true":11,"dominance-main|artefact=false":2}
+collaterals: 691 positives, 214 negatives, matched pairs 41 {"dominance-main|artefact=true":31,"dominance-main|artefact=false":10}
+
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > locate frames with several boxes in different grade bins are graded against the box hit
+locate keyframes with more than one box: 103 of 269; with boxes in different grade bins: 70
+
+ ✓ src/content/content.test.ts (52 tests) 3193ms
+   ✓ real-angiogram drills on the local library > artery: sets are stratified and a constant answerer scores chance with kappa 0 366ms
+   ✓ real-angiogram drills on the local library > locate: sets are stratified and a constant answerer scores chance with kappa 0 301ms
+   ✓ real-angiogram drills on the local library > occlusion and collaterals: positives and negatives come from the same image set and artefact stratum 348ms
+ ✓ src/simulation/angioPci.test.ts (14 tests) 2270ms
+   ✓ angiographic PCI > every scenario has a reachable lesion with a sensible reference diameter 800ms
+   ✓ angiographic PCI > with the patient engine: balloon inflation in the LAD gives anterior ST elevation and ischaemia that resolve after deflation 581ms
+   ✓ angiographic PCI > with the patient engine: a free perforation fills the pericardium and the pressure falls; balloon tamponade stops the leak 812ms
+(node:62400) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/pericardiocentesis.test.ts (27 tests) 13ms
+ ✓ src/simulation/pci/coronaryWire.test.ts (13 tests) 748ms
+ ✓ src/simulation/complications/complications.test.ts (10 tests) 19ms
+ ✓ src/simulation/laao.test.ts (27 tests) 23ms
+ ✓ src/simulation/access/access.test.ts (16 tests) 590ms
+ ✓ src/ui/lab/lab.test.ts (12 tests) 660ms
+   ✓ lab render: no ground truth on the screens > renders the full lab in every mode without the engagement state, coach text, scores or meters 435ms
+ ✓ src/simulation/procedure.test.ts (12 tests) 33ms
+ ✓ src/progress/progress.test.ts (53 tests) 4833ms
+   ✓ screens render with a populated profile (server-side smoke test) > renders every progression screen without throwing 4686ms
+ ✓ src/simulation/haemo.test.ts (21 tests) 38ms
+ ✓ src/simulation/pci/pressureWire.test.ts (6 tests) 267ms
+(node:62439) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/input/views.test.ts > cost > input frame and table render stay well inside a 66 ms frame budget
+[S8 cost] input frame 0.0041 ms, table render (SSR) 0.873 ms
+
+ ✓ src/input/views.test.ts (8 tests) 113ms
+ ✓ src/simulation/physiology.test.ts (13 tests) 36ms
+ ✓ src/simulation/engagement.test.ts (10 tests) 8ms
+ ✓ src/simulation/circulation.test.ts (13 tests) 431ms
+(node:62428) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/integration.test.ts (9 tests) 1013ms
+ ✓ src/simulation/pciBench.test.ts (10 tests) 6ms
+ ✓ src/state/store.test.ts (6 tests) 8ms
+ ✓ src/simulation/contrast.test.ts (9 tests) 5ms
+ ✓ src/simulation/imaging/qca.test.ts (5 tests) 322ms
+ ✓ src/simulation/srs.test.ts (9 tests) 7ms
+ ✓ src/simulation/pci/guide.test.ts (5 tests) 408ms
+ ✓ src/simulation/pci/indeflator.test.ts (5 tests) 13ms
+ ✓ src/simulation/imaging/carm.test.ts (7 tests) 7ms
+ ✓ src/physics/client.test.ts (4 tests) 1564ms
+   ✓ physics client (in-thread) > with config "auto" the host benches at init and reports a validated configuration 1341ms
+(node:62468) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/team/team-ui.test.ts (4 tests) 40ms
+ ✓ src/simulation/pci/stentGeometry.test.ts (5 tests) 4ms
+ ✓ src/simulation/pci/ivus.test.ts (4 tests) 435ms
+ ✓ src/simulation/scoring.test.ts (7 tests) 3ms
+ ✓ src/simulation/projection.test.ts (6 tests) 3ms
+ ✓ src/simulation/calc.test.ts (9 tests) 4ms
+ ✓ src/simulation/caseGenerator.test.ts (9 tests) 12ms
+ ✓ src/physics/bench.test.ts (4 tests) 1614ms
+   ✓ auto configuration from measured costs > autoConfig measures configurations finest first on the app's geometry, stops at the first within the margin, and returns a validated one 1610ms
+ ✓ src/simulation/pressure.test.ts (5 tests) 10ms
+stdout | src/content/manual.test.ts > manual curriculum > covers the coverage-map topics (all of them when MANUAL_COMPLETE=1)
+manual curriculum: 247 of 247 topics taught
+
+ ✓ src/content/manual.test.ts (5 tests) 23ms
+ ✓ src/mentor/bridgePedal.test.ts (1 test) 30ms
+ ✓ src/simulation/iabp.test.ts (6 tests) 5ms
+ ✓ src/simulation/ecg.test.ts (5 tests) 7ms
+ ✓ src/utils/random.test.ts (7 tests) 23ms
+ ✓ src/simulation/pci/lesionAssessment.test.ts (5 tests) 213ms
+ ✓ src/simulation/clock/clock.test.ts (4 tests) 3ms
+ ✓ src/simulation/imaging/collimation.test.ts (2 tests) 51ms
+ ✓ src/simulation/angio.test.ts (3 tests) 205ms
+ ↓ src/content/track.check.test.ts (1 test | 1 skipped)
+stdout | src/content/cases/published.check.test.ts > published cases > validate, are unique and carry a real source URL
+20 published cases
+
+ ✓ src/content/cases/published.check.test.ts (1 test) 4ms
+stdout | src/render/xray/segments/segments.test.ts > real coronary tree > random rays through the tree: union geometry against ray marching (median, p95, p99, worst)
+real tree, random rays: 773 rays, median 0.000 %, p95 0.149 %, p99 0.420 %, worst 0.473 %; over 1 %: 0 joint partition, 0 through unresolved overlaps (excluded); batch.unresolvedOverlaps 0
+
+stdout | src/render/xray/segments/segments.test.ts > real coronary tree > branch origins: three rays through the first segments of every branch match ray marching (p99 under 2 %)
+real tree, branch origins: 582 rays, median 0.000 %, p95 0.161 %, p99 0.338 %, worst 0.459 % (D1-twig2)
+
+stdout | src/render/xray/segments/segments.test.ts > tile binning > bins 30,000 segments within the CPU budget (time relative to a minimal reference loop)
+binSegments: 30253 segments, 153020 entries, median 5.58 ms, reference loop 1.16 ms, ratio 4.8
+
+ ✓ src/render/xray/segments/segments.test.ts (34 tests) 20305ms
+   ✓ round cone interval (closed form) > matches brute-force membership on random cones and rays (interval length within 0.5 %) 1533ms
+   ✓ union integral against ray marching > random vessel trees (chains with taper, bends and branches): geometry exact, concentration attribution small 4244ms
+   ✓ union integral against ray marching > bifurcation origin: no dark dot (at most the larger chord + 1 %), and no gap 939ms
+   ✓ real coronary tree > random rays through the tree: union geometry against ray marching (median, p95, p99, worst) 4907ms
+   ✓ real coronary tree > branch origins: three rays through the first segments of every branch match ray marching (p99 under 2 %) 3201ms
+   ✓ hollow shells, ellipses and the laminar profile > elliptical (flattened) sections match brute force 1008ms
+   ✓ tile binning > brute force: no pixel is missing a segment that contributes to it 1146ms
+   ✓ end-on chains > a chain seen end-on (rays along its length) is integrated without double counting 355ms
+   ✓ host slots > an extension list removes every host it names 368ms
+   ✓ vessel families > children that run into each other away from their origins are counted once 2158ms
+ ✓ src/simulation/session/caseSession.test.ts (14 tests) 13578ms
+   ✓ case session: arrival, time-out and puncture > each step takes time on the session clock 609ms
+   ✓ case session: arrival, time-out and puncture > a front-wall puncture with pulsatile flashback lets the wire advance freely 624ms
+   ✓ case session: arrival, time-out and puncture > a back-wall puncture loses the flashback, the wire meets resistance and the patient reports pain 567ms
+   ✓ case session: arrival, time-out and puncture > forcing a wire from a bevel half in the wall makes it subintimal 620ms
+   ✓ case session: navigation, exchanges and handover > radial route reaches the root on fluoroscopy; blind advancing is challenged 805ms
+   ✓ case session: navigation, exchanges and handover > skipping the line flush leaves air in the line and raises the air-embolism hazard 957ms
+   ✓ case session: navigation, exchanges and handover > pulling the wire without back-bleeding and flushing without aspirating sends air into the coronary 942ms
+   ✓ case session: navigation, exchanges and handover > not zeroing or levelling gives offset pressures; zeroing and levelling removes the offset 881ms
+   ✓ case session: navigation, exchanges and handover > diagnostic angiography continues into ad hoc PCI with the same access, heparin, contrast and dose 838ms
+   ✓ case session: closure and delayed complications > closure is required to finish; patent haemostasis is documented with the pleth 1173ms
+   ✓ case session: closure and delayed complications > a femoral sheath pulled early with a short, misplaced compression presents a delayed bleed in recovery 4561ms
+   ✓ case session: closure and delayed complications > the handover note is graded against the case 808ms
+ ✓ src/physics/amplatz.test.ts (5 tests) 19177ms
+   ✓ prolapse rule with the preformed shape > an Amplatz hook seated in the left sinus, tip up, is not called prolapsed (the wave-1 rule called it prolapsed every time) 2038ms
+   ✓ prolapse rule with the preformed shape > a Judkins right pushed on in the left sinus still folds far beyond its free shape and is called prolapsed 1350ms
+   ✓ prolapse rule with the current Amplatz curves (catalogue AL1 and AL2) > an AL1 (normal root) and an AL2 (dilated root) pushed 48 mm past seating are never called prolapsed, their fold staying at least 15 degrees below the threshold 5905ms
+   ✓ prolapse rule with the current Amplatz curves (catalogue AL1 and AL2) > a genuine Amplatz prolapse is still caught: pushed 120 mm, the AL1 and the AL2 loop on the valve and are called prolapsed in most starts, each call with a fold beyond the threshold 6145ms
+   ✓ withdrawal of an engaged catheter > an engaged Amplatz left 1 stays in the left main, no more than 1 mm shallower, when pulled back 4 mm 3738ms
+ ✓ src/simulation/patient/patient.test.ts (54 tests) 31356ms
+   ✓ 12-lead ECG > LAD occlusion gives ST elevation in the anterior leads; RCA occlusion in the inferior leads 363ms
+   ✓ pharmacology > intracoronary adenosine produces transient AV block, at about the sourced complete-block rate 19112ms
+   ✓ pharmacology > a vasopressor raises and GTN lowers blood pressure; atropine reverses a vagal bradycardia 570ms
+   ✓ arrhythmias and arrest management > charge, clear and shock restore circulation; the delay worsens the outcome 402ms
+   ✓ arrhythmias and arrest management > injection into the conus branch carries a far higher VF risk than a normal injection 2337ms
+   ✓ review corrections > stable angina patients are quiet at rest: no ST shift, no STEMI criteria, no chest pain (24 seeds, 120 s) 4564ms
+   ✓ review corrections > STEMI patients arrive with elevation in the culprit territory only, and no ischaemia elsewhere 1341ms
+   ✓ review corrections > restores a snapshot across a change of coronary network (rewind after stenting) 381ms
+ ✓ src/render/xray/anatomy.test.ts (48 tests) 39606ms
+   ✓ coronary morphology > every branch belongs to its parent's injection side, for every variant and dominance 1533ms
+   ✓ coronary morphology > first diagonal and first marginal: near-ostial diameters as Divia Paul 2018, and not systematically smaller than the next 4307ms
+   ✓ coronary morphology > branch density: mid-tree transect crossings above the wave-1 5/5/5, towards the library 8/7/4 1252ms
+   ✓ coronary morphology > no generator artefacts: no branch re-enters its parent, no lumen runs through another one of its tree 804ms
+   ✓ coronary morphology > epicardial courses stay above the myocardium outside a flagged bridge, and every genome bridge is flagged 5764ms
+   ✓ coronary morphology > named branches keep their reach: the PDA runs down the posterior groove, D1 and OM1 are not cut short 6304ms
+   ✓ case library > every library case builds a finite tree within adult dimensions 17969ms
+ ✓ src/physics/calibration/calibration.test.ts (7 tests) 43193ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > Judkins right 4 engaged in the RCA: median shape error at most 1.5 mm over the distal 60 mm 4691ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > Judkins left family engaged in the left main, with the aortic root tilted as the silhouettes call for (FITTED_ORIENTATION, not yet applied by the renderer): median shape error at most 2.5 mm over the distal 60 mm, and the tilt explains most of the mismatch 8270ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > the app's current state: with the vertical root the renderer draws, the Judkins left family is NOT within 2 mm (median 3.74 mm, 14% of runs within 2 mm); only the Judkins right 4 is 10815ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > the fitted root orientation holds on held-out patients: fitted on one half of the patients and scored on the other (two folds), the left median stays at most 3.0 mm and at least 0.7 mm better than the vertical root 19258ms
+ ✓ src/physics/manoeuvres.live-1.4.test.ts (11 tests) 43233ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 1925ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 525ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 7907ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1149ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 3182ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2358ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 2107ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 9019ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 2486ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 12306ms
+ ✓ src/physics/manoeuvres.live-1.2.test.ts (11 tests) 47325ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 2364ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 675ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 9002ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > over-torque winds up the shaft and releases it as whip 332ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1324ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 3260ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2355ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 2361ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 9526ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 2391ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 13734ms
+ ✓ src/physics/manoeuvres.test.ts (12 tests) 51481ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 2448ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 681ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 12109ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > over-torque winds up the shaft and releases it as whip 452ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1155ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 3911ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2007ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 2990ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 12549ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 2913ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > dilated root on the frozen fixture (known gap, regenerate the fixture when the root is re-oriented): a JL5 in the dilated root engages within 3 of 12 starts of a JL4 in a normal root 8576ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > pushing on an engaged JR4 advances it further into the RCA without leaving it or reaching the ventricle 1688ms
+ ✓ src/physics/manoeuvres.live-1.0.test.ts (11 tests) 53187ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 2640ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 1016ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 12903ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > over-torque winds up the shaft and releases it as whip 472ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1162ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 4414ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2223ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 2960ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 9846ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 3330ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 12221ms
+
+ Test Files  68 passed | 1 skipped (69)
+      Tests  1163 passed | 15 skipped (1178)
+   Start at  04:46:01
+   Duration  72.24s (transform 8.39s, setup 0ms, collect 41.07s, tests 400.93s, environment 9ms, prepare 4.26s)
+
+exit 0

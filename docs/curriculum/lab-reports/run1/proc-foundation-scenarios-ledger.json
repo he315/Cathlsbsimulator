@@ -1,0 +1,305 @@
+{
+ "package": "proc-foundation-scenarios-ledger",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built proc-foundation-scenarios-ledger. Six of its seven acceptance criteria are met by tests and the typecheck, and the browser one is left for the browser stage. One thing outside my files needs a fix: six tests in src/content/content.test.ts now fail. They are not caused by a bad link. Those tests check links against a cut-down list that holds a single lesson, and default.launch.ts is the first real launch file to name lessons, so the cut-down check reports its three lessons as unknown. The full-content check in the same file passes, which shows the three lessons are real.\n\nWhat was built:\n- **Named scenarios.** Each scenario file in src/simulation/session/scenarios/ is picked up automatically. A scenario can override patient facts (renal function and the contrast ceiling are recomputed with the existing formulas), chart text and the access-site anatomy. It can also script events keyed to session moments, such as 'micro-wire', 'sheath-pull' or 'recovery+40min', add delayed events after closure, and set a start stage. 'default' overrides nothing; it is the random case 'New patient' opens, and its .launch.ts lists the six start stages under three lessons.\n- **Site overrides.** buildAccessSite takes an optional overrides argument, applied after every random draw, so a site built without overrides is unchanged.\n- **Autopilot.** src/simulation/session/autopilot.ts holds the six helpers moved out of caseSession.test.ts, plus fastForward(session, stage) and stageReached(), using public session methods only. On a femoral case it gives the weight-based heparin order the lab already offers, and before pulling the sheath it waits for the ACT to fall below the sourced threshold.\n- **Session modules.** Module files in src/simulation/session/modules/ are attached to every session automatically and reached with session.mod(id).\n- **CaseSession.**\n  - It writes 16 scored decisions through decide(), each with a lesson and, where one exists, a tip. A step done wrongly once stays wrong if it is later repeated cleanly.\n  - finish() returns the decisions and the scenario id.\n  - The hand-over now carries the hand-over contract's anticoagulation, antithrombotic, contrast and sheath fields, and every heparin bolus is recorded.\n  - askHelp() sets helpAskedAt; no 'Ask the attending' button yet (proc-tip-context mounts it).\n  - newCaseSession({ scenario, start }) applies the overrides and fast-forwards.\n- **Store.** It takes a scenario, start stage, launch mode and workspace, and opens the workspace that fits the stage. If the autopilot cannot reach the stage, the case opens at the chart with a notice. Each case runs as one LabRun (the class useLabRun wraps), and finish copies the session's decisions into that run's single logbook row.\n- **panels.tsx split.** Mechanically, into src/ui/access/panels/*.tsx, re-exported from panels.tsx. ChartPanel and OrdersPanel render sections registered in src/ui/access/chart/ and src/ui/access/orders/. After the case is finished, the handover summary lists the decisions with the tip beside each and an 'Open lesson' button.\n- **ProcedureLab.** It takes launches on mount and while open, has a Scenario picker next to 'New patient', and has the dev hooks __caseSession.scenario(id, stage?) and __caseSession.decisions().",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/default.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/default.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/autopilot.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/modules/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/site.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useProcedureStore.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/ChartPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/OrdersPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/TablePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/ClosurePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/RecoveryPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/HandoverPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/LogPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/AccessPicker.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/chart/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/orders/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/ProcedureLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/ledgerTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useProcedureStore.test.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios.test.ts (17 tests: fastForward to closure on a radial and a femoral seed, stage order, recovery on both routes, a start run inside newCaseSession, the default scenario changes nothing, DOAC plus raised creatinine shown in the chart with a recomputed MACD, chart and site overrides, scripted events at hooks and at recovery+40min, scenario delayed events, registry errors, profile recompute, modules attached, ticked, hooked and reached by mod(id), module registry errors, decide() records in finish().decisions, wrong steps recorded, wrong steps stay wrong when repeated, hand-over contract extensions)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/ledgerTips.test.ts (4 tests: the practice index lists the default scenario under each lesson its .launch.ts names and every lesson resolves; the cases cover all 16 scored steps; every tip id resolves in TIP_BY_ID and every lesson id resolves; ledgerRows puts each tip beside its decision)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useProcedureStore.test.ts (5 tests: launchToCase, a 'closure' start opens the Closure workspace with a sheath in, a launch mode becomes the session's and the run's mode, decide() records appear in finish().decisions and in the logbook row, logCase writes one row)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/caseSession.test.ts: 14 passed (existing tests now use the helpers moved to autopilot.ts)",
+     "npx vitest run src/simulation/session/scenarios.test.ts src/simulation/session/caseSession.test.ts: 31 passed",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts src/state/useProcedureStore.test.ts src/simulation/access/access.test.ts src/content/lab/reachability.test.ts: 30 passed",
+     "npx vitest run src/simulation/access/access.test.ts src/simulation/session/handover.test.ts src/ui/content/practiceIndex.test.ts src/ui/lab/labRun.test.ts: 54 passed",
+     "npx vitest run src/content/content.test.ts src/content/lab/reachability.test.ts: 58 passed, 6 failed. The full-content check 'existing content and every .launch.ts validate' passes. The 6 failures are the cut-down tests at lines 127-160 of content.test.ts: they now also receive three 'unknown lesson' errors for default.launch.ts (see outOfScope)."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit passes with no errors after the split (last run after all edits).",
+    "acceptance": [
+     {
+      "criterion": "autopilot.fastForward(session,'closure') on a radial and a femoral seed leaves a sheath in, the catheter out, heparin given and closureDone() false; existing caseSession tests pass using the moved helpers",
+      "status": "met",
+      "evidence": "scenarios.test.ts 'fastForward(session, 'closure') on a radial-right seed / on a femoral seed ...' both pass (they also check no critical errors and that the diagnostic lab was visited). caseSession.test.ts now imports aimedPose, prepare, advanceToFlash, gainAccess, navigate and exchange from ./autopilot; all 14 of its tests pass."
+     },
+     {
+      "criterion": "newCaseSession({ scenario }) with a DOAC and raised creatinine override shows them in session.chart with a recomputed MACD",
+      "status": "met",
+      "evidence": "scenarios.test.ts 'newCaseSession({ scenario }) with a DOAC and raised creatinine override ...': profile.doac is apixaban, creatinine is 210 \u00b5mol/L, macdMl equals the Cigarroa value for the new creatinine and is lower than the generated patient's, the engine has the same profile, chart.anticoag reads 'Apixaban (direct oral anticoagulant); last dose 10 h ago', chart.renal shows the creatinine and the new maximum contrast dose, and reviewing renal sets contrastBudgetMl to it."
+     },
+     {
+      "criterion": "session.decide() records appear in finish().decisions and in the logbook row",
+      "status": "met",
+      "evidence": "scenarios.test.ts 'session.decide() records appear in finish().decisions ...' (all 16 scored steps plus a custom record). useProcedureStore.test.ts 'session.decide() records appear in finish().decisions and in the logbook row': the store's finish() writes one useProgressStore logbook row whose decisions match the summary, with caseId 'procedure:default', and a second finish() writes no further row. 'logCase copies the decisions into the run and writes one row' checks the same through a LabRun with a captured log."
+     },
+     {
+      "criterion": "browser: __caseSession.scenario('default','closure') opens on the Closure tab with a sheath in; a lesson link with params opens the Full procedure on that scenario",
+      "status": "needs-browser",
+      "evidence": "Not checked in a browser, as instructed. The dev hook calls the store's newCase({ scenario, start }). useProcedureStore.test.ts shows newCase({ scenario: 'default', start: 'closure' }) sets workspace 'closure' with a sheath in and the catheter out, and that launchToCase maps link params correctly. ProcedureLab calls useLabLaunch('procedure', p => newCase(launchToCase(p))) and skips the random case while a launch is pending."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit passes after the split",
+      "status": "met",
+      "evidence": "The typecheck exits cleanly after the split into src/ui/access/panels/*.tsx (panels.tsx re-exports every panel, so ProcedureLab's import is unchanged)."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/simulation/session/scenarios/default.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "status": "met",
+      "evidence": "ledgerTips.test.ts: for each lesson named (pm-access-seldinger, pm-to-the-root-table, pm-closure-plan), the lesson exists in TRACKS and practiceForLesson lists { sim: 'procedure', scenario: 'default' }; the index reports no problems for the file, and the starts are the six autopilot stages. content.test.ts 'existing content and every .launch.ts validate' passes with the full content. The cut-down content tests that now fail are covered in outOfScope."
+     },
+     {
+      "criterion": "Tips: every ledger record that names a teaching tip id resolves in TIP_BY_ID, and the debrief shows that tip beside the decision",
+      "status": "met",
+      "evidence": "ledgerTips.test.ts drives four cases that cover all 16 decision ids: a clean radial case, a femoral case with a blind wire advance and an early, misplaced compression, a femoral closure device without an angiogram, and an anticoagulated femoral puncture. Every tipId resolves in TIP_BY_ID and every lessonId resolves to a lesson. ledgerRows(records, TIP_BY_ID) returns each decision's tips with their titles; that is what the handover summary renders beside each decision with 'Open lesson'. The rendering itself has not been looked at in a browser."
+     }
+    ],
+    "outOfScope": [
+     "src/content/content.test.ts (owned by found-launch-links), lines 114-160: the cut-down tests build `known` with launchKnown({ '/test/ct-demo.launch.ts': ... }), which merges every real src/**/*.launch.ts, but check them against a root holding only lesson l0. Any real .launch.ts that names lessons therefore adds 'unknown lesson' errors. default.launch.ts is the first real launch file to name lessons, so 6 of those tests now fail ('a sim block naming a known scenario...', 'an unknown scenario id fails', 'an unknown start id fails', 'an unknown mode fails', 'a link to a held-out scenario or variant fails', 'module sims, case practice entries and PCI-lab drill blocks...'). Fix: build `known` for those tests from the demo file alone (buildKnownLaunch({ '/test/ct-demo.launch.ts': { launch: DEMO } }) with the built-in drills), or keep only errors whose location is the test's block. Every later scenario package's .launch.ts will hit the same failure until this is changed."
+    ],
+    "notes": "Snapshots of the five files that already existed (caseSession.ts, caseSession.test.ts, site.ts, useProcedureStore.ts, panels.tsx, ProcedureLab.tsx) are in datasets/tmp/wp-snapshots/proc-foundation-scenarios-ledger/, with .started. The other listed files are new. Files modified after .started that are not in my list (engagement.ts, diagnosticContext.ts, src/ui/sim/*, src/ui/physics/*, useLabTips.ts and their tests) belong to the packages running in parallel; I did not touch them.\n\nThings a reviewer should know:\n- **The 16 decisions** have these ids: time-out-backed, time-out-before-puncture, local-anaesthetic, anticoagulated-route, sheath-aspirated, catheter-prepped, radial-heparin, wire-under-fluoroscopy, aspirate-before-flush, line-flushed, transducer-zero-level, femoral-act, femoral-compression, femoral-angiogram, patent-haemostasis and handover-note.\n  - Each one scores a judgement the session already made (an attending line, a critical error or an existing threshold), so no new clinical number was added.\n  - The ACT and compression wording uses the sourced FEMORAL constants.\n  - The lesson and tip ids were checked against the content and the tip registry.\n  - The expected answers appear only in the summary after finish().\n- **Autopilot settings.** The starting band inflation of 15 mL (the closure panel's existing default) and the femoral ACT wait loop (10 min between measurements, 4 h cap) are labelled MODEL PARAMETER in autopilot.ts comments. I did not add them to docs/realism/facts, which is not in this package's files.\n- **The autopilot's 'post-diagnostic' stage does no angiogram.** It calls returnFromLab with zero contrast and dose.\n- **Mode and logbook changes.** The store passes the session's mode to the LabRun as its launch mode, so the logbook mode always matches the session; the mode logic itself (policyFor, or a launch mode) is unchanged. The logbook caseId for a full case changes from the generated anatomy id to 'procedure:<scenario>' (source 'full-case', EPA still given explicitly), as labRun expects for scenario labs.\n- **Import cycles.** caseSession.ts imports autopilot.ts, and autopilot.ts imports SOURCED_DOSES from caseSession.ts. This is safe because autopilot.ts uses it only inside functions; the file headers say so. Module, scenario and chart/order section files must import CaseSession as a type only. panels.tsx and panels/*.tsx also import each other (for useSession, clock and ledgerRows), which works for the same reason.\n- **Later packages.** The plan says the next ones (proc-tip-context, access-multi-site) build on session.scenarioEvents(), hookAt, heparinDoses and helpAskedAt.\n- **Test speed.** The femoral 'recovery' fast-forward waits for the ACT in simulated time, so tests that use it take 5-10 s; every test file ran in under 25 s."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "The package is mostly complete and well built, but it should not be accepted until the three major items are fixed.\n\nWhat I checked myself:\n- **Typecheck:** `npx tsc -p tsconfig.app.json --noEmit` passes.\n- **Package tests:** these pass: scenarios.test.ts, caseSession.test.ts, ledgerTips.test.ts, useProcedureStore.test.ts, access.test.ts, handover.test.ts, reachability.test.ts, practiceIndex.test.ts and labRun.test.ts (66 tests in the four package files, 120 across these nine).\n- **content.test.ts:** 6 tests fail, for exactly the cause the builder gave. A lesson-scoped test is built from every real `*.launch.ts` but checked against a root that holds only lesson l0.\n- **The split:** a block-by-block diff against the snapshot shows it is mechanical. The only changes are the new imports, `export` on `Pleth`, the chart and orders section loops, and `LedgerList`.\n- **buildAccessSite:** without overrides it makes the same random draws in the same order, so sites are unchanged.\n- **Other files changed since .started:** engagement, pressure, diagnosticContext, useLabTips, ui/physics and ui/sim belong to the packages running in parallel. Nothing in them points to this package.\n- **Clinical numbers:** none added without a source. The ACT, compression time, band time and level/zero wording come from FEMORAL, SOURCED_DOSES or the existing session text.\n- **Live screens:** decisions appear only in the summary after finish(), and the session's 'decision' events go to telemetry only.\n- **Browser (port 5173, my own tab):**\n  - `__caseSession.scenario('default','closure')` opened on the Closure tab with sheath 6 in and the catheter out.\n  - A launch request (scenario, start 'sheath-in', access femoral, mode supervised) sent while the lab was open opened the Table tab with a femoral sheath, heparin given, and supervised mode on both the session and the run.\n\nThe three major problems:\n1. **Logbook rows collapse into one case.** Every random full case is now logged as `procedure:default`. caseKey() uses the raw caseId for the procedure lab, so only one passed full case can ever count towards Level II for the access EPAs.\n2. **Autopilot steps are logged as the learner's.** Up to 12 decisions the autopilot made are written to the ledger and the logbook as the learner's. A case opened at 'recovery' can then be logged as a passed full case.\n3. **The fast-forward freezes the page.** It runs synchronously on the main thread: about 0.8 to 1.7 s in the browser for most stages, and 6.4 s for a femoral 'recovery' start (10.6 s in Node).\n\nThe content.test.ts failure also needs a fix in a file this package does not own (found-launch-links) before the suite can go green.",
+    "findings": [
+     {
+      "where": "src/state/useProcedureStore.ts, newCase(): caseId: runCaseId(\"procedure\", scenarioId)",
+      "problem": "Before, every full case was logged under its own generated anatomy id (gen|rand|proc-<seed>). Now every random case is logged as 'procedure:default'. caseKey() in src/progress/competency.ts returns the raw caseId for lab 'procedure' with no date suffix. Level II for access-radial and access-femoral counts distinct passed practice cases (level2PracticePasses = 3), so full cases can now add only one distinct case towards it, ever. The Analytics replay check (replayable(caseId)) also no longer recognises these rows. The builder's report mentions the caseId change but not this effect.",
+      "severity": "major",
+      "fix": "Make random-patient scenarios distinct per patient. When the scenario has no fixed seed, use caseId: runCaseId(\"procedure\", scenarioId, seed), giving 'procedure:default~<seed>'; caseKey already treats '~' ids, and procedure-lab ids, as distinct by id. Keep 'procedure:<id>' when scenario.seed is set. Update useProcedureStore.test.ts to expect /^procedure:default~store-closure$/ and similar, and add a test: two finished default cases with different seeds give two different caseKey() values."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts newCaseSession() (fastForward then return) and src/state/useProcedureStore.ts logCase()",
+      "problem": "The autopilot plays the case through public methods that call decide(). A case opened at 'sheath-in' already holds 3 to 4 correct decisions, and one opened at 'closure' or 'recovery' holds 9 to 12; the browser showed 11 at a femoral 'recovery' start. The learner never made them. finish() returns them, the debrief marks them 'As expected', and logCase writes them, with decisionsCorrect counting them, to the logbook row. That row has epas access-radial or access-femoral and can pass. A learner can open at 'recovery', write the hand-over note and get a passed full case counted as access practice.",
+      "severity": "major",
+      "fix": "In newCaseSession, after fastForward(session, start), call a new public CaseSession method, e.g. clearAutopilotDecisions(), that empties the ledger (DecisionLedger.clear()). Set a readonly startStage: ScenarioStart on the session. In logCase, when startStage is past 'access', pass notes: `Opened at ${startStage}; earlier steps played by the autopilot` and passed: sum.passed && (startStage === 'chart' || startStage === 'access'), so a part-played case is never counted as access-EPA evidence. Add a scenarios.test.ts case: after newCaseSession({ start: 'closure' }), session.decisions() is empty, and a store finish() from that start logs passed false."
+     },
+     {
+      "where": "src/state/useProcedureStore.ts newCase() calling newCaseSession({ start }) synchronously; src/simulation/session/autopilot.ts waitForFemoralAct",
+      "problem": "fastForward runs every pending time-lapse (runPending) in one synchronous call on the UI thread, while the normal flow spreads it over frames. Measured in the browser: 'closure' 1.7 s including 0.8 s of waiting, a launch at 'sheath-in' 0.79 s, and 'recovery' on a femoral case 6.4 s; femoral 'recovery' took 10.6 s in Node. A lesson link or the dev hook freezes the page for seconds on a machine that already stalls.",
+      "severity": "major",
+      "fix": "Defer the build so the lab paints 'Preparing the patient\u2026' first. newCase sets { session: null, preparing: true } and builds in setTimeout(() => {...}, 0). Better, give fastForward a resumable form (fastForwardSteps(session, stage) as a generator, yielding after each prepare, gainAccess, navigate, exchange and each 10-minute ACT wait) and run it one step per animation frame. Have __caseSession.scenario return a Promise that resolves when the stage is reached. The ACT wait cost is the patient engine's sim time; cutting how many sim minutes are waited is not an option without changing the shared engine."
+     },
+     {
+      "where": "src/content/content.test.ts lines ~114-160 (owned by found-launch-links)",
+      "problem": "6 tests fail now that default.launch.ts names three lessons. The tests build `known` from every real *.launch.ts but validate a cut-down root holding only lesson l0. I confirmed the extra errors are exactly 'default.launch.ts scenario default: unknown lesson \u2026'. Every later scenario package will hit the same failure. This package cannot land with a green suite until that file changes.",
+      "severity": "major",
+      "fix": "Ask found-launch-links (or the orchestrator) to change content.test.ts so that `known` for the cut-down tests is built from the demo file only, e.g. `const known = buildKnownLaunch({ \"/test/ct-demo.launch.ts\": { launch: DEMO } })` with the built-in drills it already includes by default. Or filter errsFor results to errors whose location is the test's own lesson. Keep the full-content test 'existing content and every .launch.ts validate' as it is."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts decideFemoralAct()",
+      "problem": "correct requires acts.length > 0 even when no heparin was given. The session's own judgement only objects to a pull without an ACT when heparinU > 0 (\"You pulled the sheath without checking the ACT.\"), and the linked tip is about waiting for the ACT after heparin. A femoral case done without heparin is therefore always scored wrong, which contradicts the builder's claim that each decision scores a judgement the session already makes.",
+      "severity": "minor",
+      "fix": "const measured = this.acts.length > 0 || this.heparinU === 0; and given: this.heparinU === 0 ? \"No heparin given\" : \u2026 . Add a test: a femoral case with no heparin, compressed for FEMORAL.manualMinutes over the arteriotomy, records femoral-act as correct."
+     },
+     {
+      "where": "src/simulation/session/autopilot.ts waitForFemoralAct()",
+      "problem": "If the ACT has not fallen after 24 waits (4 h), the loop simply ends, and fastForward pulls the sheath with a high ACT. It records femoral-act as wrong and adds bleeding risk, even though the autopilot is meant to play clean technique and to throw AutopilotError when it cannot reach a stage.",
+      "severity": "minor",
+      "fix": "After the loop, throw new AutopilotError(\"recovery\", \"the ACT did not fall below the sheath-pull threshold\") so the store falls back to the chart with its notice. Have waitForFemoralAct return a boolean, or throw inside it."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts newCaseSession()",
+      "problem": "When fastForward throws, the half-played session is dropped without dispose(), so any module attach() side effects (listeners, timers) leak. The store then builds a second session.",
+      "severity": "minor",
+      "fix": "try { if (start !== \"chart\") fastForward(session, start); } catch (e) { session.dispose(); throw e; }"
+     },
+     {
+      "where": "src/state/useProcedureStore.ts newCase() launchNotice; src/ui/sections/ProcedureLab.tsx notice",
+      "problem": "The on-screen notice ends with the internal error text, e.g. \"(autopilot could not reach 'sheath-in': no arterial flashback)\". That is developer wording in UI copy.",
+      "severity": "minor",
+      "fix": "Show only \"This case could not be set up at the requested stage; it opens at the chart.\" and send e.message to console.warn in DEV builds."
+     },
+     {
+      "where": "src/simulation/session/scenarios/index.ts applyProfileOverrides()",
+      "problem": "When heightCm or weightKg is overridden, bmi is recomputed but habitus is not. habitus is derived from BMI in generatePatient and drives the imaging chain, so a scenario's obese or very lean patient keeps the generated patient's habitus.",
+      "severity": "minor",
+      "fix": "Recompute habitus with the same mapping whenever bmi changes. Best is to export a habitusFromBmi(bmi) helper from src/simulation/patient/patient.ts and use it in both places. That file is outside this package, so record it in outOfScope, or duplicate the one-line mapping with a comment pointing to its source line until that change lands."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts runScript() (called from slowTick every frame)",
+      "problem": "While a scenario has scripted events pending, every frame runs the regex in parseHookSpec, allocates a result object for each pending event, and builds a new array from scriptPending.filter() plus a `due` array. This allocates in the per-frame tick path.",
+      "severity": "minor",
+      "fix": "Parse each event's hook spec once in the constructor into a private array of { hook, afterS, ev }. In runScript, loop with an index, compare against hookAt, and splice out and fire only the events that are due, allocating nothing when none is due."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts time-out decision 'time-out-backed'",
+      "problem": "The tip attached to this decision is 'access-planning-site-history' (\"Check the access history first\"). It is about previous access, not about confirming time-out items from the chart, so the debrief shows a weakly related tip beside it.",
+      "severity": "minor",
+      "fix": "Use a tip that teaches backing time-out items with the record, e.g. 'pci-mon-time-out', or leave tipIds out. Keep lessonId 'pm-planning-steps' if that lesson covers it."
+     },
+     {
+      "where": "src/ui/sections/ProcedureLab.tsx Scenario picker; src/simulation/session/scenarios/index.ts ProcedureScenario",
+      "problem": "The picker lists every registered scenario. ProcedureScenario has no heldOut flag, so once a later package adds an exam-only scenario, the picker will offer it for free practice and expose a held-out case.",
+      "severity": "minor",
+      "fix": "Add heldOut?: boolean to ProcedureScenario, check it against the .launch.ts entry in collectScenarios or a test, and filter the picker with PROCEDURE_SCENARIOS.filter((sc) => !sc.heldOut)."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 11,
+    "rejected": [
+     "Finding 4 (src/content/content.test.ts, 6 failing cut-down launch-link tests): I did not apply this one. The finding is right, but the file belongs to found-launch-links and is outside this package's list. I re-ran it and it still fails with exactly the same 6 tests (53 pass). The fix has to be made there: build `known` for the cut-down tests from the demo file only, or filter errors to the test's own lesson, and leave the full-content test as it is."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/scenarios.test.ts (23 passed)",
+     "npx vitest run src/state/useProcedureStore.test.ts (7 passed)",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts (4 passed)",
+     "npx vitest run src/simulation/session/caseSession.test.ts (14 passed)",
+     "npx vitest run src/ui/lab/integration.test.ts (9 passed)",
+     "npx vitest run src/content/content.test.ts (53 passed, the same 6 cut-down launch-link tests fail; that file is outside this package, see rejected)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit passes with no errors.",
+    "notes": "I checked each finding against the code and applied 11 of the 12. The only one not applied is the content.test.ts change, because that file belongs to another package.\n\n**What changed**\n1. **Case ids.** A random patient is now logged as runCaseId(\"procedure\", scenarioId, seed), giving 'procedure:default~<seed>'. A scenario with a fixed seed keeps 'procedure:<id>'. A store test checks that two random patients give two different caseKey() values.\n2. **Autopilot decisions and pass status.**\n   - CaseSession has `readonly startStage` (a new `start` option) and clearAutopilotDecisions(), which empties the ledger.\n   - newCaseSession runs the fast-forward, then scenario.state, then clears the ledger when it started past the chart or ran a state.\n   - logCase passes `passed: sum.passed && (start is chart or access)`. Past 'access' it adds the note \"Opened at <stage>; earlier steps played by the autopilot\".\n   - Tests: a 'closure' start has an empty ledger and then records the learner's own femoral-angiogram decision; a store finish from 'recovery' logs passed false with that note.\n   - ledgerTips.test.ts now plays its cases with fastForward, because a start stage clears the ledger.\n3. **Page freeze.**\n   - autopilot.ts has fastForwardSteps(s, stage), a generator that yields after each step: prepare, access, heparin, catheter, every 300 frames of wire driving, exchange, the diagnostic hand-over, catheter out, each ACT wait and closure. fastForward runs it to the end, so tests and callers behave as before.\n   - caseSession.ts adds newCaseSessionStepped(o, pause, cancelled). It pauses before building anything and between steps, and disposes and returns null when a newer case is asked for.\n   - The store's newCase now returns a Promise. A chart start still builds at once. Any later start first sets { session: null, preparing: true }, so the existing 'Preparing the patient\u2026' line shows, then builds with setTimeout(0) pauses (not requestAnimationFrame, so it also runs in a hidden pane). A build token drops any build that has been replaced.\n   - __caseSession.scenario is now async and resolves when the stage is reached. The mount effect does not start a second case while one is preparing.\n   - Total compute time is unchanged; only the page stays responsive.\n4. **No heparin, no ACT needed.** decideFemoralAct treats a case with no heparin as measured, with the given text \"No heparin given\". There is a test for it.\n5. **ACT never falls.** waitForFemoralAct now throws AutopilotError('recovery', ...) after the 24 waits instead of pulling the sheath on a high ACT.\n6. **Failed start.** Both builders dispose the session before rethrowing. A test checks that the module disposer runs.\n7. **Notice wording.** The screen shows only the plain sentence; e.message goes to console.warn in DEV builds.\n8. **Habitus.** applyProfileOverrides recomputes habitus whenever height or weight is overridden. It uses an exported habitusFromBmi() in scenarios/index.ts that copies the mapping in patient.ts, with a comment pointing to it. A test checks the copy matches generatePatient on several seeds.\n9. **Per-frame work in runScript.** Hook specs are parsed once in the constructor. runScript scans with an index and allocates nothing unless an event is due. Due events are taken out before any fires, so an event that fires a hook cannot run the same event twice.\n10. **Time-out tip.** time-out-backed now names the tip 'pci-mon-time-out' (\"Time out with the whole team\"). It is filed under the PCI lab, but it is the only time-out tip there is. The lesson id stays 'pm-planning-steps'.\n11. **Held-out scenarios.** ProcedureScenario has `heldOut?: boolean`. The picker lists `PROCEDURE_SCENARIOS.filter(sc => !sc.heldOut || sc.id === scenarioId)`, so an exam case that is already open stays selectable. A test checks every scenario's flag matches its .launch.ts entry.\n\n**Outside this package (outOfScope)**\n- src/content/content.test.ts belongs to found-launch-links; it needs the change described in the rejected item.\n- src/simulation/patient/patient.ts should export habitusFromBmi so the copy in scenarios/index.ts can be removed.\n- src/progress/logbook.ts: replayable() only recognises gen| ids, so full-case rows ('procedure:default~<seed>') still cannot be replayed from Analytics. Adding replay means teaching it the 'procedure:<scenario>~<seed>' form.\n\n**Not done here:** the browser acceptance check, __caseSession.scenario('default','closure') opening on the Closure tab with a sheath in, is still for the browser stage. The call now returns a Promise, so it has to be awaited."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-16) at http://localhost:5173 and went to the Full procedure section from the sidebar. ProcedureLab mounted and window.__caseSession was there with scenario() and decisions(). The Scenario picker sat next to 'New patient' and listed 'default: Routine diagnostic case'.",
+     "__caseSession.scenario('default','closure') returned {scenario:'default', workspace:'closure', sheath:'6', catheterInBody:false, notice:null} in about 1.4 s. The Closure tab had the tab-active class and the wrist band controls showed. heparinU was 5000, closureDone() was false and criticalErrors was 0. decisions() was empty because the ledger is cleared after the autopilot runs. I repeated this 8 times and got the same result each time.",
+     "With the lab already open, a launch from the app's useUiStore.openSim('procedure', {scenario:'default', start:'closure', access:'femoral'}) was picked up through the store subscription. It opened a new femoral case on the Closure tab with a 6 Fr sheath in, the catheter out, heparin 6100 U and closureDone() false. The femoral closure controls showed: Measure ACT, femoral angiogram, manual compression and the closure device.",
+     "openSim('procedure', {scenario:'default', start:'post-diagnostic', access:'radial-left', mode:'independent', workspace:'table'}) applied every param: left radial, independent mode in both the store and the session, Table workspace, catheter still in. The header showed 'independent'.",
+     "Lesson link: in Academy > PCI step by step > Closing the access site (pm-closure-plan), the box 'Practise this in the lab' said 'Full procedure (access \u2192 wire) / Routine diagnostic case / Opens at Routine diagnostic case \u00b7 guided mode.' Its Open button switched to the procedure section and replaced the earlier case (the seed changed) with scenario 'default' at the chart start.",
+     "Ledger and debrief: I played a femoral case and then a radial case from the chart with autopilot.fastForward(session,'recovery') on the live session, then called store.finish() and opened the Handover tab. Each showed 'Decisions: 11 of 11 as expected'. Each row had label, You, Expected, the tip titles (12 data-tip rows; every tipId resolved) and an 'Open lesson' button (11). 'Open lesson' went to Academy > PCI step by step > Planning the case (pathway {trackId:'pci-manual', moduleId:'pm-planning', lessonId:'pm-planning-steps'}).",
+     "Logbook: useProgressStore.profile.logbook got one row per finish(): lab 'procedure', source 'full-case', caseId 'procedure:default~<seed>', scenarioId 'default', and decisions identical to the summary.",
+     "Layout at 1440x900: the Closure 'Apply the band' button can be clicked (elementFromPoint hits it) and the debrief ledger list reads cleanly. At the pane's native 650 px width the attending caption covers the closure controls (see problems).",
+     "Console: there were no errors or warnings in this tab. The only messages were Vite debug lines, including 'Could not Fast Refresh (\"clock\" export is incompatible)' for src/ui/access/panels.tsx, which forces a full reload whenever that file is edited. Edits from other packages reloaded the page several times while I worked, so I ran each check as a single javascript_tool call.",
+     "Side effect: each test finish() wrote a real logbook row to this browser profile's progress store. I added 4 rows; the sidebar counter now reads 4 logged. I did not delete them.",
+     "I edited no files. Tab tab-16 was reset to the desktop viewport and closed."
+    ],
+    "problems": [
+     {
+      "where": "src/simulation/session/autopilot.ts, fastForwardSteps, 'sheath-in' block (around line 247)",
+      "problem": "The autopilot does not use clean technique on radial cases. It never gives the intra-arterial spasmolytic, so every radial fast-forward past sheath-in (8 of 8 at 'closure', and also at 'post-diagnostic' on left radial) logs the complication 'Radial artery spasm'. The patient says 'My arm is really hurting', and the catheter is then pulled through the spastic artery, so the learner opens on 'Ready for closure' with the attending warning 'Pulling through a spastic artery hurts and can tear it...'. That complication is the autopilot's, but it stays in session.complications. It reaches the hand-over (spasm: spasmSeen > 0.5), the summary and the logbook row's complications through logCase, so the learner is charged with it. The tests did not catch this because they only check criticalErrors, and spasm is a minor complication. Checked in the browser: after scenario('default','sheath-in'), calling s.order('verapamil'); s.runPending() before fastForward(s,'closure') gave no complications and spasmSeen 0.15 in 4 of 4 runs.",
+      "severity": "major",
+      "fix": "Change the sheath-in step to: `if (s.heparinU === 0) s.order(s.access === 'femoral' ? 'heparin-weight' : 'heparin-radial'); if (s.access !== 'femoral' && s.ia.length === 0) s.order('verapamil'); s.runPending();` This is the lab's own sourced verapamil order (SOURCED_DOSES.verapamilMg). Update the 'sheath-in' header comment to say so. In scenarios.test.ts, extend the radial fastForward('closure') test to assert `s.complications.length === 0`. Also consider clearing session.complications along with the ledger at the end of newCaseSession, or tagging them as autopilot-caused, so anything the autopilot causes never reaches the learner's logbook row."
+     },
+     {
+      "where": "src/simulation/session/scenarios/default.ts and default.launch.ts (title)",
+      "problem": "The default scenario overrides nothing, so the indication is random, but it is titled 'Routine diagnostic case'. In the browser the header read '66 y woman \u00b7 st-elevation myocardial infarction' or '53 y man \u00b7 st-elevation myocardial infarction' while the Scenario picker and the lesson box ('Opens at Routine diagnostic case') called it a routine diagnostic case. The label contradicts the case on screen.",
+      "severity": "minor",
+      "fix": "Rename the title in both files to something accurate, for example 'Random patient', and keep the two titles identical. Alternatively, give 'default' an indication override of stable angina and keep the 'Routine diagnostic case' title, if routine is what the lessons intend."
+     },
+     {
+      "where": "src/simulation/session/scenarios/default.launch.ts and the lesson practice entry for pm-closure-plan",
+      "problem": "The closure lesson's practice link opens the case at the chart ('Opens at Routine diagnostic case \u00b7 guided mode.'), not at the 'Ready for closure' start. The learner has to play the whole access and diagnostic sequence before reaching the closure step the lesson teaches.",
+      "severity": "minor",
+      "fix": "If LaunchFile supports per-lesson params, have pm-closure-plan link with start 'closure' and pm-to-the-root-table with start 'sheath-in'. Otherwise split 'default' into lesson-specific entries, or add an inline launch block with params {scenario:'default', start:'closure'} in src/content/manual/pci-manual/13-closure.ts. The second option is outside this package's files, so report it to the content owner."
+     },
+     {
+      "where": "src/ui/sections/ProcedureLab.tsx (CaseLab workspace column with the absolute 'bottom-3' attending caption)",
+      "problem": "At the preview pane's 650 px width, the attending caption (pointer-events-auto, absolutely positioned at the bottom of the workspace column) sits over the Closure panel's 'Band inflation' and 'Apply the band over the sheath' controls. elementFromPoint at the button's centre returned the caption, so the controls cannot be clicked until the message clears. At 1440x900 there is no overlap. This may predate this package.",
+      "severity": "minor",
+      "fix": "Put the caption in normal flow below the panel (or as a sticky footer with padding reserved, for example pb-20 on the workspace scroller) instead of absolute over the content. Alternatively, reserve bottom padding equal to the caption height in the workspace column below the xl breakpoint."
+     },
+     {
+      "where": "src/ui/access/panels.tsx",
+      "problem": "panels.tsx exports non-component helpers (clock, ledgerRows, useSession) next to components. Vite logs 'Could not Fast Refresh (\"clock\" export is incompatible)' and fully reloads the app whenever this file or its importers change, which wipes the live case. This only affects development.",
+      "severity": "minor",
+      "fix": "Move clock, ledgerRows and useSession into src/ui/access/panels/util.ts (no JSX components) and import them from there in the panel files. panels.tsx would then re-export only components."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 5 (move clock, ledgerRows and useSession out of panels.tsx so Fast Refresh works): deferred as out of scope rather than judged wrong. The fix needs a new non-test module, src/ui/access/panels/util.ts, and that file is not in this package's list. Whoever owns it should create util.ts with the three helpers, switch the eight panels/*.tsx files, ProcedureLab.tsx and ledgerTips.test.ts to import from it, and leave only component re-exports in panels.tsx. Today the only importers outside panels/ are ProcedureLab.tsx and ledgerTips.test.ts. It only affects development.",
+     "Part of finding 1 (also clear session.complications at the end of newCaseSession): not done. Clearing them would also delete complications that a scenario's scripted events fire at hooks during the fast-forward (for example at 'micro-wire'), and those belong to the case. I fixed the cause instead: the autopilot now uses clean technique, and a test checks that no complication is left behind."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/scenarios.test.ts (24 passed)",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts src/state/useProcedureStore.test.ts (12 passed)",
+     "npx vitest run src/simulation/session/caseSession.test.ts (14 passed)",
+     "npx vitest run src/content/content.test.ts (6 'lab launch links' tests still fail; they are outside this package, see notes)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: none of this package's files have errors. The errors left are in other packages' files that are being edited at the same time: src/simulation/pci/equipment.test.ts (readdirSync from node:fs) on the last run, and earlier runs also flagged pci/actions/scenario.ts, pci/scenarios/legacy.ts and pci/scenarios/packs/core.ts.",
+    "notes": "Four of the five findings are fixed. Finding 5 is deferred because it needs a file outside this package's list, and part of finding 1 is declined (reasons above). All of this package's tests pass and its files typecheck. The in-app checks have not been rerun yet.\n\n1. Radial spasm caused by the autopilot (major, fixed). In src/simulation/session/autopilot.ts, the 'sheath-in' step now runs the heparin order, waits for it to finish, and on a radial route then gives the lab's own verapamil order (SOURCED_DOSES.verapamilMg) if no vasodilator is already active (checked with the public s.vasodilatorEffect(); s.ia is private). The suggested one-line fix would not have worked: every order takes time and keeps the session busy, so a second order sent straight after the first is refused. My first attempt confirmed this: the case still logged the spasm. If verapamil is refused, the autopilot now throws an AutopilotError. The header comment is updated.\n   - After the fix, 12 of 12 radial seeds (6 right, 6 left) reached closure with no complications and spasmSeen of about 0.15. Before, all of them logged 'radial-spasm' with spasmSeen 1.0.\n   - In scenarios.test.ts, the two fastForward('closure') tests now assert s.complications is empty. A new test runs 2 left and 2 right radial seeds opened at 'closure' and asserts no complications and spasmSeen at most 0.5.\n\n2. Scenario title (fixed). The title is now 'Random patient', identical in default.ts, default.launch.ts and the fallback in caseSession.ts (line 495).\n\n3. The closure lesson opened at the chart (fixed inside this package). LaunchFile already supports per-lesson links with a start, so default.launch.ts now:\n   - keeps lessonIds ['pm-access-seldinger'] on the scenario, which opens at the chart;\n   - adds links {scenario:'default', start:'sheath-in', lessonIds:['pm-to-the-root-table']} and {scenario:'default', start:'closure', lessonIds:['pm-closure-plan']}.\n   default.ts lessonIds now match the launch file. A new ledgerTips test checks that each of those two lessons gets exactly one default-scenario practice entry, with the right params.start, and that the titles match.\n\n4. Attending caption covering the Closure controls (fixed). In src/ui/sections/ProcedureLab.tsx the workspace column is now a flex column. On the Ultrasound ('access') and fluoroscopy views the caption stays a subtitle over the image. On the form panels (chart, table, closure, recovery, handover) it sits in normal flow below the panel, so it cannot cover a control. It is one wrapper in a fixed place whose class changes with the view, so switching workspace does not remount it or replay the last message. Not yet checked at 650 px in the browser.\n\n5. Fast Refresh in panels.tsx: deferred, see rejected.\n\nOutside this package: the 6 'lab launch links' tests in src/content/content.test.ts still fail. The cut-down known-lesson fixture in that test now reports unknown lessons from several real .launch.ts files, for example src/simulation/pci/scenarios/packs/core.launch.ts (lad-focal: 'pm-antithrombotics-heparin' and others), not only this package's. The fixture needs to ignore real launch files or use the full lesson set; that change belongs to whoever owns content.test.ts.\n\nFiles changed: autopilot.ts, scenarios/default.ts, scenarios/default.launch.ts, caseSession.ts (title only), scenarios.test.ts, ledgerTips.test.ts, ProcedureLab.tsx. All are under /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ (scenarios/ and the session files in src/simulation/session/, ProcedureLab.tsx in src/ui/sections/). A temporary debug test was created and then deleted."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "autopilot.fastForward(session,'closure') on a radial and a femoral seed leaves a sheath in, the catheter out, heparin given and closureDone() false; existing caseSession tests pass using the moved helpers",
+      "met": true,
+      "evidence": "src/simulation/session/scenarios.test.ts 'autopilot > fastForward(session, 'closure') on a radial-right / femoral seed ...' both pass (sheath non-null, catheter.inBody false, heparinU > 0, closureDone() false, no complications). caseSession.test.ts line 4 imports aimedPose, prepare, advanceToFlash, gainAccess, navigate, exchange from ./autopilot; all 14 caseSession tests pass."
+     },
+     {
+      "criterion": "newCaseSession({ scenario }) with a DOAC and raised creatinine override shows them in session.chart with a recomputed MACD",
+      "met": true,
+      "evidence": "scenarios.test.ts test of that name passes: apixaban 10 h and creatinine 210 \u00b5mol/L appear in chart.anticoag and chart.renal text, macdMl equals cigarroaMacd(weight, 210/88.4) and is below the base patient's, engine.profile matches, contrastBudgetMl follows after reviewing the renal item. Implemented by applyProfileOverrides in src/simulation/session/scenarios/index.ts."
+     },
+     {
+      "criterion": "session.decide() records appear in finish().decisions and in the logbook row",
+      "met": true,
+      "evidence": "scenarios.test.ts 'decision ledger > session.decide() records appear in finish().decisions...' passes; src/state/useProcedureStore.test.ts 'session.decide() records appear in finish().decisions and in the logbook row; a part-played case never passes' and 'logCase copies the decisions into the run and writes one row' pass (row.decisions ids equal sum.decisions ids, one row only). logCase in useProcedureStore.ts writes through LabRun.finish."
+     },
+     {
+      "criterion": "browser: __caseSession.scenario('default','closure') opens on the Closure tab with a sheath in; a lesson link with params opens the Full procedure on that scenario",
+      "met": true,
+      "evidence": "No verify report exists for this package, so I checked it myself in a background tab on the running dev server (localhost:5173). With the Full procedure open, window.__caseSession.scenario('default','closure') resolved to {scenario:'default', workspace:'closure', sheath:'6', catheterInBody:false, notice:null}; the store showed startStage 'closure', preparing false and an empty ledger. openSim('procedure', {scenario:'default', start:'closure', access:'femoral'}), the call BlockRenderer's lesson practice buttons make, opened the Full procedure on the Closure workspace (right groin, heparin given). Store test 'a scenario at closure opens on the Closure workspace with a sheath in' and the launchToCase test also cover this."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit passes after the split",
+      "met": true,
+      "evidence": "The final run exited 0 with no output. One earlier run failed with a single error in src/simulation/pci/equipment.test.ts (readdirSync not exported from node:fs). That file belongs to package pci-device-catalogue, which was being edited at the same moment. The error was gone on the rerun and does not involve this package's files."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/simulation/session/scenarios/default.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "met": true,
+      "evidence": "src/simulation/session/ledgerTips.test.ts 'practiceIndex lists every scenario in default.launch.ts under the lessons it names, and every named lessonId resolves' passes, as do the root-table and closure start-link test (pm-access-seldinger, pm-to-the-root-table, pm-closure-plan resolve) and src/ui/content/practiceIndex.test.ts."
+     },
+     {
+      "criterion": "Tips: every ledger record that names a teaching tip id resolves in TIP_BY_ID, and the debrief shows that tip beside the decision",
+      "met": true,
+      "evidence": "ledgerTips.test.ts passes: every tipId on records from radial, femoral, device and OAC cases resolves in TIP_BY_ID and every lessonId resolves. 'the summary's ledger rows show each named tip beside its decision' checks ledgerRows (src/ui/access/panels.tsx), which HandoverPanel.tsx uses (lines 178-202) to render tips and 'Open lesson' only in the summary."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/session/scenarios.test.ts src/simulation/session/ledgerTips.test.ts src/simulation/session/caseSession.test.ts (3 files, 43 tests passed)",
+     "npx vitest run src/state/useProcedureStore.test.ts (7 tests passed)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/simulation/session/handover.test.ts (2 files, 20 tests passed)",
+     "Browser (background tab, localhost:5173): window.__caseSession.scenario('default','closure') -> workspace 'closure', sheath '6', catheter out, no notice; openSim('procedure', {scenario:'default', start:'closure', access:'femoral'}) opened the Full procedure on Closure"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors on the final run. One earlier run showed a single error, TS2305 in src/simulation/pci/equipment.test.ts (package pci-device-catalogue, edited concurrently). It cleared on its own and is not in this package."
+   }
+  ]
+ }
+}

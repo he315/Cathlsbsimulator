@@ -1,0 +1,157 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Pre-case complication forecast. Before the first engagement in any PCI scenario, a short form asks for: the two or three likeliest complications for this lesion and plan (choices from Brilakis's location tree: dissection, aorto-coronary dissection, thrombosis, embolisation, side-branch occlusion, spasm, pseudolesion, entrapment, intramural haematoma, perforation), the first move for each, and the support plan (prophylactic device, device on standby with a 4 Fr femoral sheath, or none). The debrief shows the forecast beside what the complications engine actually produced.",
+    "learnerDoes": "Writes the forecast from the scenario's lesion features (for the calcified mid-RCA: dissection and entrapment; for the LCx STEMI: thrombus embolisation and no-reflow), runs the case, then compares.",
+    "success": "At least one forecast complication matches an engine event, or the debrief records which risk factor was missed; the support choice matches Brilakis 14.1.2 for the scenario's haemodynamics and lesion.",
+    "tips": [
+      "pci-principles-explain-unexpected",
+      "pci-principles-support-standby"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-forecast"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Stop-or-continue checkpoint. The lab tracks air kerma, contrast volume (against a ceiling of 3.7 × GFR entered at the start, or 3.7 × estimated creatinine clearance in the CTO scenario) and elapsed time, announces the cumulative air kerma at each 1 Gy and every 30 minutes with the contrast total alongside (Brilakis 28.2.2.4.8 for the dose call; the contrast call is this module's extension), raises 'high-radiation-dose' above 5 Gy and 'high-contrast-volume' as the ceiling approaches, and at each change of wire or strategy pauses with a decision point: continue (with a named next step), change strategy, bail out (STAR without stent in the CTO scenario), stage, or stop. Dose, contrast and time at each decision appear in the debrief.",
+    "learnerDoes": "Sets limits before starting; at each checkpoint reads the numbers, judges progress and complications, and chooses.",
+    "success": "In the mid-RCA CTO scenario, stops or bails out when air kerma exceeds 5 Gy without crossing or progress; in a multivessel scenario, stages the second lesion after a complication or when contrast exceeds the ceiling.",
+    "tips": [
+      "pci-stop-checkpoint",
+      "pci-stop-after-complication",
+      "pci-cto-strategy-stop-rules",
+      "pci-planning-contrast-ceiling",
+      "pci-planning-radiation-limit"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-stopping"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Abrupt-closure scenario that starts in the closed state, with a cause-finding step before treatment. The complications engine already produces closure; add a scenario variant that opens with TIMI 0–1 flow after predilatation and one hidden mechanism chosen from: dissection (spiral defect with staining), plaque embolisation (smooth segment, distal branch cut-offs, therapeutic ACT), thrombosis (low ACT, failed venous line), spasm (smooth narrowing that relaxes after intracoronary nitroglycerin), pseudolesion (narrowings at bends with a stiff wire in a tortuous vessel; resolve when the wire is withdrawn so only the soft segment lies distally), intramural haematoma (IVUS crescent beyond a stent edge), and a balloon in a tight lesion blocking contrast (vessel reappears with the trapping manoeuvre). The lab raises 'acute-closure' (and 'coronary-spasm', 'new-narrowing-tortuous', 'thrombus' or 'dissection' as appropriate; 'hypotension' when the scenario drops the pressure). The learner must name the mechanism, using the trace, two views, the ACT, the wire position and imaging, before any treatment is accepted. Wire withdrawal during the closure is recorded as an error. Wire protection before closure: if the learner pushes a balloon or stent forcefully against resistance, the guide backs out ('guide-backout') and, if the push continues, the wire is pulled back proximal to the lesion; a dissection that then occurs cannot be stented until the vessel is rewired. Spasm responds only after a delay of up to 2 minutes after nitroglycerin; a spasm variant that does not relax lets the learner image it (OCT or IVUS) to tell spasm from a fixed stenosis.",
+    "learnerDoes": "Keeps the wire, checks trace and ACT, takes two views, images if needed, names the mechanism, then treats it (stent for dissection; aspiration and vasodilators and no stent for plaque embolisation; ACT correction, GP IIb/IIIa or cangrelor and thrombectomy for thrombosis; nitroglycerin 100–300 micrograms for spasm after a pressure check (reduced or withheld below 100 mmHg systolic); equipment withdrawal for pseudolesion after excluding dissection; distal-first stenting for haematoma) and supports the pressure. Before closure, prepares the lesion, re-dilates rather than forcing a stent through resistance, and watches the guide and distal wire tip while pushing.",
+    "success": "Correct mechanism named before treatment in at least 4 of 5 runs; no stent placed for plaque embolisation; the wire is never withdrawn; vasopressor or support started while hypotension persists. No loss of wire position from forceful device advancement; spasm judged only after waiting for the nitroglycerin to act.",
+    "tips": [
+      "pci-closure-name-cause",
+      "pci-closure-balloon-hides-distal",
+      "pci-closure-spasm",
+      "pci-closure-collapse-support",
+      "pci-mon-keep-wire-in-crisis",
+      "pci-thrombus-check-act-first",
+      "pci-interp-pseudolesion",
+      "pci-ocx-imh-distal-first",
+      "pci-mon-guide-backout"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-acute"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Dissection grading and rescue. When the engine creates a lesion or edge dissection, a grading step asks for the NHLBI type (A–F) after washout. If the scenario removes the wire (or the learner withdraws it), the lab raises 'wire-subintimal' for a second wire that enters the wall; the learner can test the position with a microcatheter plus workhorse wire (free passage vs resistance), IVUS, or an injection into a collateral donor; a microcatheter tip injection with the tip in the wall enlarges the false lumen. Selective injections after the dissection are counted; non-selective injection with the guide disengaged is allowed. Stent delivery can fail in the calcified scenario, requiring predilatation or a guide extension. Add a 'minor-dissection' event (non-flow-limiting) or an exclusion field to the tip trigger, so pci-dissection-leave-small does not appear beside a flow-limiting dissection; until then the tip opens with 'Only if flow is normal'.",
+    "learnerDoes": "Grades the dissection, stops selective injections, confirms the true lumen without a tip injection, stents quickly, and leaves small non-flow-limiting or proximal edge dissections alone.",
+    "success": "Correct NHLBI type; no balloon or stent before true-lumen confirmation; no microcatheter tip injection with a subintimal tip; small non-flow-limiting dissections left untreated; edge dissections over 60° of arc or 3 mm on OCT, or into the media and over 3 mm on IVUS, covered.",
+    "tips": [
+      "pci-dissection-stop-selective",
+      "pci-dissection-deliver-stent",
+      "pci-dissection-workhorse-test",
+      "pci-dissection-true-lumen-lost",
+      "pci-dissection-leave-small",
+      "pci-interp-dissection-nhlbi"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-dissection"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Diagnostic-catheter dissection. The injection engine already models ostial injury and a 'dissected' pressure kind. Add consequences: an injection with a damped or ventricularised trace (or through a deeply seated catheter) can produce an ostial dissection with a linear opacity on the next run; the trace shows the dissected pattern so the tip diag-dissection-diagnostic-catheter appears. Offer the choices: stop injecting, retract gently, pass a coronary wire through the diagnostic catheter, take second access and a guide (handover to the PCI lab), or, in a 'no on-site PCI' setting, oxygen, analgesia, intracoronary nitrate and urgent transfer.",
+    "learnerDoes": "Recognises the dissection, stops injecting, and chooses the ping-pong rescue or transfer according to the setting.",
+    "success": "No further selective injection after the dissection appears; correct route chosen for the setting.",
+    "tips": [
+      "diag-dissection-diagnostic-catheter"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-dissection"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Scenario that starts after a forceful injection through a wedged 8 Fr AL guide in a proximal RCA lesion: contrast stains the right sinus. Add an ostial stenting step: the learner must stop RCA injections, keep the wire, choose a stent that can be expanded enough to seal, position it with 1–2 mm protruding into the aorta under IVUS, flare it at high pressure, check the distal vessel by injecting through a dual-lumen microcatheter or aspiration catheter, and decide on follow-up (CT after and at 24 hours, blood pressure control). A variant extends the stain up the ascending aorta when the learner injects again; another adds an effusion and aortic regurgitation at follow-up to trigger surgical referral. Add an event 'aortocoronary-dissection' (contrast staining from the ostium into the sinus or aortic wall) to LAB_EVENTS and raise it with 'dissection' and vessel RCA, so that pci-aortocoronary-after can trigger on it rather than on any RCA or left main dissection in the finish phase (its interim trigger); raise 'poor-guide-support' in the set-up phase so the prevention tip appears before the injury.",
+    "learnerDoes": "Stops injecting, seals the ostium with correct protrusion under IVUS, checks the distal vessel without the guide, sets up imaging and pressure control, and chooses conservative care or surgery from the triggers.",
+    "success": "Stent covers the ostium with 1–2 mm protrusion on IVUS; no further guide injections; correct surgical decision against Brilakis's and Oxford's triggers.",
+    "tips": [
+      "pci-aortocoronary-prevent",
+      "pci-aortocoronary-after",
+      "pci-cto-retro-aortocoronary-dissection"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-aortocoronary"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Guide-induced left main dissection. In an LAD scenario through an EBU guide, forceful balloon withdrawal or deep intubation can produce a left main dissection (vessel LM, event 'dissection'), with or without bifurcation involvement and with a stable or falling pressure. The learner must classify bifurcation involvement and stability and choose according to Oxford's table (PCI, conservative, surgery, or two-stent PCI while discussing surgery), prepare femoral access for support, wire both branches when the bifurcation is involved, confirm with IVUS rather than OCT, and stent quickly; simultaneous kissing stents are allowed only with an unstable patient and at least a 7 Fr guide. When the bifurcation is spared, a stent from the left main ostium into the LAD crosses the circumflex ostium: the learner should wire the circumflex first if it can be done quickly, confirm the LAD wire with IVUS if time allows, and finish with POT.",
+    "learnerDoes": "Recognises the dissection, applies the decision table, and performs or refers.",
+    "success": "Decision matches the table for the scenario's bifurcation status and stability; femoral access prepared; no OCT flush or repeat selective injection before the left main is sealed. Circumflex wired before a left main to LAD stent unless the patient's state allows no delay.",
+    "tips": [
+      "pci-lm-dissection-decide",
+      "pci-lm-dissection-bailout",
+      "pci-sks-emergency-only"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-aortocoronary"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Side-branch rescue added to the side-branch exposure the engine already models. In the focal mid-LAD scenario, a diagonal with ostial disease can be wired and jailed; after main-vessel stenting the engine can make it compromised (TIMI under 3, stenosis over 70% or type B dissection) or occluded. Rescue actions: rewire through a distal strut, confirm with a low-profile balloon, remove the jailed wire with gentle traction (a hard pull risks fracture and deep guide intubation), kissing inflation, final POT; if rewiring fails, a 1.0–1.5 mm balloon over the jailed wire (or a torquable microcatheter first), rewiring with a dual-lumen microcatheter, or conversion to inverted DK crush. Add a lesion event 'bifurcation' to LAB_EVENTS, raised from the plan phase when a significant branch sits at the lesion, so that pci-sb-predict can move from its interim trigger (phase 'plan' alone, which the PCI lab does not yet report) to phase plan/wire with event 'bifurcation', before the strategy is chosen. The existing 'wire-side-branch' event means a wire that has left the lesion vessel and is not a substitute. The PCI lab should also report a 'plan' phase before the guide is engaged. The prediction step should ask whether the branch needs preserving (size, territory) and whether occlusion is likely, and route a high likelihood towards a planned two-stent strategy (cp-bifurcation-two-stent).",
+    "learnerDoes": "Predicts the risk, protects the branch, recognises compromise or occlusion, and performs the rescue sequence in order.",
+    "success": "Branch wired and jailed when its ostium is diseased; main-vessel stent sized to the distal vessel; branch flow restored without removing the jailed wire before rewiring is confirmed.",
+    "tips": [
+      "pci-sb-predict",
+      "pci-bif-assess-side-branch",
+      "pci-bif-occluded-sb-rescue",
+      "pci-bif-confirm-inside-struts"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-side-branch"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "End-of-case complications report and classification under the fifth universal definition of myocardial infarction (2026). After any case in which the engine produced a lost side branch, dissection, slow or no flow or embolisation, the finish step asks the learner to record each event and its final state, order an ECG and a troponin against any pre-procedure value, and, when a complication occurred during the case, order imaging of the territory. A simulated troponin course (with or without a rise still present at 6 hours), clinical or ECG features (chest pain, new ischaemic ECG change, new Q waves, unexplained deterioration under sedation) and an echo result (new regional wall-motion abnormality or not) are then shown, and the learner classifies the result as acute myocardial injury without infarction or procedure-related myocardial infarction. Complications that arose on the table need both the angiographic complication and the imaging finding; after an initially uncomplicated case one of them in the treated territory is enough; troponin multiples (for example over 5 times the sex-specific upper reference limit after PCI) are a pointer to imaging, not a threshold.",
+    "learnerDoes": "Writes the complications section, orders troponin, ECG and imaging when indicated, and classifies the result.",
+    "success": "Every engine event documented; imaging ordered whenever a complication on the table is followed by a rising troponin; correct classification in at least 4 of 5 simulated results.",
+    "tips": [
+      "pci-pmi-document"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-pmi"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "New ST elevation during a diagnostic study from an iatrogenic occlusion (air, thrombus or debris embolus, or dissection): raise 'st-elevation' in the inject or views phase with chest pain, hypotension or bradycardia, so diag-stemi-during-cath appears. Choices: airway, oxygen only if the saturation is below 90% (100% oxygen if the cause is air), hand over for immediate PCI, mechanical support chosen for the patient if shock follows (routine balloon pumping is not the default), inotropes if revascularisation is impossible, no thrombolysis, transfer in a centre without on-site PCI.",
+    "learnerDoes": "Recognises the occlusion, starts the first measures and chooses immediate PCI or transfer.",
+    "success": "Immediate revascularisation chosen (or transfer without on-site PCI); thrombolysis not given; oxygen given only for hypoxaemia or air embolism.",
+    "tips": [
+      "diag-stemi-during-cath"
+    ],
+    "lessonIds": [
+      "cm-principles-closure-pmi"
+    ],
+    "priority": "P3"
+  }
+]

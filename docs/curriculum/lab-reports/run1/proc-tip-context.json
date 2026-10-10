@@ -1,0 +1,315 @@
+{
+ "package": "proc-tip-context",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built proc-tip-context. The full case now has a tips panel in the right column, under the haemodynamic monitor. It merges access, diagnostic, PCI and haemodynamic tips through one pure context function. caseTipContexts(session, workspace, stage) builds one context per lab for each workspace, following the plan's table. In the access workspace it reports the current step and the site together: puncture until the wire runs free, wire while the wire is at the needle, sheath from needle removal until the sheath is flushed.\n\nCaseSession gained accessStep(), activeEvents() and noteTipsShown(), and its summary now carries tipsShown. activeEvents() reads an EventLog on the patient clock. That log holds:\n- events the session raises from what the operator sees or feels: venous-flashback, no-flashback, radial-spasm, radial-loop, perforation, bleeding, haematoma, pressure-damped, air\n- patient events from the shared adapter, sampled from the vitals at most once per second\n- scenario and module events\n\nselectCaseTips() applies a cap per lab and a total cap. At an access step it also leaves out tips written for another step at the same site, and ranks tips for the current step first, so wire and sheath tips do not crowd the puncture. caseTips.ts exports raises for the reachability report.\n\nThe PCI and haemodynamic contexts get only patient and scenario events, so an arm perforation never brings up a coronary perforation tip. In the reachability report the access lab went from 5 to 85 satisfiable tips out of 89. 85 of the 87 waiting tips naming this package are now satisfiable; the 2 cold-leg tips are not (see criteria).\n\nThe dev hook __caseSession.tips() is async. It returns the mode, whether tips are visible, the workspace, stage, step, events, contexts, the panel's ids and the tips shown so far.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/CaseTipsPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/ProcedureLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.test.ts (14 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.reach.test.ts (3 tests)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts: 17 passed",
+     "npx vitest run src/content/lab/reachability.test.ts: 5 passed (access 89 tips, 85 satisfiable, 85 ready; pci 97 satisfiable and 95 ready; haemo 3 satisfiable)",
+     "npx vitest run src/simulation/session/caseSession.test.ts src/simulation/session/scenarios.test.ts src/simulation/session/handover.test.ts: 48 passed",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts src/state/useProcedureStore.test.ts src/ui/lab/integration.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/eventLog.test.ts src/ui/lab/useContextTips.test.ts: 57 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors (tests are included in this config)",
+    "acceptance": [
+     {
+      "criterion": "caseTips.test.ts: a session advanced to a femoral sheath yields access step 'sheath' and route 'femoral'; a radial session at the wrist never yields a femoral-only tip",
+      "status": "met",
+      "evidence": "Test 'a femoral session reports puncture, wire and sheath in turn...': once the sheath is in, accessStep() is {step:'sheath', site:'femoral', route:'femoral'} and the context is {lab:'access', phase:'sheath', phases:['femoral'], route:'femoral'}. After the flush the step is null, and the table workspace still reports phase sheath. Test 'a radial session never yields a femoral-only tip': at the chart, puncture, wire, sheath and after heparin, across all 7 workspaces, no tip whose route excludes radial appears, either in tipsFor(ctx, 1000) over every context or in the panel."
+     },
+     {
+      "criterion": "A context { lab:'access', phase:'closure', route:'radial' } returns access-radial-remove-now, access-radial-band-inflation and access-radial-patency-check within the default limit",
+      "status": "met",
+      "evidence": "tipsFor(ctx) with the default limit of 6 contains all three and no femoral-only tip. A femoral closure context shows no radial-only tip. In the case itself (radial, start 'closure') the panel's closure selection also contains all three, within the total cap of 7."
+     },
+     {
+      "criterion": "mcs-largebore-limb-check is not returned unless limb-ischaemia is active",
+      "status": "met",
+      "evidence": "No case context returns it in any workspace, with or without limb-ischaemia, because the full case does no large-bore procedure and so builds no mcs context. With a test scenario that scripts limb-ischaemia, the case shows access-closure-cold-leg at closure and access-cx-cold-leg-six-ps is reachable. A large-bore mcs context returns mcs-largebore-limb-check only once the case's active events, including limb-ischaemia, are added."
+     },
+     {
+      "criterion": "browser: __caseSession.tips() in guided mode at the femoral puncture lists access-femoral-scan-bifurcation; in exam mode the panel is empty",
+      "status": "needs-browser",
+      "evidence": "Covered in node tests without a browser. At the femoral puncture in guided mode, the panel's selection (the same caseTipContexts, selectCaseTips and caseTipLimits calls the hook makes) includes access-femoral-scan-bifurcation and access-needle-flashback-check. In exam mode tipsVisible is false even after askHelp, the selection is empty, and LabTipsPanel renders nothing. The hook itself (ProcedureLab.tsx, DEV only) has not been called in a browser."
+     },
+     {
+      "criterion": "Tips (a new test file beside src/ui/access/caseTips.ts): at phase 'puncture', tipsFor(ctx, 20) includes access-needle-flashback-check and access-central-vein-no-blood; every waiting.ts entry naming proc-tip-context becomes satisfiable, so the reachability waiting count for the access lab falls by at least their number",
+      "status": "partly",
+      "evidence": "caseTips.reach.test.ts. A real radial puncture taken through the back wall raises no-flashback, and tipsFor(ctx, 20) includes access-needle-flashback-check. access-central-vein-no-blood needs route jugular or subclavian, and the full case has no such site (AccessRoute is femoral, radial-right or radial-left). The test therefore shows it does not appear at the wrist and does appear when the same context is set to route 'jugular'. Of the 87 waiting tips naming this package, 85 are now satisfiable (2 of them were already reachable through a diagnostic borrow). The access lab count went from 5 to 85 of 89. The 2 cold-leg tips are not satisfiable: access-cx-cold-leg-six-ps and access-closure-cold-leg need limb-ischaemia, which only a scenario script raises in the full case. The test checks they become satisfiable once it is raised. The waiting count itself falls only when tip-retarget-catchup edits waiting.ts; until then the report shows these tips as 'ready'."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: add the new MODEL PARAMETER entries. MP_TIPS.sampleS = 1 s and MP_TIPS.spasmLevel = 0.5 in caseSession.ts (0.5 is the level raoFactors already counts as spasm). The panel caps CASE_TIP_LIMITS, CASE_TIP_LIMITS_AT_ACCESS and STEP_BONUS in caseTips.ts are display settings, not clinical values.",
+     "src/ui/access/panels/HandoverPanel.tsx (or the full-case debrief): list session.tipsShown / SessionSummary.tipsShown with 'Open lesson'. The session records them, but no debrief screen shows them yet.",
+     "src/content/lab/raisable/waiting.ts (tip-retarget-catchup): 85 access entries are now ready. The full case's pci plan and finish contexts also make 95 PCI waiting tips ready (they are reachable in an ACS case or after ad hoc PCI), which the catchup should check before treating them as raised by the PCI lab.",
+     "access-central-vein-no-blood needs a jugular or subclavian site in the full case: types AccessRoute, src/simulation/access/site.ts and route.ts (the access-venous package).",
+     "The limb-ischaemia tips (access-cx-cold-leg-six-ps, access-closure-cold-leg) need a full-case scenario in src/simulation/session/scenarios/ that scripts limb-ischaemia, or a limb-ischaemia model in the closure code. Iliac dissection (access-cx-iliac-dissection-crossover) is not modelled either.",
+     "src/ui/lab/LabTipsPanel.tsx labels its help button 'Ask for a tip'. The design text says 'Ask the attending'; the button calls the store's askHelp, which is that request. Changing the label is outside this package."
+    ],
+    "notes": "I snapshotted the two existing files (caseSession.ts and ProcedureLab.tsx) before editing, into datasets/tmp/wp-snapshots/proc-tip-context/ with their relative paths, and created .started. The other three listed files are new.\n\nDesign choices to check:\n1. caseSession.ts now imports two framework-free modules from ui/lab: EventLog and PatientEventAdapter/PATIENT_EVENTS. This puts a value import from ui into simulation. Without it the session could not hold the 10 s hypotension window on its own clock.\n2. The tip log runs on the patient clock, because the adapter raises at vitals.t. Telemetry 'lab.event' rows carry tWall = session time.\n3. Retroperitoneal bleeds raise no 'bleeding'. Their cue is the hypotension the adapter raises, so the tip context never names the cause. The nurse-reported groin and forearm swellings and pseudoaneurysm hold 'haematoma'; a rebleed raises 'bleeding'.\n4. The ACT feeds 'low-act' only once the case has gone to PCI, because the adapter's ACT goal is the PCI goal.\n5. caseTips.ts imports caseSession.ts as a value (for CASE_SESSION_EVENTS and CASE_PATIENT_EVENTS), so the declaration cannot drift from what the session raises. The reachability test therefore loads the session module; it still runs in milliseconds.\n6. The step filter and step bonus are a selection rule in caseTips.ts only; tips.ts is unchanged. Without them, femoral wire and sheath caution tips pushed access-femoral-scan-bifurcation out of the puncture panel.\n7. When the case is handed to the diagnostic or PCI lab, caseTipContexts returns no context, since that lab shows its own tips.\n8. One test sets the wire's perforation flag directly to simulate a forced hydrophilic wire. The hypotension test overrides engine.vitals so that it returns a fixed low cuff reading.\n\nThe whole suite was not run, per the machine limits; only the files listed above were."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Mostly complete and sound. The package needs one fix before it can be accepted. Checks: both test files pass (17/17), reachability.test.ts and caseSession.test.ts pass (19/19), and tsc -p tsconfig.app.json is clean. I tested the browser criterion myself in a background tab of the running dev server. __caseSession.tips() for a guided femoral case at the access workspace (step puncture) listed access-femoral-scan-bifurcation, though only 8th of 8. In exam mode, even after askHelp, it returned visible=false and ids=[], and no Tips panel was rendered. I diffed the snapshots: caseSession.ts and ProcedureLab.tsx change only as the report describes. Every other file under src/ newer than .started belongs to another package's file list (haemo-study-session-and-tips, pci-device-catalogue, pci-scenario-registry), or is a new test beside one of them. Shared engines keep their defaults: tips.ts, eventLog.ts and patientEvents.ts are unchanged and the adapter's thresholds are unchanged. The per-frame path is clean: sampleTipEvents returns early on the 1 s gate, and the panel recomputes at the 8 Hz re-render using a JSON key. Labs this package does not touch behave as before. The panel uses its own selectCaseTips rather than useContextTips. That is an acceptable deviation, because per-lab caps cannot be expressed through useContextTips' single limit. The blocking defect: a radial case can still show a femoral-only tip. Contexts outside the access workspace carry no site phase, and the test defines 'femoral-only' by `route` alone, so it misses this. The other findings are minor ground-truth and coverage gaps, plus out-of-scope items the builder correctly reported.",
+    "findings": [
+     {
+      "where": "src/ui/access/caseTips.ts caseTipScore/fitsStep (lines 176-199); src/ui/access/caseTips.test.ts femoralOnly (line 21)",
+      "problem": "A radial session can show a femoral-only tip, breaking acceptance criterion 1. The chart, fluoro, table and closure contexts carry no site phase (access('sheath') with route 'radial'). tipScore matches phases as a union, so a tip whose trigger is phase [stage, 'femoral'] with no route still matches. Reproduced: radial-right session, start 'sheath-in', wire perforation, table workspace. The panel shows access-sheath-ooze-upsize ('Bleeding around a femoral sheath: upsize it', when {phase:['sheath','femoral'], event:['bleeding']}). The radial chart also shows access-planning-hostile-groin ({phase:['plan','femoral']}). In the other direction, access-radial-spasm-no-traction matches femoral closure and complication contexts if radial-spasm is ever active. The test misses this because femoralOnly checks only when.route.",
+      "severity": "major",
+      "fix": "Add a site filter in caseTips.ts and apply it in caseTipScore next to fitsStep:\n```ts\nconst SITE_PHASES: readonly LabPhase[] = [\"femoral\", \"radial\"];\nexport function fitsSite(tip: LabTip, ctx: LabContext): boolean {\n  if (ctx.lab !== \"access\" || tip.lab !== \"access\" || !ctx.route) return true;\n  const sites = (tip.when.phase ?? []).filter((p) => SITE_PHASES.includes(p));\n  return !sites.length || sites.includes(ctx.route as LabPhase);\n}\n```\nIn caseTipScore, use `if (score === null || !fitsStep(tip, ctx) || !fitsSite(tip, ctx)) return null;`. You may exempt ctx.phase === 'plan' if hostile-groin should stay as a reason to choose radial. In caseTips.test.ts, widen femoralOnly to `(t) => (!!t.when.route?.length && !t.when.route.some(r => r === 'radial' || r === 'distal-radial')) || (!!t.when.phase?.includes('femoral') && !t.when.phase.includes('radial'))`. Add an assertion that ids(shown(s, 'table')) does not contain access-sheath-ooze-upsize, using the radial perforation session from the 'forced hydrophilic wire' test. Do the same with selectCaseTips (shown), not only with tipsFor."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts sampleTipEvents (armWire / MP_TIPS.spasmLevel lines)",
+      "problem": "radial-spasm is raised from the hidden model level wire.spasm >= 0.5, sampled every second. Spasm also builds from anxiety in slowTick while the wire is still. The spasm tips (verapamil, no traction) can therefore appear before the operator has any cue: no wire move, no pain, no 'spasm' wire event (that fires at 0.75). This contradicts the file's own rule, 'never from a hidden diagnosis'.",
+      "severity": "minor",
+      "fix": "Delete `const armWire = ...; if (armWire && this.wire.spasm >= MP_TIPS.spasmLevel) this.raiseTip(\"radial-spasm\");` from sampleTipEvents. In commandWire, after `this.spasmSeen = Math.max(...)`, add `if (this.access !== \"femoral\" && advance !== 0 && this.wire.spasm >= MP_TIPS.spasmLevel) this.raiseTip(\"radial-spasm\");`. That is the felt resistance on a move; the spasm event and the patient's pain stay as they are. Add a test: a radial session with the wire in the arm, high anxiety and no moves raises no radial-spasm."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts hubTipEvents / passBackWall",
+      "problem": "no-flashback is raised only after a 'back-wall' puncture event, which is hidden model state. With no blood at the hub, the operator cannot tell a needle short of the artery from one that has gone through it. The event, shown in the DEV row and used by any future no-flashback tip, therefore reveals which one it is. No case-reachable tip uses it yet (access-central-vein-no-blood needs jugular or subclavian), so the impact today is small.",
+      "severity": "minor",
+      "fix": "Replace passBackWall with what the operator sees: a flashback that was there and has stopped. Rename it to passHadFlash. Reset it to false on 'skin-pass'. In hubTipEvents, set it to true when f.kind !== 'none'. Raise 'no-flashback' when f.kind === 'none' && this.passHadFlash. Remove the `this.passBackWall = true` in the back-wall case. Keep the wire-resistance 'no-lumen' raise. The existing back-wall test still passes, because the flash is seen first."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts patientTipEvents field initialiser",
+      "problem": "The design lists high-contrast-volume, and the adapter raises it only from the engine's own contrast total (v.contrast.fractionOfMacd). When the diagnostic or PCI lab returns with returnFromLab({contrastMl, ...}) and patientAdvanced is not set, that contrast goes into labTotals, not the engine. A case that used most of its maximum contrast dose in angiography therefore never raises high-contrast-volume at closure or recovery.",
+      "severity": "minor",
+      "fix": "Construct the adapter with a ceiling check that includes the lab totals: `private readonly patientTipEvents = new PatientEventAdapter(this.tipEvents, { contrastHigh: (c) => c.totalMl + this.labTotals.contrastMl >= PATIENT_EVENT_THRESHOLDS.contrastFraction * this.profile.renal.macdMl });`. Import PATIENT_EVENT_THRESHOLDS from ../../ui/lab/patientEvents. Add a test: returnFromLab('diagnostic', { contrastMl: 0.9 * macdMl, fluoroS: 100 }), then wait(2), then activeEvents() contains high-contrast-volume."
+     },
+     {
+      "where": "src/ui/access/caseTips.ts STEP_BONUS and CASE_TIP_LIMITS_AT_ACCESS; header lines 36-41",
+      "problem": "The header says tips of the current step rank before tips of the site alone, but a site-only tip with a route outranks them. For example, access-root-femoral-no-waveform ('Wire resistance: transduce the femoral sheath', phase ['femoral'] and route femoral, caution) scores 2.5 at the puncture, against 2 for a 'do' step tip. In the browser, a guided femoral case at the access workspace had st-elevation and chest-pain active (an ACS presentation). The phase-less PCI context took one of the 8 slots, and the acceptance tip access-femoral-scan-bifurcation came 8th of 8. Any further event, such as venous-flashback or hypotension, pushes it out, so the browser criterion is fragile.",
+      "severity": "minor",
+      "fix": "Either set STEP_BONUS = 2 and correct the header text, or reserve the access slots at the access workspace with `CASE_TIP_LIMITS_AT_ACCESS = { perLab: { access: 8, diagnostic: 1, pci: 1, haemo: 1 }, total: 10 }`. Add a test that pins access-femoral-scan-bifurcation in shown(s, 'access') at the femoral puncture with an ACS indication (scenario or indication: 'STEMI') and an active patient event."
+     },
+     {
+      "where": "src/ui/access/caseTips.test.ts lines 168 and 305",
+      "problem": "Two test titles claim more than the tests check. 'a needle through the back wall raises no-flashback; a sheath in the vein raises venous-flashback' never tests the flushSheath venous path (the raiseTip('venous-flashback') added in flushSheath has no test). 'raises declares every event, phase and route' checks phases and routes but not events.",
+      "severity": "minor",
+      "fix": "Add a test that puts a femoral sheath into the vein (aim at the vein as the 'needle in the femoral vein' test does, run the wire, then removeNeedle, insertSheath and flushSheath), then expect activeEvents() to contain 'venous-flashback'. Or retitle the existing test. In the raises test, add `for (const e of c.events ?? []) expect(r.events, `${c.lab} ${e}`).toContain(e);` for sessions without a scenario."
+     },
+     {
+      "where": "src/ui/access/panels/HandoverPanel.tsx (not in this package)",
+      "problem": "Design 'lessonAndCaseLinks' says the debrief lists the tips shown (session.tipsShown). The session records them and SessionSummary.tipsShown carries them, but no screen shows them. Separately, LabTipsPanel's button reads 'Read the lesson', not 'Open lesson', and 'Ask for a tip', not 'Ask the attending'. The builder reported both points correctly as out of scope.",
+      "severity": "minor",
+      "fix": "Out of scope: a follow-up package that owns HandoverPanel.tsx or the case debrief should list SessionSummary.tipsShown with TIP_BY_ID titles and an openLesson(lessonId) link. The owner of src/ui/lab/LabTipsPanel.tsx should add an optional askLabel prop, which CaseTipsPanel then passes as 'Ask the attending'."
+     },
+     {
+      "where": "src/content/lab/raisable/waiting.ts; docs/realism/facts; src/simulation/access/site.ts and route.ts; src/simulation/session/scenarios/",
+      "problem": "These items are outside this package's files and the builder reported each one. 85 waiting entries are now ready but not yet retargeted. MP_TIPS.sampleS and MP_TIPS.spasmLevel are not yet in docs/realism/facts. access-central-vein-no-blood cannot be reached in the full case (no jugular or subclavian site), so criterion 5 is only partly met: that tip is shown only with a hand-made route 'jugular' context. The two cold-leg tips need limb-ischaemia, which only a scenario script raises.",
+      "severity": "minor",
+      "fix": "Out of scope. Pass these to tip-retarget-catchup (waiting.ts), the facts owner (MODEL PARAMETER entries for MP_TIPS), access-venous (jugular and subclavian sites) and a full-case scenario that scripts limb-ischaemia. Record criterion 5 as partly met."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts imports (EventLog, PatientEventAdapter from ../../ui/lab)",
+      "problem": "The simulation layer now has value imports from src/ui/lab. Both modules are framework-free with type-only imports, so there is no cycle or React dependency. The layering is still inverted, and it ties the session to UI-folder files that other packages edit.",
+      "severity": "minor",
+      "fix": "Accept for now. In a later foundation package, move eventLog.ts and patientEvents.ts to src/simulation/lab/ and leave re-exports in src/ui/lab, so existing imports keep working."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 6,
+    "rejected": [
+     "Finding 7 (HandoverPanel debrief list of tipsShown; LabTipsPanel 'Open lesson' / 'Ask the attending' labels): not rejected on substance, but out of scope. HandoverPanel.tsx and src/ui/lab/LabTipsPanel.tsx are not this package's files. Needs a follow-up: list SessionSummary.tipsShown with TIP_BY_ID titles and an openLesson link in the debrief, and add an askLabel prop to LabTipsPanel that CaseTipsPanel would pass as 'Ask the attending'.",
+     "Finding 8 (waiting.ts retargets, MP_TIPS facts entries, jugular/subclavian sites, a limb-ischaemia full-case scenario): out of scope, as the reviewer says. Pass to tip-retarget-catchup (85 ready waiting entries), the facts owner (MODEL PARAMETER entries for MP_TIPS.sampleS and MP_TIPS.spasmLevel in docs/realism/facts), access-venous (jugular and subclavian sites for access-central-vein-no-blood) and a scenario package that scripts limb-ischaemia in the full case. Criterion 5 is partly met.",
+     "Finding 9 (caseSession importing EventLog and PatientEventAdapter from src/ui/lab): accepted as is, as the reviewer suggests. Both modules are framework-free. A later foundation package should move them to src/simulation/lab/ and leave re-exports in src/ui/lab."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts (23 passed: 20 + 3)",
+     "npx vitest run src/simulation/session/caseSession.test.ts (14 passed)",
+     "npx vitest run src/simulation/session/scenarios.test.ts (24 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors",
+    "notes": "I checked every finding against the code and applied findings 1 to 6. Only package files were edited: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.ts, src/ui/access/caseTips.test.ts and src/simulation/session/caseSession.ts. CaseTipsPanel.tsx and ProcedureLab.tsx did not need changes.\n\n1 (major, site leak), confirmed: tipsFor on the radial table context returns access-sheath-ooze-upsize. I added a site filter, fitsSite(), in caseTips.ts. In any access context with a route, a tip that names the femoral or radial site phase is shown only if it names the route's site. caseTipScore now applies it next to fitsStep. There is no exemption for 'plan', so access-planning-hostile-groin no longer appears in a radial case. The header comment explains the rule.\nTests: femoralOnly now also catches femoral-only site phases, and there is a matching radialOnly. everyMatch now uses the panel's own scoring (caseTipScore over LAB_TIPS), so the radial walk-through is checked on both shown and everyMatch. A new test covers the radial arm-perforation session: ooze-upsize matches under tipsFor but is absent from the table's shown tips and everyMatch, hostile-groin is absent at the chart, and no femoral-only tip appears in any workspace. A new fitsSite unit test covers both directions, including access-radial-spasm-no-traction in femoral closure and complication contexts.\n\n2, confirmed: the radial-spasm event no longer comes from the 1-second sampling of wire.spasm. It is raised in commandWire on a non-zero move in a radial case with spasm at or above MP_TIPS.spasmLevel. I made the same change in commandCatheter, since the removed sampled check also covered a catheter in the arm. The doc comments for the event and for MP_TIPS were updated. New test: with the wire and catheter in the arm and the hidden level at 0.95, waiting raises nothing; a wire move raises the event.\n\n3, applied: passBackWall is renamed passHadFlash. It is reset on each skin pass and set whenever the hub shows a flashback. no-flashback is raised when a flashback seen earlier on the pass has stopped. The no-lumen wire raise is unchanged. The back-wall test now also checks that a needle short of the artery, with no blood yet, raises nothing.\n\n4, applied: the adapter's contrastHigh now compares (engine total + labTotals.contrastMl) / max(1, macdMl) with PATIENT_EVENT_THRESHOLDS.contrastFraction. This matches how refreshTotals adds up the case totals. New test: returnFromLab with 0.9 x macdMl raises high-contrast-volume.\n\n5, applied both options: STEP_BONUS is now 2, so a step tip with no event scores at least 3 and a site-only tip at most 2.5. The header now says this holds among tips no event brought up. CASE_TIP_LIMITS_AT_ACCESS.total is now 10, so the other labs add to the 8 access slots instead of displacing them. New test: a femoral STEMI puncture with hypotension held keeps access-femoral-scan-bifurcation and access-needle-flashback-check in the panel, and among tips with no event the step tips come before the site-only ones.\n\n6, applied: the existing test is retitled. A new test puts a sheath in the femoral vein, lets the needle event lapse, then flushSheath and checks for venous-flashback. The raises test now also checks events, using sessions that have events (a STEMI case and an arm perforation) and asserts that at least one event is active."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-22) at http://localhost:5173, went to Full procedure and used window.__caseSession (store, tick, tips). I did not touch the existing tabs and closed tab-22 at the end.",
+     "__caseSession.tips() is async, as reported. It returns mode, visible, workspace, stage, step, events, contexts, ids and shown.",
+     "Acceptance (browser), guided femoral case at the access workspace: step {step:'puncture', site:'femoral', route:'femoral'}, context {lab:'access', phase:'puncture', phases:['femoral'], route:'femoral'}. ids include access-femoral-scan-bifurcation and access-needle-flashback-check. The DOM panel (section[aria-label=Tips]) showed the same 9 cards, each with a 'Read the lesson' link. MET.",
+     "Acceptance (browser), exam mode femoral case at the access workspace: tips() gave visible:false and ids:[] both before and after askHelp(), shown stayed [], and no Tips panel was in the DOM. MET.",
+     "Supervised radial case: the panel showed 'Ask for a tip' and the help placeholder. Clicking the button made tips visible: 7 radial puncture tips, none femoral-only.",
+     "Drove a real femoral access through the autopilot helpers imported from /src/simulation/session/autopilot.ts using store.act(). accessStep went puncture (needle placed and at arterial flash) -> wire (wire intraluminal, needle still in) -> sheath (needle out, and again with the sheath in) -> null (after the flush). Contexts and panel ids changed at each step: the wire step brought wire-never-push and no-hydrophilic-through-needle, the sheath step brought sheath-two-syringes and root-sheath-aspirate-flush.",
+     "Radial puncture taken past the lumen: flashback went to 'none' and activeEvents() raised 'no-flashback'. access-needle-flashback-check stayed in the panel.",
+     "Femoral case opened at 'sheath-in', walked through access, fluoro, table, closure and recovery. Contexts follow the plan table: fluoro = access wire + diagnostic advance, table = access sheath + diagnostic setup, closure and recovery = access closure + diagnostic finish. The PCI and haemo phase-less contexts carry patient events only.",
+     "Radial case opened at 'closure': the closure, recovery and handover workspaces each list access-radial-remove-now, access-radial-band-inflation and access-radial-patency-check within the total cap of 7. Chart = access plan + diagnostic setup (+ pci plan in an ACS case).",
+     "Checked how session.tipsShown reaches the debrief: SessionSummary.tipsShown is filled, but nothing renders or logs it. logCase in useProcedureStore.ts does not pass it, HandoverPanel's SummaryBlock lists only the per-decision ledger tips, and no host passes tipsShown to the Debrief component.",
+     "Console: no errors from this package. There were transient HMR errors from a concurrent edit to caseGenerator.ts (DEFAULT_SCENARIO_SEED, which is exported now). The lab also remounted once during the session because of hot reload."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/access/panels/HandoverPanel.tsx (SummaryBlock) and src/state/useProcedureStore.ts (logCase); neither is in this package's file list",
+      "problem": "The plan's lesson and case links say 'the debrief lists tips shown (session.tipsShown)'. The session records tipsShown and SessionSummary.tipsShown is filled, but the end-of-case summary never shows that list. logCase also does not pass it into the run or logbook record, so the mentor Debrief's tipsShownOf() never sees the case's tips. The builder did not report this as out of scope.",
+      "severity": "major",
+      "fix": "Owner of HandoverPanel: in SummaryBlock, render sum.tipsShown as a 'Tips shown' list, each entry with the tip's title from useTipsModule().TIP_BY_ID and an 'Open lesson' link through openLesson(tip.lessonId). Owner of useProcedureStore: in logCase, emit one TIP_SHOWN_TELEMETRY ('lab.tip') event per id in sum.tipsShown on the run, with data {tipId}, or add the ids to the run's finish payload, so Debrief and tipsShownOf pick them up. Both are other packages' files: route this to them, not to proc-tip-context."
+     },
+     {
+      "where": "src/ui/access/caseTips.ts, caseTipContexts for workspace 'access' when accessStep().step is null",
+      "problem": "Once the femoral sheath is flushed, the access workspace context drops to {lab:'access', phase:'femoral'} with no step. The panel then mixes tips from every femoral stage: access-planning-hostile-groin (planning), access-femoral-repuncture-wrong-height (wire), access-root-femoral-no-waveform and access-crossover-anticoagulated-care, instead of what applies once the sheath is in.",
+      "severity": "minor",
+      "fix": "In caseTipContexts, when the workspace is 'access', step is null, the sheath is in and closure is not done, report phase 'sheath' with the site (as the table workspace already does). That gives {lab:'access', phase:'sheath', phases:[site], route}. After closure, report 'closure'."
+     },
+     {
+      "where": "Tip content outside this package: access-femoral-repuncture-wrong-height, access-crossover-anticoagulated-care, access-femoral-deep-move-caudal (when: {phase:['femoral']}), access-root-femoral-no-waveform (when: {phase:['femoral'], route:['femoral']}), and radial equivalents such as access-radial-wire-resists, access-radial-heparin-timing, access-radial-thin-sheath-vasodilator",
+      "problem": "These tips are tagged with the site only, so the step filter cannot remove them. They fill the access cap at the puncture. Examples: 'Wire resistance: transduce the femoral sheath' is shown before any wire or sheath exists, and 'Femoral crossover after heparin' is shown in a primary femoral case before heparin is given.",
+      "severity": "minor",
+      "fix": "In the tip-retarget package (not proc-tip-context), add the step to each tip's when.phase: wire for repuncture-wrong-height, radial-wire-resists and root-femoral-no-waveform; sheath for thin-sheath-vasodilator and radial-heparin-timing. Gate the crossover tip on an event or condition for a failed radial attempt, or on heparin already given."
+     },
+     {
+      "where": "Full case patient profile and engine (indication 'UA') feeding the patient events adapter; outside this package",
+      "problem": "A 51 to 52 year old 'unstable angina' case has engine.vitals().stemi.met = true (anterior) and chest pain 8.1 from the chart onward. The adapter therefore raises st-elevation and chest-pain, and the top chart tip is pci-stemi-after-lysis ('After lysis: rescue now...') for a patient who never had lysis. pci-principles-explain-unexpected ('before the next device') also ranks first at the femoral puncture.",
+      "severity": "minor",
+      "fix": "Owner of the case generator or patient engine: make the UA profile's ECG consistent with its indication (no STEMI criteria unless the indication is STEMI). Optionally, in selectCaseTips, rank tips from the workspace's own phase contexts above the phase-less PCI and haemo contexts, so persistent patient events do not take the top slot during access."
+     },
+     {
+      "where": "src/ui/lab/LabTipsPanel.tsx (shared), used by CaseTipsPanel",
+      "problem": "The plan names the button 'Ask the attending'. The case panel shows 'Ask for a tip' from the shared panel. Behaviour is correct.",
+      "severity": "minor",
+      "fix": "No change needed unless the plan's wording is binding. If it is, add an optional askLabel prop to LabTipsPanel (shared file, coordinate with its owner) and pass 'Ask the attending' from CaseTipsPanel."
+     }
+    ],
+    "consoleErrors": [
+     "Uncaught SyntaxError: The requested module '/src/simulation/caseGenerator.ts?t=1791458228755' does not provide an export named 'DEFAULT_SCENARIO_SEED' (transient HMR error during a concurrent edit by another package; the export exists at caseGenerator.ts:639; not from proc-tip-context)",
+     "React: 'The above error occurred in one of your React components: at Lazy ... at App' (same HMR event)"
+    ]
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 1 (debrief does not list session.tipsShown): the finding is correct, but the fix belongs in src/ui/access/panels/HandoverPanel.tsx (SummaryBlock) and src/state/useProcedureStore.ts (logCase). Neither file is in this package's list. Out of scope: route it to their owners. SessionSummary.tipsShown is already filled, and caseTips.test.ts checks that.",
+     "Finding 3 (site-only access tips such as access-femoral-repuncture-wrong-height, access-root-femoral-no-waveform, access-crossover-anticoagulated-care, access-radial-wire-resists, access-radial-heparin-timing and access-radial-thin-sheath-vasodilator fill the puncture cap): the finding is correct. Their when.phase names only the site, and by design (fitsStep) a site-only tip applies at every step. The fix is to the tip triggers in src/content/manual/**, which belong to the tip-retarget package. Out of scope. The new test does confirm that access-femoral-scan-bifurcation, which is site-only, still matches after the flush.",
+     "Finding 4, main part (the UA profile has engine.vitals().stemi.met true and persistent chest pain, so pci-stemi-after-lysis and pci-principles-explain-unexpected appear): the root cause is in the case generator or patient engine, outside this package. Out of scope: route it to their owner. I applied the optional ranking part (see notes).",
+     "Finding 5 ('Ask for a tip' versus 'Ask the attending'): the label belongs to the shared src/ui/lab/LabTipsPanel.tsx, which is not in this package's list. Behaviour is correct. Adding an askLabel prop needs the shared panel's owner. CaseTipsPanel would then pass 'Ask the attending'."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts (25 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied two fixes, both in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.ts.\n\n(1) Finding 2: in the access workspace, once accessStep().step is null, the context is no longer the bare site. It is now {lab:'access', phase:'sheath', phases:[site], route} until closure, and phase 'closure' with [site] once session.closureDone() is true. Either way the step filter keeps removing tips written for the plan, puncture and wire stages at the site. CaseTipSource now also picks 'closureDone', which CaseSession already has as a public method, so no session change was needed. The header comment is updated.\n\n(2) Finding 4, optional part: the scores still decide which tips are selected, through the per-lab and total caps. The selected list is then stably reordered so that tips brought up by a context with a phase come before tips brought up only by the phase-less patient contexts. A persistent patient event therefore no longer takes the top slot during access, and no tip, such as an emergency one, is pushed out of the list by the ordering.\n\nTests in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.test.ts:\n- The post-flush assertion now expects phase 'sheath' with phases ['femoral']. After the flush, access-planning-hostile-groin, access-needle-flashback-check and access-cx-iliac-wire-fluoro no longer match.\n- New test: after radial closure, the access workspace reports closure [radial] and shows access-radial-patency-check.\n- New test: tips from phased contexts are listed first, followed only by tips from the phase-less contexts, and the first tip is an access tip.\n\nOut-of-scope items to route to other owners: HandoverPanel and useProcedureStore for the tipsShown debrief and logbook (finding 1); tip-retarget for the step tags on the site-only access tips (finding 3); the case generator or patient engine for the UA profile meeting STEMI criteria (finding 4); and LabTipsPanel for an optional askLabel prop (finding 5)."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "caseTips.test.ts: a session advanced to a femoral sheath yields access step 'sheath' and route 'femoral'; a radial session at the wrist never yields a femoral-only tip",
+      "met": true,
+      "evidence": "src/ui/access/caseTips.test.ts 'a femoral session reports puncture, wire and sheath in turn...' asserts accessStep() = {step:'sheath', site:'femoral', route:'femoral'} and the context {lab:'access', phase:'sheath', phases:['femoral'], route:'femoral'}. 'a radial session never yields a femoral-only tip, at any step or workspace' checks every workspace at the puncture, wire, sheath and post-flush steps using both the panel selection and every caseTipScore match. A perforation variant is also covered. All pass."
+     },
+     {
+      "criterion": "A context { lab:'access', phase:'closure', route:'radial' } returns access-radial-remove-now, access-radial-band-inflation and access-radial-patency-check within the default limit",
+      "met": true,
+      "evidence": "caseTips.test.ts 'closure by route' calls tipsFor(ctx) with the default limit and gets all three tips back, with no femoral-only tip. It also shows the same three on the case panel at a radial closure. Passes."
+     },
+     {
+      "criterion": "mcs-largebore-limb-check is not returned unless limb-ischaemia is active",
+      "met": true,
+      "evidence": "caseTips.test.ts 'mcs-largebore-limb-check is not returned unless limb-ischaemia is active...': the tip is absent from every workspace's matches with and without the event, since the full case does no large-bore procedure. In an mcs large-bore context tipsFor leaves it out without the event and includes it with s.activeEvents() containing limb-ischaemia. Passes."
+     },
+     {
+      "criterion": "browser: __caseSession.tips() in guided mode at the femoral puncture lists access-femoral-scan-bifurcation; in exam mode the panel is empty",
+      "met": true,
+      "evidence": "Checked live in my own tab on the running dev server (localhost:5173, Full procedure). Opened a femoral case through __caseSession.store, ran the prepare steps and set workspace 'access'. In guided mode, tips() gave step {puncture, femoral, femoral}, visible true and ids including access-femoral-scan-bifurcation and access-needle-flashback-check (9 ids, under the access cap of 10). In exam mode tips() gave visible false, ids [] and no tip text on the page. The unit tests also cover this (guided femoral puncture test; exam selectCaseTips returns [])."
+     },
+     {
+      "criterion": "Tips (a new test file beside caseTips.ts): in a scenario that exercises it, at phase 'puncture', tipsFor(ctx, 20) includes access-needle-flashback-check and access-central-vein-no-blood; every waiting.ts entry naming proc-tip-context becomes satisfiable, so the reachability waiting count for the access lab falls by at least their number",
+      "met": false,
+      "evidence": "src/ui/access/caseTips.reach.test.ts exists and passes. The puncture part is met. access-needle-flashback-check appears at the case's radial puncture. access-central-vein-no-blood appears at the same step and events once the route is jugular; the case has no jugular site and that tip waits on the access-venous package in waiting.ts, so a synthetic context is acceptable. The waiting part is not met. The reach test prints 'waiting on proc-tip-context: 87, now ready 85', and access satisfiable rises from 5 to 85 of 89. Two entries in the proc-tip-context group of src/content/lab/raisable/waiting.ts stay unsatisfiable: access-cx-cold-leg-six-ps and access-closure-cold-leg, both triggered by event limb-ischaemia. CASE_SESSION_EVENTS in caseSession.ts:187 has no limb-ischaemia. No shipped scenario (default.ts, default.launch.ts) scripts it. No session module declares it. So raises in caseTips.ts never declares it. The test does not assert 'every entry'. It hard-codes the two as an exception (SCENARIO_ONLY, line 58) and expects exactly those two to fail. The package's tipIntegration lists limb-ischaemia among the session.activeEvents() events, and this implementation does not raise it."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/session/caseSession.ts (CASE_SESSION_EVENTS, line 187; sampleTipEvents) and src/ui/access/caseTips.ts raises; src/ui/access/caseTips.reach.test.ts SCENARIO_ONLY (line 58)",
+      "problem": "Two waiting.ts entries naming proc-tip-context, access-cx-cold-leg-six-ps and access-closure-cold-leg (event limb-ischaemia, femoral, sheath/closure/complication), are still unsatisfiable. The full case only raises limb-ischaemia through an ad-hoc test scenario: the session does not raise it and no shipped scenario scripts it. The acceptance criterion says every entry becomes satisfiable, and the design lists limb-ischaemia as a session.activeEvents() event. The reach test hard-codes the gap as an allowed exception instead of closing it.",
+      "severity": "major",
+      "fix": "Option A (inside the package files): add 'limb-ischaemia' to CASE_SESSION_EVENTS. Raise it in sampleTipEvents from an operator-visible cue only, for example the nurse reporting a cold, pale leg with a lost distal pulse below a femoral sheath or after femoral closure, driven by an explicit occlusion or limb state. Never raise it from a hidden diagnosis. Any threshold or timing needs a cited module figure or a MODEL PARAMETER entry in docs/realism/facts. Then raises picks it up through ALL_CASE_EVENTS. Delete SCENARIO_ONLY from caseTips.reach.test.ts so the test asserts notYet = [] and fresh = group.tips.length - already.length. Add a caseSession test that the cue raises the event. Option B (outside the package files, so report as outOfScope): ship a scenario in src/simulation/session/scenarios/ that scripts limb-ischaemia with its own declared raises, or have the waiting.ts owner (found-tip-retarget / tip-retarget-catchup) move the two cold-leg tips to the package that will model limb ischaemia and record the change in lab-build-plan.json."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts (2 files, 25 tests passed; reach log: access tips satisfiable 5 -> 85 of 89; waiting on proc-tip-context 87, now ready 85)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 tests passed)",
+     "Browser (own tab, existing dev server on 5173): window.__caseSession.tips() at the femoral puncture, guided -> visible true, ids include access-femoral-scan-bifurcation; exam -> visible false, ids [] and no panel tips in the DOM"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output, exit 0)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "caseTips.test.ts: a session advanced to a femoral sheath yields access step 'sheath' and route 'femoral'; a radial session at the wrist never yields a femoral-only tip",
+      "met": true,
+      "evidence": "src/ui/access/caseTips.test.ts 'a femoral session reports puncture, wire and sheath in turn...' asserts accessStep() equals {step:'sheath', site:'femoral', route:'femoral'} after insertSheath, and the access context {phase:'sheath', phases:['femoral'], route:'femoral'}. 'a radial session never yields a femoral-only tip, at any step or workspace' walks plan, puncture, wire, sheath and post-flush across all seven workspaces, checking both the panel's selection and every caseTipScore match. A further test covers a radial arm perforation. Both pass."
+     },
+     {
+      "criterion": "A context { lab:'access', phase:'closure', route:'radial' } returns access-radial-remove-now, access-radial-band-inflation and access-radial-patency-check within the default limit",
+      "met": true,
+      "evidence": "The 'closure by route' test calls tipsFor({lab:'access', phase:'closure', route:'radial'}) with the default limit and gets all three ids and no femoral-only tip. A second test shows the case panel at a radial closure lists all three within CASE_TIP_LIMITS.total. Both pass."
+     },
+     {
+      "criterion": "mcs-largebore-limb-check is not returned unless limb-ischaemia is active",
+      "met": true,
+      "evidence": "The 'events' test checks that without limb-ischaemia the tip is absent from every workspace's matches. With a scripted limb-ischaemia scenario it is still absent from the case (no large-bore procedure), and in an MCS large-bore context tipsFor returns it only once the session's active events, including limb-ischaemia, are passed. Passes."
+     },
+     {
+      "criterion": "browser: __caseSession.tips() in guided mode at the femoral puncture lists access-femoral-scan-bifurcation; in exam mode the panel is empty",
+      "met": true,
+      "evidence": "Checked live on the running dev server (port 5173) in a separate background tab. For a femoral case at the access start in guided mode, __caseSession.tips() returned step {puncture, femoral, femoral}, visible true and an ids list that includes access-femoral-scan-bifurcation and access-needle-flashback-check. The same case in exam mode returned visible false and ids [], and the page showed no tips panel: LabTipsPanel returns null in exam mode and no 'Ask for a tip' or 'Open lesson' text appeared. Unit tests cover the same: caseTips.test.ts lines 77-88 (guided) and 399-408 (exam returns [])."
+     },
+     {
+      "criterion": "Tips (a new test file beside caseTips.ts): at phase 'puncture', tipsFor(ctx, 20) includes access-needle-flashback-check and access-central-vein-no-blood; every waiting.ts entry naming proc-tip-context becomes satisfiable, so the reachability waiting count for the access lab falls by at least their number",
+      "met": false,
+      "evidence": "Puncture part: met. caseTips.reach.test.ts gets access-needle-flashback-check from the case's real puncture context. It gets access-central-vein-no-blood only by switching that same context to route 'jugular', because the full case has no jugular site; that satisfies the literal tipsFor(ctx, 20) check. Waiting part: not met. The proc-tip-context group in waiting.ts has 87 ids and only 85 are satisfiable. access-cx-cold-leg-six-ps and access-closure-cold-leg need limb-ischaemia, which neither the case's raises nor any registered scenario declares. The reach test writes these two in as SCENARIO_ONLY exceptions rather than making them satisfiable. The reachability report (src/content/lab/reachability.test.ts, passes) prints 'access 89 tips satisfiable 85 waiting 89 ready 85', so the access count falls by 85, not by the group's 87."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/content/lab/raisable/waiting.ts (proc-tip-context group, access lab) and src/ui/access/caseTips.reach.test.ts (SCENARIO_ONLY)",
+      "problem": "Two waiting.ts entries listed under proc-tip-context are still unsatisfiable: access-cx-cold-leg-six-ps and access-closure-cold-leg. Both need the limb-ischaemia event, and the full case has nothing to raise it from. The plan gives that event source to access-closure-femoral-devices (its tipIntegration names access-closure-cold-leg) and access-cx-endovascular-control (its tipIntegration names both tips). The entries are therefore filed under the wrong package. The reach test passes only because it lists them as an expected exception, so the criterion 'every waiting.ts entry naming proc-tip-context becomes satisfiable' is not met: 85 of 87.",
+      "severity": "minor",
+      "fix": "Do not raise limb-ischaemia from the case without a modelled cause, since that would invent a trigger. Instead: (1) In waiting.ts, outside this package's file list, so the orchestrator or a waiting.ts owner must make it: remove access-closure-cold-leg and access-cx-cold-leg-six-ps from the proc-tip-context group. Add them under raisedBy 'access-cx-endovascular-control', lab 'access' (or put access-closure-cold-leg under 'access-closure-femoral-devices'), keeping each tip listed only once as reachability.test.ts requires. (2) In src/ui/access/caseTips.reach.test.ts, empty SCENARIO_ONLY and change the assertion to expect(notYet).toEqual([]). Rename the test to 'every waiting.ts entry naming proc-tip-context becomes satisfiable'. Keep the cold-leg scenario check, or move it to the owning package. (3) Re-run npx vitest run src/ui/access/caseTips.reach.test.ts src/content/lab/reachability.test.ts and confirm the access row shows waiting 87, ready 85, with every proc-tip-context entry ready."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts (2 files, 25 tests passed; console: access tips satisfiable 5 -> 85 of 89; waiting on proc-tip-context 87, now ready 85)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 tests passed; access 89 tips, satisfiable 85, waiting 89, ready 85)",
+     "browser (dev server on 5173, own background tab, closed afterwards): window.__caseSession.tips() for a femoral case at the access start, guided mode: visible true, step puncture/femoral, ids include access-femoral-scan-bifurcation; exam mode: visible false, ids [], no tips panel in the DOM"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no errors, about 4 s)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (limb-ischaemia unsatisfiable for access-cx-cold-leg-six-ps and access-closure-cold-leg), Option A rejected. The gap is real, but closing it inside this package would mean inventing a cause the full case does not model. caseSession.ts has no femoral artery size (the profile has only radialDiamMm), no plug or thrombus in the lumen and no embolus, so the nurse could only report a cold leg from something invented. Any incidence, dwell time or sheath-to-artery threshold would need a MODEL PARAMETER entry in docs/realism/facts, which is outside this package's files. The plan also gives the cause to other packages. access-closure-femoral-devices has a plug tamped before resistance in 'plug-deep-sheath' raise limb-ischaemia, and its tipIntegration names access-closure-cold-leg; it also lists caseSession.ts and may be editing it now. access-cx-endovascular-control's tipIntegration names both cold-leg tips with limb-ischaemia and declares raises in src/simulation/session/modules/endovascular.ts, which the reach test already reads. Adding limb-ischaemia to CASE_SESSION_EVENTS with nothing that raises it would make the reachability report claim a tip is reachable when it is not. Option B (outOfScope) is the right fix: the owner of src/content/lab/raisable/waiting.ts (found-tip-retarget / tip-retarget-catchup) should move access-cx-cold-leg-six-ps to access-cx-endovascular-control and access-closure-cold-leg to access-closure-femoral-devices (or both to endovascular), and record the move in docs/curriculum/lab-build-plan.json. The literal acceptance line 'every waiting.ts entry naming proc-tip-context becomes satisfiable' then holds."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.reach.test.ts src/ui/access/caseTips.test.ts (2 files, 25 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors (exit 0)",
+    "notes": "I rejected the one finding and changed no code. I edited one comment in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/caseTips.reach.test.ts: the note above SCENARIO_ONLY now says why the two cold-leg tips cannot be satisfied yet (the case has no cause of occlusion to raise them from) and which packages the plan gives that cause to. The test still checks that notYet equals SCENARIO_ONLY exactly, so it fails as soon as either tip becomes satisfiable and the exception cannot go stale. Its third test still shows that both tips become satisfiable once limb-ischaemia is raised.\n\noutOfScope: src/content/lab/raisable/waiting.ts (owner found-tip-retarget / tip-retarget-catchup) should move access-cx-cold-leg-six-ps and access-closure-cold-leg from the proc-tip-context group to the packages that will raise limb-ischaemia: access-closure-femoral-devices (the plug-deep-sheath scenario) and access-cx-endovascular-control (modules/endovascular.ts). The move should be recorded in docs/curriculum/lab-build-plan.json. Once that is done, delete SCENARIO_ONLY from caseTips.reach.test.ts. The test should then expect notYet to be empty and fresh to equal group.tips.length minus already.length."
+   }
+  ]
+ }
+}

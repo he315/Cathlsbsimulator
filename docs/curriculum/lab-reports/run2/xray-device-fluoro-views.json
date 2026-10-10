@@ -1,0 +1,235 @@
+{
+ "package": "xray-device-fluoro-views",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built xray-device-fluoro-views. It is a reusable fluoroscopy view that draws non-coronary devices on the real X-ray renderer, on the patient's own thorax (thorax genome, breathing, the beating heart shapes). The devices go through buildXrayScene's public extras hook, and no existing renderer file was edited.\n\nsrc/render/xray/deviceTubes.ts turns device polylines into named TubeSpecs and BonePrims. The polylines are anchored to landmarks: the carina, the aortic arch and left subclavian origin, the aortic valve and LV axis, the SVC and IVC and their junctions with the RA, the RA, LA, RV and RVOT shapes from heartShapes, the fossa, the pulmonary arteries and the pericardium. There are seven device kinds:\n- IABP: helium balloon, folded or inflated, with a radio-opaque tip marker. The tip is placed by tipBelowCarinaMm, and there is a 1:1 counterpulsation helper driven from the cardiac clock.\n- Microaxial pump: 9 Fr shaft, motor and cannula, inlet 35 mm below the valve, pigtail curled in the LV.\n- VA-ECMO: 25 Fr venous cannula with its tip at the SVC-RA junction or an offset from it, and a 17 Fr arterial cannula.\n- Temporary pacing lead along a venous station graph (femoral, right internal jugular or left subclavian route), with tip and ring electrodes.\n- Balloon-tipped right heart catheter whose gas balloon can be inflated or deflated.\n- Pericardiocentesis: subxiphoid needle on a track fixed in the body, a 0.035 inch J wire that follows the sac, and a thin iodine shell for the contrast-outlined sac.\n- Transseptal sheath, dilator and needle, with stages svc, descent, fossa, tenting and crossed.\n\nEach sourced number cites its location in the module text (17-support-devices.ts and 04-cardiac-catheterisation.ts). Attenuation values come from the renderer's existing NIST-derived METAL, PLASTIC and MU tables. Everything else is labelled MODEL PARAMETER.\n\nFor host checks it also reports positions that never appear on the image: tip below carina and below the left subclavian, inlet depth below the valve and whether the inlet is in the LV, venous tip to junction, needle tip in the sac or beyond the epicardium, whether the septum is crossed, and the course of each venous device.\n\nsrc/ui/xray/XrayDeviceView.tsx follows the pattern of AccessFluoroView:\n- The pedal button or a held F key turns the beam on; releasing it holds the last image and books no dose.\n- It offers AP, LAO 30 and RAO 30, and renders at 768 px at 15 p/s only while the beam is on.\n- Dose runs through LabImaging/dose.ts and is shown in the panel head.\n- The table auto-centres on the devices (with the heart when it fits); Shift-drag or the arrow keys pan it.\n- It can run on its own clock or on an external CardiacClock, uses the Clinical Graphite classes and generic device names.\n- It has a DEV-only window.__xrayDeviceDraw hook (timings, projected tips, optional tip-marker contrast) and a DEV-only devMountXrayDeviceView helper for checking the view before any lab hosts it.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/deviceTubes.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/deviceTubes.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/xray/XrayDeviceView.tsx"
+    ],
+    "testsAdded": [
+     "src/render/xray/deviceTubes.test.ts: an IABP tip 2 cm below the carina yields a tube whose radio-opaque tip is at that height (4 cases)",
+     "src/render/xray/deviceTubes.test.ts: carina = bottom of the thorax trachea; IABP tip at carina level lies left of the spine midline in the descending aorta, below the left subclavian origin",
+     "src/render/xray/deviceTubes.test.ts: helium mu below soft tissue; balloon gas tube is a negative excess holding 36-44 mL; absent when deflated",
+     "src/render/xray/deviceTubes.test.ts: counterpulsation inflation from the clock",
+     "src/render/xray/deviceTubes.test.ts: microaxial pump inlet 35 mm below the valve inside the LV, 9 Fr shaft, outlet above the valve",
+     "src/render/xray/deviceTubes.test.ts: ECMO 25 Fr venous tip at the SVC-RA junction (on the RA surface), 17 Fr arterial, offset tips",
+     "src/render/xray/deviceTubes.test.ts: thorax-fixed landmarks lie inside the matching buildThorax shapes (RA, SVC, IVC, LA, ascending aorta)",
+     "src/render/xray/deviceTubes.test.ts: pacing lead and RHC catheter venous courses per route, advance, balloon on/off",
+     "src/render/xray/deviceTubes.test.ts: pericardial needle short/in sac/beyond epicardium, sac iodine shell, J wire stays between the layers",
+     "src/render/xray/deviceTubes.test.ts: pericardial skin entry fixed while the heart breathes under it",
+     "src/render/xray/deviceTubes.test.ts: transseptal fossa on the RA surface, tenting not crossed, crossed inside LA, SVC start high",
+     "src/render/xray/deviceTubes.test.ts: all devices give valid finite tubes in 4 cases x 3 breathing states",
+     "src/render/xray/deviceTubes.test.ts: deterministic; breathing moves heart-anchored devices, not the carina",
+     "src/render/xray/deviceTubes.test.ts: tubes pass through buildXrayScene's extras hook unchanged"
+    ],
+    "testsRun": [
+     "npx vitest run src/render/xray/deviceTubes.test.ts: 14 of 14 passed (about 3.3 s)",
+     "python3 scripts/realism/report.py wp-xdfv --jobs 2: 189/236 rows inside the real band (296 s)",
+     "python3 scripts/realism/compare_sets.py baseline wp-xdfv: 189/236 against 189/236, every section identical, no LOST rows, no GAINED rows",
+     "Byte comparison of the re-captured offscreen set wp-xdfv with datasets/tmp/captures/baseline: 562 of 562 frame PNGs identical; only the 12 .meta.png files differ (they carry the set name and date)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0) after the final edit.",
+    "acceptance": [
+     {
+      "criterion": "deviceTubes.test.ts: an IABP tip 2 cm below the carina yields a tube whose radio-opaque tip is at that height; helium mu is below soft tissue",
+      "status": "met",
+      "evidence": "Test 'an IABP tip 2 cm below the carina...' passes on 4 library cases: the 'tip marker' tube (metal channel 4.65/mm against 0 for the shaft) ends at y = carina.y - 20 to within 0.05 mm, positions.iabp.tipBelowCarinaMm = 20, and no IABP point lies above it. Test 'helium attenuates less than soft tissue' passes: HELIUM_MU (0) < MU.soft (0.02), gasExcess = -0.02, and the inflated 'balloon gas' tube has a negative R channel and holds 36-44 mL."
+     },
+     {
+      "criterion": "browser (hidden pane): the dev draw hook renders an IABP frame with the tip marker visible against the spine within the lab frame budget",
+      "status": "met",
+      "evidence": "Run in a new tab (tab-14) on localhost:5173 with visibilityState 'hidden', using devMountXrayDeviceView and window.__xrayDeviceDraw({view:'ap', measure:true}) with an inflated IABP at carina level. Result: res 768; tip at x = 18.1 mm, over the left edge of the vertebral column (overSpine true). The marker averaged grey 70 against 125 in the ring around it (contrast 55 grey levels, CNR 1.2-3.7 over 15 frames). Settled frame totals were 18-40 ms (builds, render and GPU sync) against the 66.7 ms budget of one 15 p/s pulse, withinBudget true; the first frame after mount took 230 ms (shader and thorax warm-up). The screenshot shows a dark rectangular tip marker over the left spine edge at the level of the aortic knob. No console errors."
+     },
+     {
+      "criterion": "No existing renderer file changes",
+      "status": "met",
+      "evidence": "find src -newer datasets/tmp/wp-snapshots/xray-device-fluoro-views/.started: under src/render only the two new files changed, and nothing under src/ui/pci/render, src/dev/xrayCapture.ts, src/ui/sim/FluoroView.tsx, PciLiveMonitor.tsx or pciDevicesRender.ts. The devices reach the scene only through the public SceneInput.extras; the view imports only public exports (buildXrayScene, LabImaging, SID, SOD, treeCentre, motionAt, heartShapes, METAL, PLASTIC, MU, aorticCourse, ANATOMY_TUNE, thoraxGenome)."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows (compare_sets.py baseline <set>); the re-scored rows are listed in the package notes",
+      "status": "partly",
+      "evidence": "The offscreen part was re-captured as set wp-xdfv (__xrayCapture.baseline('wp-xdfv'), 12 sequences) and scored: 189/236, the same as the baseline. compare_sets.py baseline wp-xdfv shows no lost and no gained rows, and all 562 frames are byte-identical to the baseline. The two live-path sequences (live_pci_raocra, live_diag_raocau) were not re-captured: that needs the PCI and diagnostic labs opened at the 1600 x 1000 viewport, so I did not run those two steps. They are measurement rows outside the pass count, and this package changes no code they run. No rows were re-scored."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: the device constants labelled MODEL PARAMETER in DEVICE_MODEL (src/render/xray/deviceTubes.ts) are not yet listed in a facts note. Among them: IABP balloon length and taper, folded radius and tip marker; pump cannula, motor and pigtail; ECMO coil share, wall and arterial tip height; temporary lead 5 Fr; RHC 7 Fr and its balloon radius; pericardial needle, effusion, sac contrast share and track direction; transseptal sheath and dilator sizes, tent and cross depths; the venous station coordinates; helium taken as 0. A facts entry (for example docs/realism/facts/xray-devices.md) is needed but outside this package's file list.",
+     "Hosting: no lab mounts XrayDeviceView yet. Replacing the SVG schematics is for the host packages, for example src/ui/bedside/PacingFluoro.tsx, the IabpConsole, ImpellaConsole and EcmoConsole in src/ui/mcs, PericardioLab.tsx, the structural views and the haemodynamics catheter panel. Each would map its own state (lead zone, IABP position, needle depth and so on) to DeviceSpec and choose the view and centre through presets."
+    ],
+    "notes": "**Realism re-score.** The offscreen baseline set was re-captured as datasets/tmp/captures/wp-xdfv__* and scored in datasets/tmp/realism/reports/wp-xdfv/. Result: 189/236, the same per section as the baseline; no rows lost, gained or changed. The live-path sequences were not re-captured.\n\n**Snapshot folder.** Snapshot taken before any edit: datasets/tmp/wp-snapshots/xray-device-fluoro-views/.started. None of the three listed files existed before, so nothing was copied, and the stale folder from run 1 was overwritten.\n\n**Frames.** Devices are built in the thorax frame the anatomy uses (heart frame plus the breathing shift, as hardware.ts does). The aortic tilt that toWorld applies to the coronaries and the diagnostic catheter is not applied, so devices line up with the drawn silhouette. With an aortic tilt of 4-18 degrees the aortic devices can therefore sit a few mm off the tilted coronary catheter course. The breathing shift mirrors sceneBuilder's heartShift formula (heartShiftFor); thorax landmarks mirror thorax.ts constants, and a test checks they stay inside the matching buildThorax shapes.\n\n**Pericardial sac.** The sac is a single ellipsoid on the heart axes, fitted to the ventricles' outer surface points (90% enclosed). It can be a few mm inside the silhouette at the apex. An effusion without contrast does not enlarge the cardiac silhouette.\n\n**Positions.** DevicePositions holds one entry per device kind: with two devices of one kind, the last one is reported.\n\n**Visual checks.** In the hidden pane I also looked at:\n- the pacing lead (femoral and right internal jugular routes) to the RV apex\n- the pump with its motor\n- the RHC to wedge\n- the pericardial needle with the J wire curling in a contrast-outlined sac (contrast share lowered to 0.015 after the first look, which was too dense)\n- the transseptal sheath at the fossa in RAO\n- the ECMO venous cannula (coil share raised to 0.2 so the 25 Fr cannula reads as a reinforced tube)\n\nThe interactive pedal path (requestAnimationFrame loop, button and F key) could not run in the hidden pane and needs a look with the pane visible.\n\n**Browser cleanup.** I used tab-14 only and closed it. The page reloaded once in the middle (probably another agent's edit), which interrupted the first capture attempt; the second ran to completion."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "The package is approved once the two correctness fixes below are made (the pump's inletInLv flag and ECMO `side`). The three listed files implement the design: device polylines anchored to the thorax landmarks, all seven device kinds, helium, iodine and metal attenuation, the iodine shell for the sac, and a view that works like AccessFluoroView (pedal or held F key, AP/LAO 30/RAO 30, last image hold, dose through LabImaging, 768 px only while the beam is on, DEV-only draw hook). Devices reach the scene only through the public SceneInput.extras hook. No existing renderer or shared-engine file changed. Nothing else imports the new modules, so labs this package does not touch behave as before.\n\nI checked it myself:\n- `npx vitest run src/render/xray/deviceTubes.test.ts`: 14 of 14 passed.\n- `npx tsc -p tsconfig.app.json --noEmit`: clean.\n- The other files changed under src/ since `.started` all belong to other packages (tavi/structural, pericardiocentesis, BedsideLab, pacing) or are new test files.\n- Module citations: carina level (Brilakis), just beyond the left subclavian (Oxford), 7.5 F, 40 mL, 3.5 cm, 9 Fr in a 14 Fr sheath, ECMO 25 Fr and 15/17 Fr, and the 0.035 inch J wire all appear in 17-support-devices.ts and 04-cardiac-catheterisation.ts as cited.\n- The live view prints no device positions. It uses Clinical Graphite classes that exist in index.css and tailwind.config.js, and its wording is British English.\n- deviceTubes takes about 0.4 to 0.7 ms per call, once per 15 p/s pulse. The rAF loop allocates nothing while the beam is off or the pulse is throttled.\n\nA probe script (vite-node) confirmed two real defects:\n- With the pump inlet at the valve plane (depth 0) or 90 mm deep, `positions.pump.inletInLv` is still true.\n- `EcmoSpec.side: \"left\"` puts both cannulae in the right groin.\n\nThe IABP tip cannot be placed above the left subclavian origin. A request of -40 or -60 mm below the carina is silently clamped to -22.2 mm.\n\nThe realism criterion is met for the offscreen set (189/236, all 562 frames byte-identical). The two live-path sequences were not re-captured; with no shared code touched this is acceptable. The MODEL PARAMETER entry in docs/realism/facts is still missing and needs the lead, because that file is outside this package's list.",
+    "findings": [
+     {
+      "where": "src/render/xray/deviceTubes.ts:793 (pump(), positions.pump.inletInLv)",
+      "problem": "The host check inletInLv tests the inlet against the LV myocardium's outer ellipsoid (\"lv myocardium\"), not the cavity, and does not check that the inlet is below the valve. Probe on CASE_LIBRARY[0]: inletBelowValveMm 0 gives inletInLv true (r 0.94), 10 gives true, and 90 gives true (r 0.84). Only -10 and 120 give false. A host that grades pump position on this flag would accept an inlet sitting at the valve plane (no unloading, pump across nothing) or one deep against the wall or apex. The plan's only tip integration is these positions for host checks.",
+      "severity": "major",
+      "fix": "Add a MODEL PARAMETER `lvWallMm` to DEVICE_MODEL.pump, for example 10 and labelled. Compute `const below = dot(sub(inlet, L.aorticValve), L.lvAxis);` and set `inletInLv: below > 0 && ellipsoidRadius(grow(L.lv, -M.lvWallMm), inlet) < 1`. `grow` already exists in the file. Alternatively rename the field to `inletInLvSilhouette` and document that it is only the myocardial outline. Add a test asserting inletInLv is false for inletBelowValveMm 0 and true for 35, plus a deep case chosen to land outside the shrunken ellipsoid."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.ts:798-835 (venousToSvc, ecmo)",
+      "problem": "EcmoSpec.side is documented as \"venous cannula side (default right); the arterial cannula goes in the other groin\". venousToSvc always starts at stations.femoral, which is the right groin (x = -55k), whatever the side. So `side: \"left\"` sends the arterial cannula to the right groin as well. Probe: venous start x -63.4 and arterial start x -80.7, both on the right.",
+      "severity": "minor",
+      "fix": "Give venousToSvc a `side: Side` parameter. When side is \"left\", mirror the first two control points (`v(55 * k, -460, -35)` and `v(34 * k, -330, -52)` in place of stations.femoral and stations.iliac). Call it as `venousToSvc(L, side)` in ecmo() and keep `venousToSvc(L, \"right\")` in transseptal(). Add a test: with side \"left\", the venous tube's first point has x > 0 and the arterial tube's first point has x < 0."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.ts:704-716 (iabp tip search)",
+      "problem": "The tip search stops at the apex of the arch course (y about 100). Any tipBelowCarinaMm above about -22 mm is silently clamped. Requests of -40 and -60 both give tipBelowCarinaMm -22.2, and tipBelowLeftSubclavianMm can never go below about +3.8 mm. A host cannot show the classic too-high malposition (tip at or above the left subclavian origin), and the clamp is neither documented nor tested.",
+      "severity": "minor",
+      "fix": "Either continue the tip past the apex along `path` towards the ascending aorta when targetY > path[apex].y, by extending sTip by (targetY - path[apex].y) of arc length and clamping to the path end. Or document the clamp on IabpSpec.tipBelowCarinaMm and add a `clamped: boolean` field to positions.iabp. Add a test for a request of -40 mm."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.ts:142-143 (DEVICE_MODEL.ecmo.arterialTipY comment)",
+      "problem": "The comment says the arterial cannula tip at y = -300 is \"in the common iliac artery\". The femoral arterial course joins aorticCourse at (18, -330, -92), so a tip at y = -300 lies on the aortic midline course (probe: x 24.4, z -92.2), which is the distal aorta, not an iliac. The label misdescribes the geometry.",
+      "severity": "minor",
+      "fix": "Either change the comment to \"in the distal abdominal aorta\", or move the tip below the confluence, for example arterialTipY = -350, so that it lies on the iliac segment between the femoral control points and the course. Then update the test at deviceTubes.test.ts:141 to match."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.ts:148-150 and 850 (pacing lead conductor); 683-696 (shaft lumens)",
+      "problem": "The conductor is documented as \"coiled conductor seen as a hollow metal tube (as hardware.ts permanent leads)\". It is drawn as a solid tube of steel*0.55, which is denser than the hardware.ts lead it claims to match: hardware.ts:302 uses inner 0.55 with muIn [0,0,0]. Lumens elsewhere are made from a second, negative-valued tube rather than TubeSpec's built-in hollow fields (inner, muIn). That doubles the tube count and relies on exact cancellation.",
+      "severity": "minor",
+      "fix": "In pacingLead(), push the conductor as `{ pts, r: pts.map(() => M.conductorRadiusMm), mu: [0, 0, M.conductorMu], muIn: [0, 0, 0], inner: 0.55, device, part: \"conductor\" }`. Optionally rewrite shaft() to emit one tube with `inner: rIn / rOut` and `muIn: [0, 0, 0]` instead of the negative lumen tube, and the needle (line 909-910) the same way. Re-run the hidden-pane visual check after the change."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.ts (unlabelled numbers) and docs/realism/facts",
+      "problem": "Most constants are labelled MODEL PARAMETER, but several shape numbers carry no label:\n- iabpInflationAt ramp 0.06 s (line 1032)\n- the 60 mm hub run outside the skin (905)\n- the ECMO venous tip marker, 3 mm and steel*0.25 (819)\n- the transseptal sheath marker, platinum*0.25 (976)\n- the transseptal approach offset 14 mm and septal-wall offset 2 mm (955, 966)\n- the dilator taper `/8 + 0.35` (981)\n- the default crossed needle-out 6 mm (983)\n- the RHC balloon on the last 7 to 0.5 mm (866)\n- the pigtail radius 1.0 and cannula wall 0.35 (774, 786)\nThe plan rule also asks for MODEL PARAMETERs to be listed in docs/realism/facts, and that note does not exist yet. The builder reported this as out of scope.",
+      "severity": "minor",
+      "fix": "Move these numbers into DEVICE_MODEL with `/** MODEL PARAMETER: ... */` comments, for example iabp.rampS, pericardial.hubOutsideMm, ecmo.tipMarkerMm and tipMarkerMu, transseptal.approachMm, septalOffsetMm, dilatorTaperMm and crossedNeedleOutMm, rhc.balloonLenMm, pump.pigtailTubeRadiusMm and cannulaWallMm. The lead should then add docs/realism/facts/xray-devices.md listing every DEVICE_MODEL entry and its label, outside this package's file list. Also import CATHETER_WALL from sceneBuilder for DEVICE_MU.jacket instead of repeating 0.18."
+     },
+     {
+      "where": "src/ui/xray/XrayDeviceView.tsx:371-397 (keyboard) and 430-438 (pedal button)",
+      "problem": "This is a reusable view, but its pedal can stick on. Cmd+F or Ctrl+F turns the beam on; on macOS the 'f' keyup is not delivered while Cmd is held, so the beam stays on and dose keeps accruing. There is no window blur release either, so switching away while holding F leaves the beam on. The arrow-key handler calls preventDefault on the whole window whether or not the view is focused. The hold button cannot be operated from the keyboard. These faults come from AccessFluoroView, but every host would inherit them here.",
+      "severity": "minor",
+      "fix": "In `dn`, return early when `e.metaKey || e.ctrlKey || e.altKey`. Add `const blur = () => setPedal(false); window.addEventListener(\"blur\", blur);` and remove it in the cleanup. Give the button `onKeyDown={(e) => { if (e.key === \" \" || e.key === \"Enter\") setPedal(true); }}` and `onKeyUp` to release, plus `aria-pressed={pedal}`. Optionally limit arrow panning to when `wrapRef.current` contains document.activeElement, or to when the pointer is over the view."
+     },
+     {
+      "where": "src/ui/xray/XrayDeviceView.tsx:183 and 368 (effect deps)",
+      "problem": "The `hr` prop is read when LabImaging is created, but it is not in the effect's dependency list. Changing hr on a mounted view has no effect, and the eslint-disable comment hides this.",
+      "severity": "minor",
+      "fix": "Add `props.hr` to the dependency array at line 368, or document that hr is read once at mount. Better: keep the LabImaging and call `lab.clock.setHr?.(hr)` (if CardiacClock exposes a setter) in a separate effect, so the renderer is not rebuilt."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.test.ts (coverage gaps)",
+      "problem": "The tests cover the acceptance criteria and are not tautological, apart from the gasExcess identity at line 90, which the criterion requires. But no test exercises a host check returning its negative or edge value: pump inletInLv false, the IABP above the arch apex, ECMO side \"left\", and an IABP from the left femoral side. The flags hosts will rely on are never shown false where they should be.",
+      "severity": "minor",
+      "fix": "Add cases for:\n- `{ kind: \"microaxial-pump\", inletBelowValveMm: 0 }`: inletInLv false, after the fix above.\n- `{ kind: \"iabp\", tipBelowCarinaMm: 20, side: \"left\" }`: the first shaft point has x > 0 and the tip is still 20 mm below the carina.\n- `{ kind: \"ecmo\", side: \"left\" }`: venous start x > 0, arterial start x < 0.\n- `{ kind: \"iabp\", tipBelowCarinaMm: -40 }`: whichever clamp or extension behaviour is chosen."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 9,
+    "rejected": [
+     "Finding 5, second half (rewrite shaft(), the needle and the conductor with TubeSpec's built-in hollow fields `inner`/`muIn`): TubeSpec (thorax.ts:88) has no `inner` or `muIn`. Those fields belong to the hardware wire/segment primitive (hardware.ts:101, thorax.ts SegOpts), and buildXrayScene's extras hook carries TubeSpec[] and BonePrim[] only (sceneBuilder.ts:166). The suggested object would fail the excess-property check, and the renderer would ignore the fields anyway. The negative inner tube is the renderer's documented shell convention (XrayRenderer.ts:1036: outer tube plus a negative inner tube on one shared points array, sampled identically). shaft() and the needle already pass the same points array to both tubes, so the lumens stay as they are. The first half of finding 5 was applied: the conductor is now hollow."
+    ],
+    "testsRun": [
+     "npx vitest run src/render/xray/deviceTubes.test.ts (18 passed, up from 14)",
+     "Dev-server check on :5173 with devMountXrayDeviceView and window.__xrayDeviceDraw: pacing lead plus IABP -40, ECMO left and pump all render; the hollow conductor shows as a clean thin lead with no uncancelled core; warm frame 22-71 ms; IABP tip marker contrast 35.6 grey levels, CNR 2.7. The view was unmounted afterwards."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no errors)",
+    "notes": "I fixed 8 of the 9 findings in full and finding 5 in part (see rejected). I checked each one against the code first.\n\nWhat changed:\n- **Pump inlet check (finding 1, major):** `inletInLv` is now true only when the inlet is below the valve and inside the cavity. The cavity is the myocardial ellipsoid with the wall taken off: new MODEL PARAMETER `DEVICE_MODEL.pump.lvWallMm = 10`. A probe confirmed the fault first: before the change, 0 and 90 mm both gave true. In all 4 cases it is now false at -10, 0, 5 and 110 mm and true at 35 mm.\n- **ECMO side (finding 2):** confirmed that `side: \"left\"` put both cannulae in the right groin. `venousToSvc(L, side)` now mirrors the femoral and iliac veins through a new `groinVeins()` helper. The transseptal course uses `groinVeins(L, \"right\")`. Tests cover both sides, and the left-sided venous tip still reaches the SVC-RA junction.\n- **IABP too-high position (finding 3):** confirmed that requests above about -22 mm were clamped without notice. A request above the arch apex now carries the tip on past the apex along the arch by the extra height, ending at the valve if it runs out of course. The clamp is documented on `IabpSpec.tipBelowCarinaMm`, and `positions.iabp` gains three fields:\n  - `clamped`\n  - `pastArchApexMm`\n  - `tipPastLeftSubclavianMm`: arc length past the course point nearest the left subclavian origin, positive when too high.\n\n  The existing height field `tipBelowLeftSubclavianMm` can never go below about +3.8 mm, because the arch apex is lower than the subclavian origin landmark. Hosts should grade \"too high\" on `tipPastLeftSubclavianMm` instead; it is already about -50 mm at carina level. The tests check -40, -60 (20 mm further on), -2000 (clamped) and left-groin access.\n- **ECMO arterial tip (finding 4):** confirmed that y = -300 was on the aortic course, not in an iliac. `arterialTipY` is now -360, below where the femoral course joins the aorta (y = -330), so the \"common iliac artery\" label is now true. A new test checks the tip is below -330 and off the midline on both sides.\n- **Pacing conductor (finding 5, first half):** the conductor is now hollow like the hardware.ts leads: a metal tube plus a negative \"conductor core\" tube on the same points, with inner share 0.55 (`DEVICE_MODEL.lead.conductorInner`). A test checks this.\n- **Unlabelled numbers (finding 6):** all the listed numbers, and the nearby ones, are now labelled MODEL PARAMETER entries in `DEVICE_MODEL`:\n  - IABP: `rampS`, which is now the default for `iabpInflationAt`; membrane and jacket shares; tip marker radius share.\n  - Pump: `cannulaWallMm`, pigtail tube radius, turns and jacket share.\n  - ECMO: `tipMarkerMm`, `tipMarkerMu`, `jacketShare`.\n  - Lead: tip electrode and ring distances.\n  - RHC: balloon span and membrane share.\n  - Pericardial: `hubOutsideMm`.\n  - Transseptal: `crossedNeedleOutMm`, `approachMm`, `septalOffsetMm`, `raBendMm`, dilator taper, marker values, needle values and jacket shares.\n  - A module constant `RA_PASS_RIGHT_MM` for the RA pass.\n  - `DEVICE_MU.jacket` now imports `CATHETER_WALL.jacket` from sceneBuilder; there is no import cycle.\n- **Pedal and keys (finding 7):** the F key is ignored with Cmd, Ctrl or Alt held. The pedal releases on window blur, on the tab being hidden, and on Meta or Control keyup. Arrow keys pan and call preventDefault only when the pointer is over the view or focus is inside it. The hold button now has `aria-pressed` and works with Space or Enter (keydown holds, keyup releases), and releases on blur and pointer cancel. The help text says so.\n- **hr prop (finding 8):** the LabImaging instance is kept in a ref, and a separate effect calls `lab.clock.setHeartRate(hr)` when `hr` changes and the view runs its own clock. The renderer is not rebuilt.\n- **Missing negative-case tests (finding 9):** added as listed: pump at 0 mm, IABP from the left side, ECMO left side, IABP at -40 mm.\n\nOut of scope, for the lead: the plan asks for `docs/realism/facts/xray-devices.md` listing every `DEVICE_MODEL` entry with its label. That file is outside this package's file list, so I did not create it. The constants it should list are now all in `DEVICE_MODEL`, plus `HELIUM_MU` and `RA_PASS_RIGHT_MM`.\n\nFiles: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/deviceTubes.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/deviceTubes.test.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/xray/XrayDeviceView.tsx. A temporary probe test was created and deleted."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-20) on http://localhost:5173 with visibilityState 'hidden'. Mounted the view with devMountXrayDeviceView({devices:[IABP tipBelowCarinaMm 20, inflation 1]}) and drove it through window.__xrayDeviceDraw. Closed the tab at the end.",
+     "IABP acceptance (hidden pane): res was 768. positions.iabp.tipBelowCarinaMm was 20.0, not clamped, with the tip at x = 21.6 mm. Over 8 measured frames the marker grey was 68-80 against a ring of 116-129, so contrast was 45-55 grey levels with CNR 1.7-2.4 and overSpine true. Frame totals were 20-33 ms against the 66.7 ms budget (withinBudget true). The first frame after mount took 250 ms (warm-up). A screenshot shows a dark rectangular tip marker over the left edge of the vertebral column with the shaft running down from it. Criterion met.",
+     "Helium balloon on the image: averaged over 8 frames at inflation 0 and at 1, columns over the balloon were 9-14 grey levels brighter when inflated across about 60 px (roughly the aortic width), with a 1-2 level global shift elsewhere. So the helium lucency shows.",
+     "Counterpulsation: with pumping:true, inflation from iabpInflationAt cycled 0 -> 0.29 -> 1 (about 4 frames) -> 0 over a beat at 72 bpm.",
+     "Every device kind rendered without exceptions in AP, LAO 30 and RAO 30 in 13-40 ms. Devices tried: microaxial pump (inlet 35 mm below the valve, inletInLv true); ECMO (venous tip to junction 0); pacing lead by femoral, RIJ and left subclavian to rv-apex, each with the correct station course; RHC femoral to wedge and RIJ to lpa (balloon flag reported); pericardial with sac contrast; transseptal tenting (tipToFossa 5) and crossed (crossed true); IABP requested too high (tip clamped to the arch, reported as -13.8 mm below the carina with pastArchApexMm 19); and IABP, pump and ECMO together.",
+     "Pedal: a keydown F switched the panel head to 'fluoro 15 p/s' and the button to 'Fluoroscopy on' with aria-pressed true. Keyup F returned it to 'last image hold'. Cmd+F did not engage the pedal. Each forced pulse booked 1/15 s of fluoro time, and the dose read-out (m:ss, mGy, Gy\u00b7cm2) appeared in the panel head.",
+     "Views: clicking the LAO 30 segment changed the head label and the hook's default view. initialView 'rao' with views ['rao','ap'] was respected. onPositions and onBeam fired.",
+     "Cleanup: after unmount, window.__xrayDeviceDraw was removed and the overlay element was gone.",
+     "Generic device names, the Clinical Graphite classes (panel, panel-head, btn, seg) and British English held in the UI chrome. No ground truth (tip-to-carina and similar) appears on the image or in the panel.",
+     "npx vitest run src/render/xray/deviceTubes.test.ts: 18 of 18 passed.",
+     "Renderer files: find -newer on the package .started marker shows only deviceTubes.ts and deviceTubes.test.ts changed under src/render. src/dev/xrayCapture.ts (21:20) and src/ui/sim/FluoroView.tsx (22:10) changed after the builder finished (20:53), so another package edited them, not this one.",
+     "Console: no errors. There were about 126 WebGL warnings saying 'READ-usage buffer was written, then fenced, but written again before being read back'. They come from the shared XrayRenderer meter PBO (XrayRenderer.ts lines 918-1662) under back-to-back forced hook draws. This is not this package's code.",
+     "Not re-checked: the two live-path realism sequences the builder skipped. They need the PCI and diagnostic labs at 1600 x 1000, which is outside this view."
+    ],
+    "problems": [
+     {
+      "where": "src/render/xray/deviceTubes.ts, function pericardial() (about lines 1018-1066)",
+      "problem": "The J wire's course is re-decided every frame from the instantaneous tipInSac. Breathing moves the sac under the body-fixed needle track: skinToSacMm ranged 52-62 mm over 30 frames. So with the needle at 60 mm and a 120 mm wire, the wire flips between following the sac (wireInSacMm 111-113) and a straight run along the needle line (wireInSacMm 0, which goes about 120 mm on through the cardiac silhouette). It flipped in 7 of 30 frames. A wire already passed into the sac does not leave it when the patient breathes, so the learner sees the wire jump between two courses whenever the needle sits near the sac entry.",
+      "severity": "major",
+      "fix": "Make the wire course stateful rather than instantaneous. Option one: decide 'wire in sac' on the rest geometry (compute hitO and hitI against restOuter and rest.pericardium from the same skin and d), then build the sac-following path on the current frame's mid shell from onSurface(mid, tip) even when the current tip is a few millimetres outside. Option two: add an optional PericardialSpec field (for example wireInSac?: boolean) that the host latches when the wire is first passed with the tip in the sac. Keep positions.pericardial.tipInSac instantaneous for host checks. Add a test in deviceTubes.test.ts: with needleDepthMm set at the rest sac entry plus 2 mm, wireInSacMm > 0 for resp across 0..1 and through the beat."
+     },
+     {
+      "where": "src/render/xray/deviceTubes.ts DEVICE_MODEL.pericardial.sacContrastShare (0.015)",
+      "problem": "At sacContrast 1 with a 15 mm effusion, the contrast-outlined sac is not discernible on the AP image. Screenshots and an 8-frame averaged difference against sacContrast 0 showed no outline along the cardiac border, only changes of 9 or fewer grey levels that cannot be told apart from beat and breathing differences. The plan's summary promises 'the contrast-outlined sac'.",
+      "severity": "minor",
+      "fix": "Raise the MODEL PARAMETER sacContrastShare until the shell reads as a thin dark rim where the beam runs tangential to it, at the lateral and inferior heart borders in AP. Check with the hook by averaging frames at sacContrast 0 and 1 and confirming a rim of 15 or more grey levels at the silhouette edge. Note the re-tuned value in docs/realism/facts as a MODEL PARAMETER."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/render/xray/deviceTubes.test.ts (19 tests passed, including the new J wire latch test)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "Both findings were right, and I applied both.\n\nFinding 1 (major, the J wire jumping between two courses) is fixed in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/deviceTubes.ts, function pericardial(). I used both of the suggested options together:\n- The wire's course is now decided once, on the rest geometry (end-expiration, diastole). That is the same geometry that fixes the skin entry and the needle track. The test is made against the rest sac and epicardium along the same skin point and direction.\n- The path that follows the sac is still built on the current frame's mid shell, starting from onSurface(mid, tip), even when breathing has moved the sac a few millimetres off the needle tip.\n- PericardialSpec has a new optional field, wireInSac?: boolean, which a host can latch when the wire is first passed. When set, it overrides the rest decision.\n- positions.pericardial.tipInSac, skinToSacMm and skinToEpicardiumMm are still computed per frame, so host checks are unchanged.\n\nA new test in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/deviceTubes.test.ts covers this:\n- Setup: four cases, needle at the rest sac entry plus 2 mm, 120 mm of wire, 30 frames run through the breath cycle and the beat (motionAt and clockStateAt).\n- The instantaneous tipInSac is false in some frames, which proves the sac does move under the needle in the test.\n- wireInSacMm stays above 60 mm in every frame, and its spread is under 15 mm.\n- A wire short of the sac at rest runs straight on in every breathing state.\n- Setting wireInSac true or false overrides the rest decision in both directions.\n\nFinding 2 (minor, the sac outline not visible) is fixed by raising the MODEL PARAMETER DEVICE_MODEL.pericardial.sacContrastShare from 0.015 to 0.06. I measured this in the running dev server on port 5173, using devMountXrayDeviceView and window.__xrayDeviceDraw:\n- Setup: AP view, 15 mm effusion, sacContrast 0 against 1, frames alternated and averaged over 8 frames, blurred over a 7 px box.\n- At 0.015 the difference was 9 grey levels or less, about the same as a 0-versus-0 control (p99 8.25 against 10.9). This confirms the finding.\n- At 0.06 the rim at the silhouette edge was about 20 to 25 grey levels at the lateral heart border and about 30 to 40 at the inferior border, falling to near 0 in the interior. A screenshot showed a visible dark band along the inferior heart border.\n- I also tried 0.08: lateral about 30, inferior about 40.\n- The parameter's comment records the tuning and the old value.\n- Afterwards I unmounted the dev overlay and restored the runtime value in the page.\n\nOut of scope:\n- Recording the new value in docs/realism/facts: the finding asks for this, but that folder is not one of this package's files, so I did not edit it. Someone needs to add a line there saying that DEVICE_MODEL.pericardial.sacContrastShare = 0.06 is a MODEL PARAMETER, tuned so the contrast-outlined sac reads as a rim of 15 or more grey levels in AP with a 15 mm effusion. It replaces 0.015.\n- Two observations from the measurement that are not part of either finding and that I did not chase:\n  - At high sac contrast, areas outside the sac got brighter (by up to about 16 grey levels at 0.06). This looks like the renderer's automatic exposure or levelling reacting to the extra attenuation.\n  - In the canvas pixels read back with drawImage, the sac appeared on the opposite side of the image from where it shows on screen. It would be worth checking that the hook's tipsPx and marker measurement use the same orientation as the displayed image."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "deviceTubes.test.ts: an IABP tip 2 cm below the carina yields a tube whose radio-opaque tip is at that height; helium mu is below soft tissue",
+      "met": true,
+      "evidence": "npx vitest run src/render/xray/deviceTubes.test.ts: 19 of 19 passed. 'an IABP tip 2 cm below the carina yields a tube whose radio-opaque tip is at that height' runs on 4 library cases. It checks that the tip marker has a metal channel above 1 and the shaft has none, that the last marker point has y = carina.y - 20 (to 1 dp), that positions.iabp.tipBelowCarinaMm is 20, and that no IABP point lies above the marker. 'helium attenuates less than soft tissue' asserts HELIUM_MU < MU.soft and DEVICE_MU.gasExcess < 0. It also checks a negative R channel for the balloon gas, a volume of 36-44 mL, and no gas tube when the balloon is deflated."
+     },
+     {
+      "criterion": "browser (hidden pane): the dev draw hook renders an IABP frame with the tip marker visible against the spine within the lab frame budget",
+      "met": true,
+      "evidence": "No verify report exists, so I ran the check myself. I used a background tab on localhost:5173, where requestAnimationFrame is paused. I mounted the view with devMountXrayDeviceView({devices:[{kind:'iabp',tipBelowCarinaMm:0}]}) and called window.__xrayDeviceDraw({view:'ap',measure:true}). Results: res 768. Steady-state frame totals were 15.7-18.6 ms against the 66.7 ms budget (15 p/s), withinBudget true. Marker overSpine true, marker grey 62 against a ring of 137 (SD 20), so contrast 74 and CNR 3.7. With the tip 20 mm below the carina: total 33.9 ms, within budget, contrast 40, CNR 1.6, overSpine true, tipBelowCarinaMm 20.0. Dose built up through LabImaging. Unmounting removed the hook. The very first exposed frame took 222 ms (scene and shader warm-up)."
+     },
+     {
+      "criterion": "No existing renderer file changes",
+      "met": true,
+      "evidence": "The package started at 20:03 (wp-snapshots/xray-device-fluoro-views/.started). Four renderer files changed after that: sceneBuilder.ts at 22:47, contrastTransport.ts at 23:11, coronaryTree.ts and lesionMorphology.test.ts at 23:12. All four are listed by diag-lesion-morphologies. That package snapshotted them at 22:22, and the snapshot copies still carry their 5 October mtimes. The diff of sceneBuilder.ts against that snapshot contains only lesion-morphology changes. xrayCapture.ts and FluoroView.tsx changed under diag-rod-physics. deviceTubes.ts uses only exports that already existed: CATHETER_WALL, extras, SID/SOD, LabImaging and treeCentre from sceneBuilder, plus thorax, heartShape, hardware and injection, which all date from 5 October. Nothing outside the package imports XrayDeviceView or deviceTubes."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows (compare_sets.py baseline <set>); the re-scored rows are listed in the package notes",
+      "met": true,
+      "evidence": "Capture set wp-xdfv was taken at 20:27 and scored at 20:32, before the other renderer packages' edits, so it shows this package's effect alone. python3 scripts/realism/compare_sets.py baseline wp-xdfv: baseline 189 of 236, wp-xdfv 189 of 236, with identical counts in every section and no lost or gained rows. The live_pci and live_diag sequences were not re-captured; they are measurement rows outside the pass count. The package adds only new files that no lab path imports, so the offscreen set cannot change. I could not see the package notes from here. With zero rows lost or gained, there is no re-scored row for them to list."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/xray/XrayDeviceView.tsx draw hook (first exposure after mount)",
+      "problem": "The first exposed frame after mount took 222 ms (scene build 160 ms), over the 66.7 ms lab frame budget. Every later frame took 16-34 ms. The acceptance check passes on steady-state frames, but a host will stall for one frame on the first pedal press.",
+      "severity": "minor",
+      "fix": "Optional. Warm up once off-pedal after XrayRenderer.create, for example by building the scene and rendering one frame without lab.expose so no dose is booked, or have the hook report the first frame separately. No change is needed for acceptance."
+     },
+     {
+      "where": "datasets/tmp/captures/wp-xdfv",
+      "problem": "The re-capture covered only the offscreen set. live_pci_raocru and live_diag_raocau were not re-captured. They are not counted rows, so the result stands.",
+      "severity": "minor",
+      "fix": "If the owner wants a complete set, run __xrayCapture.live('pci','wp-xdfv') and __xrayCapture.live('diagnostic','wp-xdfv') at the baseline viewport. Neither lab path imports the new files, so no change is expected."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/render/xray/deviceTubes.test.ts (19/19 passed)",
+     "npx tsc -p tsconfig.app.json --noEmit (clean)",
+     "python3 scripts/realism/compare_sets.py baseline wp-xdfv (189/236 vs 189/236, 0 lost, 0 gained)",
+     "browser background tab localhost:5173: devMountXrayDeviceView + window.__xrayDeviceDraw({view:'ap',measure:true}) for IABP at 0 mm and 20 mm below carina (within budget, marker over spine, contrast 74/40 grey levels)",
+     "mtime and snapshot diff audit of src/render/xray/*, src/dev/xrayCapture.ts, src/ui/sim/FluoroView.tsx against wp-snapshots"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output, exit 0)"
+   }
+  ]
+ }
+}

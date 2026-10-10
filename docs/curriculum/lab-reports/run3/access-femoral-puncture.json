@@ -1,0 +1,268 @@
+{
+ "package": "access-femoral-puncture",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built access-femoral-puncture: the Brilakis femoral sequence before the sheath (marker on the femoral head, ultrasound scan, puncture, needle and micro-wire events) in the full case.\n\n- **Site anatomy (`site.ts`).** New overrides: near-wall depth presets (20 and 40 mm), femoral head centre, anterior-wall calcium, inferior epigastric and lateral circumflex iliac origins, accessory profunda, small CFA. A calcified stretch narrows the target window to the longest clear stretch. New helpers: `calcifiedAt` and `entryVsHead` (below / lower half / upper half / above the head).\n- **Needle and B-mode (`ultrasound.ts`).** A needle meeting calcified wall tents further and then glances off sideways. A plugged needle gives no blood until `flushNeedle()`. Once the 0.018 inch micro-wire runs free it takes a course: up the iliac, into the inferior epigastric (high entry, aimed medially), the lateral circumflex iliac (high, aimed laterally), down the leg (steep, near the bifurcation), or the course a scenario scripts. In a small branch it stops after a short run (wire-resistance). Pulled back below the turn, it goes up the artery when advanced again. The image shows calcium as a bright anterior arc with a shadow beneath, and draws the two branches.\n- **Groin on fluoroscopy (`route.ts`).** `siteToAortic` maps the ultrasound site frame into the fluoroscopy frame. `limbExtras(r, model, site)` now places the femoral head from the site landmarks; without a site it draws as before. New drawing helpers put the femoral angiogram, the sheath, the needle, the micro-wire and the skin marker at their real site position.\n- **Session (`caseSession.ts`).**\n  - New marker and needle methods: `placeFemoralMarker`, `markFemoralHead`, `femoralMarkX`, `flushNeedle`, and `scriptAccess` for scenario scripts.\n  - `CASE_SESSION_EVENTS` gains wire-resistance, wire-misdirected and wrong-height. `caseTips.ts` already builds its `raises` from that list, so it was not touched.\n  - Screening the groin with the micro-wire in (`noteFluoroscopy('groin')`) raises wire-misdirected and wrong-height. A plugged needle with its tip in a lumen raises no-flashback.\n  - A sheath over a misplaced micro-wire is refused as a critical stop; the attending's line does not name the branch.\n  - Four new scored decisions: head marked, deep-artery angle and skin entry, entry over the head and above the bifurcation within two passes, and sheath over a misplaced wire.\n  - An accessory profunda stick is no longer described as \"below the bifurcation\".\n- **Autopilot.** It marks the head, flushes a plugged needle, screens and redirects a misplaced micro-wire, and takes out a wrong-height wire that a start state left in. `advanceToFlash` now defaults to the needle's full length. All ten scenarios reach 'sheath-in' with no critical error and no failed femoral decision.\n- **Scenarios.** `femoral.ts` and `femoral.launch.ts` add ten scenarios, each opening ready to puncture. `fem-entry-below-head` is linked from pm-access-femoral-sheath at the fluoroscopy workspace.\n- **UI.** The fluoroscopy view gets a \"Marker\" hand (drag on the image) and a \"Mark the skin here\" button; it draws the head, sheath, needle and micro-wire at the groin, only on exposed frames, and names neither the wire's course nor the entry height. The ultrasound view gets \"Take out and flush the needle\", wire pull-back and feed after the needle is out at the groin, \"21 gauge\" and \"0.018 inch\" labels, and a depth range up to 80 mm.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/site.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/ultrasound.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/route.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/autopilot.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/UltrasoundView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/access.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/femoral.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/femoral.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/femoralPuncture.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/femoralPuncture.tips.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/access/access.test.ts: new describe blocks 'femoral puncture: site landmarks and overrides' (depth presets; default site unchanged; small CFA and accessory profunda; fem-high-bif bifurcation in the head window and a head-centre puncture classified low; calcium narrows the window and the needle glances off; calcium bright arc with shadow), 'plugged needle and micro-wire course' (plugged no flash until flush; course rule; scripted IEA turns, stops, re-advances up the iliac), 'the groin on fluoroscopy' (limbExtras head moves with the landmarks, not the sheath tip, and the no-site fallback is unchanged; marker at the head's lower edge projects on the drawn lower edge within tolerance; sheath and micro-wire start at the arteriotomy, IEA course turns medially, down-leg runs caudally)",
+     "src/simulation/session/femoralPuncture.test.ts (new, 12 tests): every femoral scenario opens at access and fast-forwards cleanly; fem-micro-wire-iea raises wire-misdirected only on screening and insertSheath before withdrawal is a critical stop, then redirect and sheath; LCIA and down-leg raise it, fem-normal does not; branch resistance raises wire-resistance; fem-entry-below-head raises wrong-height, redone entry correct, sheath at the wrong height incorrect; CFV puncture gives venous flashback and the event; fem-plugged-needle no flash until flushNeedle; marker decision on, off and not marked; deep preset 45 and 70 degrees correct, 55 not",
+     "src/simulation/session/femoralPuncture.tips.test.ts (new, 6 tests): fem-normal at phase femoral, tipsFor(ctx,20) includes access-femoral-head-marker and access-femoral-scan-bifurcation (also from the case's own context); all 8 request tips brought up at their step (venous redirect after a CFV flash, never-push at the wire step); caseTips raises declare the new events with phase and route femoral; waiting entries naming the package (none) and request tips satisfiable; practiceIndex lists fem-normal, fem-high-bif and fem-calcified-anterior under the three lessons from femoral.launch.ts; every scenario declared and listed, fem-entry-below-head linked at workspace fluoro"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/access/access.test.ts: 28 passed",
+     "npx vitest run src/simulation/session/femoralPuncture.test.ts: 12 passed",
+     "npx vitest run src/simulation/session/femoralPuncture.tips.test.ts: 6 passed",
+     "npx vitest run src/ui/access/ (caseTips, caseTips.reach, siteSelector) + ledgerTips, handover, planning, modules/planning.tips: 7 files, 80 passed",
+     "npx vitest run src/simulation/session/caseSession.test.ts multiSite.test.ts multiSite.tips.test.ts scenarios.test.ts: 64 passed, 1 failed. The failure is scenarios.test.ts 'session.decide() records ... clean case': its only failed decision is 'pre-puncture-checklist' from src/simulation/session/modules/planning.ts, which another package edited at 09:10, after this package started at 08:59. It is a radial case and none of this package's decisions are involved.",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/tips.test.ts: 46 passed, 1 skipped",
+     "npx vitest run src/content/content.test.ts: 61 passed (launch file validation)",
+     "npx vitest run src/state/useProcedureStore.test.ts src/ui/lab/integration.test.ts src/ui/pci/PciLabSession.tips.test.ts src/simulation/procedure.test.ts: 33 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "acceptance": [
+     {
+      "criterion": "In 'fem-high-bif' the bifurcation lies within the head window and a puncture at the head centre is classified low",
+      "status": "met",
+      "evidence": "access.test.ts 'in fem-high-bif the bifurcation lies within the head window...': the site comes from SCENARIO_BY_ID['fem-high-bif'].site; the bifurcation (36) lies within headFrom..headTo (6..54); a needle aimed at headX gives arteriotomyClass() 'low'."
+     },
+     {
+      "criterion": "'fem-micro-wire-iea' raises wire-misdirected; insertSheath before withdrawal is a critical stop",
+      "status": "met",
+      "evidence": "femoralPuncture.test.ts: wire-misdirected is absent before noteFluoroscopy('groin') and present after. After removeNeedle, insertSheath('6') returns false: criticalErrors 1, complication 'sheath-over-misplaced-wire' marked critical, a stop line that does not name the branch, and a decision with correct false. After pulling back and re-advancing, the sheath goes in."
+     },
+     {
+      "criterion": "A CFV puncture gives a venous flashback and event venous-flashback; 'fem-plugged-needle' gives no flash until 'flush needle'",
+      "status": "met",
+      "evidence": "femoralPuncture.test.ts 'blood at the hub': a needle aimed at the CFV in fem-normal gives flashback 'venous' and activeEvents includes venous-flashback. In fem-plugged-needle the tip reaches the lumen (arterialPunctures 1) with kind 'none', plugged true and no-flashback raised; after flushNeedle() advanceToFlash succeeds with an arterial flash."
+     },
+     {
+      "criterion": "limbExtras head centre moves with the site landmarks, not the sheath tip",
+      "status": "met",
+      "evidence": "access.test.ts 'limbExtras head centre moves...': headX 20 versus 40 moves the head prim 20 mm (toBeCloseTo 20, 0). The head equals femoralHeadCentre(r, site), lies about sheathTipSiteX - headX below the route start, and the no-site fallback is still the old sheath-tip position. A second test checks that a marker at headFrom projects on AP within 6 mm of the drawn head's lower edge."
+     },
+     {
+      "criterion": "browser: __accessFluoroDraw({ station:'groin' }) shows the marker over the head and the IEA micro-wire only with the beam on",
+      "status": "needs-browser",
+      "evidence": "Not run in a browser (this package was told not to). The dev hook is unchanged. The marker (while markerX is set and before the first skin pass), the needle and the micro-wire are added only inside the exposed-frame draw, so nothing new appears when the pedal is up. The geometry (head from the landmarks, IEA turning medially) is covered headlessly in access.test.ts."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios fem-normal, fem-high-bif, fem-calcified-anterior under lessons pm-access-femoral-puncture, pm-access-seldinger, pm-access-femoral-sheath (from femoral.launch.ts)",
+      "status": "met",
+      "evidence": "femoralPuncture.tips.test.ts: practiceForLesson lists each of the three scenarios under each of the three lessons, with source matching femoral.launch.ts. content.test.ts (launch validation) passes."
+     },
+     {
+      "criterion": "Tips: in fem-normal at phase 'femoral', tipsFor(ctx, 20) includes access-femoral-head-marker and access-femoral-scan-bifurcation; every waiting.ts entry naming access-femoral-puncture becomes satisfiable, so the access lab's waiting count falls by at least their number",
+      "status": "met",
+      "evidence": "femoralPuncture.tips.test.ts: both tips appear for { lab:'access', phase:'femoral', route } and for the case's own access context (puncture + [femoral]). waiting.ts has no WAITING_TIPS or DEFERRED_RETARGETS entry with raisedBy 'access-femoral-puncture', so this clause holds trivially: the count falls by zero. The 8 request tips sit under proc-tip-context's entry; each is satisfiable by caseTips' access raises and is brought up by the session at its step. The reachability report shows access ready 85 of 89."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts/C5.md (not in this package's files) should list the new MODEL PARAMETERS. site.ts MP_SITE: femoralHeadLat, presetFasciaMm, branchR, ieaAboveLigament, lciaAboveLigament, branchLen, branchDy, branchDz, accessoryProfundaShare, accessoryProfundaBelowHead, clearWindowMm. ultrasound.ts: MP_NEEDLE.tentCalcified, calciumDeflectDeg, wireSteepDegFemoral; MP_MICRO.*; MP_BMODE.calcium, calciumMm, calciumShadow. route.ts: MP_LIMB.sheathTipSiteX, MP_GROIN_DRAW.*. caseSession.ts: the model parts of MP_FEMORAL_PUNCTURE. Each is labelled in code; the sourced ones cite Brilakis 4.2 or lab request pm-access#1.",
+     "src/simulation/session/scenarios.test.ts fails 'session.decide() records ... clean case'. Its only failed decision is 'pre-puncture-checklist' from src/simulation/session/modules/planning.ts, edited by another package (proc-chart-planted-problems) at 09:10, after this package started. A case played from the chart by fastForward never confirms the checklist. The fix belongs to that package: either its module treats an autopilot-played puncture as the team's, or autopilot.ts (now edited by this package) is told to confirm the checklist through the module's actions. I did not change autopilot for this, so as not to break their 'checklist' scenario, which opens at 'access' for the learner.",
+     "modules/planning.ts blocks placeNeedle in supervised and exam modes at a start of 'access' until the checklist is complete. So fem-entry-below-head opened in those modes from the picker would open without the team's wire in, because its state's placeNeedle is refused. Lesson links open in guided mode, where it works. That module could treat a scenario with a start state as having the checklist done by the team."
+    ],
+    "notes": "I snapshotted all 8 existing listed files into datasets/tmp/wp-snapshots/access-femoral-puncture/ and created .started before editing. femoral.ts and femoral.launch.ts are new. Since the start, other packages changed planning.ts, planning.test.ts and files under src/ui/lab and src/ui/pci; this package did not touch them.\n\nPlaces where I interpreted the design:\n\n- **The two branches** (inferior epigastric, lateral circumflex iliac) are in `AccessSite.branches`, not in `tubes`. They appear on ultrasound and steer the micro-wire, but the needle model does not puncture them (they arise above the ligament). This keeps every existing femoral site, needle result and B-mode test unchanged.\n- **Calcium blocks entry.** \"Needles through calcium tent and deflect\" is modelled as: the calcified wall never gives; once the needle has tented it, it glances off sideways (yaw changes). The learner has to choose a clear stretch.\n- **\"SFA when caudal\"** became: a needle at 50 degrees or steeper entering within 8 mm above the bifurcation sends the wire down the leg. The scenario script also forces any course; a scripted turn is used once.\n- **Steep femoral needle.** The existing wire rule (no wire through a needle steeper than 58 degrees) would make Brilakis's second option (about 70 degrees) impossible. I added `wireSteepDegFemoral` = 75 for femoral sites only; the radial limit is unchanged.\n- **wrong-height** is raised for an entry below or above the femoral head, matching the lesson's high and low rows; an entry over the upper half of the head is not flagged. The femoral-entry decision counts \"over the head\" as either half.\n- **wire-resistance** is raised for any wire resistance at the needle, at both groin and wrist. No tip uses that event today, so no panel changes.\n- **Drawing.** The micro-wire is drawn with the scene builder's existing \"014\" wire, the thinnest available. The sheath at a femoral site runs from the skin through the arteriotomy to the route's start. Drawing sizes are labelled MODEL PARAMETER.\n- **Autopilot.** It marks the head only when fluoroscopy is in use, so the crossover test's \"no fluoroscopy\" case still marks nothing. Femoral cases from all starts now carry the new decisions, and the autopilot scores them as expected."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve, with seven minor fixes. I found nothing critical or major. The package is implemented completely: the site overrides and landmarks, calcium (bright arc, shadow, tent then glance off), the plugged needle and flushNeedle, the micro-wire course rule and scripts, branch resistance with pull-back and re-advance, siteToAortic and limbExtras placing the head from the landmarks (the no-site fallback is unchanged), the groin drawing, the marker hand and the 'Mark the skin here' button, the critical stop for a sheath over a misplaced wire, four new ledger decisions, the autopilot changes, and ten scenarios with their launch file.\n\n**Tests and typecheck.** I ran these myself:\n- The three package test files: 46 of 46 passed.\n- Neighbouring session tests (caseSession, multiSite, scenarios): 56 of 57 passed. The one failure is 'clean case' in scenarios.test.ts, a radial case. Its only failed decision is pre-puncture-checklist from modules/planning.ts, which another package changed at 09:10.\n- multiSite.tips, handover, ledgerTips, caseTips, caseTips.reach, siteSelector and planning: 84 of 84 passed.\n- npx tsc -p tsconfig.app.json --noEmit: clean.\n\n**Files changed outside the list.** Files changed since .started that are not on the package list sit under src/ui/pci, src/ui/lab, src/simulation/patient, and planning.ts / planning.test.ts. Other packages plausibly changed them.\n\n**Browser check (in the dev pane on port 5173).** I opened fem-micro-wire-iea from the scenario picker, marked the head, punctured and fed the micro-wire. The course was 'iea' and wireMisdirected() was true. wire-misdirected was not active before an exposed frame and was raised after `__accessFluoroDraw({station:'groin'})`. The draw took about 49 ms, and there were no console errors. I could not read back the WebGL pixels (the drawing buffer is not preserved), so I did not see the marker over the head or the IEA wire medially with my own eyes. That geometry rests on the headless tests and on the code: the new parts are drawn only after the `!on` early return, so they appear only with the beam on. The dev pane is still on that scenario.\n\n**Content and wording.**\n- No ground truth appears on live screens: the attending lines name neither the branch nor the height, and the course goes only to telemetry.\n- The cited numbers check out against 05-access.ts and pm-access.json: the 45 and 70 degree options, 'first or second pass', 'needle plugged', the accessory profunda, 21 gauge and 0.018 inch. Everything else is labelled MODEL PARAMETER.\n- British English and the design-system classes (btn, btn-ghost, seg-btn) are used throughout.\n\n**For the orchestrator (out of scope here).**\n- docs/realism/facts/C5.md does not exist at all, though site.ts and the builder's report both point to it. Someone needs to create it with the new MODEL PARAMETERS.\n- In every femoral scenario the pre-puncture-checklist decision still fails under the autopilot, and in supervised or exam mode the planning module refuses placeNeedle. The planning package owns both.",
+    "findings": [
+     {
+      "where": "src/simulation/session/scenarios/femoral.ts wireInBelowTheHead (with AccessFluoroView.tsx lines 210 and 427, caseSession.ts sitePuncture)",
+      "problem": "In fem-entry-below-head the scenario's own puncture sets activeSite.firstPassAt (I checked: 425 s at open, passes 1, ledger empty). After that the marker is never drawn, 'Mark the skin here' stays disabled, and decideHeadMarked never fires for the learner's own repeat puncture. The scenario expects the learner to puncture again over the head, but they cannot use the marker or be scored on it.",
+      "severity": "minor",
+      "fix": "At the end of wireInBelowTheHead add `s.activeSite.firstPassAt = null;` so the learner's own first skin pass is the one scored. A cleaner alternative: in AccessFluoroView, gate the marker drawing and the button on 'no needle in the skin and no wire' (`!(pst.needle && pst.needle.inserted > 0) && !pst.wire && !act.sheath`) instead of firstPassAt, and in caseSession score the head marker at the first skin pass after a start state (record that a start state ran, and score at the next pass). Add a test: open fem-entry-below-head, abandonPass, placeFemoralMarker(headFrom), markFemoralHead returns true, puncture, then femoral-head-marked is correct."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts insertSheath (the new misplaced-wire branch)",
+      "problem": "The critical stop fires whenever wireMisdirected() is true, even with the needle still in. pm.insertSheath would refuse that anyway with the ordinary technique line. So clicking the sheath with the needle still in is scored as a critical error for an action that could not have happened.",
+      "severity": "minor",
+      "fix": "Change the condition to `this.activeSite.siteKind === \"femoral\" && this.pm.st.needleRemoved && this.pm.wireMisdirected()`. Add a test: in fem-micro-wire-iea, insertSheath with the needle still in returns false with criticalErrors 0; after removeNeedle it is the critical stop."
+     },
+     {
+      "where": "src/simulation/access/ultrasound.ts advanceNeedle, calcium deflection branch (`this.st.walls = {}`)",
+      "problem": "When the needle glances off calcium, the code wipes the wall state of every vessel on the pass, not just the target. If the needle had already entered another vessel on this pass (for example the CFV), the next step registers that front wall again. veinPunctures goes up twice, holes are duplicated and a second front-wall event is sent.",
+      "severity": "minor",
+      "fix": "Reset only the target's wall: replace `this.st.walls = {}; this.wall(t.id).glanced = true;` with `this.st.walls[t.id] = { frontTent: 0, backTent: 0, frontHole: false, backHole: false, roll: 0, glanced: true };` (use the WallState constructor the file already uses in wall()). Keep the crossings recompute."
+     },
+     {
+      "where": "src/simulation/access/ultrasound.ts advanceWire (`steep = n.angleDeg > (this.site.kind === \"femoral\" ? MP_NEEDLE.wireSteepDegFemoral : MP_NEEDLE.wireSteepDeg)`)",
+      "problem": "The 75 degree wire limit applies to every femoral-kind site, including femoral-vein and added crossover sites that this package does not own. That changes shared-engine behaviour for labs it does not touch: a 60 to 75 degree needle there used to meet 'steep' resistance. The justification (Brilakis's 70 degree option) covers the deep common femoral artery only.",
+      "severity": "minor",
+      "fix": "Scope it to the femoral artery target: `const femArtery = this.site.kind === \"femoral\" && this.site.arteryId === \"cfa\"; const steep = n.angleDeg > (femArtery ? MP_NEEDLE.wireSteepDegFemoral : MP_NEEDLE.wireSteepDeg);`. Add a test that a 65 degree needle at a femoral-vein site still gives wire-resistance reason 'steep'."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts decideFemoralEntry / screenMicroWire, and the femoral-entry decision text",
+      "problem": "The module text asks for entry over the lower half of the femoral head (05-access.ts line 555; the pitfall at line 668; tips at lines 2560 and 2571). The decision accepts the upper half silently, and its 'given' text says only 'over the femoral head'. Accepting the upper half is defensible: fem-high-bif leaves no clear stretch below the bifurcation except over the upper half, and the module's case at line 2040 accepts it. But the debrief does not say which half was used.",
+      "severity": "minor",
+      "fix": "Leave the scoring as it is (pm-access#2 says 'above or below the femoral head'). In decideFemoralEntry and decideDeepEntry, report the half: `over the ${h === \"lower-half\" ? \"lower\" : \"upper\"} half of the femoral head`. Change `expected` to 'Arterial entry over the femoral head (its lower half unless a high bifurcation leaves only the upper half), above the bifurcation ...'."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx draw() groin block; src/simulation/access/ultrasound.ts renderBMode (`allTubes`)",
+      "problem": "New allocations on every frame in render paths. Each exposed fluoroscopy frame (15/s) builds a new `steel` array and new polylines (markerPolylines, needlePolyline, microWirePolyline, femoralSheathPolyline) and maps them through steelTubes and toWorld, even when nothing has changed. renderBMode spreads `[...site.tubes, ...site.branches]` every frame at every femoral site, and calcifiedAt allocates a closure for each column.",
+      "severity": "minor",
+      "fix": "In renderBMode, build the combined list once per site: either a module-level `const US_TUBES = new WeakMap<AccessSite, UsTube[]>()` filled lazily, or an `allTubes` field set in buildAccessSite. In AccessFluoroView, cache the groin TubeSpecs in a ref keyed on a cheap signature (markerX, firstPassAt, needle entryX/angle/yaw/inserted, wire beyondMm and state, wireCourse, arteriotomy x, sheath id, geom identity) and rebuild only when it changes; do the same for the per-site sheath polylines. Write calcifiedAt as a plain for loop."
+     },
+     {
+      "where": "src/simulation/access/access.test.ts 'a site without the new overrides keeps its anatomy'",
+      "problem": "The test compares buildAccessSite(p) with buildAccessSite(p, {}) built from the same new code. That is tautological: it cannot catch a change from the model as it stood before this package, such as an extra rng draw or the femoral-head yRef. The real guard is that the older tests still pass.",
+      "severity": "minor",
+      "fix": "Pin golden values from the snapshot version for a fixed seed: run datasets/tmp/wp-snapshots/access-femoral-puncture/src/simulation/access/site.ts once and paste fatMm, the CFA radius and z at x=0, ligamentX, bifurcationX, targetFrom/targetTo and the femoral-head bone into the test with toBeCloseTo. Or deep-compare the new site, minus the new fields (calcium, branches, landmarks.headX), with the snapshot module's output."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 7,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/access/access.test.ts src/simulation/session/femoralPuncture.test.ts src/simulation/session/femoralPuncture.tips.test.ts (51 passed)",
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/siteSelector.test.ts src/simulation/session/multiSite.test.ts src/simulation/session/caseSession.test.ts (60 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all 7 findings against the code, applied every one, and rejected none. Two were applied in a changed form, explained under 1 and 4. All 51 package tests and 60 neighbouring tests pass, and the typecheck is clean. I edited only files on the package list plus its test files.\n\n1. **fem-entry-below-head marker** (`scenarios/femoral.ts`, `AccessFluoroView.tsx`). `wireInBelowTheHead` now ends with `s.activeSite.firstPassAt = null`, so the learner's own first skin pass is the one scored on the head marker. I also took the reviewer's view-side option: a new `markerAllowed(act)` helper gates both the marker drawing and the \"Mark the skin here\" button. It requires that the site has had no skin pass yet, no needle is in the skin, and there is no wire or sheath. I did not add a separate \"a start state ran\" flag to `caseSession`; the scenario reset is enough because `openAtStart` already clears the autopilot's decisions. New test: open the scenario, `abandonPass`, place the marker on `headFrom`, mark, puncture; `femoral-head-marked` is correct.\n\n2. **insertSheath critical stop** (`caseSession.ts`). The misplaced-wire stop now also requires `this.pm.st.needleRemoved`. With the needle still in, the click gets the ordinary technique line and no critical error. New test in fem-micro-wire-iea: with the needle in, the sheath is refused, there are 0 critical errors and no decision is recorded; after `removeNeedle` it is the critical stop.\n\n3. **Calcium deflection** (`ultrasound.ts`). Only the target's wall is reset now: `this.st.walls[t.id] = { ...newWall(), glanced: true }`. The crossings are still recomputed. New test: a CFV wall state set by hand during the pass survives the glance, and `veinPunctures` stays 0.\n\n4. **Steep wire limit** (`ultrasound.ts`). The reviewer's exact fix (`site.arteryId === \"cfa\"`) would have changed nothing, because every femoral-kind site has `arteryId` \"cfa\", including added crossover sites. There is no femoral-vein site kind. I scoped the limit to the vessel the bevel opens into instead: `femArtery = site.kind === \"femoral\" && !!t && t.id === site.arteryId`. The CFV and the branches therefore keep the shared default of 58 degrees. Crossover sites keep the 75 degree limit, because they are also the common femoral artery and the Brilakis reasoning applies to them. New test: a 65 degree needle in the CFV gives wire-resistance with reason \"steep\", and the same angle in the CFA passes.\n\n5. **Which half of the femoral head** (`caseSession.ts`). Scoring is unchanged. Both `decideFemoralEntry` and `decideDeepEntry` now say \"over the lower/upper half of the femoral head\" in the debrief text. The `expected` text now reads \"Arterial entry over the femoral head (its lower half unless a high bifurcation leaves only the upper half), above the bifurcation ...\". New test checks both texts on the redone entry.\n\n6. **Per-frame allocations.**\n   - `ultrasound.ts`: `renderBMode` now takes its tube list from `imagedTubes(site)`, which builds it once per site and keeps it in a module-level WeakMap. I checked that `site.tubes` and `site.branches` are never changed after the site is built.\n   - `site.ts`: `calcifiedAt` is now a plain for loop.\n   - `AccessFluoroView.tsx`: the draw loop keeps each sheath's tube in a per-site `sheathCache`, rebuilt only when the route geometry, site, sheath, arteriotomy x or needle angle changes. The groin marker, needle and micro-wire are kept in `groinCache`, rebuilt only when a signature string, the route geometry or the site changes. I checked that `buildXrayScene` only reads these tubes.\n\n7. **Tautological test** (`access.test.ts`). I ran the snapshot `site.ts` from `datasets/tmp/wp-snapshots/access-femoral-puncture` against the new one using vite-node from the scratchpad. For seeds fp-same and fp-gold the two sites were identical once calcium, branches and `landmarks.headX` were removed. I then pinned the fp-same values in the test: fat depth, CFA radius and depth at x=0, ligament and bifurcation positions, head edges, tube ids, typical angle, and the femoral-head bone."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-43) at http://localhost:5173, went to Full procedure and drove the lab through window.__caseSession and window.__accessFluoroDraw. I used a 1440x900 viewport for the screenshots, then reset it to desktop and closed the tab.",
+     "fem-normal opened at the access (ultrasound) workspace at step puncture/femoral. The landmarks were headFrom 6, headTo 54, headX 30 and bifurcationX -4. The UI showed 'Needle, 21 gauge', '0.018 inch micropuncture wire and sheath' and 'Take out and flush the needle'.",
+     "Marker on fluoroscopy: the Marker hand appears at a femoral artery site, and selecting it lays the marker at x 0. With the marker at headFrom, __accessFluoroDraw({station:'groin'}) returned true and the AP frame showed the marker's tip at the lower edge of the femoral head. 'Mark the skin here' changed to 'Skin marked', markX became 6 and the log read 'Skin marked at the tip of the marker.'",
+     "Marker drag: in the real UI, dragging up 60 screen px with the Marker hand moved femoralMarkerX from 0 to 12 mm.",
+     "fem-micro-wire-iea: I punctured at headX at 45 degrees. The flash was arterial, the arteriotomy at x 24.1 on the CFA, the micro-wire intraluminal 35 mm beyond, wireCourse 'iea' and activeEvents empty. Ticking with the pedal up raised nothing. One groin frame raised wire-misdirected. The image showed the needle and wire across the head, with the wire turning medially (to the viewer's right) and cranially. No screen text names the branch.",
+     "Same scenario: after removeNeedle, insertSheath('6') returned false, with criticalErrors 1 and complication 'sheath-over-misplaced-wire'. The attending said 'Stop. Nothing goes over that wire until you have seen where it runs.', which does not name the branch. The decision 'Nothing advanced over a misplaced micropuncture wire' was recorded as incorrect. I pulled the wire back to 5 mm and fed it to 45 mm: wireCourse became null, a groin frame raised no event, and insertSheath('6') then succeeded.",
+     "fem-plugged-needle: with the tip in the CFA lumen, the flash was 'none' with plugged true, no-flashback was raised, the hub text read 'No blood in the hub.' and the flush button was enabled. flushNeedle() succeeded, the needle went back to the skin with 0 mm inserted, and the log read 'Needle withdrawn and flushed.' Advancing again gave an arterial flash; passes 2.",
+     "fem-normal CFV puncture: the flash was venous on the CFV, venous-flashback was raised, the hub read 'Dark blood, not pulsatile.' and the tips added access-femoral-vein-redirect.",
+     "Tips: in fem-normal at the access workspace, the ids included access-femoral-head-marker, access-femoral-scan-bifurcation, access-femoral-deep-move-caudal and access-needle-flashback-check, with the context lab access, phase puncture, phases [femoral], route femoral.",
+     "fem-entry-below-head opened with the wire intraluminal and the arteriotomy at x 3.85 (the head starts at 14), and with no events. The first groin frame raised wrong-height. The entry below the head was visible only after panning 48 mm caudally.",
+     "fem-calcified-anterior, ultrasound short axis over the calcified stretch (calcium 26 to 50): there is a bright anterior arc on the artery with an acoustic shadow column beneath it, and the compressible vein lies beside it. The clear window narrowed to targetFrom 15.6 to targetTo 26.",
+     "femoral.launch.ts: three scenarios are listed under all three lessons, and fem-entry-below-head is linked from pm-access-femoral-sheath with workspace fluoro (I read this in the source; I did not click the lesson link).",
+     "Console: no errors and no warnings in the session. Midway, the open fem-micro-wire-iea case was replaced by a random 'default' case. This looked like a hot reload from another package's edits; it did not happen again on retry."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/access/UltrasoundView.tsx line 300 ('Arterial punctures so far: {pm.st.arterialPunctures}')",
+      "problem": "The counter is shown in every mode, not only guided. It gives away ground truth on the live screen. In fem-plugged-needle it read 'Arterial punctures so far: 1' while the hub said 'No blood in the hub.', so the learner learns the tip is in the artery and the needle must be plugged. The same applies to a dry tap in the wall or vein.",
+      "severity": "major",
+      "fix": "Show the arterial-puncture count only when the `guided` prop is set, or count a puncture only once an arterial flash has been seen. Keep 'skin passes' visible in every mode."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx draw(): station target `toWorld(model, stn.c)` for station 'groin' at a femoral site",
+      "problem": "The default groin framing puts the femoral head at the bottom edge of the 25 cm field, and the attending banner covers that edge. In fem-entry-below-head, the entry below the head (the whole point of the drill) is at or beyond the lower edge. It was visible only after four ArrowDown pans (48 mm). Marker placement at the inferior border also happens right at the bottom edge.",
+      "severity": "major",
+      "fix": "When st.current.station === 'groin' and the active site is a femoral artery, centre the field on the femoral head. Use femoralHeadCentre(r, site) from route.ts in the site-to-fluoroscopy frame, mapped with toWorld, instead of stn.c. Alternatively add an equivalent pan offset, so the head and the 1 to 2 cm below it lie mid-field."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts decideHeadMarked() / markFemoralHead()",
+      "problem": "femoral-head-marked was scored correct ('Marked on the lower edge of the femoral head') after placeFemoralMarker(headFrom) and markFemoralHead() with no fluoroscopy at all (fluoroAt null). The decision's label says 'marked on fluoroscopy', and a learner can drag the marker blind and still pass.",
+      "severity": "minor",
+      "fix": "In noteFluoroscopy('groin'), record the marker position that was screened (for example st.markerScreenedX = st.markerX when markerAllowed). In decideHeadMarked, require markX to equal a screened marker position, otherwise given 'Marked without an AP image'. Alternatively disable 'Mark the skin here' until a groin frame has been exposed with the marker at its current position."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx line ~396 (marker drag uses a fixed MARKER_MM_PER_PX)",
+      "problem": "The marker does not track the cursor. A 60 px drag in screenshot coordinates (about 108 CSS px on a 626 px canvas showing 250 mm) moved the marker 12 mm, while the image under the cursor moved about 40 mm. The ratio also changes with canvas size.",
+      "severity": "minor",
+      "fix": "Derive mm per CSS px from the view: FIELD_MM / wrapRef.current.clientHeight divided by the geometric magnification at the groin. Approximating it as FIELD_MM / clientHeight is acceptable. This keeps the marker under the cursor at any canvas size."
+     },
+     {
+      "where": "src/ui/access/caseTips.ts caseTipContexts, case 'fluoro' (outside this package's files)",
+      "problem": "The marker step happens on the fluoroscopy workspace, but there the tip context is only {lab:'access', phase:'wire'} with no phases [femoral]. The tips panel therefore shows iliac wire tips ('Wires through the iliac arteries under fluoroscopy') and not access-femoral-head-marker while the learner places the marker. The plan's tipIntegration asks for the head-marker tip 'during the marker and scan'.",
+      "severity": "minor",
+      "fix": "In the 'fluoro' case, when the active site is a femoral artery site and there is no sheath (accessStep().step is 'puncture' or the micro-wire step), push access('puncture', ['femoral']) as well as or instead of access('wire'). This needs the owner of caseTips.ts (proc-tip-context)."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts sheath-over-misplaced-wire stop line",
+      "problem": "The attending's stop line, 'Nothing goes over that wire until you have seen where it runs.', reads oddly when the learner has already screened the wire (wire-misdirected was raised before the attempt).",
+      "severity": "minor",
+      "fix": "Branch on st.misdirectedSeen. If the wire was screened, use a non-naming line such as 'Stop. That wire is not where it should be: pull it back and redirect it before anything goes over it.' Otherwise keep the current line."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 5 (caseTips.ts 'fluoro' tip context does not give phase femoral during the marker step): the finding is correct, but I did not apply it because src/ui/access/caseTips.ts is outside this package's files. It belongs to proc-tip-context. Change needed: in caseTipContexts case 'fluoro', when the active site is a femoral artery site with no sheath (accessStep().step is the puncture or micro-wire step), push access('puncture', ['femoral']) as well as or instead of access('wire'), so access-femoral-head-marker shows while the marker is placed."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/femoralPuncture.test.ts src/simulation/session/femoralPuncture.tips.test.ts (22 passed)",
+     "npx vitest run src/simulation/session/multiSite.test.ts src/simulation/session/multiSite.tips.test.ts src/simulation/access/access.test.ts (57 passed)",
+     "npx vitest run src/ui/access/siteSelector.test.ts (5 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked each finding against the code and applied five. Finding 5 is the only one not applied, because it needs a file outside the package (details in rejected).\n\n1. Puncture counter gives away ground truth (major). In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/UltrasoundView.tsx, 'Arterial punctures so far' now shows only when the `guided` prop is set. 'Skin passes' still shows in every mode.\n\n2. Groin framing (major). In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx, at the 'groin' station of a femoral artery site the field is now centred over the femoral head, 15 mm below its centre along the limb. This is a framing choice, named GROIN_FRAME_BELOW_HEAD_MM. The centre is mapped with siteToAortic and toWorld. The head's lower edge and the 1 to 2 cm below it now sit mid-field, well inside the \u00b1125 mm field and clear of the banner at the bottom. Other stations, radial sites and venous sites keep stn.c.\n\n3. Blind marking was credited (minor). In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts:\n   - AccessSiteState gains `markerSeenX` and `markSeen`.\n   - `noteFluoroscopy(stationId, view = 'ap')` takes an optional view. The default keeps existing callers working. An AP frame of the groin, with the marker on the skin before the first pass, records `markerSeenX`.\n   - `markFemoralHead` sets `markSeen` only if the marker is where it was last seen on AP.\n   - `decideHeadMarked` now scores a mark that was never seen as incorrect, given 'Marked without an AP image of the marker'.\n   - The fluoroscopy view passes its current view to `noteFluoroscopy`.\n   - The autopilot's `markFemoralHead` now screens the groin on AP between placing the marker and marking.\n\n4. Marker drag scale (minor). In AccessFluoroView.tsx, the fixed MARKER_MM_PER_PX is gone. The view now works out mm per CSS pixel from the image: FIELD_MM \u00d7 (SOD / SID) / canvas.clientHeight. FIELD_MM is the field at the detector, scaled back to the isocentre. So the marker follows the pointer at any canvas size.\n\n6. Stop line (minor). In caseSession.ts `insertSheath`, the stop line now depends on `misdirectedSeen`:\n   - If the wire was screened: 'Stop. That wire is not where it should be: pull it back and redirect it before anything goes over it.'\n   - If not: the original 'Nothing goes over that wire until you have seen where it runs.'\n   Neither line names the branch.\n\nTests, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/femoralPuncture.test.ts:\n- Existing marker tests now screen on AP before marking.\n- New test 'a mark made without an AP image of the marker at that position is not credited': blind, LAO only, and moved after an AP image all score incorrect; seen on AP scores correct.\n- The IEA test checks the screened stop line, and the needle-in test checks the unscreened line. Both check the branch is not named.\n\nAll ten scenarios still reach 'sheath-in' with no critical error and no failed femoral decision.\n\nI did not repeat the in-app check of the new groin framing and marker drag. They were checked against the code and geometry only."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "In 'fem-high-bif' the bifurcation lies within the head window and a puncture at the head centre is classified low",
+      "met": true,
+      "evidence": "src/simulation/access/access.test.ts line 338: buildAccessSite with SCENARIO_BY_ID['fem-high-bif'].site, bifurcationX between headFrom and headTo; a needle at headX reaches an intraluminal wire and pm.arteriotomyClass() is 'low'. The test passes (access.test.ts 30/30)."
+     },
+     {
+      "criterion": "'fem-micro-wire-iea' raises wire-misdirected; insertSheath before withdrawal is a critical stop",
+      "met": true,
+      "evidence": "src/simulation/session/femoralPuncture.test.ts, 'the micro-wire on screening': wire-misdirected is absent until noteFluoroscopy('groin') and present after it. insertSheath('6') returns false, criticalErrors is 1, complication 'sheath-over-misplaced-wire' is critical, and the attending stop does not name the branch. After the wire is withdrawn and advanced again the sheath goes in. A separate test covers a sheath tried with the needle still in, which is refused without a critical error. Passes."
+     },
+     {
+      "criterion": "A CFV puncture gives a venous flashback and event venous-flashback; 'fem-plugged-needle' gives no flash until 'flush needle'",
+      "met": true,
+      "evidence": "femoralPuncture.test.ts 'blood at the hub': with the needle aimed at the CFV, flashback().kind is 'venous' and activeEvents contains 'venous-flashback'. In fem-plugged-needle advanceToFlash is false, flashback shows plugged, no-flashback is raised, and after flushNeedle() the flashback is 'arterial'. fem-normal is not plugged. Passes."
+     },
+     {
+      "criterion": "limbExtras head centre moves with the site landmarks, not the sheath tip",
+      "met": true,
+      "evidence": "access.test.ts line 550: changing headX from 20 to 40 moves the head primitive by 20 mm. It matches femoralHeadCentre(r, site) and lies at its own site x below the sheath tip, while the call without a site keeps the old placement. Passes."
+     },
+     {
+      "criterion": "browser: __accessFluoroDraw({ station:'groin' }) shows the marker over the head and the IEA micro-wire only with the beam on",
+      "met": true,
+      "evidence": "No verify report exists, so I checked it in the running dev app on port 5173, in a separate browser tab that I have since closed. I opened fem-micro-wire-iea through __caseSession.scenario and marked the head with the autopilot (markerX = headFrom = 4). On the Fluoroscopy workspace, __accessFluoroDraw({station:'groin',view:'ap'}) drew the femoral head with the marker jaw tip on its lower edge. I then punctured, fed the micro-wire (course 'iea') and removed the needle with the beam off: the last-image hold still showed the old frame with no wire, and no wire-misdirected event was raised. A second __accessFluoroDraw then showed the 0.014 micro-wire curving over the head and raised 'wire-misdirected'. The code agrees: the wire is added only inside draw(), which returns before rendering unless the pedal is down or the frame is forced. Tests cover the marker geometry (access.test.ts 'marker's tip at the head's lower edge') and the IEA course turning medially."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios fem-normal, fem-high-bif, fem-calcified-anterior under lessons pm-access-femoral-puncture, pm-access-seldinger, pm-access-femoral-sheath (from femoral.launch.ts)",
+      "met": true,
+      "evidence": "src/simulation/session/femoralPuncture.tips.test.ts 'femoral puncture practice links': practiceForLesson returns each of the three scenarios under each of the three lessons with sim 'procedure', and the source matches femoral.launch.ts. All ten scenarios are declared with titles matching the registry. Passes."
+     },
+     {
+      "criterion": "Tips: in scenario fem-normal, at phase 'femoral', tipsFor(ctx, 20) includes access-femoral-head-marker and access-femoral-scan-bifurcation; every waiting.ts entry naming access-femoral-puncture becomes satisfiable, so the reachability waiting count for the access lab falls by at least their number",
+      "met": true,
+      "evidence": "femoralPuncture.tips.test.ts, a new test file beside the session event source (CASE_SESSION_EVENTS in caseSession.ts, exported as raises through src/ui/access/caseTips.ts): tipsFor({lab:'access',phase:'femoral',route,events}, 20) contains both tips, as does the case's own access context. WAITING_TIPS and DEFERRED_RETARGETS name this package 0 times (grep count 0 in waiting.ts), so the required fall is zero. All 8 request tips are satisfiable from caseRaises, which declares the events wrong-height, wire-misdirected, wire-resistance, venous-flashback and no-flashback, phase 'femoral' and route 'femoral'. reachability.test.ts passes (5/5)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/access/access.test.ts (30 passed)",
+     "npx vitest run src/simulation/session/femoralPuncture.test.ts src/simulation/session/femoralPuncture.tips.test.ts (22 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)",
+     "Browser check on localhost:5173, scenario fem-micro-wire-iea: __accessFluoroDraw({station:'groin',view:'ap'}) before and after the puncture, beam-off hold compared with beam-on frame"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors (about 10 s)"
+   }
+  ]
+ }
+}

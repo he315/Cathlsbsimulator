@@ -1,0 +1,146 @@
+[
+  {
+    "lab": "cathlab",
+    "what": "Intracoronary nitroglycerin as a syringe action in the diagnostic lab: the learner chooses a dose (50, 100 or 200 µg) and a route (manifold or needle through the Y-connector), the aortic pressure falls in proportion, and a timer shows the 1–2 minutes before full vasodilatation. Giving it through a damped or ventricularised trace is flagged, and the lab asks about PDE-5 inhibitors and outflow tract obstruction (HOCM) before the first dose.",
+    "learnerDoes": "Reads the systolic pressure, chooses the dose from Brilakis's ladder, gives it with a free trace, waits before the first cine run, and treats a pressure fall with saline or phenylephrine.",
+    "success": "Dose matches the pressure band; no nitrate through an abnormal trace; first run recorded after the wait; hypotension below 100 mmHg handled without further nitrate.",
+    "tips": [
+      "diag-nitrate-dose-by-pressure",
+      "diag-acq-spasm-repeat-view"
+    ],
+    "lessonIds": [
+      "pm-acquiring-test-nitrate"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A scenario in which a smooth focal mid-RCA narrowing is spasm: it is present on the first run without nitrate, and resolves to a mild irregularity when the same projection is repeated after intracoronary nitrate. A variant in which it persists, prompting intravascular imaging, and a catheter-tip spasm variant (trace ventricularises then falls) in a small non-dominant RCA.",
+    "learnerDoes": "Recognises possible spasm, withdraws if the catheter caused it, re-engages carefully with a free trace, then gives intracoronary nitrate, repeats the same angles, stores a documenting run, and requests IVUS or OCT if the narrowing persists.",
+    "success": "The narrowing is not reported as a fixed lesion without a post-nitrate run in the same projection; no injection into a ventricularised trace.",
+    "tips": [
+      "diag-acq-spasm-repeat-view",
+      "diag-ventricularised-stay-out",
+      "diag-acq-small-rca-small-volume"
+    ],
+    "lessonIds": [
+      "pm-acquiring-test-nitrate",
+      "pm-acquiring-anatomy"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Test injection read-out: a 1–2 mL puff that shows the tip coaxial, tenting the wall, super-selective in the LAD (short left main) or in the conus branch, with the corresponding debrief. Upsizing the JL by one size engages the circumflex in the short left main variant. A short left main variant in which a catheter deep in the LAD blocks the circumflex ostium: with a side-hole catheter the trace stays normal while the lateral wall becomes ischaemic.",
+    "learnerDoes": "Gives a test puff before each run and states whether the tip is coaxial and the whole artery fills; corrects super-selective or conus positions before the full injection.",
+    "success": "No full injection into a conus or tenting position; both left branches imaged in the short left main variant.",
+    "tips": [
+      "diag-acq-read-test-puff",
+      "diag-short-lm-size-up",
+      "diag-conus-withdraw"
+    ],
+    "lessonIds": [
+      "pm-acquiring-test-nitrate"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Acquisition geometry and dose: table height and detector distance controls, magnification field, collimation and angulation, with a live dose-rate (mGy/min) and cumulative air kerma display that reflects them (higher at steep angles, low table, raised detector and magnification) while the image stays similar. The debrief also reports the follow-up a dose would trigger in Brilakis 28.2 (above 5 Gy air kerma a skin check within a month; above 10 Gy a physicist's peak skin dose calculation).",
+    "learnerDoes": "Sets table high and detector close before each angle, chooses the shallowest adequate angle, collimates, and changes angle in a long study.",
+    "success": "Dose rate kept below 20 mGy/min where possible; the debrief compares the learner's cumulative dose with a reference set-up.",
+    "tips": [
+      "diag-acq-table-up-detector-down",
+      "diag-acq-high-dose-adjust"
+    ],
+    "lessonIds": [
+      "pm-acquiring-setup"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Run recording mechanics: separate cine pedal and injection with timing (contrast-free first 1–2 seconds), breath-hold command (inspiration or end-expiration), injection volume and force on the hand syringe, optional panning, and fluoroscopy versus cine frame-rate settings. Weak or small injections stream and fail to reflux; deep inspiration from the radial can pull the catheter out; panning degrades the frames. Each run can show spasm, air, thrombus or debris embolism or dissection, which the learner must notice.",
+    "learnerDoes": "Frames the catheter on screen, presses the pedal, injects after 1–2 seconds to full opacification with reflux, holds the breath, avoids panning, and stops when the distal bed and any collaterals have filled.",
+    "success": "Runs show full opacification for about three beats with aortic reflux, no streaming, and no unnecessary panning; inflations documented with fluoro save in the PCI lab.",
+    "tips": [
+      "diag-acq-frame-then-pedal",
+      "diag-acq-breath-hold",
+      "diag-acq-streaming-fill",
+      "diag-acq-catheter-backs-out",
+      "pci-acq-fluoro-save-inflations"
+    ],
+    "lessonIds": [
+      "pm-acquiring-cine"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Poor-filling scenarios: a 4 French or side-hole catheter in a large or ectatic artery, and a high-flow state (severe aortic stenosis), where the artery cannot be filled until a larger lumen or stronger injection is used; the option to declare the study non-diagnostic.",
+    "learnerDoes": "Recognises incomplete filling, changes to a larger-lumen catheter, avoids side-hole catheters, injects harder, and declares the run non-diagnostic if filling is still incomplete.",
+    "success": "No lesion grading from an incompletely filled artery.",
+    "tips": [
+      "diag-acq-streaming-fill"
+    ],
+    "lessonIds": [
+      "pm-acquiring-cine"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "View-set completeness in the debrief: the lab records each run's angles in signed rotation/tilt notation and checks them against Brilakis's orthogonal sets for the left main, LAD, RCA and grafts, and against a per-segment two-view rule; ostial cases check for the least foreshortened ostial views.",
+    "learnerDoes": "Builds a complete orthogonal set for each artery and adds views for segments seen only once or foreshortened.",
+    "success": "Every segment seen in two near-orthogonal views; the debrief lists any segment seen once.",
+    "tips": [
+      "diag-acq-complete-view-set",
+      "diag-acq-ostium-views",
+      "pci-acq-target-orthogonal-views"
+    ],
+    "lessonIds": [
+      "pm-acquiring-views"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A segment-naming step on CoronaryDominance and CADICA runs: after deciding dominance, the learner clicks a point on a real run and names the SYNTAX segment number, with the numbering scheme switched by dominance (segments 4 and 16 in right dominance, 15 in left dominance).",
+    "learnerDoes": "Decides dominance from both injections, then names segments on real cine, including a circumflex PDA as segment 15 in left-dominant studies.",
+    "success": "Correct segment numbers on a set of runs from both dominance patterns.",
+    "tips": [
+      "diag-acq-dominance-follow-pda"
+    ],
+    "lessonIds": [
+      "pm-acquiring-anatomy"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Finish-of-study territory check: before the catheter is removed, the learner is asked which vessel supplies each wall; a scenario with an anomalous circumflex leaves the lateral wall unsupplied on the left injection, while the vessel is faintly visible on review of the RCA injection, and an aortic root injection defines its origin.",
+    "learnerDoes": "Names a supplying vessel for each wall, re-reviews the other injection and adds an aortic root injection when a territory is unsupplied.",
+    "success": "The anomalous circumflex is found before the study ends.",
+    "tips": [
+      "diag-acq-missing-territory",
+      "diag-anomalous-origin-image-first"
+    ],
+    "lessonIds": [
+      "pm-acquiring-anatomy"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Bypass graft angiography timing: a prior-CABG patient with a long vein graft to a large territory and a LIMA graft. The lab offers run length control and a non-selective subclavian injection or a subclavian-versus-aortic pressure comparison before the selective mammary injection.",
+    "learnerDoes": "Prolongs the vein graft run until the distal coronary bed fills, and images the proximal subclavian artery (or compares pressures) before engaging the mammary graft.",
+    "success": "Distal filling through the long vein graft is recorded, and a subclavian stenosis is excluded before selective mammary angiography.",
+    "tips": [
+      "diag-acq-complete-view-set"
+    ],
+    "lessonIds": [
+      "pm-acquiring-cine"
+    ],
+    "priority": "P3"
+  }
+]

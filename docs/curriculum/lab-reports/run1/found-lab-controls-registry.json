@@ -1,0 +1,180 @@
+{
+ "package": "found-lab-controls-registry",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built found-lab-controls-registry. The table-side controls are now a strip of tabs found by glob, and every tab talks to the lab through one lab-agnostic LabControlsTarget, which DiagnosticLabSession implements. The four existing sections (C-arm and table, Imaging, Back table, Patient) moved into tab files with their markup unchanged. The foot switches, Inject, Aspirate and Store fluoro stay in the bar above the tabs. A one-off scratchpad check rendered the old component (from the snapshot) and the new one for all four tabs in two lab states, and the server-rendered HTML was byte-identical.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/TableSideControls.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/types.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/registry.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/tabs/CArmTab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/tabs/ImagingTab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/tabs/BackTableTab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/tabs/DefibTab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/controls.test.ts (10 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/__fixtures__/tabs/FixtureTab.tsx (fixture: diagnostic tab, order 25)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/__fixtures__/tabs/PciOnlyTab.tsx (fixture: PCI-only tab)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/__fixtures__/tabs/NotInExamTab.tsx (fixture: tab hidden in exam mode)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/ui/lab/controls/controls.test.ts: 3 files, 31 tests passed",
+     "npx vitest run src/ui/lab/eventLog.test.ts src/ui/lab/labRun.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/useContextTips.test.ts: 4 files, 54 tests passed",
+     "One-off scratchpad check (not in the repo; separate vitest config): the snapshot TableSideControls against the new one, rendered on the server for tabs carm, imaging, table and patient, before and after breath-hold, X-ray off and a 16 cm field: identical HTML, 1 test passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors in this package's files. It reports 8 errors, all in another package's files: src/simulation/patient/contrastBudget.test.ts, src/simulation/patient/patient.test.ts and src/simulation/team/formulary.test.ts. The errors are 'node:path' has no export 'resolve' and possibly-undefined x.data/e.data. These files belong to found-patient-formulary, which runs in the same wave.",
+    "acceptance": [
+     {
+      "criterion": "lab.test.ts and integration.test.ts pass unchanged",
+      "status": "met",
+      "evidence": "diff against the snapshot shows lab.test.ts is unchanged, and integration.test.ts was not touched. Both pass: 12 and 9 tests. lab.test.ts's full LabScreen render, in every mode, still finds 'Table-side controls', 'Fluoro' and 'Cine', and shows no ground truth."
+     },
+     {
+      "criterion": "A test renders TableSideControls for the diagnostic session and finds the same four sections as before",
+      "status": "met",
+      "evidence": "controls.test.ts checks that CONTROL_TABS ids are [carm, imaging, table, patient] and that the strip labels are ['C-arm and table','Imaging','Back table','Patient'], in that order, with C-arm and table open first. It also checks each tab's controls: joystick, memories with one Store button per memory, table and height; field, rates, dose level, shutters, wedge and X-ray release; every catheter in CATHETERS plus the J-wire note; breathing and defibrillator. The scratchpad check against the snapshot component gave byte-identical HTML for all four tabs."
+     },
+     {
+      "criterion": "Adding a file under controls/tabs/ adds a tab without editing any other file (test with a fixture tab)",
+      "status": "met",
+      "evidence": "controls.test.ts globs ./tabs/*.tsx plus ./__fixtures__/tabs/*.tsx and passes the result through the same collectControlTabs the registry uses. The fixture tab then appears in the strip at its order, between Imaging and Back table, and renders its body with the shell's Hold control. The PCI-only fixture is absent from the diagnostic lab and present for a 'pci' target. The not-in-exam fixture hides itself in exam mode. The registry rejects a file without a 'tab' export, a duplicate id and a tab with no labs."
+     },
+     {
+      "criterion": "Design: LabControlsTarget (C-arm, table, imaging, back table, defibrillator, plus optional capabilities queried by tabs); ControlTab { id, label, order, labs, visible(target, policy), Component }; registry globs tabs/*.tsx; DiagnosticLabSession implements LabControlsTarget; behaviour unchanged",
+      "status": "met",
+      "evidence": "types.ts defines LabControlsTarget, ControlTab (visible is optional and defaults to shown), ControlTabProps and ControlKit. Optional capabilities are queried with capability(k); later packages add keys to LabCapabilities by module augmentation and register them with provideCapability, and 'patient' (the PatientEngine) is provided now. registry.ts uses import.meta.glob('./tabs/*.tsx', {eager:true}). The session declares 'implements LabControlsTarget'. Simulator.tsx still passes session={session} and typechecks. The session tests cover subscribeControls (re-renders on the same store slices the old useSim selectors watched, plus session notifications, and stops after dispose) and the setters (same store actions; values the lab does not offer are refused)."
+     }
+    ],
+    "outOfScope": [
+     "The Hold and Seg controls are shared by the shell and the tabs, and the file list has no file to hold them. TableSideControls.tsx defines them and passes them to every tab as the ControlKit prop, so tabs never import from the shell and there is no circular import. A small src/ui/lab/controls/kit.tsx would be a cleaner home if a later package's list allows it. No change is needed now."
+    ],
+    "notes": "Snapshot and the .started marker are in datasets/tmp/wp-snapshots/found-lab-controls-registry/. The snapshot holds the three listed files that already existed: TableSideControls.tsx, labSession.ts and lab.test.ts. The other six listed files are new.\n\nHow it fits together:\n- src/ui/lab/controls/types.ts defines the interfaces. LabControlsTarget is flat: the C-arm, table and memories; the imagingControls() read-out, including the field and rate options the lab offers, so the PCI lab can add 3.75 p/s without touching the tab; the back table; breath-hold and the defibrillator; subscribeControls, controlsVersion and controlsPolicy.\n- src/ui/lab/controls/registry.ts exports collectControlTabs(modules) (checks each tab, sorts by order then id), CONTROL_TABS (the glob), and tabsFor(target, policy, tabs), which filters by the target's controlsLab and the tab's visible().\n- A tab file exports `tab: ControlTab`. The core orders are 10, 20, 30 and 40. Back table is for the diagnostic lab only; the C-arm, Imaging and Patient tabs list both labs.\n- TableSideControls keeps its props (session, input) and adds optional `tabs` and `initialTab`. If the open tab hides itself, the first tab shown takes its place.\n- DiagnosticLabSession now:\n  - declares controlsLab = 'diagnostic';\n  - subscribes once to the store and bumps a counter only when imaging, cArm, pedal, catheterId, fluoroOn or policy changes (the same slices the old component selected), then calls the controls listeners;\n  - folds its own notify() into controlsVersion();\n  - adds thin wrappers over the existing store actions;\n  - exports DIAGNOSTIC_FIELDS and DIAGNOSTIC_RATES.\n  The store subscription is removed on dispose.\n- No shared engine defaults changed. No doses, thresholds or device dimensions were added. All UI text is the old text, moved without change.\n- Test fixtures are under src/ui/lab/controls/__fixtures__/tabs/, following the __fixtures__ convention of practiceIndex. They are not globbed by the runtime registry or picked up by vitest's include, which only matches *.test.ts. They do typecheck.\n- Nothing was checked in the browser, as instructed; a separate stage checks the app."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "PASS with minor findings. The design is implemented completely and behaviour is unchanged. types.ts defines LabControlsTarget, ControlTab { id, label, order, labs, visible?, Component } and LabCapabilities, which later packages extend by module augmentation. registry.ts globs ./tabs/*.tsx eagerly, validates each tab and sorts by order then id. The four sections moved into CArmTab, ImagingTab, BackTableTab and DefibTab (id 'patient'), and their markup matches the snapshot line for line. The foot switches, Inject, Aspirate and Store fluoro stay in the bar above the tabs. DiagnosticLabSession declares 'implements LabControlsTarget'. Its new store subscription watches the same slices the old useSim selectors watched (imaging, cArm, pedal, catheterId, fluoroOn) plus policy, and it is pushed to unsub, so dispose removes it. The setters call the same store actions as before. DIAGNOSTIC_FIELDS (25/20/16/12) and DIAGNOSTIC_RATES (7.5/15/30) are the old UI constants moved into the session, so no clinical numbers are new. lab.test.ts is byte-identical to its snapshot (empty diff), and integration.test.ts was not touched. I ran npx vitest run on controls.test.ts, lab.test.ts and integration.test.ts: 3 files, 31 tests passed. npx tsc -p tsconfig.app.json --noEmit is now clean; the 8 errors the builder saw in another package's files are gone. Files under src/ changed after .started that are not in this package's list all belong to other packages. src/state/useLabHandoverStore.ts and src/simulation/session/handover(.test).ts belong to found-handover-contract. src/simulation/patient/contrastBudget.test.ts, src/simulation/patient/patient.test.ts and src/simulation/team/formulary.test.ts belong to found-patient-formulary. The only new files outside the list are the test and its fixtures, as allowed. Simulator.tsx is the only consumer of TableSideControls, and its props still fit. There is no ground truth on screen: the UI text is the old text moved unchanged. The design system classes are unchanged and the new comments are in British English. The plan sets no tip integration or lesson links for this package, so neither is expected. No render-path per-frame allocations were added beyond the old component's own. tabsFor and imagingControls/backTable allocate small arrays and objects on each React render, at the same rate the old component re-rendered.",
+    "findings": [
+     {
+      "where": "src/ui/lab/controls/controls.test.ts, test 'stops listening to the store when disposed'",
+      "problem": "The test cannot fail. dispose() clears controlsListeners whether or not the store subscription was removed, so n stays 0 even if the store.subscribe unsub were never pushed. A leaked store subscription would pin the disposed session (and its engine) to the global store for good, and this test would not catch it.",
+      "severity": "minor",
+      "fix": "Assert on the session's own counter instead of the listener: `const v = session.controlsVersion(); session.dispose(); g().setField(16); expect(session.controlsVersion()).toBe(v);` controlsRev only moves if the store listener is still attached. The n === 0 check can stay as well."
+     },
+     {
+      "where": "src/ui/lab/controls/controls.test.ts (acceptance: 'finds the same four sections as before')",
+      "problem": "The builder's byte-identical check of the snapshot component against the new one ran only in a scratchpad and is not in the repo. The in-repo test checks labels and controls, so it would miss changes to markup, classes or attributes, such as a lost '!text-warn' on 'X-ray disabled' or a lost disabled state.",
+      "severity": "minor",
+      "fix": "Optional. In the patient-tab render, add `expect(patient).toMatch(/disabled=\"\"[^>]*>Shock</)` to check the Shock button is disabled when uncharged. In the imaging test after toggleFluoro, add `expect(html).toMatch(/!text-warn[^\"]*\"[^>]*>X-ray disabled/)`. These cover the state-dependent classes and disabled states the move had to keep."
+     },
+     {
+      "where": "src/ui/lab/controls/types.ts ControlTab.visible",
+      "problem": "The plan's design lists visible(target, policy) as a member, and the builder made it optional, defaulting to shown. This is a reasonable relaxation, but later packages should know about it.",
+      "severity": "minor",
+      "fix": "No code change. Keep the doc comment ('default: always'), and mention it in the builder notes passed to the eight packages that will add tabs (drugs, bail-outs, kink, route, rhythm, left heart, beam, PCI devices)."
+     },
+     {
+      "where": "src/ui/lab/TableSideControls.tsx (Hold and Seg passed as ControlKit)",
+      "problem": "The builder flagged this as out of scope. Hold and Seg live in the shell and reach the tabs only through the kit prop. It works and avoids a circular import, but later tab packages cannot reuse Hold outside a tab body, for example in a dialog.",
+      "severity": "minor",
+      "fix": "No change in this package. Record a follow-up for a later package whose file list allows it: move Hold and Seg to src/ui/lab/controls/kit.tsx and import CONTROL_KIT from there in TableSideControls.tsx."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 3 (ControlTab.visible optional): no code change, as the finding itself recommends. The doc comment 'default: always' in src/ui/lab/controls/types.ts stays. Orchestrator: tell the eight tab-adding packages (drugs, bail-outs, kink, route, rhythm, left heart, beam, PCI devices) that visible(target, policy) is optional and a tab is shown when it is left out.",
+     "Finding 4 (Hold and Seg passed through ControlKit): no change in this package, as the finding recommends. Follow-up for a later package whose file list allows it: move Hold and Seg into a new src/ui/lab/controls/kit.tsx and import CONTROL_KIT from there in TableSideControls.tsx. That file is not on this package's list."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/controls/controls.test.ts src/ui/lab/lab.test.ts (2 files, 22 tests passed)",
+     "Mutation check: with the store-unsubscribe loop in DiagnosticLabSession.dispose() commented out, 'stops listening to the store when disposed' failed. labSession.ts was then restored from a backup and confirmed byte-identical with cmp."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "Only one file was edited: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/controls.test.ts. No source file was changed.\n\nFinding 1 is fixed. The dispose test can now fail. It reads session.controlsVersion() before dispose(), calls setField(16) after it, and checks that the version has not changed. The n === 0 check is still there. The mutation run above shows the test now catches a leaked store subscription, which the old version could not.\n\nFinding 2 is fixed. Two markup checks were added that depend on lab state:\n- In the patient tab, the Shock button is disabled while the defibrillator is uncharged (/disabled=\"\"[^>]*>Shock</).\n- After toggleFluoro, the X-ray release button keeps the !text-warn class (/!text-warn[^\"]*\"[^>]*>X-ray disabled/).\nBoth patterns were checked against the markup in DefibTab.tsx and ImagingTab.tsx and pass.\n\nFindings 3 and 4 needed no code change, as the review itself said. They are listed under rejected only so the notes for later packages reach you."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-8) at http://localhost:5173 and went to Coronary simulators > Cath lab (FreeLab, so the diagnostic lab mounts). window.__lab is the DiagnosticLabSession and reports controlsLab 'diagnostic'. The tab was closed at the end.",
+     "The tab strip is role=tablist 'Control groups' and shows [C-arm and table, Imaging, Back table, Patient] in that order, with C-arm and table selected first. The bar above the tabs holds Fluoro F, Cine C, Inject J, Aspirate L and Store fluoro N, and Store fluoro is disabled at start.",
+     "Imaging tab: clicking 20 cm, 7.5 p/s, 30 f/s and 'high' dose each updated the store or session (imagingControls().field, pulseRate and cineRate, exposure.fluoroLevel) and moved aria-checked to the new choice. The X-ray toggle switched xrayEnabled true, false, true and its label followed. The side-shutter slider (0 to 0.45, step 0.01) and the wedge-insertion slider set store shutters [0.23,0.23,0,0] and wedge insertion 0.6. I restored all of these afterwards.",
+     "Re-render path: setField(16) applied straight to the store, and setFluoroLevel('low') on the session, both showed up in the open Imaging tab without any UI action. So both the store-slice subscription and session.notify() reach subscribeControls. controlsVersion went from 0 to 1 when the store policy changed.",
+     "Back table tab: lists all 17 CATHETERS plus the J-wire note. Clicking Judkins Left 3.5 set store catheterId JL3.5 and moved the active marker. I restored JL4.",
+     "Patient tab: Breathe in and hold toggled breathHeld() and the label changed to 'Breathe normally' with the accent border, then back again. Charge showed 'Charging', then '200 J ready' after __labStep(8 s), and Shock became enabled. All clear set cleared on the next lab step and gave the button its accent border. I did not fire a shock.",
+     "C-arm and table tab, driven with Enter keydown/keyup on the Hold buttons: holding LAO set aria-pressed true, the arm reached LAO 11 after 1 s and the readout showed 'LAO 11 CRA 0'. On release the arm braked to LAO 15 and stayed there. Holding memory 2 drove the arm to LAO 40. Store on memory 5 saved the current angles. Holding Up raised the table and the readout showed 'height +32 mm'. Head moved panY.",
+     "Foot switches: holding Fluoro set pedal.fluoro true and gave the button its accent border. Twenty steps with __fluoroDraw filled fluoroLoop with 20 frames and enabled Store fluoro. Clicking it stored a run (the reference panel lost 'No runs stored yet'), and the loop was cleared and the button disabled again. Holding Inject pushed 2.5 mL in 1 s, and releasing it stopped the plunger.",
+     "Exam mode: with store policy.mode set to 'exam' (restored afterwards), all four tabs still showed. Their text is controls only: angles, memories, imaging options, catheter names and defibrillator buttons. There is no engagement state, score or coach text.",
+     "Looks: a screenshot at 650 px viewport width shows the strip and tabs in Clinical Graphite styling, the same as the old markup. The tablist is 458 px wide and the four tabs take 312 px.",
+     "Compared with the snapshot in datasets/tmp/wp-snapshots/found-lab-controls-registry: the tablist, the Patient/defibrillator markup and the table handlers (including Centre) are the same. The doubled aria-label 'Table-side controls' (LabLayout's section plus the component root) was there before this package.",
+     "npx vitest run src/ui/lab/controls/controls.test.ts src/ui/lab/lab.test.ts: 22 of 22 passed (10 and 12).",
+     "The page reloaded fully three or four times during the session (a fresh __lab each time, with simT and version back to 0). The console shows only vite reconnect and React DevTools messages around these, which fits other packages editing files at the same time. I found no fault in this package that would cause them."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/lab/TableSideControls.tsx, the tablist div (className \"flex border-b border-line px-1\")",
+      "problem": "The strip does not wrap and does not scroll (overflow-x visible, flex-wrap nowrap). It sits inside LabLayout's panel, which has overflow-hidden. At the measured 458 px width the four core tabs use 312 px, so about two more tabs of the roughly eight this registry is built to take (drugs, bail-outs, kink recovery, route tools, rhythm orders, left heart, beam controls, PCI consoles) will push later tabs out of view, and they cannot be reached. The markup is the same as before, but the registry makes this certain to happen.",
+      "severity": "minor",
+      "fix": "Change the tablist className to \"flex overflow-x-auto border-b border-line px-1\" and add shrink-0 to each tab button's className (\"tab !h-8 shrink-0 whitespace-nowrap !px-2 text-[13px] ...\"). Alternatively use flex-wrap. Re-run controls.test.ts and lab.test.ts. The builder's byte-identical HTML check will then differ by these classes only."
+     },
+     {
+      "where": "C-arm and table tab, Centre button (target.table.set({x:0,y:0})), and the X key in src/ui/sim/Simulator.tsx:180; sync in DiagnosticLabSession.step, src/ui/sim/labSession.ts around line 663",
+      "problem": "Centre resets TableDrive to x=0, y=0, but the store pan is never updated. TableDrive.step() returns false when the table is at rest, because 'before' is taken after set(), so st0.setPan is never called. Observed: drive state {x:0,y:0} while the store imaging stayed at panX 0, panY 98.8 through several seconds of stepping. The image and readout stay off-centre. The snapshot has the same handler, so this bug was there before this package and does not break 'behaviour unchanged'.",
+      "severity": "minor",
+      "fix": "In DiagnosticLabSession, wrap the table the controls get so that set() also writes the store. For example, add to the session: centreTable or override via a TableControl adapter: `readonly table` stays the TableDrive, and step() syncs whenever the drive and store differ: replace `if (this.table.step(dt)) {...}` with `const moved = this.table.step(dt); const ts = this.table.state; if (moved || ts.x !== st0.imaging.panX || ts.y !== st0.imaging.panY || ts.height !== st0.imaging.tableHeight) { st0.setPan(ts.x, ts.y); if (ts.height !== st0.imaging.tableHeight) st0.setTableHeight(ts.height); }`. This is in labSession.ts, which is in this package's file list. Since the package requires behaviour unchanged, it could go to a follow-up instead."
+     }
+    ],
+    "consoleErrors": [
+     "Uncaught NotFoundError: Failed to execute 'setPointerCapture' on 'Element': No active pointer with the given id is found (TableSideControls.tsx onPointerDown, 4 times). My synthetic PointerEvents with made-up pointerIds caused these, so they are a verification artefact. The handler is the same as before, and a real pointer would not hit this. No other console errors."
+    ]
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/controls/controls.test.ts src/ui/lab/lab.test.ts (23/23 passed, 11 in controls.test.ts including the new regression test)",
+     "npx vitest run src/ui/lab/integration.test.ts (9/9 passed; run because labSession.ts changed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "Both findings checked against the code and applied.\n\n1. Tab strip overflow, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/TableSideControls.tsx. The finding was correct. The tablist was \"flex border-b border-line px-1\": it neither wraps nor scrolls, and it sits inside a panel with overflow hidden, so any tab past the panel width could not be reached. The tablist is now \"flex overflow-x-auto border-b border-line px-1\" and each tab button has shrink-0. Server-rendered HTML now differs from the old snapshot only by these two classes.\n\n2. Centre leaves the image off-centre, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts, DiagnosticLabSession.step. The finding was correct. TableDrive.set() moves the drive and zeroes its velocity. step() then takes its 'before' snapshot after that move and returns false, so st0.setPan was never called. The store's panX/panY, which FluoroView and the readout use, stayed where they were. step() now syncs the store whenever the drive and the store differ, not only when the drive moved during that frame. Before applying it I confirmed that nothing else in src writes the store's pan or table height (setPan, panTable, centreTable and setTableHeight have no callers outside the store except this sync), and that the store's clamps (\u00b190, \u00b1120) match TableDrive's limits. So the drive is the only source and the sync cannot override another control or keep rewriting every frame. This also fixes the X key in Simulator.tsx, which calls the same session.table.set; that file was not edited. The bug predates this package, but the fix is in a listed file and only adds the missing store write, so I applied it here rather than deferring it.\n\nTest added to /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/controls.test.ts ('table centre'). It drives the table off-centre, releases it, calls table.set({x:0,y:0}), steps once, and checks that the store's panX and panY are 0. Nothing outside the package's files was touched."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "lab.test.ts and integration.test.ts pass unchanged",
+      "met": true,
+      "evidence": "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts: lab.test.ts 12/12 and integration.test.ts 9/9 passed. lab.test.ts is byte-identical (cmp) to the pre-package snapshot at datasets/tmp/wp-snapshots/found-lab-controls-registry/src/ui/lab/lab.test.ts. integration.test.ts was last modified Oct 5 19:41, before the package started (snapshot .started Oct 8 09:25), so it has not been changed."
+     },
+     {
+      "criterion": "A test renders TableSideControls for the diagnostic session and finds the same four sections as before",
+      "met": true,
+      "evidence": "src/ui/lab/controls/controls.test.ts 'shows the same four sections as before, in the same order, with the same controls' server-renders TableSideControls with a real DiagnosticLabSession. It checks that the tab strip reads C-arm and table / Imaging / Back table / Patient, that C-arm opens first, and that each tab has its controls (angulation, memories, table, field, rates, dose, shutters, wedge, X-ray release, catheters plus the J-wire note, breathing, defibrillator, Shock disabled while uncharged). It passed. I also compared the snapshot's original TableSideControls.tsx with the four tab files: markup, labels and handlers moved across unchanged, now routed through LabControlsTarget. The only addition is overflow-x-auto/shrink-0 on the tab strip so it can hold more tabs. The session re-renders the controls on the same store slices the old useSim selectors used, plus policy."
+     },
+     {
+      "criterion": "Adding a file under controls/tabs/ adds a tab without editing any other file (test with a fixture tab)",
+      "met": true,
+      "evidence": "registry.ts collects tabs with import.meta.glob('./tabs/*.tsx'), and collectControlTabs sorts them by order then id. controls.test.ts globs the real tabs plus src/ui/lab/controls/__fixtures__/tabs/{FixtureTab,PciOnlyTab,NotInExamTab}.tsx through the same function. The fixture tab appears in the strip in its order slot and renders with the shell's control kit. Lab filtering, policy hiding (exam), fallback for a hidden initial tab, and errors for a malformed tab or duplicate id are also tested. All passed."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/ui/lab/controls/controls.test.ts (3 files, 32 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0, no errors."
+   }
+  ]
+ }
+}

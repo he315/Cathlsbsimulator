@@ -1,0 +1,165 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Distal drug delivery for no-reflow. When the complications engine raises no-reflow or slow flow, add a microcatheter (or over-the-wire balloon / dual-lumen catheter) that can be advanced over the wire to the distal vessel, and give every intracoronary drug a route: 'via guide' or 'via microcatheter'. Drugs given via the guide while flow is TIMI 0–1 should have a much smaller effect than the same drug given distally. Add nicardipine (Brilakis 100–300 µg, his preferred agent) to the existing adenosine, verapamil, nitroprusside and epinephrine bail-outs, with dose fields showing both manuals' ranges.",
+    "learnerDoes": "Recognises no-reflow, advances a microcatheter over the wire to the distal bed, chooses an agent and a dose, and repeats it if the response is partial.",
+    "success": "Vasodilator delivered through the microcatheter rather than the guide; agent matched to the patient's pressure and rhythm (nicardipine or intracoronary adrenaline when hypotensive; no verapamil or high-dose RCA adenosine when bradycardic); flow restored to TIMI 3.",
+    "tips": [
+      "pci-no-reflow-distal-vasodilator",
+      "pci-noreflow-pick-agent"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-noreflow"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A 'no-reflow-refractory' lab event (to be added to LAB_EVENTS in src/content/lab/tips.ts), raised when no-reflow persists after two distal vasodilator doses without TIMI improvement (a lab threshold chosen as an example of refractory no-reflow; Brilakis 19.9 gives no number of doses). It lets a refractory-no-reflow tip (intracoronary adrenaline, Brilakis 19.9) appear only at that point rather than at the first report of no-reflow. Also add intracoronary adrenaline as a distal-delivery action that can be chosen first (trial data: COAR 2022; 2026 network meta-analysis) or after vasodilators fail.",
+    "learnerDoes": "Gives two distal vasodilator doses; when flow stays at TIMI 0–2, adds intracoronary adrenaline through the microcatheter.",
+    "success": "Adrenaline delivered distally; flow improves to TIMI 3; no further balloon or stent work before TIMI 3.",
+    "tips": [
+      "pci-noreflow-pick-agent"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-noreflow"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A cause-finding step before treatment when flow fails. When flow drops after a balloon or stent, the engine should hold back the label (dissection, thrombus, embolisation/no-reflow, air, spasm) until the learner has (a) kept the wire, (b) imaged the stent edges and distal vessel in two projections or with IVUS/OCT, and (c) checked the ACT. Stenting a no-reflow vessel without a dissection should worsen flow (Brilakis 10.1); stenting a dissection should restore it. Each contrast injection into a no-reflow vessel should add ischaemia (ST elevation, chest pain), while waiting after a vasodilator allows recovery (Oxford). The tip pci-embol-plaque-aspirate now fires only on 'no-reflow' (not bare 'slow-flow') and its text is conditional on dissection having been excluded.",
+    "learnerDoes": "Keeps the wire, reviews two views or images, checks the ACT, names the cause, then chooses stent (dissection) or no stent plus aspiration and vasodilator (embolisation).",
+    "success": "Correct cause named before treatment; no stent placed into no-reflow; no more than one diagnostic injection before treatment of no-reflow.",
+    "tips": [
+      "pci-noreflow-dissection-or-embolism",
+      "pci-noreflow-hold-contrast",
+      "pci-embol-plaque-aspirate"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-noreflow",
+      "cm-flow-embolism-plaque-thrombus"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Haemodynamic consequences and support for no-reflow and embolisation. The PCI lab should report hypotension as an event while no-reflow, embolisation or air is active (so tips that require 'hypotension' can fire), and offer a 'call the shock team / choose haemodynamic support' action with IABP among the devices. Persistent hypotension during infarct-related no-reflow is cardiogenic shock: routine IABP is not recommended (IABP-SHOCK II; 2023 ESC ACS guideline), so choosing IABP alone should be scored as acceptable rather than best.",
+    "learnerDoes": "Recognises persistent hypotension during no-reflow, keeps a pressor running, calls for haemodynamic support chosen with the shock team, and continues distal vasodilator treatment.",
+    "success": "Support started while the systolic pressure stays low; flow restored without the pressure falling further.",
+    "tips": [
+      "pci-noreflow-low-pressure-support",
+      "pci-air-collapse"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-noreflow",
+      "cm-flow-embolism-air"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Plaque and thrombus embolisation as distinct events. Distinguish embolised thrombus (responds to GP IIb/IIIa inhibitor or cangrelor, heparin top-up if the ACT is low, aspiration thrombectomy when the thrombus is large) from embolised plaque (responds to aspiration and vasodilators; laser if aspiration fails; worsens if stented). Add a 'thrombus in the guide' event when a large or plaque-modification balloon is withdrawn and the guide is not aspirated before the next injection. Add cangrelor and laser as actions. In a scenario with a distal filter, slow flow after stenting should be relieved by aspirating through the guide and retrieving the filter (Brilakis Fig. 25.7).",
+    "learnerDoes": "Clears the guide after every device; identifies whether the embolus is thrombus or plaque; gives the matching treatment; retrieves a full filter after aspirating the guide.",
+    "success": "No embolisation from an unaspirated guide; thrombus treated with antithrombotic escalation and aspiration; plaque embolisation not stented; filter retrieved after guide aspiration.",
+    "tips": [
+      "pci-embol-thrombus-three-steps",
+      "pci-embol-plaque-aspirate",
+      "pci-prep-clear-the-guide",
+      "pci-epd-slow-flow"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-plaque-thrombus"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An air-embolism lesson that starts in the engine's air state. Start a scenario with a bubble entering the RCA after a large balloon is withdrawn without aspirating the guide (or an injection after trapping without back-bleeding), with bradycardia, hypotension and inferior ST elevation. Add the treatment actions the manuals teach that the lab lacks: 100% oxygen via non-rebreather (exists), advancing the wire into distal side branches to break up bubbles, aspiration through an aspiration thrombectomy catheter for large volumes, atropine, temporary pacing and a vasopressor for the bradycardia and hypotension (general resuscitation support while the air clears), intracoronary adrenaline for arrest (0.05 mg has been used), and a 'check the manifold and connections' step that must be done before the next injection is allowed. A second injection before the source check should produce a second air event.",
+    "learnerDoes": "Stops injecting, gives oxygen, keeps the wire and moves it through the distal branches, aspirates via the guide or a catheter, supports the rhythm, gives IC adrenaline if the patient arrests, and checks the system before injecting again.",
+    "success": "Flow restored; no second air event; the source identified (trapping without back-bleed, balloon withdrawal, connection).",
+    "tips": [
+      "pci-air-first-moves",
+      "pci-air-collapse",
+      "pci-air-find-source",
+      "pci-trap-then-backbleed"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-air"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A small coronary air bubble during diagnostic angiography: if the learner injects with air in the syringe (syringe held without its distal end tilted up (Oxford's advice; this module reads the distal end as the plunger end), manifold not cleared after an exchange, or a damped trace), show a bubble in a distal branch with transient chest discomfort. Offer: store the loop, oxygen, observe, analgesia, IC nitrate for spasm.",
+    "learnerDoes": "Stores the loop, gives oxygen, watches the ECG and the patient, and clears the system before the next injection.",
+    "success": "Loop stored; oxygen given; no further air; no unnecessary escalation in an asymptomatic patient.",
+    "tips": [
+      "diag-air-small-bubble",
+      "diag-mon-store-loop",
+      "diag-root-air-in-line"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-air"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "procedure",
+    "what": "A neurological deficit in recovery, with an escalation step. In the full procedure, after closure and transfer to recovery, occasionally (more often in older patients with aortic atheroma, previous stroke, diabetes, renal failure, hypertension or aortic valve disease, and after catheter exchanges without a wire or flushing a catheter that would not aspirate) present a new deficit: aphasia, visual disturbance, limb weakness or confusion, sometimes hours after the case. Offer: ABC, neurological examination with time of onset, review of antithrombotic drugs given, emergency CT with CT angiography, stroke team referral, and wrong options (observe, start heparin before imaging, give aspirin before imaging). Add an end-of-case neurological check at the table (speak, move all four limbs).",
+    "learnerDoes": "Performs the end-of-case neurological check; when a deficit appears, runs ABC, examines and times it, reviews drugs given, orders CT with vascular imaging and calls the stroke team.",
+    "success": "No antithrombotic drug before imaging; imaging and stroke team requested at once; time of onset recorded.",
+    "tips": [
+      "diag-finish-neuro-check",
+      "diag-exchange-over-wire"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-stroke"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "A pulmonary oedema event triggered by fluid and contrast load. Track total contrast and IV fluid in the full procedure. In patients with LV impairment, a raised LVEDP, severe aortic or mitral stenosis or dialysis dependence, a large contrast or fluid load (or a ventriculogram despite an LVEDP above 30 mmHg) triggers breathlessness, falling saturation and crackles. Offer the Oxford treatment: high-flow oxygen, sit up, IV loop diuretic (e.g. furosemide 80–100 mg), IV nitrate only if systolic above 100 mmHg, CPAP, consider IABP; wrong options include a fluid bolus and nitrate at low pressure.",
+    "learnerDoes": "Reads the LVEDP before ventriculography, limits contrast and fluid in at-risk patients, recognises oedema, and treats it in order.",
+    "success": "Ventriculogram omitted when LVEDP is above 30 mmHg; oedema treated without nitrate at systolic 100 mmHg or below; saturation recovers.",
+    "tips": [
+      "diag-lvedp-before-lv-gram",
+      "diag-oedema-on-table",
+      "haemo-wedge-oedema-risk"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-oedema-cholesterol"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "procedure",
+    "what": "Cholesterol embolisation at follow-up: in a patient with a diseased or aneurysmal aorta in whom catheters were exchanged without a wire or debris was aspirated, add a delayed follow-up vignette (days later) with livedo reticularis, blue toes with palpable pulses, a creatinine that keeps rising beyond 2 weeks and eosinophilia, to be distinguished from acute limb ischaemia and contrast nephropathy.",
+    "learnerDoes": "Recognises cholesterol embolisation from the pattern and chooses supportive management (hydration, blood pressure control, renal advice).",
+    "success": "Correct diagnosis; no emergency limb angiography for a limb with palpable pulses.",
+    "tips": [
+      "diag-exchange-over-wire"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-oedema-cholesterol"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A context event for plaque embolisation, so plaque-specific advice appears only where it applies. Add a lab event (for example 'atherectomy' raised while a rotational or orbital atherectomy device is in use, or 'plaque-embolisation' raised by the complications engine when debris from atherectomy, a lipid-rich lesion or a vein graft causes slow flow) to LAB_EVENTS in src/content/lab/tips.ts. The tip pci-embol-plaque-aspirate could then require it rather than firing on every no-reflow. An atherectomy scenario should also let the learner set burr size and speed (Brilakis: ratio under 0.5, 140,000–150,000 rpm, runs under 15 s with more than 30 s between, decelerations under 5,000 rpm; Oxford: ratio 0.5–0.6, 135,000–180,000 rpm) and offer bradycardia prevention for an RCA or dominant circumflex (atropine, temporary pacing, aminophylline).",
+    "learnerDoes": "Chooses burr size and speed, runs short ablations with pauses, prevents bradycardia in an RCA case, and when slow flow follows, excludes dissection, stops the burr and gives a distal vasodilator rather than stenting over the debris.",
+    "success": "Settings inside the manuals' ranges; no stent placed over embolised plaque; flow restored with distal vasodilator, aspiration or laser.",
+    "tips": [
+      "pci-embol-plaque-aspirate",
+      "pci-noreflow-dissection-or-embolism",
+      "pci-no-reflow-distal-vasodilator"
+    ],
+    "lessonIds": [
+      "cm-flow-embolism-noreflow",
+      "cm-flow-embolism-plaque-thrombus"
+    ],
+    "priority": "P3"
+  }
+]

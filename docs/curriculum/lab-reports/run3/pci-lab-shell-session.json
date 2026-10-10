@@ -1,0 +1,460 @@
+{
+ "package": "pci-lab-shell-session",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built pci-lab-shell-session. The PCI lab now runs on the full-screen LabLayout (lab=\"pci\") through a new PciLabSession: header, live monitor, reference monitor with QCA, haemodynamic monitor, dose panel, table strip and table-side controls. Imaging happens only while a pedal is held. The old 900 ms of automatic fluoroscopy after each action is gone. Cine runs and \"store fluoro\" go to the reference monitor through the same helpers the diagnostic lab uses. Each new, repeated or launched case gets a fresh patient, dose and syringes. A hand-over from the full case keeps that case's own patient. The lab takes a pending launch (scenario, variant, start, mode) on mount. The old keys still work through usePciInput.ts, plus three new ones: C (cine pedal), N (store fluoro) and Space now holds the cine pedal for the run. Device drawing moved unchanged from AngioPci.tsx into render/core.ts, composed by pciDevicesRender.ts. AngioPci.tsx is now a thin wrapper that re-exports pciDevices, pciFlowMods and NO_REFLOW_SCALE. Device consoles are found by glob from src/ui/pci/consoles/. The assisted console uses the old load path in every mode and is opened from a new table-side \"Devices\" tab. 3.75 p/s is added to PulseRate (adrc.ts and useSimulatorStore.ts) and to the PCI dose panel and imaging controls. The session records every console or dialogue it opens as a 'ui' event. It also exports a snapshot(), a tip context with 'plan' and 'finish' phases plus a held 'high-radiation-dose' event, and `raises`. All 16 listed files were snapshotted first. Every new and touched test file passes and the typecheck is clean, except two assertions in another package's controls.test.ts (see outOfScope). The realism re-capture (set pls1) scores 189 of 236, the same as the baseline, with no rows lost.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/AngioPci.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/PciLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/PciLabSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/PciLabSession.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/PciLiveMonitor.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/pciDevicesRender.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/render/core.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/usePciInput.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/consoles/registry.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/consoles/AssistedDeviceConsole.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/tabs/PciDevicesTab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/LabLayout.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/render/xray/adrc.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useSimulatorStore.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/DosePanel.tsx"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/PciLabSession.test.ts (16 tests: pedal fluoroscopy and dose, no fluoroscopy time with the pedal up, cine run stored, store fluoro, X-ray release and beam gate, a repeated case starting afresh, 'ui' events, 4 core scenarios x guided/independent completed, 3.75/7.5/15 dose ratios)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/PciLabSession.tips.test.ts (5 tests: dose-alarm tip, plan phase, finish phase, raises export, waiting.ts entries)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/pciDevicesRender.test.ts (3 tests: AngioPci re-exports, glob finds core, golden digests of the 4 baseline device scenes plus a dissection/perforation state taken from the code before the move)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/controls/pciDevicesTab.test.ts (4 tests: the Devices tab appears only in the PCI lab, lists and opens consoles, offers 3.75 p/s in imaging, stays hidden on a bare target)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/pci/ src/ui/lab/controls/pciDevicesTab.test.ts src/ui/lab/integration.test.ts -> 5 files, 37 tests passed",
+     "npx vitest run src/ui/lab/integration.test.ts src/ui/lab/labRun.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/scenarios.test.ts src/simulation/dose.test.ts -> 5 files, 98 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/simulation/angioPci.test.ts src/simulation/pci/facade.test.ts src/simulation/pciBench.test.ts -> 4 files, 43 passed",
+     "npx vitest run src/dev/xrayCapture.test.ts src/ui/lab/controls/controls.test.ts src/ui/lab/lab.test.ts -> 30 passed, 2 failed, both in controls.test.ts: its hard-coded registry id lists at lines 39 and 92 do not include the new 'pci-devices' tab (out of scope, see outOfScope)",
+     "browser (new tab on localhost:5173, closed afterwards): __xrayCapture.baseline('pls1') and __xrayCapture.live('pci','pls1') -> python3 scripts/realism/report.py pls1 --jobs 2: 189/236; python3 scripts/realism/compare_sets.py baseline pls1: 189 vs 189, LOST none, GAINED none"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "acceptance": [
+     {
+      "criterion": "PciLabSession.test.ts (headless): 5 s of pedal fluoroscopy raises fluoroTimeS by about 5; advanceDevice with the pedal up adds no fluoroscopy time; one cine run adds one series with frames > 0 to useSeriesStore",
+      "status": "met",
+      "evidence": "Tests pass: fluoroscopy time rises by 4.8 to 5.2 s and st.fluoroS by about 5. Device and wire moves with the pedals up leave both fluoroscopy counters unchanged. A 1.5 s cine pedal stores one 'cine' series with frames > 0. Headless frames are blank, because only the GL renderer draws images."
+     },
+     {
+      "criterion": "A repeated case has contrastMl 0, a new PatientEngine instance and fresh syringes",
+      "status": "met",
+      "evidence": "The 'a repeated case starts afresh' test: session.repeat() gives st.contrastMl 0, contrastPushed 0, a different engine whose contrast total is 0, new guide and contralateral Injectors, and dose 0. In the UI, 'Repeat the case' builds a new session."
+     },
+     {
+      "criterion": "Each core scenario (lad-focal, rca-calcified, lcx-stemi, rca-cto) can be completed headlessly in guided and in independent mode through PciLabSession, loading devices through the AssistedDeviceConsole path",
+      "status": "met",
+      "evidence": "8 tests pass with debrief().passed true. The script engages the guide, steers the wire, uses a CTO wire for rca-cto and lithotripsy for rca-calcified, then loads a stent through the session's assisted path (Device.assisted true), runs cine, deploys and finishes."
+     },
+     {
+      "criterion": "DoseTracker test: 7.5 pulses/s halves dose rate against 15; 3.75 is selectable",
+      "status": "met",
+      "evidence": "Pulse-rate test on the session's DoseTracker: air kerma at 7.5 over 4 s is 0.45 to 0.55 of the 15 value, and at 3.75 it is 0.2 to 0.3. 3.75 is in PCI_FLUORO_RATES and in PulseRate (adrc.ts and useSimulatorStore.ts). The imaging tab and the DosePanel offer it (pciDevicesTab.test.ts)."
+     },
+     {
+      "criterion": "Opening a console and opening a modal each add one 'ui' event to the recorder, with the console or modal id",
+      "status": "met",
+      "evidence": "Recorder test passes: openConsole('assisted-devices') and openModal('prebrief') each add one 'ui' event carrying the id, and reopening the same one adds nothing. The browser showed the same 2 events after the case brief and the Devices console were opened."
+     },
+     {
+      "criterion": "browser: the lab renders in LabLayout; a pedal cine stores a run on the reference monitor and QCA opens on it; the current keys still move the wire; __pciDraw() renders; the realism-baseline device captures still draw through pciDevices",
+      "status": "met",
+      "evidence": "In a new tab: data-lab='pci' layout rendered. 20 W keydowns moved the wire tip from -25 to 15 mm and Q torqued it. A Space cine run stored 'Run 1' (45 frames, injected, 5 mL) on the reference monitor, and its QCA button opened the estimate step. __pciDraw rendered frames (screenshot). The device scenes are captured through AngioPci's re-exported pciDevices, and their golden digests match the code before the move. No console errors."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows; the re-scored rows are listed in the package notes",
+      "status": "met",
+      "evidence": "Set pls1: 189/236 against the baseline's 189/236. compare_sets.py baseline pls1 lists no lost and no gained rows, and every section count is equal. Details in the notes."
+     },
+     {
+      "criterion": "Tips: after its first action tipsFor(ctx, 20) includes pci-rad-operator-dose-alarm, and at phase 'plan' it includes pci-rad-shallow-working-view; every waiting.ts entry naming pci-lab-shell-session becomes satisfiable",
+      "status": "partly",
+      "evidence": "Met: a long hand-over case above the 5 Gy air kerma level raises 'high-radiation-dose' after the first action (engage plus fluoroscopy), and tipsFor(ctx, 20) includes pci-rad-operator-dose-alarm. The case brief gives phase 'plan'. waiting.ts has 0 entries naming this package, which the test asserts. Not met: at 'plan', pci-rad-shallow-working-view is not in the first 20. It matches (rank 33 of 41) but more than 20 PCI tips whose trigger is 'plan' alone, or 'plan' with more conditions, rank ahead of its ['plan','wire'] trigger in tipsFor's specificity tie-break. The test asserts it applies and records why it falls outside the top 20."
+     },
+     {
+      "criterion": "browser: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) then mount gives window.__pci.s.id === 'rca-cto'",
+      "status": "met",
+      "evidence": "After openSim and opening the lab: __pci.s.id 'rca-cto', policy mode 'exam', data-lab 'pci', and the case-brief dialogue open."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/lab/controls/controls.test.ts (found-lab-controls-registry): lines 39 and 92 assert the exact registry id lists ['carm','imaging','table','patient'] and the fixture list. The planned new tab src/ui/lab/controls/tabs/PciDevicesTab.tsx (id 'pci-devices', labs ['pci'], order 5) puts 'pci-devices' first in both, so those two tests now fail. They should include 'pci-devices' or filter by lab 'diagnostic'. The diagnostic strip itself is unchanged (asserted in the new pciDevicesTab.test.ts).",
+     "src/ui/lab/useLab.ts rateText writes non-integer rates with toFixed(1), so the shared imaging tab labels 3.75 as '3.8 p/s'. It should keep two decimals for 3.75. PciLiveMonitor and DosePanel already show '3.75'.",
+     "src/content/lab/reachability.test.ts: its RAISE_MODULES glob does not include src/ui/pci/PciLabSession.ts, so the session's `raises` export (phases plan and finish, high-radiation-dose and the patient events) is not counted until pci-tip-context's src/ui/lab/pciEvents/ event source carries it, or the glob is widened.",
+     "src/content/lab/tips.ts ranking or the pci-rad-shallow-working-view trigger: with more than 20 PCI 'plan' tips ranked ahead of it, this tip (and pci-attending's pci-mon-time-out and pci-planning-fourteen-steps) cannot reach tipsFor(ctx, 20) at phase 'plan' alone. pci-tip-context or the content owners should decide how plan tips are ordered."
+    ],
+    "notes": "Snapshots are in datasets/tmp/wp-snapshots/pci-lab-shell-session/ (6 files that already existed, plus .started). No file outside the 16 listed was edited apart from the 4 new test files. Two temporary probe test files were created and deleted.\n\nRealism:\n- Set pls1 = the 12 offscreen baseline specs plus live_pci_raocra filmed through the new lab's hooks at 1600x1000.\n- Headline 189/236 against baseline 189/236. compare_sets.py baseline pls1 shows LOST none and GAINED none, so no rows were re-scored.\n- Frame identity against the baseline is byte-identical for lad_raocra, lad_apcra, lad_laocra, rca_lao, rca_rao, lad_raocau_fluoro, lad_raocau_flush, dev_guide and dev_wire. lad_raocau was not checked frame by frame.\n- dev_balloon and dev_stent frames differ in all 51 frames from baseline, dlm-morph, rodphys and wp-xdfv alike. pciBench.ts was edited this morning (08:09) by pci-bench-imaging-unify, after its 23:30 snapshot, which changes BALLOON_SPEC and balloon diameters. pciDevicesRender.test.ts shows the moved drawing gives byte-equal output to the old code on the same state, so the difference comes from that edit, not from this package.\n- Measurement rows (outside the pass count): dev_balloon 63 (baseline 64), dev_guide 62, dev_stent 63, dev_wire 63, live_pci_raocra 44 of 64.\n\nBehaviour changes worth knowing:\n- The lab opens at the registry's default start, guide-in-root. The old lab started with the guide engaged; the console now has an 'Engage the guide' button.\n- The screen is black until the first pedal press, then holds the last image.\n- Coach read-outs and the event log are a guided-mode teaching aid in the attending drawer. The live screens show only the latest event line on the table strip.\n- The old exact-truth QCA line is replaced by the trainee's QCA on the reference monitor.\n- recordSim is replaced by useLabRun.finish (one logbook row; source pci-<scenario>, so the EPA mapping is kept).\n- The assisted console still uses the deprecated loadDevice, moveDevice, inflate and deflate shims in every mode until pci-equipment-tray. Keys go through usePciInput until pci-lab-input.\n- labSession.ts now exports startCineRun, storeFluoroLoop and storedMmPerPx, which DiagnosticLabSession also uses; its behaviour is unchanged (integration tests pass).\n\nValues carried from the old lab and labelled in comments: the frame cadence (15/s), the contralateral run length (6.5 s, MODEL PARAMETER), the device size menus and the 70 U/kg heparin (SOURCED_DOSES). The 3.75/7.5/15 rates are cited to request hb-lab-and-radiation#1 (Brilakis 28.2). The TableView insertion lengths are a display MODEL PARAMETER. Nothing was added to docs/realism/facts, which is not in this package's file list."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/pci/PciLiveMonitor.tsx loop (the `now - last < 1000 / PCI_FRAME_HZ` gate, about line 88) and src/ui/pci/PciLabSession.ts step() headless branch (line 893, `1 / PCI_FRAME_HZ`); beginRun line 732 and storeFluoro line 753",
+      "problem": "Frames are always acquired at a fixed 15 Hz, but stored runs are labelled with the selected rate (RunRecorder fps = cinePps, storeFluoroLoop fps = fluoroPps). RunRecorder and storeFluoroLoop set durationS = frames / fps, and the reference monitor plays back at fps. A 30 f/s cine run therefore plays at twice real speed with half its true duration. A 7.5 f/s run plays at half speed. A stored 3.75 p/s fluoroscopy loop is four times too long and four times too slow. The live image also refreshes at 15 Hz whatever pulse rate is set, so 3.75 and 7.5 p/s look exactly like 15. The live gate also has no tolerance: at 60 Hz rAF, 4 ticks (66.7 ms) often fall just short, so frames arrive at about 12 Hz while being labelled 15. The diagnostic lab (src/ui/sim/FluoroView.tsx lines 333-334) acquires at the acquisition rate.",
+      "severity": "major",
+      "fix": "Acquire at the rate in force, as FluoroView does. In PciLiveMonitor's loop: `const im = session.imagingControls(); const fps = mode === \"cine\" ? im.cineRate : im.pulseRate; if (now - last < 1000 / fps - 1) return;`. In PciLabSession.step() headless branch: `const fps = mode === \"cine\" ? (this.lab.exposure.cinePps ?? 15) : (this.lab.exposure.fluoroPps ?? 15); if (this.frameAcc >= 1 / fps - 1e-9) {...}`, and reset frameAcc to 1 / fps when the beam goes off. Dose stays correct, because LabImaging.expose books dose by elapsed time times pps. Add a test: set the cine rate to 7.5 and the fluoroscopy rate to 3.75, run 2 s of each, and assert the stored series' frames.length / fps is about 2 s."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx PciTableStrip, lines 417 and 471-475",
+      "problem": "The live table strip shows the latest PciState event text in every mode, exam included. Those texts carry ground truth that the operator would not be told: 'Wire across the lesion. Take it well into the distal vessel for support.', 'Geographic miss: the distal stent edge lands in diseased vessel.', 'The balloon covered only part of the lesion.', 'Balloon inflated away from the lesion.', 'Flow was already normal.'. labScreens already sets coachLine: false for every mode, and the builder's own notes say the event log is a guided-mode teaching aid. This breaks the no-ground-truth-on-live-screens rule.",
+      "severity": "major",
+      "fix": "Pass `showEvent={screens.teachingAids}` from PciLabScreen to PciTableStrip and render the status line only when it is true. The event log stays in the guided drawer's teaching-aid section. Alternatively drop the line from the strip entirely. Add a render test that shows no event text in exam or independent mode after a wire crossing."
+     },
+     {
+      "where": "src/ui/lab/controls/controls.test.ts lines 39 and 92 (no package owns this file; reported by the builder in outOfScope)",
+      "problem": "The new tab file src/ui/lab/controls/tabs/PciDevicesTab.tsx (id 'pci-devices', order 5) makes two existing assertions fail. I reproduced this: 2 failed, 32 passed. The test suite is red until the orchestrator fixes it.",
+      "severity": "major",
+      "fix": "Line 39: `expect(CONTROL_TABS.filter((t) => t.labs.includes(\"diagnostic\")).map((t) => t.id)).toEqual([\"carm\", \"imaging\", \"table\", \"patient\"]);`. Line 92: `expect(withFixtures.filter((t) => t.id !== \"pci-devices\").map((t) => t.id)).toEqual([...unchanged list])`, or prepend \"pci-devices\" to the expected list. The stripLabels assertions render the diagnostic session and need no change."
+     },
+     {
+      "where": "src/ui/pci/PciLabSession.ts imagingControls() line 1171 together with the shared src/ui/lab/controls/tabs/ImagingTab.tsx line 19",
+      "problem": "The shared imaging tab builds the Cine rate segment from im.rates, which is PCI_FLUORO_RATES. The PCI lab therefore offers a '3.8 f/s' cine button, but setCineRate accepts only PCI_CINE_RATES (7.5, 15, 30) and silently ignores it. That leaves a dead control on the live lab.",
+      "severity": "minor",
+      "fix": "Out of scope for this package's file list: add `cineRates?: readonly number[]` to ImagingControls in src/ui/lab/controls/types.ts, use `options={im.cineRates ?? im.rates}` for the Cine rate segment in ImagingTab, and return `cineRates: PCI_CINE_RATES` from PciLabSession.imagingControls(). If that cannot land now, report it to found-lab-controls-registry. Do not add 3.75 to PCI_CINE_RATES: the request names 3.75 as a fluoroscopy rate only."
+     },
+     {
+      "where": "src/ui/lab/controls/pciDevicesTab.test.ts, imaging-tab test (`toMatch(/aria-checked=\"true\"[^>]*>3\\.8 p\\/s/)`)",
+      "problem": "The test locks in the known useLab.rateText defect, which labels 3.75 as '3.8'. Once rateText is fixed to show '3.75', this test fails even though the behaviour is correct.",
+      "severity": "minor",
+      "fix": "Make the assertion independent of the label precision, e.g. `toMatch(/aria-checked=\"true\"[^>]*>3\\.(75|8) p\\/s/)`. Better, assert that the first of the four Fluoro rate radios is the checked one."
+     },
+     {
+      "where": "src/ui/pci/PciLabSession.tips.test.ts, 'the case brief puts the tips at phase plan' test",
+      "problem": "An acceptance criterion is not met: at phase 'plan', tipsFor(ctx, 20) does not include pci-rad-shallow-working-view. It ranks 33rd, because more than 20 PCI 'plan' tips win the specificity tie-break. The test instead asserts weaker facts: the tip is somewhere in the full ranking, and there are more than 20 PCI tips. The builder reported this honestly, but the acceptance cannot be signed off as met.",
+      "severity": "minor",
+      "fix": "Escalate to the owners of pci-tip-context and src/content/lab/tips.ts, who must decide either the plan-tip ordering or this tip's trigger (for example narrowing it to phase ['plan'] or adding a context field the brief sets). Once that is settled, change the test to assert `tipsFor(ctx, 20).map(t => t.id)` contains 'pci-rad-shallow-working-view'. Until then, mark it as a known gap in the plan."
+     },
+     {
+      "where": "src/content/lab/reachability.test.ts RAISE_MODULES glob (owned by found-tip-retarget)",
+      "problem": "The `raises` export of PciLabSession.ts (phases plan and finish, high-radiation-dose, patient events) is not read by the reachability report. The design's statement that the event source exports raises for the reachability report therefore has no effect yet.",
+      "severity": "minor",
+      "fix": "Widen the RAISE_MODULES glob to include src/ui/pci/PciLabSession.ts, or re-export `raises` from the pci-tip-context event source in src/ui/lab/pciEvents/ when that package lands. Record this as a follow-up for found-tip-retarget or pci-tip-context."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx PciAttendingDrawer call, line 322 (`guided={screens.attendingDrawer}`)",
+      "problem": "The 'Where things are (teaching aid)' section and the event log are gated on attendingDrawer (guided mode) and ignore p.visibility.overlays.toggleable. labScreens defines teachingAids for exactly this purpose.",
+      "severity": "minor",
+      "fix": "Pass `guided={screens.teachingAids}` (and rename the prop to `teachingAids`)."
+     },
+     {
+      "where": "src/ui/pci/consoles/AssistedDeviceConsole.tsx lines 147-148",
+      "problem": "The stent's nominal 10 atm and rated burst pressure 16 atm are hard-coded with no source and no MODEL PARAMETER label. They were carried over from the old AngioPci.tsx, but the package moved them and they are shown to the learner as device read-outs. The rule is no device dimension or pressure from memory.",
+      "severity": "minor",
+      "fix": "Take the values from a stent spec in src/simulation/pciBench.ts if one exists, or name them as constants (e.g. `STENT_NOMINAL_ATM`, `STENT_RBP_ATM`) with a comment `MODEL PARAMETER (carried from the earlier lab)`. Then add the matching docs/realism/facts entry through the package that owns that file."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx CaseBrief, line 360 (`guide {s.guide}`)",
+      "problem": "The case brief shows the raw catheter id (e.g. 'EBU3.5', a trade-name abbreviation). The assisted console shows the generic label 'Extra-backup 3.5' from GUIDE_BY_ID. The UI chrome should use generic device names.",
+      "severity": "minor",
+      "fix": "Use `guide {GUIDE_BY_ID[s.guide]?.label ?? s.guide}`, importing GUIDE_BY_ID from src/simulation/pci/equipment, as AssistedDeviceConsole does."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx lines 66-106 (session state and the `key={`${sid}:${runKey}`}` on PciLabScreen)",
+      "problem": "On a scenario change or a repeat, the new key renders in the same commit as the previous session. Passive effect cleanups run first, so the old session is disposed. The remounted PciLabScreen and PciLiveMonitor then mount once on that disposed session: they create a WebGL XrayRenderer, open 'prebrief', register the __lab.pci hook and start a rAF loop. All of this is torn down when the new session arrives. It is harmless to state but churns a WebGL context and the dev hooks on every case change.",
+      "severity": "minor",
+      "fix": "Store the session with the key it was built for, e.g. `const [built, setBuilt] = useState<{ key: string; session: PciLabSession } | null>(null)`, set it to `{ key: `${sid}:${runKey}`, session: x }` in the effect, and render 'Preparing the lab' until `built?.key === `${sid}:${runKey}``. Alternatively key PciLabScreen by a per-session uid."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx line 70 (`useSeriesStore.getState().clear()`)",
+      "problem": "With a full-case hand-over (same patient, same case), opening the PCI lab clears the diagnostic runs stored for that patient, so the reference monitor cannot show the diagnostic angiogram during PCI. This is not a regression (the old PCI lab had no reference monitor), but it works against the continuous-case design.",
+      "severity": "minor",
+      "fix": "Clear the series store only when there is no hand-over: `if (!handover) useSeriesStore.getState().clear();`. Optionally filter by caseId when the session's caseId differs from the hand-over's."
+     }
+    ],
+    "verdict": "pci-lab-shell-session needs changes before it can be signed off. Most of the design is implemented and works, but I found 3 major and 9 minor problems.\n\nWhat I checked and found sound:\n- The 6 snapshotted shared files changed only as described. labSession.ts was refactored into startCineRun, storeFluoroLoop and storedMmPerPx with the same behaviour, and the diagnostic integration tests pass. adrc.ts and useSimulatorStore.ts only gained 3.75 in the PulseRate type, and DIAGNOSTIC_RATES is unchanged. LabLayout gained a `lab` prop defaulting to diagnostic, and DosePanel gained `rates` and `cineRates` props with the old defaults.\n- The device drawing moved into render/core.ts unchanged apart from renamed lambda parameters (I diffed it), and the golden digests match.\n- The other src files modified since .started (patient.ts, the planning files, PlantedProblems.tsx) are listed by other packages.\n- I ran the 4 package test files myself: 28 of 28 pass. The typecheck is clean (exit 0). The neighbouring tests pass except the 2 controls.test.ts assertions the builder reported.\n- Each new case gets a fresh session and the 900 ms automatic fluoroscopy is gone. Imaging is pedal-gated, with an X-ray release and a beam gate. Cine runs and store fluoro use the shared helpers. 'ui' events are recorded with their ids. The keys moved to usePciInput.ts unchanged. Consoles are discovered by glob, and the assisted path works in every mode. The `raises` export, the plan and finish phases and the held high-radiation-dose event are present, as are the __pci, __pciDraw, __pciStep, __pciSession and __lab.pci hooks. Per-frame allocations match the old lab and FluoroView.\n- I did not repeat the browser checks or the realism re-capture; those rest on the builder's report.\n\nThe 3 major problems:\n1. Stored runs have the wrong speed and duration. The lab acquires frames at a fixed 15 Hz but labels each stored run with the selected rate. A 30 f/s cine run plays at twice real speed, and a 3.75 p/s fluoroscopy loop plays four times too slowly. The live image also looks the same at every pulse rate.\n2. Ground truth appears on a live screen. The table strip shows the latest procedure message in every mode, exam included, for example 'Wire across the lesion' or 'Geographic miss'.\n3. controls.test.ts fails. The new Devices tab breaks 2 assertions in that file, which no package owns.\n\nOne acceptance criterion is not met. At phase 'plan', pci-rad-shallow-working-view ranks 33rd and does not reach tipsFor(ctx, 20). Fixing this needs a decision from the owners of tips.ts or pci-tip-context, and the test as written only asserts weaker facts.\n\nThe minor problems:\n- The shared imaging tab offers a 3.75 cine rate that does nothing in the PCI lab.\n- A new test asserts the known '3.8 p/s' label defect, so it will fail once that label is fixed.\n- The reachability report does not yet read the session's `raises` export.\n- The teaching-aid section is gated on guided mode instead of `teachingAids`.\n- The stent's 10 atm nominal and 16 atm rated burst pressure are unsourced and unlabelled.\n- The case brief shows the raw guide id ('EBU3.5') instead of the generic label.\n- On each scenario change or repeat, the lab screen mounts once on the disposed old session.\n- A full-case hand-over clears the patient's diagnostic runs from the reference monitor.\n\nExact fixes for each problem are listed in the findings."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 9,
+    "rejected": [
+     "Finding 3 (controls.test.ts lines 39 and 92): correct, and I reproduced it again (2 failed, 9 passed in that file). I did not apply it because src/ui/lab/controls/controls.test.ts is not in this package's file list and is not one of its test files. The orchestrator or found-lab-controls-registry needs to apply the reviewer's fix: filter line 39 to the diagnostic tabs, and exclude or prepend 'pci-devices' at line 92.",
+     "Finding 4 (3.8 f/s cine button from im.rates): correct. The fix needs src/ui/lab/controls/types.ts (an optional cineRates on ImagingControls) and src/ui/lab/controls/tabs/ImagingTab.tsx (options={im.cineRates ?? im.rates}). Neither is in this package's list, so it goes to found-lab-controls-registry. Once that field exists, PciLabSession.imagingControls() should return cineRates: PCI_CINE_RATES. PCI_CINE_RATES was not changed.",
+     "Finding 6 (pci-rad-shallow-working-view ranks 33rd at phase 'plan', outside tipsFor(ctx, 20)): correct, and the acceptance criterion is not met. Fixing it needs a decision in src/content/lab/tips.ts or in pci-tip-context about tip ordering or this tip's trigger, which is outside this package. The test is unchanged. Record it as a known gap and escalate to the tips and pci-tip-context owners.",
+     "Finding 7 (reachability RAISE_MODULES glob does not read PciLabSession.ts raises): correct, but src/content/lab/reachability.test.ts belongs to found-tip-retarget. Follow-up for found-tip-retarget or pci-tip-context: widen the glob, or re-export raises from the pciEvents source."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/pci/PciLabSession.test.ts src/ui/pci/PciLabSession.tips.test.ts src/ui/pci/pciDevicesRender.test.ts src/ui/lab/controls/pciDevicesTab.test.ts src/ui/pci/PciTableStrip.test.ts: 5 files, 32 tests, all pass",
+     "npx vitest run src/ui/lab/controls/controls.test.ts: still 2 failed, 9 passed (finding 3, out of scope)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I applied 9 of the 13 findings; the other 4 need files outside this package. All 5 package test files pass (32 tests) and the typecheck is clean. The suite is still red in one place: the existing src/ui/lab/controls/controls.test.ts fails 2 assertions (finding 3), and only its owner can fix that.\n\nApplied (all under /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator):\n\n1. Frame rate (major). Frames are now taken at the rate in force: the cine frame rate during cine, the pulse rate during fluoroscopy. This is done in the live monitor loop in src/ui/pci/PciLiveMonitor.tsx (with 1 ms of slack, as FluoroView does) and in the headless step in src/ui/pci/PciLabSession.ts (new acquisitionRate(mode); the timer keeps its remainder, and the first frame after a pedal press comes at once). PCI_FRAME_HZ is gone; nothing else used it.\n   - The fix exposed a second problem that the reviewer's claim \"dose stays correct\" missed. LabImaging.expose in src/render/xray/sceneBuilder.ts books at most 0.2 s of beam time per frame (MAX_EXPOSE_STEP_S), and a 3.75 p/s frame interval is 0.27 s. At 3.75 p/s the dose and fluoroscopy time were therefore 25% too low, and the existing ratio test failed (0.185 against a floor of 0.2).\n   - That shared engine is outside this package and keeps its default. Instead, the session now re-books the last frame's exposure at least every PCI_DOSE_TICK_S (1/15 s, the earlier lab's cadence, labelled MODEL PARAMETER) while the beam is on, and only within the same beam mode.\n   - The 3.75/7.5/15 test now also asserts that the fluoroscopy time equals the time the pedal was held. A new test stores 2 s of cine at 7.5 f/s and 2 s of fluoroscopy at 3.75 p/s and checks that frames / fps is 2 s to within one frame, with 15 p/s for comparison.\n   - The same 0.2 s cap would undercount 3.75 p/s in the diagnostic lab if it offered that rate; worth passing to the sceneBuilder owner.\n\n2. Event line in the table strip (major). src/ui/pci/PciLab.tsx: PciTableStrip now takes showEvent = screens.teachingAids and shows the status line only when it is true. New test src/ui/pci/PciTableStrip.test.ts (3 tests): after the wire is advanced, there is no event text and no status line in independent or exam mode, and the latest event shows in guided mode. PciTableStrip is now a named export so the test can render it.\n\n5. src/ui/lab/controls/pciDevicesTab.test.ts: the 3.75 test now checks that the first of the four Fluoro rate radios is the one ticked, whatever precision the label uses.\n\n8. The attending drawer prop is now teachingAids={screens.teachingAids} (renamed from guided), and the doc comment is updated.\n\n9. src/ui/pci/consoles/AssistedDeviceConsole.tsx: the hard-coded stent 10/16 atm are gone. Nominal and rated burst pressures now come from the bench catalogue at the device's own diameter, via stentPressures and balloonPressures from src/simulation/pciBench.ts. A balloon read-out now also follows its diameter rather than the fixed 3.0 mm figure. No new facts entry is needed because the values come from the existing catalogue.\n\n10. The case brief shows GUIDE_BY_ID[s.guide]?.label ?? s.guide, the generic name, instead of the raw catheter id.\n\n11. PciLab now keeps each session with the case key it was built for ({key, session}). It shows 'Preparing the lab' until the key matches and the session is not disposed. PciLabScreen is keyed by caseKey, so it no longer mounts once on a disposed session.\n\n12. useSeriesStore is cleared only when there is no hand-over, so the diagnostic runs stay on the reference monitor for the same patient.\n\nRejected for scope only; the reasons and owners are in `rejected`. Findings 3, 4, 6 and 7 are all correct."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-41) at http://localhost:5173 and used the dev server that was already running. The seed tab was not touched; tab-41 is now closed and its viewport reset.",
+     "Launch: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) had to go through the app's own module instance, useUiStore.ts?t=1791530555802. Importing the plain path gives a separate store, which changed the section but not what the page rendered. After that, window.__pci.s.id was 'rca-cto', the policy mode was 'exam', [data-lab=pci] rendered, and the 'Case brief' dialogue was open. Met.",
+     "Pedal-gated fluoroscopy: the beam was null with both pedals up and 'fluoro' with the fluoro pedal down. __pciStep(5) with the pedal down raised st.fluoroS from 0 to 5. With the pedal up, 1 s of idle time and 20 W keydowns added 0 s of fluoroscopy, so there is no automatic fluoroscopy after an action. In the browser the dose totals are booked only on rendered frames (__pciDraw or rAF), which is correct.",
+     "Keys: 20 W keydowns moved the wire tip from -25 to 3 mm on route RCA. C held the cine pedal (beam 'cine', null on keyup). F held fluoroscopy. N stored the fluoroscopy loop (canStoreFluoro true, a 'fluoro' series of 20 frames added). Space started a cine injection with autoCine: 57 frames, the beam ended by itself, and contrast went from 0 to 10 mL.",
+     "Stored runs: useSeriesStore went from 0 to 1 'cine' series with 57 frames, injected=true and grey levels 34 to 220 (not blank), so __pciDraw renders real frames. The reference monitor listed the runs, and its QCA button opened the step 'QCA on this frame' with the estimate prompt 'First, your visual estimate of the worst diameter stenosis on this frame.' Met.",
+     "Dose panel: fluoroscopy pulse rates 3.75 / 7.5 / 15 / 30 and cine rates 7.5 / 15 / 30 are offered. Air kerma, KAP and the operator scatter readings update after the cine and fluoroscopy frames. The header shows 'Fluoro 00:01' and 'Ka,r 3.0 mGy'. The 'Fluoro 15 p/s' badge returns to 'Beam off' after the hold time.",
+     "UI events: the case brief logs {action:'modal-open', modal:'prebrief'}. Opening the Devices tab's 'Guide, wire and devices' console logs {action:'console-open', console:'assisted-devices'}, and openConsoleId() returns 'assisted-devices'. Reopening the case brief after closing it logs one more event, and the debrief opens as modal 'debrief'.",
+     "Assisted device console: renders with the guide, guidewire choices, balloon or stent type, diameter and length menus, 'Load on the wire', the injection kinds and 'Flush guide'. No lesion ground truth is shown, and in exam mode it is not pre-sized to the lesion.",
+     "Exam-mode screens: no stenosis percentage, lesion size or 'where things are' aid is visible. The only '%' on screen is the SpO2 unit. The Attending drawer in guided mode shows tips, 'Ask for help', and 'Where things are (teaching aid)'.",
+     "Repeat the case: after 'Final result' (debrief: residual 100%, no stent, and so on), 'Repeat the case' built a new session. The old one was disposed. The engine is a new instance, contrastMl and contrastPushed are 0, air kerma is 0, the scenario stays rca-cto in exam mode, the case brief reopens and the reference monitor is empty ('No runs stored yet').",
+     "Tips: __lab.pci.context() gives phase 'plan', vessel LAD, lab pci; __lab.pci.tips() returns 5 tips while the case brief is open.",
+     "AngioPci.tsx re-exports, imported in the browser: pciDevices and pciFlowMods are functions, NO_REFLOW_SCALE is 0.3. I did not re-run the realism capture; I relied on the builder's pls1 189/236 and its golden digests.",
+     "Layout at 1440x900: the live monitor shows a fluoroscopy image with the wire, next to the reference monitor, haemodynamic monitor, dose panel, table strip and table-side tabs (Devices, C-arm and table, Imaging, Patient), styled in Clinical Graphite.",
+     "Interruption from other agents: twice the page reloaded fully while I was testing. The window globals I set were gone, and the lab came back as lad-focal in guided mode. Files outside this package were being edited at the time (src/simulation/access/*.ts and src/simulation/session/modules/planning.ts after 09:00). The launch is deliberately not persisted, so after a reload the lab falls back to its default case. This is not a defect of this package.",
+     "Console: no errors and no warnings in tab-41. The only noteworthy line is Vite's debug message 'Could not Fast Refresh (\"DEVICE_DIAMETERS\" export is incompatible)' for AssistedDeviceConsole.tsx."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/pci/consoles/AssistedDeviceConsole.tsx (lines 24-38)",
+      "problem": "The file exports non-component values next to its default component: DEVICE_DIAMETERS, DEVICE_LENGTHS, INDEFLATOR_RANGE and deviceSizeFor. Vite logs 'Could not Fast Refresh (\"DEVICE_DIAMETERS\" export is incompatible)' and invalidates the module. Every edit to this file therefore remounts the PCI lab, which loses the case in progress and any pending launch while someone is developing.",
+      "severity": "minor",
+      "fix": "Move DEVICE_DIAMETERS, DEVICE_LENGTHS, INDEFLATOR_RANGE and deviceSizeFor into a plain module, for example src/ui/pci/consoles/deviceMenu.ts, and import them in the console and in PciLabSession.test.ts. Keep only `meta` and the default component exported from the .tsx file; registry.ts's glob needs meta. The new file is outside the listed files, so record it in the package notes."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx header ('Final result' button)",
+      "problem": "One click on 'Final result' ends the case at once and shows the debrief, with no confirmation. In exam or independent mode, a stray click ends the run, and it cannot be undone.",
+      "severity": "minor",
+      "fix": "Ask for confirmation before calling session.finish(). For example, show an inline 'End the case and see the result?' with Confirm and Cancel, or ask in exam and independent modes only, the way the diagnostic lab's finish step does."
+     },
+     {
+      "where": "src/ui/pci/PciLab.tsx (Attending drawer toggle, line ~260) and the reference monitor's QCA tool",
+      "problem": "Opening the Attending drawer or the QCA tool does not record a 'ui' event; only the case brief, the debrief and device consoles are logged. The owner checkpoints count interruptions from the run recorder, so drawer and QCA openings will be missing from those counts.",
+      "severity": "minor",
+      "fix": "Decide whether the drawer and QCA count as interruptions. If they do, call session.uiEvent (or openModal('attending') / closeModal) when setDrawerOpen(true) runs, and log a 'qca-open' when QCA opens on a run. Note the decision in the package notes."
+     },
+     {
+      "where": "src/ui/lab/LabLayout.tsx line 33 (shared with the diagnostic lab, so not a regression)",
+      "problem": "At narrow content widths (an 800 px pane with the sidebar, about 495 px for the lab), the grid minmax(0,1fr) minmax(0,1fr) minmax(300px,340px) squeezes the live and reference monitors to about 30 px slivers while the haemodynamic column keeps its 300 px. The live image cannot be used. At 1440 px the layout is correct.",
+      "severity": "minor",
+      "fix": "Give the two monitor columns a usable minimum, for example grid-cols-[minmax(220px,1fr)_minmax(220px,1fr)_minmax(260px,340px)]. Below a container width of about 900 px, move the haemodynamic and dose column under the monitors, for example with a container query or a lg: breakpoint that switches to grid-cols-2 and spans the side column across both. Coordinate the change with the diagnostic lab, since the layout is shared."
+     },
+     {
+      "where": "src/ui/lab/DosePanel.tsx (cine summary line)",
+      "problem": "The summary reads '30 cine frames \u00b7 1 runs \u00b7 2 s', with the plural 'runs' after 1. The session's counters also hold floating-point drift (cineFrames 56.999999999999936, contrastMl 10.000000000000027); the display rounds them correctly.",
+      "severity": "minor",
+      "fix": "Pluralise: `${n} run${n === 1 ? '' : 's'}`. Optionally round cineFrames to whole frames in the dose snapshot (Math.round), so tests and the tip context see whole numbers."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 3, QCA half only: I did not add a 'qca-open' event. The QCA tool's open state is local to src/ui/lab/ReferenceMonitor.tsx, which has no callback for it and is not in this package's files. Logging it needs an onQcaOpen prop on ReferenceMonitor (out of scope; it is shared with the diagnostic lab). PciLab can then pass `() => session.openModal('qca')` or a uiEvent. The attending-drawer half of finding 3 is applied."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/pci/PciLabSession.test.ts (20 passed: 16 existing + 4 new)",
+     "npx vitest run src/ui/pci/PciLabSession.tips.test.ts src/ui/pci/pciDevicesRender.test.ts src/ui/lab/controls/pciDevicesTab.test.ts (12 passed)",
+     "npx vitest run src/ui/lab/LabLayout.test.ts src/ui/pci/consoles/consoles.test.ts (5 passed, both new files)",
+     "In-app check on the running dev server (localhost:5173, PCI lab). At 1440x900 the monitors are 414 px each and the side column is 340 px. In a 402 px pane the monitors are 187x240 each, with the haemodynamic, dose, table and controls sections stacked underneath. 'Final result' shows 'End the case and see the result?' with Keep going and Confirm; Keep going clears session.finishing. Toggling Attending adds and removes the 'attending' modal and logs one 'ui' modal-open. Touching AssistedDeviceConsole.tsx gave '[vite] hot updated' with no invalidate, and the live session survived (not disposed, ui events kept). The viewport was reset afterwards."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "All five findings were checked against the code and are real. Four are applied in full. Finding 3 is applied for the attending drawer only; the QCA half is in rejected because it needs a file outside this package.\n\n1. Fast Refresh (AssistedDeviceConsole.tsx): I did not create the new deviceMenu.ts the finding suggested, because that file is outside the listed files. DEVICE_DIAMETERS, DEVICE_LENGTHS, INDEFLATOR_RANGE and deviceSizeFor moved unchanged into src/ui/pci/PciLabSession.ts. The console and PciLabSession.test.ts now import them from there.\n   - Moving the constants alone was not enough. plugin-react's refreshUtils.js also rejects any non-component export whose identity changes, so `export const meta = {...}` blocked Fast Refresh too. The plan requires each console to export meta.\n   - So src/ui/pci/consoles/registry.ts now installs a dev-only `window.__getReactRefreshIgnoredExports` hook, guarded by `import.meta.hot`. It ignores `meta` for files under /src/ui/pci/consoles/, keeps any existing hook, and installs only once.\n   - Checked in the browser: after a touch the console file hot-updated without an invalidate and the case survived.\n   - New test src/ui/pci/consoles/consoles.test.ts checks that every console file exports only `meta` and `default`, and that the moved menu values are unchanged.\n\n2. 'Final result' (PciLab.tsx) now asks first in every mode, through session.setFinishStep(true), so the tips are at the 'finish' phase while it waits. The header shows 'End the case and see the result?' with Keep going and Confirm, and only Confirm calls session.finish(). When the drawer is available (guided), opening the step also opens the drawer, as the diagnostic lab does.\n\n3. Attending drawer (PciLab.tsx): opening it now counts as an interruption. drawerOpen is now derived from session.openModals().includes('attending') instead of local state. Opening the drawer from the button, from Ask the attending, or from the finish step calls session.openModal('attending'), which logs one 'ui' modal-open; closing it calls closeModal. Nothing else reads the modal set (input, tip phase), so behaviour is otherwise unchanged.\n\n4. LabLayout.tsx (shared with the diagnostic lab): the lab root is now a size container and the layout switches at a lab width of 900 px, not the window width.\n   - At 900 px and wider, the grid is minmax(220px,1fr) minmax(220px,1fr) minmax(300px,340px), as before apart from the monitor minimums.\n   - Below 900 px the content scrolls in an inner wrapper. The two monitors share a row of minmax(240px,52cqw), the haemodynamic and dose column spans both columns underneath (dose at least 260 px), and the table-side controls sit under the table strip (rows 200 px and 214 px).\n   - The modal overlay stays outside the scrolling wrapper, so it still covers the whole lab.\n   - The header gets overflow-x-auto so the confirm text never pushes the buttons off.\n   - Tailwind 3.4's arbitrary `[@container(max-width:899px)]:` variant compiles (checked), and class strings are literal so the JIT finds them.\n   - New test: src/ui/lab/LabLayout.test.ts.\n   - The diagnostic lab gets the same behaviour; at 900 px and wider its layout is unchanged apart from the 220 px monitor minimums.\n\n5. DosePanel.tsx now says '1 run' or 'N runs'. PciLabSession.snapshot() rounds dose.cineFrames to whole frames and contrastMl to 0.1 mL (a shallow copy of totals; the live tracker is untouched).\n\nNew session tests in PciLabSession.test.ts:\n- The 'attending' modal logs one 'ui' event.\n- The finish step can be cancelled and the case continues until confirmed.\n- The snapshot counters are rounded.\n\nNot in the findings: DosePanel.tsx also exports DEFAULT_DOSE_RATES, which blocks Fast Refresh for that file (seen in the Vite log). I left it alone because moving it is a separate refactor.\n\nFiles changed: src/ui/pci/PciLabSession.ts, src/ui/pci/PciLabSession.test.ts, src/ui/pci/PciLab.tsx, src/ui/pci/consoles/AssistedDeviceConsole.tsx, src/ui/pci/consoles/registry.ts, src/ui/lab/LabLayout.tsx, src/ui/lab/DosePanel.tsx; new tests src/ui/pci/consoles/consoles.test.ts and src/ui/lab/LabLayout.test.ts (all under /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator)."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "PciLabSession.test.ts (headless): 5 s of pedal fluoroscopy raises fluoroTimeS by about 5; advanceDevice with the pedal up adds no fluoroscopy time; one cine run adds one series with frames > 0 to useSeriesStore",
+      "met": true,
+      "evidence": "src/ui/pci/PciLabSession.test.ts, 'pedal-gated imaging and dose (headless)': the 5 s check asserts a rise between 4.8 and 5.2 s, the pedal-up advance adds no fluoroTimeS or st.fluoroS and beamMode() stays null, and one cine run gives one 'cine' series with frames > 0. All 20 tests in the file pass."
+     },
+     {
+      "criterion": "A repeated case has contrastMl 0, a new PatientEngine instance and fresh syringes",
+      "met": true,
+      "evidence": "PciLabSession.test.ts 'a repeated case starts afresh': repeat() disposes the old session. The new one has st.contrastMl 0, contrastPushed() 0, a different engine with vitals().contrast.totalMl 0, new guide and contra syringes with totalMl 0, and zero air kerma. Passes."
+     },
+     {
+      "criterion": "PciLabSession.test.ts: each core scenario (lad-focal, rca-calcified, lcx-stemi, rca-cto) completes headlessly in guided and in independent mode through PciLabSession, loading devices through the AssistedDeviceConsole path",
+      "met": true,
+      "evidence": "The 8 cases in 'the core scenarios can be completed headlessly through the session' all pass. Each asserts r.passed, finished, the right policy.mode and st.device.assisted === true (the assisted load path). The header of consoles/AssistedDeviceConsole.tsx says the old load path serves every mode."
+     },
+     {
+      "criterion": "DoseTracker test: 7.5 pulses/s halves dose rate against 15; 3.75 is selectable",
+      "met": true,
+      "evidence": "PciLabSession.test.ts 'pulse rates': PCI_FLUORO_RATES contains 3.75, imagingControls().pulseRate follows setFluoroRate, the 7.5/15 kerma ratio is between 0.45 and 0.55, and the 3.75/15 ratio is between 0.2 and 0.3. PulseRate = 3.75 | 7.5 | 15 | 30 in src/render/xray/adrc.ts:47 and src/state/useSimulatorStore.ts:60. The existing src/simulation/dose.test.ts (44 tests) still passes."
+     },
+     {
+      "criterion": "PciLabSession.test.ts: opening a console and opening a modal each add one 'ui' event to the recorder, with the console or modal id",
+      "met": true,
+      "evidence": "'the recorder counts interruptions' checks one event with {action:'console-open', console:'assisted-devices'} and one with {action:'modal-open', modal:'prebrief'}. Re-opening the same console and closing add nothing. Passes."
+     },
+     {
+      "criterion": "browser: the lab renders in LabLayout; a pedal cine stores a run on the reference monitor and QCA opens on it; the current keys still move the wire; __pciDraw() renders; the realism-baseline device captures still draw through pciDevices",
+      "met": true,
+      "evidence": "Checked in the running dev server (port 5173) through the dev hooks. [data-lab=\"pci\"] is present. Holding the cine pedal for 1.8 s in real time stored one cine series (26 frames at 15 f/s) and the reference monitor showed 'Run 1 15 / 26'. The QCA button opened 'QCA on this frame' with the exam's visual-estimate step. Five 'w' keydowns moved tipMm from -25 to -15, 'e' torqued the tip and 'f' gave beam 'fluoro'. __pciDraw() produced stored frames with grey levels 52 to 248 (mean 152). Device captures: pciDevicesRender.test.ts ('the baseline device scenes ... draw what they drew before the move') passes, and capture set pls1 has dev_balloon, dev_guide, dev_stent and dev_wire. Note that __pciStep alone does not acquire frames, because frames come from the live monitor's rAF loop."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows; re-scored rows listed in the package notes",
+      "met": true,
+      "evidence": "python3 scripts/realism/compare_sets.py baseline pls1: 189 of 236 in both sets, every section count is equal, and there are no LOST or GAINED rows, so there are no re-scored rows to list. Caveat: pls1 was captured at 08:46, and src/ui/pci/PciLiveMonitor.tsx (which provides __pciDraw for the live_pci_raocra capture) was last modified at 08:55. See failures."
+     },
+     {
+      "criterion": "Tips: in a scenario that exercises it, after its first action, tipsFor(ctx, 20) includes pci-rad-operator-dose-alarm, and at phase 'plan' it includes pci-rad-shallow-working-view; every waiting.ts entry naming pci-lab-shell-session becomes satisfiable",
+      "met": false,
+      "evidence": "The operator-dose half is met: PciLabSession.tips.test.ts uses rca-cto with a high-dose hand-over, and 'high-radiation-dose' is raised after the first action with pci-rad-operator-dose-alarm in tipsFor(ctx, 20). There are no waiting.ts entries for this package, and the test asserts the count is 0. The plan half is not met. At phase 'plan' (prebrief modal open), pci-rad-shallow-working-view ranks 33 of 42 in lad-focal, rca-calcified and lcx-stemi, and 43 of 52 in rca-cto (checked with a temporary probe test, since deleted). So tipsFor(ctx, 20) does not include it. The test calls tipsFor(ctx, LAB_TIPS.length) instead and notes that ranking is pci-tip-context's to settle. The plan has not moved this criterion: pci-tip-context's acceptance does not mention it, but waiting.ts:163 lists the tip under raisedBy 'pci-tip-context'."
+     },
+     {
+      "criterion": "browser: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) then mount gives window.__pci.s.id === 'rca-cto'",
+      "met": true,
+      "evidence": "In the dev server: useUiStore.getState().openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}), then after the lab took the launch, window.__pci.s.id === 'rca-cto' and __pciSession.policy.mode === 'exam'. __pciDraw, __pciStep, __pciLab, __pciSession and __lab.pci are all present."
+     },
+     {
+      "criterion": "Package tests pass and no regression in existing tests",
+      "met": false,
+      "evidence": "All of the package's own tests pass: PciLabSession.test.ts (20), PciLabSession.tips.test.ts (5), PciTableStrip.test.ts (3), consoles.test.ts (2), pciDevicesRender.test.ts (3), LabLayout.test.ts (3), pciDevicesTab.test.ts (4). Related suites also pass: dose, collimation, xrayCapture, lab, integration, sessionModules, the diagnostic scenarios, diagnosticContext and diagnosticTips, lesions and script modules, reachability, tips, retarget, the PCI scenarios and facade. However, the existing src/ui/lab/controls/controls.test.ts now fails 2 of 11 tests. The new tab src/ui/lab/controls/tabs/PciDevicesTab.tsx (id 'pci-devices', order 5, labs ['pci']) is now first in CONTROL_TABS, so the full-registry assertions at lines 39 and 92 no longer match."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/pci/PciLabSession.tips.test.ts (second test) / plan criterion 'at phase plan tipsFor(ctx, 20) includes pci-rad-shallow-working-view'",
+      "problem": "At phase 'plan', pci-rad-shallow-working-view ranks 33 of 42 (43 of 52 in rca-cto), so tipsFor(ctx, 20) does not contain it. The test was weakened to tipsFor(ctx, LAB_TIPS.length). The ranking is set by tipsFor's specificity tie-break in src/content/lab/tips.ts and by the tip's broad trigger {phase:['plan','wire']} in src/content/manual/cath-handbook/01-lab-and-radiation.ts:1510. Neither file belongs to this package, and waiting.ts:163 already assigns the tip to pci-tip-context.",
+      "severity": "major",
+      "fix": "This cannot be fixed inside the package's files. The owner should either (a) amend docs/curriculum/lab-build-plan.json so that the 'phase plan includes pci-rad-shallow-working-view' half of this criterion moves to pci-tip-context, matching waiting.ts:163, after which the current test is acceptable; or (b) have pci-tip-context or tip-retarget-catchup narrow the plan-phase PCI tips or retarget this tip so that it ranks in the top 20 at phase 'plan', and then change the test to assert tipsFor(ctx, 20).map(t => t.id) contains 'pci-rad-shallow-working-view'."
+     },
+     {
+      "where": "src/ui/lab/controls/controls.test.ts lines 39 and 92 (owned by found-lab-controls-registry; no package lists this file)",
+      "problem": "Adding src/ui/lab/controls/tabs/PciDevicesTab.tsx (id 'pci-devices', order 5, labs ['pci']) breaks two existing assertions on the full registry: line 39 expects ['carm','imaging','table','patient'] and line 92 expects ['carm','imaging','fixture','table','patient','fixture-pci','fixture-not-exam']. Both now begin with 'pci-devices'. 2 of 11 tests fail. The package should have reported this in outOfScope instead of leaving the test red.",
+      "severity": "major",
+      "fix": "The owner or a repair package that lists the file should make these edits. Line 39: expect(CONTROL_TABS.filter((t) => t.labs.includes(\"diagnostic\")).map((t) => t.id)).toEqual([\"carm\", \"imaging\", \"table\", \"patient\"]). Line 92: expect(withFixtures.filter((t) => t.labs.includes(\"diagnostic\") || t.id.startsWith(\"fixture\")).map((t) => t.id)).toEqual([\"carm\", \"imaging\", \"fixture\", \"table\", \"patient\", \"fixture-pci\", \"fixture-not-exam\"]). The strip-label assertions are unaffected because tabsFor already filters by lab. Then run npx vitest run src/ui/lab/controls/controls.test.ts."
+     },
+     {
+      "where": "datasets/tmp/realism/reports/pls1 vs src/ui/pci/PciLiveMonitor.tsx",
+      "problem": "The realism capture set pls1 (08:45-08:46) predates the last edit of PciLiveMonitor.tsx (08:55), which provides the __pciDraw path used by the live_pci_raocra capture. The score held (189/236, no lost rows), but the capture may not reflect the final renderer-path code. No package notes listing re-scored rows were found in the repository; with zero changed rows there is nothing to list.",
+      "severity": "minor",
+      "fix": "Re-run the baseline capture set through the dev hooks on the final code (for example as set pls2), run python3 scripts/realism/compare_sets.py baseline pls2, and record in the package notes that no rows were re-scored, or list any that were."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/pci/PciLabSession.test.ts (20 passed)",
+     "npx vitest run src/ui/pci/PciLabSession.tips.test.ts src/ui/pci/PciTableStrip.test.ts src/ui/pci/consoles/consoles.test.ts src/ui/pci/pciDevicesRender.test.ts src/ui/lab/LabLayout.test.ts src/ui/lab/controls/pciDevicesTab.test.ts (20 passed)",
+     "npx vitest run src/simulation/dose.test.ts (44 passed)",
+     "npx vitest run src/ui/lab/controls/controls.test.ts (2 failed, 9 passed: lines 39 and 92, 'pci-devices' now in CONTROL_TABS)",
+     "npx vitest run src/dev/xrayCapture.test.ts src/simulation/imaging/collimation.test.ts src/ui/lab/integration.test.ts src/ui/lab/lab.test.ts src/ui/sim/sessionModules.test.ts (36 passed)",
+     "npx vitest run src/simulation/diagnosticScenarios/launch.test.ts src/simulation/diagnosticScenarios/scenarios.test.ts src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/sim/modules/lesions.test.ts src/ui/sim/modules/script.test.ts (65 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/tips.test.ts src/content/lab/retarget.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/tips.test.ts src/simulation/pci/facade.test.ts (98 passed, 1 skipped)",
+     "temporary probe tests (src/ui/pci/__acc_probe*.test.ts, created and deleted): rank of pci-rad-shallow-working-view at phase 'plan' is 33/42 (lad-focal, rca-calcified, lcx-stemi) and 43/52 (rca-cto)",
+     "python3 scripts/realism/compare_sets.py baseline pls1 (189/236 both, no lost or gained rows)",
+     "browser (dev server :5173, dev hooks): openSim rca-cto exam gives __pci.s.id 'rca-cto'; [data-lab=pci] present; a held cine pedal stored a 26-frame run on the reference monitor; QCA opened on the frame; keys w/e/f move, torque and fluoro; __pciDraw renders non-blank frames"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (clean)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "PciLabSession.test.ts (headless): 5 s of pedal fluoroscopy raises fluoroTimeS by about 5; advanceDevice with the pedal up adds no fluoroscopy time; one cine run adds one series with frames > 0 to useSeriesStore",
+      "met": true,
+      "evidence": "src/ui/pci/PciLabSession.test.ts 'pedal-gated imaging and dose (headless)': 5 s pedal gives a fluoroTimeS rise between 4.8 and 5.2 s; wire and device advanced with the pedal up leave fluoroTimeS and st.fluoroS unchanged and beamMode() null; a 1.5 s cine pedal adds exactly one 'cine' series with frames > 0. All 20 tests in the file pass."
+     },
+     {
+      "criterion": "A repeated case has contrastMl 0, a new PatientEngine instance and fresh syringes",
+      "met": true,
+      "evidence": "PciLabSession.test.ts 'a repeated case starts afresh': after repeat(), b.st.contrastMl 0, contrastPushed 0, b.engine !== a.engine, engine contrast total 0, new guide and contra syringes with 0 mL, KAR 0, old session disposed. Passes."
+     },
+     {
+      "criterion": "Each core scenario (lad-focal, rca-calcified, lcx-stemi, rca-cto) can be completed headlessly in guided and independent mode through PciLabSession, loading devices through the AssistedDeviceConsole path",
+      "met": true,
+      "evidence": "PciLabSession.test.ts runs all 8 scenario and mode pairs through complete(). It loads devices with session.loadDevice, which is the call AssistedDeviceConsole.tsx line 126 makes and which sets device.assisted; it asserts r.passed and finished. All 8 pass."
+     },
+     {
+      "criterion": "DoseTracker test: 7.5 pulses/s halves dose rate against 15; 3.75 is selectable",
+      "met": true,
+      "evidence": "PciLabSession.test.ts 'pulse rates': PCI_FLUORO_RATES contains 3.75; the KAR ratio of 7.5 to 15 falls between 0.45 and 0.55, and 3.75 to 15 between 0.2 and 0.3. PulseRate = 3.75 | 7.5 | 15 | 30 in both adrc.ts and useSimulatorStore.ts. pciDevicesTab.test.ts checks that the imaging tab offers 3.75 p/s in the PCI lab. dose.test.ts passes. In the browser, imagingControls().rates is [3.75, 7.5, 15, 30]."
+     },
+     {
+      "criterion": "Opening a console and opening a modal each add one 'ui' event to the recorder, with the console or modal id",
+      "met": true,
+      "evidence": "PciLabSession.test.ts 'the recorder counts interruptions': openConsole('assisted-devices') adds one event {action:'console-open', console:'assisted-devices'}, a repeat open adds none, openModal('prebrief') adds {action:'modal-open', modal:'prebrief'}, and closing adds none. Opening the attending drawer is also covered. Passes."
+     },
+     {
+      "criterion": "browser: the lab renders in LabLayout; a pedal cine stores a run on the reference monitor and QCA opens on it; the current keys still move the wire; __pciDraw() renders; the realism-baseline device captures still draw through pciDevices",
+      "met": true,
+      "evidence": "Checked directly in the running dev server on port 5173, in my own tab, fronted so rAF ran. [data-lab='pci'] showed the Live, Reference, Haemodynamics, Dose, Table and Table-side controls sections. Window keydown 'w' x5 moved tipMm from -25 to -15. Holding 'c' for 1.5 s added one cine series of 22 frames at 512 px and cineRuns +1. The reference monitor showed 'Run 1 ... 5 / 22', and clicking QCA opened 'QCA on this frame' with the estimate prompt. __pciDraw() ran without error and the live canvas was non-blank (grey 53 to 237). No console errors. pciDevicesRender.test.ts (re-export and baseline scenes) and src/dev/xrayCapture.test.ts pass."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows (compare_sets.py baseline <set>); re-scored rows listed in package notes",
+      "met": true,
+      "evidence": "python3 scripts/realism/compare_sets.py baseline pls2 gives baseline 189 of 236 and pls2 189 of 236, the same in every section, with empty LOST and GAINED lists. The pls2 report (09:33) is newer than the last package file edit (09:20). No rows were re-scored, so the list is empty; I could not find a separate package-notes file to confirm it records this."
+     },
+     {
+      "criterion": "Tips: after its first action tipsFor(ctx, 20) includes pci-rad-operator-dose-alarm, and at phase 'plan' it includes pci-rad-shallow-working-view; every waiting.ts entry naming pci-lab-shell-session becomes satisfiable",
+      "met": false,
+      "evidence": "Met: the operator-dose part (PciLabSession.tips.test.ts checks tipsFor(ctx, 20) after engageGuide plus fluoroscopy on a high-dose hand-over), and the waiting part (0 entries name this package, so it holds trivially and the test asserts 0). Not met: the plan-phase part. The test checks tipsFor(ctx, LAB_TIPS.length), not 20. Run through vite-node on the live session with the prebrief open, pci-rad-shallow-working-view ranks 33rd of 42 for lad-focal, rca-calcified and lcx-stemi, and 43rd of 52 for rca-cto, so it is not in the top 20 at phase 'plan' in any core scenario."
+     },
+     {
+      "criterion": "browser: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) then mount gives window.__pci.s.id === 'rca-cto'",
+      "met": true,
+      "evidence": "In the browser, useUiStore.getState().openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) (using the app's own module URL) gave window.__pci.s.id 'rca-cto' and __pciSession.policy.mode 'exam'. __pciDraw, __pciStep, __pciLab and __lab.pci were all present."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/pci/PciLabSession.tips.test.ts (criterion 8, plan-phase half); ranking in src/content/lab/tips.ts and the tip triggers in src/content/manual/**",
+      "problem": "The acceptance asks that tipsFor(ctx, 20) at phase 'plan' includes pci-rad-shallow-working-view. It ranks 33rd (43rd in rca-cto), because more than 20 PCI tips whose trigger is phase 'plan', alone or with more conditions, outrank its broader ['plan','wire'] trigger. The test asserts against LAB_TIPS.length instead of 20, and says so in a comment. Nothing in this package's files can meet the 20-tip limit.",
+      "severity": "major",
+      "fix": "This cannot be fixed inside the package; it needs an owner or orchestrator decision. Either (a) amend this criterion in docs/curriculum/lab-build-plan.json to 'tipsFor(ctx, LAB_TIPS.length) includes pci-rad-shallow-working-view at phase plan' and move the top-20 ordering to pci-tip-context, which owns the waiting entry for this tip in waiting.ts; or (b) have a tip-trigger package narrow the competing plan-phase triggers. Then the test can assert tipsFor(ctx, 20) directly. Record the decision in outOfScope."
+     },
+     {
+      "where": "src/ui/lab/controls/controls.test.ts lines 39 and 92 (owned by found-lab-controls-registry)",
+      "problem": "Two tests now fail. This package's new src/ui/lab/controls/tabs/PciDevicesTab.tsx (order 5, labs ['pci']) is registered in CONTROL_TABS, and those tests hard-code the registry contents: they expect ['carm','imaging','table','patient'] and get 'pci-devices' first. npx vitest run src/ui/lab/controls/controls.test.ts gives 2 failed and 3 passed. The package lists the tab file, so the break was unavoidable, but the test it breaks is not in its file list and the rules say to report this in outOfScope rather than leave a red suite.",
+      "severity": "major",
+      "fix": "Do not edit this from the package; report it in outOfScope and schedule a small change to controls.test.ts. Either expect ['pci-devices','carm','imaging','table','patient'] at line 39 and ['pci-devices','carm','imaging','fixture','table','patient','fixture-pci','fixture-not-exam'] at line 92, or filter both lists to tabs whose labs include 'diagnostic' so later PCI tabs cannot break them again. The stripLabels assertions for the diagnostic session already pass, because the tab is hidden there."
+     },
+     {
+      "where": "src/content/lab/reachability.test.ts glob (RAISE_MODULES) and src/ui/pci/PciLabSession.ts `raises` export",
+      "problem": "The tipIntegration says the session's event source exports raises for the reachability report. PciLabSession.ts does export raises (phases plan and finish, high-radiation-dose and the patient events), but the reachability glob reads only ui/lab/pciEvents/*.ts, *Context.ts, *Tips.ts and the session module folders, so this export is not counted. Only the package's own tips test reads it. This is not an acceptance criterion.",
+      "severity": "minor",
+      "fix": "Out of scope for this package. Either pci-tip-context provides src/ui/lab/pciEvents/ (or a pciContext.ts) that re-exports the session's raises, or the reachability glob owner adds ../../ui/pci/PciLabSession.ts. Note it in outOfScope."
+     },
+     {
+      "where": "Reference monitor header in the PCI lab at narrow pane width (src/ui/lab/ReferenceMonitor.tsx, rendered inside LabLayout)",
+      "problem": "At about 800 px viewport (reference monitor about 240 px wide), the run header 'RAO 20 CRA 24 \u00b7 15 f/s \u00b7 20 cm' overlaps the '1.5 s \u00b7 2.2 mGy' line and the run thumbnail. This is cosmetic and not part of any criterion.",
+      "severity": "minor",
+      "fix": "Optional. Let the reference header wrap or truncate below about 300 px container width. ReferenceMonitor.tsx is not in the package list, so report it rather than edit it."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/pci/PciLabSession.test.ts src/ui/pci/PciLabSession.tips.test.ts (25 passed)",
+     "npx vitest run src/ui/pci/PciTableStrip.test.ts src/ui/pci/pciDevicesRender.test.ts src/ui/pci/consoles/consoles.test.ts src/ui/lab/LabLayout.test.ts src/ui/lab/controls/pciDevicesTab.test.ts src/simulation/dose.test.ts src/ui/lab/controls/controls.test.ts (68 passed, 2 failed, both in controls.test.ts)",
+     "npx vitest run src/dev/xrayCapture.test.ts src/mentor/bridgePedal.test.ts src/state/store.test.ts src/ui/lab/integration.test.ts src/ui/lab/lab.test.ts src/simulation/imaging/collimation.test.ts (39 passed)",
+     "npx vitest run src/simulation/diagnosticScenarios/launch.test.ts src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/sim/modules/script.test.ts src/ui/sim/sessionModules.test.ts src/ui/sim/modules/lesions.test.ts (55 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)",
+     "npx vite-node scratchpad/rank.ts (rank of pci-rad-shallow-working-view at phase plan: 33 of 42 in lad-focal, rca-calcified and lcx-stemi; 43 of 52 in rca-cto)",
+     "python3 scripts/realism/compare_sets.py baseline pls2 (189/236 both; no rows lost or gained)",
+     "browser on localhost:5173: openSim rca-cto exam gave __pci.s.id 'rca-cto'; data-lab='pci' with all LabLayout sections; W key moved the wire; C pedal stored a 22-frame cine run on the reference monitor; QCA opened on it; __pciDraw rendered a non-blank canvas; no console errors"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 1 (pci-rad-shallow-working-view not in tipsFor(ctx, 20) at phase 'plan'): I checked this and it is correct, but it cannot be fixed inside the package. A probe test found the tip ranked 34 of 42 in lad-focal and 44 of 52 in rca-cto. The probe ran on the session's real plan-phase context: {lab:'pci', phase:'plan', events:[], vessel:'LAD'}, and for rca-cto events ['cto','total-occlusion']. That context is accurate. Its rank is set by the specificity tie-break in tipsFor (src/content/lab/tips.ts) and by the tip's broad trigger {phase:['plan','wire']} (src/content/manual/cath-handbook/01-lab-and-radiation.ts:1510). Neither file is in this package's list. The session could only lift the tip by giving a false context. The owner needs to decide: (a) move the 'phase plan' half of the criterion in docs/curriculum/lab-build-plan.json:528 to pci-tip-context, in line with waiting.ts:163, or (b) have pci-tip-context or tip-retarget-catchup narrow or retarget the plan-phase PCI tips and then tighten the test to tipsFor(ctx, 20). Until then PciLabSession.tips.test.ts keeps its documented check over LAB_TIPS.length.",
+     "Finding 2 (controls.test.ts lines 39 and 92 fail): I checked this and it is correct. 2 of 11 tests fail because 'pci-devices' now heads the unfiltered registry. src/ui/lab/controls/controls.test.ts belongs to found-lab-controls-registry. It is not in this package's list and is not a new test file, so I did not edit it. The fix for the owner or a repair package: line 39 should filter CONTROL_TABS by t.labs.includes('diagnostic') before mapping the ids. Line 92 should filter withFixtures by t.labs.includes('diagnostic') || t.id.startsWith('fixture'). The expected arrays stay as they are. Then run npx vitest run src/ui/lab/controls/controls.test.ts."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/pci/PciLabSession.test.ts src/ui/pci/PciLabSession.tips.test.ts src/ui/pci/pciDevicesRender.test.ts src/ui/lab/controls/pciDevicesTab.test.ts: 4 files, 32 of 32 tests passed",
+     "npx vitest run src/ui/lab/controls/controls.test.ts: 2 failed, 9 passed (finding 2 confirmed, out of scope, unchanged)",
+     "temporary probe test of the plan-phase tip rank, deleted after use",
+     "browser capture on the existing dev server (port 5173, 1600x1000 viewport): __xrayCapture.baseline('pls2') made 12 offscreen sequences, then __xrayCapture.live('pci','pls2') made live_pci_raocra through __pciDraw after the case brief was closed",
+     "python3 scripts/realism/report.py pls2 --jobs 4",
+     "python3 scripts/realism/compare_sets.py baseline pls2",
+     "python3 scripts/realism/compare_sets.py pls1 pls2"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no errors)",
+    "notes": "I fixed 1 of the 3 findings and rejected 2 because they need files this package does not own. I changed no package source file in this pass.\n\nFinding 3 (realism capture predated the final code): fixed. I made a new capture set, pls2, on the final code through the dev hooks. It contains the c1g0 standard specs, the four PCI device scenes and the live_pci_raocra sequence through __pciDraw. I left out live_diag_raocau, as pls1 did, because this package does not change the diagnostic lab's render path.\n- Score: pls2 scores 189 of 236, the same as baseline and pls1. Every section count matches.\n- Rows: compare_sets.py baseline pls2 and pls1 pls2 both show no lost and no gained rows. A direct check of the scorecard JSON rows found 0 changed values against both baseline and pls1. No rows were re-scored, so there are none to list in the package notes.\n- Live sequence: it sits outside the pass count, with 43 of 63 measurements inside the real band (pls1 had 44 of 64, baseline 44 of 62). Its frames are 988 px (CSS 494 px), as in pls1. The baseline's were 1280 px, because the PCI lab now uses the LabLayout monitor, so the live rows cannot be compared directly with baseline (docs/realism/baseline.md says the same).\n- Where things are: datasets/tmp/realism/reports/pls2/scorecard_matched.md and .json; captures in datasets/tmp/captures/pls2.\n- I cannot write a docs file for this, because none is in the package's list. This record is the package note.\n\nOther things I noticed, outside this package:\n- scripts/realism/compare_sets.py --all crashes with a TypeError in band() when a row's band has a None bound. The default mode works.\n- PciLab.tsx, PciLabSession.ts, LabLayout.tsx and DosePanel.tsx were modified at about 09:17-09:18, after pls1. pls2 was captured after that, so it covers those edits.\n- The browser viewport emulation was reset to desktop afterwards."
+   }
+  ]
+ }
+}

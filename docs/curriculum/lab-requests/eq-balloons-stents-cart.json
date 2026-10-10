@@ -1,0 +1,113 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A full balloon device picker in the PCI lab with the eight categories Brilakis describes, each with its own behaviour: semi-compliant and non-compliant balloons with compliance charts (diameter at each pressure, nominal and rated pressure shown), crossing profile and deliverability (non-compliant less deliverable); small single-marker crossing balloons (1.0–1.5 mm) whose profile is highest at the marker and which lose profile after one inflation; plaque modification balloons (spiral scoring, caged, cutting, wire-alongside scoring) that are less deliverable and stop watermelon seeding; balloon sizing (diameter no larger than the vessel at the lesion, length shorter than the lesion: too short slips, too long injures adjacent wall); ways to make a standard non-compliant balloon work harder (0.5 mm undersizing, shorter balloon, pressure cycling, two balloons side by side, buddy wires) and sticky balloons after high-pressure inflation pulling the wire back unless withdrawn under fluoroscopy; the cutting balloon accepting only slow inflation (about 1 atm every 5 s) to 6–8 atm with a ceiling of 12 atm (14 atm per chapter 23), with blade entrapment or balloon rupture if inflated fast or high, and vessel injury if withdrawn before full deflation; the very-high-pressure non-compliant balloon (usually used at 30–35 atm, capable of more than 40 atm, rated 35 atm in a 2010 case report; up to 45–50 atm in the largest series) that is missing from the picker today, with a small but real rupture risk; and the lithotripsy balloon, which may fail to cross a tight lesion.",
+    "learnerDoes": "Chooses the balloon for each problem (crossing, testing expansion, a waist that persists at rated pressure, slipping balloon, calcium), sets the inflation pressure and speed for that type, reads the compliance chart before going high, and refuses to stent until a 1:1 non-compliant balloon has expanded fully.",
+    "success": "Lesion crossed and fully expanded without exceeding any balloon's rated pressure, without a fast or high-pressure cutting balloon inflation, and with no stent placed over a persistent waist.",
+    "tips": [
+      "pci-eqb-know-the-chart",
+      "pci-eqb-standard-first",
+      "pci-eqb-scoring-or-cutting",
+      "pci-eqb-very-high-pressure",
+      "pci-calc-cutting-slow",
+      "pci-calc-ivl-crossing",
+      "pci-unx-small-long-balloon"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-standard",
+      "eq-balloons-stents-cart-specialty"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An undilatable-lesion branch in the calcified mid-RCA scenario: after crossing, a 1:1 non-compliant balloon leaves a waist at its rated pressure. Events: balloon-undilatable while the waist persists; balloon rupture with a sudden pressure fall when a balloon is taken far beyond its rated pressure (raise perforation or air if the learner does not apply suction and image); stent-underexpanded if a stent is deployed over the waist.",
+    "learnerDoes": "Holds a prolonged inflation watching the inflation-device pressure, escalates to a plaque modification balloon, then the very-high-pressure balloon or lithotripsy, and deploys only after full expansion, then post-dilates with a shorter non-compliant balloon at 20 atm or more.",
+    "success": "Full balloon expansion before stenting; stent expanded on imaging; no rupture or perforation.",
+    "tips": [
+      "pci-eqb-know-the-chart",
+      "pci-eqb-very-high-pressure",
+      "pci-unx-rupture-look",
+      "pci-calc-no-stent-until-expanded"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-standard",
+      "eq-balloons-stents-cart-specialty"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Post-dilatation choices driven by intravascular imaging after stenting: an underexpanded stent (minimum stent area below target) that responds only to a non-compliant balloon at least the stent diameter above 18 atm, and extensive malapposition (gap of 400 µm or more, or 1 mm or more long) that is corrected with a semi-compliant balloon at low pressure; high-pressure inflation of the stent's own balloon injures the vessel beyond the stent edges (raise dissection).",
+    "learnerDoes": "Reads the imaging finding, chooses the balloon type, size and pressure for it, and uses a separate balloon shorter than the stent for high-pressure post-dilatation.",
+    "success": "Expansion and apposition corrected without edge dissection.",
+    "tips": [
+      "pci-eqb-postdil-which-balloon",
+      "pci-optimise-nc-postdilate"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-standard"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Trapping as a device action: withdrawing an over-the-wire microcatheter over a short wire with a trapping balloon inside the guide (raise microcatheter-removal). Model the guide-size rules: 2.5 mm balloon for 6 or 7 Fr guides, 3.0 mm for 7 or 8 Fr, length 20 mm or more (shorter or undersized balloons let a polymer-jacketed wire slip); dedicated trapping balloons and monorail balloons fit beside other devices, over-the-wire balloons may not; a 6 Fr guide cannot trap over-the-wire balloons or dissection re-entry devices, while a 6 Fr guide with a 0.071 in. lumen can trap low-profile microcatheters; a guide extension with a built-in trapping balloon as an alternative. Also model: advancing the trapping balloon beyond the microcatheter's distal marker near the primary curve; with a short or shortened guide, shaft markers do not stop the balloon entering the coronary; trapping several devices in one guide often fails; the guide extension with a built-in trapping balloon works with 135 cm but often not 150 cm microcatheters.",
+    "learnerDoes": "Withdraws the microcatheter into the guide, chooses and inflates a trapping balloon of the right size and length, removes the microcatheter and confirms the distal wire has not moved.",
+    "success": "Microcatheter removed with no loss of distal wire position.",
+    "tips": [
+      "pci-eqb-trapping-balloon-size",
+      "pci-microcath-cannot-trap"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-specialty"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Stent platform properties on the bench: several generic platforms, each with its size range (2.0 mm smallest; one platform up to 5.0 mm), labelled post-dilatation limit per size band (for 3.5–4.0 mm stents from about 4.5 to 5.5 mm across platforms, two platforms reaching 5.75 mm), strut thickness affecting deliverability and visibility, and cell design (closed or open) affecting side-branch access. A tapering vessel or left main to proximal LAD exercise in which the learner sizes to the distal reference and post-dilates proximally only within the chosen platform's limit; overexpansion beyond the limit is flagged.",
+    "learnerDoes": "Chooses a platform and size for a tapering vessel, checks the labelled limit before proximal optimisation, and compares visibility of thin- and thick-strut stents.",
+    "success": "Stent sized to the distal reference, proximal segment optimised to the proximal reference without exceeding the platform limit.",
+    "tips": [
+      "pci-ocx-stent-expansion-limit",
+      "pci-eqb-thin-strut-visibility"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-stent-build"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A 'check the cart' step before complex and CTO scenarios (the mid-RCA CTO and the calcified mid-RCA): a cart screen listing what is stocked, in which sizes and with which expiry dates (short and long wires, microcatheters, dissection re-entry system, guide extensions, specialty balloons, coils of 0.014 in. and 0.018 in. compatibility, covered stents of sandwich and single-layer designs, snares of 2–4 mm and 18–30 or 27–45 mm, pericardiocentesis kit), with some items randomly missing or out of date. The bail-out devices offered later in the case are limited to what the cart and the chosen guide allow: sandwich PTFE covered stent 6 Fr up to 4.0 mm and 7 Fr for 4.5–4.8 mm, with a blocking balloon alongside only in 8 Fr; single-layer covered stents 5–6 Fr; 0.018 in. coils only after a change to a larger microcatheter; a 2.0 mm burr only in a 7 Fr guide. A restock prompt at the end of the case. Perforation branch: a distal wire perforation in which the learner must first inflate a vessel-sized semi-compliant balloon proximal to the leak at no more than 8–10 atm (echo for effusion, pericardiocentesis if hypotensive, surgical notice), withhold heparin reversal until the equipment is out, then embolise with fat (Brilakis's usual choice except for very large perforations) or a coil delivered alongside the balloon through one guide (block and deliver; minimum guide size set by the microcatheter, 6 Fr or larger): the balloon is deflated only briefly to pass the second wire and then the microcatheter, reinflated at once, and kept inflated during coil or fat delivery, with the seal checked by microcatheter tip injection; for a large-vessel perforation, a second arterial access if the guide is not 8 Fr.",
+    "learnerDoes": "Before the first wire, walks the plan with a bail-out for each step, chooses the guide size for the largest rescue device it may need, finds missing or expired items and replaces them, names who fetches what; after the case, restocks. In a perforation, blocks the vessel before anything else and chooses an embolic that fits the microcatheter in use.",
+    "success": "When a complication is triggered, a fitting rescue device is available through the guide in use without delay.",
+    "tips": [
+      "pci-eqb-cart-check",
+      "pci-eqb-cart-covered-fit",
+      "pci-eqb-cart-cto",
+      "pci-eqb-cart-restock",
+      "pci-perf-coil-match",
+      "pci-snare-size-for-space"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-cart"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "The dual-balloon ostial flaring catheter as a device for aorto-ostial RCA or left main stents: three markers (proximal end of the anchoring balloon in the aorta, start of the 8 mm angioplasty balloon at the ostium, distal end), distal balloon 3.0–4.5 mm inflated with an inflation device, proximal anchoring balloon up to 14 mm inflated with a 1 mL syringe; flaring eases later re-engagement.",
+    "learnerDoes": "Positions the markers relative to the aortic wall and ostium, inflates each balloon with the right tool, and re-engages the flared stent.",
+    "success": "Overhanging struts flared against the aortic wall; guide re-engages without catching the stent.",
+    "tips": [
+      "pci-eqb-ostial-flare-markers",
+      "pci-ostial-overhang-flare"
+    ],
+    "lessonIds": [
+      "eq-balloons-stents-cart-specialty"
+    ],
+    "priority": "P3"
+  }
+]

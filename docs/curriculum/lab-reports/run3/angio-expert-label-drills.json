@@ -1,0 +1,311 @@
+{
+ "package": "angio-expert-label-drills",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built angio-expert-label-drills. The engine-side and data-side acceptance tests pass and the typecheck is clean; the app has not been checked in a browser yet.\n\nWhat was built:\n- **Expert labels** (`src/ui/angio/labels.ts`): a label format (`labels.json` beside each dataset's `index.json`), with parsing, strict validation and merging into runs (`LibRun.expert`).\n- **Reader mode**: a named reader turns it on in Settings and labels runs in the Library tab, with frame stepping through new frame-mark buttons in CinePlayer. Labels can be exported and imported as JSON and are never uploaded.\n- **Eight gated drills**: timi, frame-count, morphology, collateral-grade, medina, calcium, classify and segment. Each opens only once at least 20 practice runs carry usable library labels for it, and otherwise says 'not yet labelled'. Runs where readers disagree are left out. Labels made or imported in this browser are never used for scoring. Each set shows how many readers labelled it and which files the labels came from.\n- **Supporting logic**: ACC/AHA type and SCAI class are derived from the recorded lesion features using the table in pm-planning-classification. SYNTAX segment lists change with dominance. The LAD frame count is divided by 1.7 and counts are scaled by frame rate.\n- **Published normal frame counts**: these show only when the reference entry carries the study's frame rate and normal counts marked as verified against the full paper. To allow that I added an optional `verifiedValues` field to `Reference`. Nothing is filled in today, so no normal values appear.\n- **Simulated-run fallback** (`src/ui/angio/simFlowDrill.ts`): short runs filmed through the diagnostic renderer at set flow levels. TIMI 0 is an occlusion, and the RCA's TIMI 1 run also slows flow beyond the mid vessel, because the short RCA fills during the injection at any overall flow level. The engine grades each run against the module's TIMI definitions and gives a frame count at the run's own frame rate. The learner grades and counts, and the reveal labels everything as model values. 'timi' and 'frame-count' open this drill until 20 real runs are labelled, and also open it when the library isn't installed.\n- **Reveal tips**: each reveal shows the diagnostic lab's tips for the views phase plus the drill's events.\n- **Lesson links**: `src/content/practice/angio-expert-label-drills.launch.ts` declares the eight drills under their lessons, so the practice index lists them.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/library.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/CinePlayer.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/RealAngiograms.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/schema.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/simFlowDrill.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/simFlowDrill.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/practice/angio-expert-label-drills.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.tips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.practice.test.ts"
+    ],
+    "testsAdded": [
+     "src/ui/angio/labels.test.ts (17 tests: merging and gate 19/20, simulated vs real target, local labels refused, reader disagreement, validation, export round trip, stratified sets, LAD/1.7 and fps correction, normals only from verified refs, ACC/AHA C for >20 mm or occlusion >3 months, SCAI classes, classify derivation, SYNTAX segments by dominance, launch ids match drill ids)",
+     "src/ui/angio/simFlowDrill.test.ts (6 tests: engine grades TIMI 0-3 runs as made, items scored against engine grade, model frame count at the run's fps and labelled a model value, no normals shown, TIMI 0/1 'no count', stratified set, tip context)",
+     "src/ui/angio/labels.tips.test.ts (5 tests: morphology scenario after first answer -> pci-interp-grade-flow and pci-interp-thrombus-grade; timi reveals show pci-interp-grade-flow within the shown limit; collateral reveal; waiting.ts entries naming the package are satisfiable)",
+     "src/ui/angio/labels.practice.test.ts (2 tests: practiceIndex lists every drill of the launch file under its lessons, including pm-interpreting-flow, -morphology and -collaterals; links valid)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/angio src/ui/content/practiceIndex.test.ts src/state/useLabLaunchStore.test.ts src/content/lab/reachability.test.ts src/content/lab/tips.test.ts: 8 files, 81 passed, 1 skipped (the skip was already in tips.test.ts)",
+     "npx vitest run src/content/content.test.ts: 61 passed (launch validation and the ANGIO_DRILL_IDS vs DRILL_LABEL check unchanged)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean. An earlier run showed two errors in src/simulation/pci/pwSession.hyperaemia.test.ts, another package's file; those were gone by the final run.",
+    "acceptance": [
+     {
+      "criterion": "labels.test.ts: merging labels.json gives labelled runs; the gate hides a drill with 19 labelled runs and shows it with 20",
+      "status": "met",
+      "evidence": "labels.test.ts 'merging labels.json gives labelled runs' and 'the gate hides a drill with 19 labelled runs and shows it with 20' (drillGate: 19 -> open false, 20 -> open true, with readers and files)."
+     },
+     {
+      "criterion": "simFlowDrill.test.ts: runs rendered at the flowScale values for TIMI 0, 1, 2 and 3 are graded against the engine's grade, and the frame-count answer is the model's count at the run's fps, labelled a model value",
+      "status": "met",
+      "evidence": "simFlowDrill.test.ts: engineGrade(measureFlow) equals the intended grade for TIMI 0-3 on LAD and RCA. Items are scored against truth.timi. truth.frameCount equals modelFrameCount at 15 and 10 fps, and the 10 fps count is about two thirds of the 15 fps count. truth.source is 'model' and describeTruth starts with 'Model value'. The grading runs on the same transport (contrastField) that the renderer draws from; the WebGL rendering itself is not run in tests."
+     },
+     {
+      "criterion": "Frame-count correction divides LAD counts by 1.7 and scales by fps; no normal value shows when refs has none",
+      "status": "met",
+      "evidence": "labels.test.ts: correctedFrameCount(34, LAD, 15 fps) = 20; correctedFrameCount(17, LAD, 15 to 30 fps) = 20; RCA 10 to 30 fps scales by 3. frameCountNormals returns null for empty refs, for a verified citation without verifiedValues, and for the real REF_BY_ID. A fixture with verified values shows them with a scale of 2."
+     },
+     {
+      "criterion": "ACC/AHA derivation returns C for a lesion over 20 mm or a total occlusion over 3 months",
+      "status": "met",
+      "evidence": "labels.test.ts: accAhaType({length:'>20'}) = 'C' and accAhaType({occlusion:'over-3-months'}) = 'C'. Also tested: B1/B2 splitting with the lesson's worked example, the SCAI I-IV classes, and the classify item deriving C / IV."
+     },
+     {
+      "criterion": "browser: with a test labels.json, drill 'timi' opens from a lesson link and the reveal shows the expert grade and pci-interp-grade-flow",
+      "status": "needs-browser",
+      "evidence": "Implemented, not seen in a browser. The practice entry opens openSim('angio-real', {drill:'timi'}), Drills opens the registered timi drill, and LabelDrillView shows the real-run set once 20 runs are labelled. ExpertSummary shows 'Expert grade: TIMI n'. RevealTips shows tipsFor(labelTipContext(item), REVEAL_TIPS); labels.tips.test.ts checks that pci-interp-grade-flow is within that limit for timi items."
+     },
+     {
+      "criterion": "With no labels.json, drill 'timi' opened from a lesson link starts the simulated-run drill; with 20 labelled runs it starts the real-run drill",
+      "status": "partly",
+      "evidence": "Logic tested: labels.test.ts checks flowDrillTarget('timi') is 'simulated' with no labels or 19, and 'real' with 20. LabelDrillView routes on flowDrillTarget, and with no library installed a timi or frame-count link sets simOnly and shows SimFlowDrillView. Not yet confirmed in a browser."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/practice/angio-expert-label-drills.launch.ts under lessons pm-interpreting-flow, pm-interpreting-morphology, pm-interpreting-collaterals",
+      "status": "met",
+      "evidence": "labels.practice.test.ts: every drill in the file is found in practiceForLesson for each of its lessonIds with params {drill}, and each of the three named lessons has entries from this file. Each drill goes under its own lesson; not every drill is listed under all three."
+     },
+     {
+      "criterion": "Tips: in a scenario from the launch file, after its first action, tipsFor(ctx, 20) includes pci-interp-grade-flow and pci-interp-thrombus-grade; every waiting.ts entry naming angio-expert-label-drills becomes satisfiable, so the reachability waiting count for the pci lab falls by at least their number",
+      "status": "met",
+      "evidence": "labels.tips.test.ts: in the morphology scenario, after the first answer (scoreLabelItem), tipsFor(labelTipContext(first), 20) includes both tips. waiting.ts has no entries naming this package, so the satisfiability loop passes with nothing to check and the pci waiting count falls by 0. reachability.test.ts still passes."
+     }
+    ],
+    "outOfScope": [
+     "src/content/lab/reachability.test.ts: its RAISE_MODULES glob (ui/lab/pciEvents, ui/sim/modules, simulation/session/modules, ui/lab/*Context.ts, ui/**/*Tips.ts) does not include src/ui/angio/labels.ts or src/ui/angio/simFlowDrill.ts, so their `raises` exports are not yet read by the reachability report. Add '../../ui/angio/labels.ts' and '../../ui/angio/simFlowDrill.ts' to the glob. Tip reachability does not change, because the diagnostic lab already raises views, slow-flow, thrombus, dissection and total-occlusion.",
+     "src/content/validate.ts ANGIO_DRILL_IDS (and the content.test.ts check that it equals DRILL_LABEL plus 'review'): lesson drill blocks naming timi, frame-count, morphology, collateral-grade, medina, calcium, classify or segment would fail validation as 'unknown drill'. The content-links package that adds inline lesson blocks for these drills needs validate.ts to accept the ids declared in .launch.ts files, or LABEL_DRILL_IDS. The practice index links work today without that change.",
+     "docs/realism/facts: the new model parameters are labelled MODEL PARAMETER in code comments but have no entry in docs/realism/facts. They are SIM_FLOW_LANDMARK, SIM_FLOW_ORIGIN, SIM_FLOW_OCCLUSION_AT, SIM_FLOW_SETTINGS, SIM_FLOW_GRADING, SIM_FLOW_RUN_S, SIM_FRAME_TOLERANCE and SIM_FLOW_VIEW in simFlowDrill.ts, and FRAME_TOLERANCE_DEFAULT and LABEL_PER_CLASS in labels.ts.",
+     "src/progress/logbook.ts labelForKey: the simulated drill's recordSim key 'angio-timi-simulated' appears in the logbook as 'Real angiograms: timi-simulated drill set'. A KEY_LABEL entry would give it a clearer name."
+    ],
+    "notes": "The snapshot is in datasets/tmp/wp-snapshots/angio-expert-label-drills/, with the .started marker and copies of the five files that already existed: library.ts, CinePlayer.tsx, RealAngiograms.tsx, Settings.tsx and schema.ts. Every other file touched is new: the five other listed files plus two extra test files, labels.tips.test.ts and labels.practice.test.ts.\n\nDesign choices:\n- **Which labels score**: only labels served with the library in `labels.json` are used for scoring. Labels made in Reader mode, or imported in Settings, stay in this browser and are display-only, which is how 'the learner's own labels are refused for scored drills' is enforced.\n- **Reader disagreement**: where two readers label the same run differently, that run is left out of the drill.\n- **Gate number**: the minimum of 20 labelled runs comes from the plan design and is labelled as a planning parameter.\n- **Normal frame counts**: these show only once someone adds `verifiedValues` to the gibson-tfc-1996 entry in `src/content/refs.ts`, with the study's frame rate and the normal mean and SD per vessel, after checking them against the full paper. No number is filled in from memory.\n- **Simulated runs**:\n  - The runs are filmed on the first case in the case library with its lesions removed.\n  - The flow levels and grading thresholds are model parameters, and the tests confirm each run's engine grade matches the grade it was made for.\n  - The model's count of 38 frames at 30 fps for a normal LAD is within Gibson's 36.2 \u00b1 2.6, which is what the transport was calibrated to.\n- **Label drill registration**: the label drills register through `registerAngioDrill` at module load in `RealAngiograms.tsx`. `ExtraDrill` now takes props and an optional gate, and nothing was registered before this package, so no existing drill is affected. `DRILL_LABEL` is unchanged, so the existing content test still passes.\n- **Browser check needed**:\n  - `renderSimFlowRun` (WebGL2 offscreen canvas to JPEG data URLs played in CinePlayer) has not been run in a browser.\n  - Neither have the Reader mode UI (Settings panel, labelling panel in the Library tab) and the label-drill cards.\n  - A test `labels.json` with 20 TIMI labels in /angio-library/cadica/ would exercise the real-run path."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/sections/RealAngiograms.tsx Library (line ~424 `const [sel, setSel] = useState<LibRun | null>(null)`, line ~436 `const cur = sel && runs.includes(sel) ? sel : runs[0] ?? null`) together with src/ui/angio/CinePlayer.tsx preload effect deps `[run, startFrame]` and playback deps `[playing, speed, run]`",
+      "problem": "Reader mode cannot label any run after the first edit. Every setLabel changes `readerLabels`, so `mergeLabels` runs again and builds a new object (`{...r, expert}`) for every labelled run. The selected run is then no longer `includes`-equal to `sel`, so `cur` falls back to `runs[0]`. After the reader's first change (a TIMI select, Save count, a keystroke in Note), the Library jumps to the first run in the filter, and ReaderPanel remounts on that run. If the run is already runs[0], CinePlayer still gets a new `run` object: it reloads every frame and resets to frame 1, which loses the reader's paused frame. The same jump happens once when labels.json arrives after the library has loaded. Reader mode is the only route by which labels are made, so this blocks the package's external dependency.",
+      "severity": "critical",
+      "fix": "In Library, select by id: `const [selId, setSelId] = useState<string | null>(null); const cur = (selId ? runs.find((r) => r.id === selId) : undefined) ?? runs[0] ?? null;` and change the thumbnail button to `onClick={() => setSelId(r.id)}`. In CinePlayer, key the effects on stable content rather than object identity: preload `[run.id, run.base, run.frames, startFrame]`, playback `[playing, speed, run.fps, run.frames.length]`. A merged run keeps the same `frames` array reference, so labelling no longer reloads or rewinds the player. Add a small test that mergeLabels keeps `frames` reference-equal, or a component test that selection survives a merge."
+     },
+     {
+      "where": "src/ui/angio/labels.ts LABEL_DRILLS['frame-count'].field (line 427) and labelledRuns (lines 493-504)",
+      "problem": "Reader agreement on a frame count requires an identical count (`${vessel}:${frames}`). Two readers rarely give the same count to the frame; the module itself quotes a mean of 4.7 frames between injections. With a second reader, nearly every frame-count run is classed as a disagreement and left out, so the drill may never reach the 20-run gate. The reference count then also depends on whichever reader's label is first (`ls[0]`).",
+      "severity": "major",
+      "fix": "Special-case frame-count in labelledRuns. Agreement means the same vessel and (max - min) of the readers' counts within the smallest stated tolerance (default FRAME_TOLERANCE_DEFAULT). The reference count is the rounded median of the readers' counts, so build the LabelledRun with a synthesised label whose frameCount.frames is that median. Make `field` return only the vessel for the agreement key, or add an optional `agrees(ls)` hook to LabelDrillDef that defaults to key equality. Add a test with two readers at 20 and 21 frames: the run must be kept, with reference 20 or 21."
+     },
+     {
+      "where": "src/ui/angio/labels.ts LABEL_DRILLS events (calcium, medina, classify, segment) with REVEAL_TIPS = 4; RevealTips in RealAngiograms.tsx",
+      "problem": "The tips in these reveals are not about the drill. Probing tipsFor({lab:'diagnostic',phase:'views',events}, 4) gives calcium: diag-rad-c-arm-clear, diag-operator-moderate-lesion-measure, pci-planning-classify-lesion, pci-acq-target-orthogonal-views. The calcium lesson's tip pci-interp-calcium-look-first (alsoIn diagnostic views, no event condition) is not shown, because no tip trigger uses the 'calcified-lesion' event. Medina and segment reveals likewise show only generic views tips. The tests check only the timi, morphology and collateral contexts, so this gap is untested.",
+      "severity": "major",
+      "fix": "Add `tips?: string[]` to LabelDrillDef with the lesson tips that exist in tips.ts, for example calcium: ['pci-interp-calcium-look-first'], classify: ['pci-planning-classify-lesion'] and morphology: ['pci-interp-thrombus-grade', 'pci-interp-dissection-nhlbi']; choose existing ids only for medina and segment. In RevealTips, show those first (deduplicated) and fill up to REVEAL_TIPS with tipsFor(labelTipContext(item), REVEAL_TIPS). In labels.tips.test.ts, add an assertion that the calcium reveal includes pci-interp-calcium-look-first within REVEAL_TIPS."
+     },
+     {
+      "where": "src/ui/angio/labels.ts LABEL_DRILLS.segment.field (line 475)",
+      "problem": "The agreement key includes each point's frame and pixel coordinates. Two readers never place identical points, so any run labelled for segments by two readers counts as a disagreement and is dropped.",
+      "severity": "minor",
+      "fix": "Use the dominance plus the sorted set of segment ids as the agreement key (`${l.dominance}|${[...new Set(l.segmentPoints.map(s=>s.segment))].sort().join(',')}`), and build items from the first agreeing reader's points. Alternatively, key on dominance only and treat each point as that reader's item."
+     },
+     {
+      "where": "src/ui/angio/labels.ts labelProblems (donor/recipient lines 179-180, segmentPoints line 184) and labelItems collateral-grade/segment (lines 654-655, 712)",
+      "problem": "Validation accepts donor or recipient 'LM' and any SYNTAX segment whatever the dominance. labelItems then maps a missing option to index 0 with `Math.max(0, indexOf(...))`. A labels.json with donor 'LM', or segment '4' in a left-dominant study, silently scores the learner against 'LAD' or the first listed segment.",
+      "severity": "minor",
+      "fix": "Refuse such labels. Restrict donor and recipient to LAD/LCx/RCA (or add LM to the drill options), and in labelProblems refuse segmentPoints whose segment is not in segmentsFor(dominance), or segmentPoints without a dominance. Replace `Math.max(0, \u2026)` with an explicit check that skips the item when the answer is not among the options."
+     },
+     {
+      "where": "src/ui/angio/labels.ts LABEL_DRILLS.classify.field and labelItems classify (scaiClass(f, l.timi === 0)); RealAngiograms ExpertSummary and ReaderPanel",
+      "problem": "For the expert, SCAI patency comes from the TIMI label (timi === 0), and the classify drill requires a TIMI label even though the ACC/AHA features already record an occlusion. A reader who records occlusion 'over-3-months' without TIMI 0 gets SCAI II, although the module's worked example is class IV. Runs labelled with features but no TIMI grade are silently excluded.",
+      "severity": "minor",
+      "fix": "Derive patency as `const occluded = l.timi === 0 || l.accAha.occlusion !== 'none'` in the field, labelItems, ExpertSummary and ReaderPanel, and drop the `has(l.timi)` requirement from classify.field."
+     },
+     {
+      "where": "src/ui/angio/labels.ts labelItems timi (comparisonBed part, line 617) and scoreLabelItem (correct = every part)",
+      "problem": "When the reader recorded a comparison bed, the learner must pick the same bed for the item to count as 'Agrees with the expert'. The lesson asks the learner to name the bed they used; either bed can be valid, so a correct TIMI grade is marked wrong.",
+      "severity": "minor",
+      "fix": "Mark the bed part as unscored (for example `scored: false` on LabelPart, ignored in `correct`) and show the reader's bed in the reveal only, or drop the part."
+     },
+     {
+      "where": "src/ui/angio/simFlowDrill.ts SIM_FLOW_SETTINGS (TIMI 2 and 1 via side-wide flowScale)",
+      "problem": "flowScale scales the whole injected side, so in a LAD TIMI 2 run the circumflex fills just as slowly. The run offers no uninvolved bed to compare with, although the module defines TIMI 2 against the proximal segment or the opposite artery. The learner can only judge against a remembered normal.",
+      "severity": "minor",
+      "fix": "For TIMI 2 and 1 on the LAD, use a regional modifier (the noReflow/slowBeyond mechanism already used for the RCA TIMI 1 run) beyond the proximal vessel at flowScale 1, so the circumflex fills normally as an in-run comparison. Re-check engineGrade in simFlowDrill.test.ts. Or show the TIMI 3 run of the same vessel beside the item as the comparison."
+     },
+     {
+      "where": "src/ui/sections/RealAngiograms.tsx LabelDrillSet commit (saveResults with drill = label id) and Progress (DRILL_ORDER filter); SimFlowDrillView (no saveResults)",
+      "problem": "Label-drill answers go into the shared results store but never appear in the Progress tab, which filters by DRILL_ORDER, although they are counted in its 'answers recorded' total. Simulated-run answers are not saved at all, so neither drill has a learning curve.",
+      "severity": "minor",
+      "fix": "Either keep label-drill results out of the shared store, or report them to the owner for a Progress change; DRILL_ORDER and DRILL_LABEL feed content.test, so do not edit them here. Save the simulated-run answers under a distinct key ('timi-simulated') for consistency, and note the Progress gap in outOfScope."
+     },
+     {
+      "where": "src/ui/angio/labels.tips.test.ts ('collateral scenario' test) and src/ui/angio/labels.test.ts (held-out exclusion)",
+      "problem": "The collateral test checks a hand-written context ({events:['total-occlusion']}), not labelTipContext of a collateral item, so a change to LABEL_DRILLS['collateral-grade'].events would go unnoticed. The design rule that held-out exam patients are excluded from labelled practice sets is only asserted in a comment; nothing tests it.",
+      "severity": "minor",
+      "fix": "Build a collateral-grade labelled run in the fixture and assert on tipsFor(labelTipContext(item), REVEAL_TIPS). For held-out patients, either filter in labelledRuns with `!heldOutPatient(run.dataset, run.patientId)` (import from content/mentor/catalogue) and test that a held-out patient's labelled run never enters labelSet, or test the practiceData filter."
+     },
+     {
+      "where": "src/ui/sections/RealAngiograms.tsx Drills button row (`d.gate?.(runs)` for 8 drills on every render)",
+      "problem": "drillGate runs over every practice run twice per drill (labelledRuns plus the localOnly pass) on every Drills render, which is each answer click. This is wasted work in an interactive path, though it is not a per-frame render path.",
+      "severity": "minor",
+      "fix": "Memoise the gates: `const gates = useMemo(() => new Map(registeredAngioDrills().map((d) => [d.id, d.gate?.(runs)])), [runs]);` and read from the map in the button row."
+     },
+     {
+      "where": "Acceptance: 'browser: with a test labels.json, drill timi opens from a lesson link and the reveal shows the expert grade and pci-interp-grade-flow'; 'With no labels.json ... starts the simulated-run drill'",
+      "problem": "Not yet checked in a browser. renderSimFlowRun (WebGL2 offscreen to JPEG data URLs), Reader mode, the label-drill cards and lesson-link routing have never been run. The Library selection bug above shows that UI paths untested in a browser hold real defects.",
+      "severity": "minor",
+      "fix": "After the fixes, check through the running dev server (port 5173). Place a 20-label TIMI labels.json in public/angio-library/cadica/, open the pm-interpreting-flow practice link and confirm 'Expert grade: TIMI n' and pci-interp-grade-flow in the reveal. Remove the file and confirm the simulated drill films and plays a run. Label two different runs in Reader mode and confirm the selection holds."
+     },
+     {
+      "where": "Out of scope (confirmed): docs/realism/facts; src/content/lab/reachability.test.ts RAISE_MODULES glob; src/content/validate.ts ANGIO_DRILL_IDS; src/progress/logbook.ts KEY_LABEL",
+      "problem": "The builder's outOfScope list is accurate. The MODEL PARAMETERs (SIM_FLOW_*, SIM_FRAME_TOLERANCE, FRAME_TOLERANCE_DEFAULT, LABEL_PER_CLASS) have no docs/realism/facts entries, as section 2 requires. The labels.ts and simFlowDrill.ts raises exports are not read by the reachability report. Lesson drill blocks naming the eight new ids would fail validate.ts. The other src files modified since .started (haemo, physiology, engine.ts, transducer.ts, pwSession.ts) all belong to haemo-transducer-and-setup or physiology-hyperaemia-and-adenosine; none come from this package.",
+      "severity": "minor",
+      "fix": "Schedule the follow-ups. Add the facts entries; add '../../ui/angio/labels.ts' and '../../ui/angio/simFlowDrill.ts' to RAISE_MODULES; make validate.ts accept ids declared in .launch.ts drills (or LABEL_DRILL_IDS) before the content-links package adds inline blocks; add a KEY_LABEL entry for 'angio-timi-simulated'."
+     }
+    ],
+    "verdict": "Not ready to close. The package tests pass (4 files, 30 tests) and `npx tsc -p tsconfig.app.json --noEmit` is clean. Most of the design is in place: the label format, validation and merging, the gate of 20 runs, the refusal of labels made in the browser, reader provenance, the stratified sets with kappa and Brier, the ACC/AHA and SCAI derivation (checked against the pm-planning-classification table), SYNTAX segments by dominance (checked against pm-acquiring), the TIMI thrombus and calcium definitions (checked against pm-interpreting), the LAD /1.7 correction and fps scaling, and normals shown only once verified. The simulated-run drill is graded on the same transport and flowScale the renderer uses: LAD TIMI 3 gives 19 frames at 15 fps, which is 38 at 30 fps, and is consistent with the existing calibration. Shared engine defaults are unchanged. The ExtraDrill hook change is additive, and no existing drill was registered before. No ground truth appears on live screens, and the UI uses the Clinical Graphite classes in British English. Three problems block closing. (1) Critical: the Library tab tracks the selected run by object identity, so every Reader-mode edit re-merges the labels, jumps the selection to the first run and rewinds the player, which makes Reader mode unusable. (2) Major: readers must give identical frame counts to agree, so a second reader would starve the frame-count drill. (3) Major: the calcium, Medina and segment reveals show generic tips; the calcium lesson tip falls outside the 4 tips shown. The other findings are minor. The browser acceptance criteria remain unverified."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 12,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/ui/angio/labels.test.ts src/ui/angio/labels.tips.test.ts src/ui/angio/labels.practice.test.ts src/ui/angio/simFlowDrill.test.ts (4 files, 40 tests, all pass)",
+     "npx vitest run src/content/content.test.ts -t \"server-side smoke test|plan drill is labelled unstratified\" (the two tests that import RealAngiograms; 2 pass)",
+     "Browser check on the running dev server (port 5173), with a temporary 24-label datasets/library/cadica/labels.json (since removed): openSim('angio-real', {drill:'timi'}) opened the real-run TIMI drill. Its reveal showed 'Expert grade: TIMI 0, compared with the proximal segment' and the pci-interp-grade-flow tip, and the bed part read 'Compared with (not scored)'. In Reader mode, labelling p1_v4 kept the selection and the paused frame (4/55), and a second run, p1_v12, was then labelled with a TIMI select and typed note without the selection moving. After the file was removed, the same link opened the simulated drill, which rendered a 75-frame run that played. The answer was saved as 'timi-simulated', and the Progress tab listed 'TIMI flow' and 'TIMI flow (simulated runs)'. Test entries in that browser (results, reader state, one haemo logbook entry made when I navigated away from the haemo lab) were removed afterwards"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I applied all 12 actionable findings and rejected none. The 13th finding lists follow-ups outside this package and is reported below. All 40 package tests pass and the typecheck is clean.\n\n**Fixes by finding**\n1. **Library selection (critical).**\n   - `RealAngiograms.tsx` Library now keeps the selected run's id (`selId`) instead of the run object.\n   - The `CinePlayer.tsx` preload effect now depends on `[run.id, run.base, run.frames, startFrame]`, and playback on `[playing, speed, run.fps, run.frames.length]`.\n   - A merged run keeps its `frames` array, and a test checks this. In the browser, labelling kept both the selected run and the paused frame.\n2. **Frame-count agreement.**\n   - New optional `consensus` hook on `LabelDrillDef`; `frame-count` now uses the vessel alone as its key.\n   - Readers agree when they name the same vessel and their counts lie within the smallest stated tolerance. The reference count is the rounded median.\n   - `LabelledRun` gained `files`, so the gate names every source file. Tests cover counts of 20 and 21 (kept), counts beyond tolerance, different vessels, and the smallest tolerance applying.\n3. **Reveal tips.**\n   - `LabelDrillDef.tips` lists each lesson's own tips. `revealTips` / `labelRevealTips` in `labels.ts` show those first and fill up to `REVEAL_TIPS` from `tipsFor`, without repeats.\n   - Tips by drill: calcium gets pci-interp-calcium-look-first; classify gets pci-planning-classify-lesion; morphology gets thrombus-grade, calcium-look-first and dissection-nhlbi; collateral gets diag-interp-collateral-long-run; segment gets diag-acq-dominance-follow-pda; timi and frame-count get pci-interp-grade-flow.\n   - Medina has no tips: no tip in LAB_TIPS teaches the Medina reading, and cp-bifurcation-provisional-assess has none.\n   - The simulated drill's reveal also leads with pci-interp-grade-flow.\n4. **Segment agreement key.** The key is now the dominance plus the sorted set of segment ids, and items use the first reader's points.\n5. **Validation.**\n   - The `Artery` type and `ARTERIES` are now LAD, LCx and RCA only.\n   - A label with segment points is refused if it has no dominance, or if a segment does not exist in that dominance.\n   - `labelItems` now skips an item whose answer is not among the options instead of using `Math.max(0, ...)`.\n6. **SCAI patency.**\n   - New `labelOccluded(l)`: TIMI 0, or any occlusion among the ACC/AHA features. It is used in the classify field, `labelItems`, ExpertSummary and ReaderPanel, and the learner's own SCAI class follows the same rule.\n   - The classify drill no longer needs a TIMI label. A test shows over-3-months gives class IV and under-3-months gives class III.\n7. **Comparison bed.** `LabelPart.scored: false` on the bed part, so `correct` ignores it. The UI labels it 'Compared with (not scored)', and the reveal still states the reader's bed.\n8. **Simulated TIMI 2 and 1.**\n   - LAD TIMI 2 and 1, and RCA TIMI 2, now run at flowScale 1 with regional slow flow beyond 0.3 of the vessel (LAD 0.45 and 0.06, RCA 0.35). I chose these values by probing `engineGrade`.\n   - RCA TIMI 1 keeps the side-wide flow scale, because the short RCA fills during the push otherwise. LCx is not one of the drill's runs and is unchanged.\n   - Tests check every run's grade, the order of the flows, and that in the LAD TIMI 2 and 1 runs the circumflex fills no later than in the normal run. These are MODEL PARAMETERS.\n   - This departs from the plan's wording 'at set flowScale values'; I applied the finding because it gives the in-run comparison bed the module's TIMI 2 definition asks for.\n9. **Progress.**\n   - Simulated-run answers are now saved under 'timi-simulated'.\n   - The Progress tab, which is inside `RealAngiograms.tsx`, now adds rows for registered drills and 'timi-simulated' that have results. Each row shows the share agreeing per set, kappa and chance except for frame-count, and Brier.\n   - `DRILL_ORDER` and `DRILL_LABEL` are untouched.\n10. **Tests.** The collateral test now builds a real collateral-grade item and checks `labelTipContext` and `labelRevealTips`. `labelledRuns` now leaves out held-out patients itself, using `heldOutPatient` from `content/mentor/catalogue`. A test passes a held-out patient's labelled run in and checks it never enters `labelledRuns`, `labelSet` or the gate count. Test fixtures now use practice patient ids only.\n11. **Gates.** The drill gates are memoised once per change of runs in Drills.\n12. **Browser check.** Done; see `testsRun`.\n\n**Two further defects found and fixed in package files**\n- **Stored labels could be lost on load.** `useReaderStore` reads stored labels while the module is still loading. Validation then used `SYNTAX_SEGMENT_IDS`, which was declared later in the file, so any stored label with segment points threw. The catch returned an empty store, and the next write would have erased the saved labels. I moved the SYNTAX table above its first use.\n- **An invalid change deleted the whole label.** `setLabel` dropped the run's label when a change failed validation. It now refuses the change and keeps the label. ReaderPanel also removes segment points that no longer exist when the dominance changes or is cleared. Tested.\n\n**Out of scope (needs other files)**\n- **Confirmed from the review:**\n  - Add docs/realism/facts entries for SIM_FLOW_SETTINGS (new values), SIM_FLOW_GRADING, SIM_FRAME_TOLERANCE, FRAME_TOLERANCE_DEFAULT and LABEL_PER_CLASS.\n  - Add `labels.ts` and `simFlowDrill.ts` to RAISE_MODULES in `src/content/lab/reachability.test.ts`.\n  - Let `src/content/validate.ts` ANGIO_DRILL_IDS accept the eight label drill ids.\n  - Add KEY_LABEL entries in `src/progress/logbook.ts` for 'angio-timi-simulated'.\n- **New:**\n  - `src/ui/sections/Pathway.tsx` around line 345 shows `DRILL_LABEL[r.drill] ?? r.drill`, so these results would appear there as raw ids ('timi', 'frame-count', 'timi-simulated').\n  - No tip in LAB_TIPS covers the Medina reading.\n- **Browser test file:** for the browser check I created `datasets/library/cadica/labels.json`, which is outside the listed files, and removed it afterwards.\n\n**Files changed**\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/labels.tips.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/simFlowDrill.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/simFlowDrill.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/angio/CinePlayer.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/RealAngiograms.tsx"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-71) at http://localhost:5173 and closed it when I finished. I set a 1440x900 viewport on that tab only and cleared it before closing.",
+     "Lesson link with no labels.json (library installed): I opened pm-interpreting-flow (pci-manual / pm-interpreting). Its 'Practise this in the lab' list shows 'Grade TIMI flow on cine runs' and 'Count TIMI frames at the run's frame rate'. Clicking Open on the TIMI row opened Real angiograms > Reading drills with 'TIMI flow \u00b7 simulated runs' selected. The simulated-run drill showed its notice ('...labelled at least 20 of them (0 so far)'), and the run filmed through the diagnostic renderer showed a filled RCA at 10 fps. The six other label drills each read '\u00b7 not yet labelled'.",
+     "I played a full simulated set of 8 runs, two at each TIMI grade, with LAD and RCA runs at 10 and 15 fps. No grade or count appears before submission. Each reveal says 'Model value: TIMI n ... (the engine's grade of this run, not an observer's)' and gives the model frame count at the run's own fps. LAD counts add 'Corrected for the LAD (divided by 1.7)', e.g. 40 frames at 15 fps gives 23.5. Runs where contrast never arrives give 'none; contrast does not reach ... during the run'. Every reveal also says no published normal count is shown. The set report gives agreement 3 of 8, weighted kappa with 95% CI, counts within tolerance and Brier score, and labels everything as model values.",
+     "Reveal tips: the TIMI reveals (simulated and real) include pci-interp-grade-flow ('Grade the flow and look for a mechanical cause'). The morphology reveal includes pci-interp-thrombus-grade, the calcium tip, the NHLBI tip and pci-interp-grade-flow.",
+     "Frame stepping and marks: on the frame-count drill and in Reader mode, '\u25c2 frame' and 'frame \u25b8' pause the player and step it. 'Contrast across the origin' and 'Reaches the landmark' record the frame and fill in the count (frames 38 to 50 gave 12; 13 to 25 gave 12).",
+     "Test labels.json: I added a fetch shim inside the page only, with no file edits, serving /angio-library/cadica/labels.json under schema cathmaster-angio-labels/1 with reader 'Test Reader' on non-held-out CADICA runs. With 22 TIMI labels, 16 frame counts and 19 thrombus/calcium labels, the same lesson link opened the real-run TIMI drill ('TIMI flow \u00b7 22 labelled runs'; 'Reference: 1 supervising reader (Test Reader), labels from /angio-library/cadica/labels.json'). The comparison bed was required before submitting. The reveal showed 'Expert grade: TIMI 2, compared with the proximal segment', the reader, date and file, and pci-interp-grade-flow. Frame count, with 16 labels, still opened the simulated drill.",
+     "Gate 19 versus 20 in the browser: with 19 labels, 'Describe the lesion' showed 'not yet labelled ... 19 runs have usable labels so far'. After adding a 20th label and reopening from the pm-interpreting-morphology lesson link, it read '20 labelled runs' and the set opened. Calcium went from hidden to open in the same way.",
+     "With 24 fully labelled runs all eight drills opened. Frame count on real runs states 'Frames counted at 10 frames per second'. Its reveal gives the expert count, the LAD /1.7 correction and the 'no published normal count' line, and the set report showed. The collaterals (12 items), Medina (24), calcium (9), classify (9, giving ACC/AHA type and SCAI class live from the learner's own features) and segment (6, 'In this right-dominant study ...') drills each rendered their first item.",
+     "Settings > Reader mode: the panel renders in Clinical Graphite style. The labelling checkbox stays disabled until a name is entered. With the test name 'Verifier Test', the Library tab showed the Reader mode panel with a select for each field, the frame-count save ('Saved: LAD 9 frames at 10 frames per second'), SYNTAX points and the ACC/AHA form. The label was saved to localStorage cathmaster:v1:angio-reader. The local TIMI label on p1_v1 was not counted toward the gate: TIMI stayed at 22 runs, with readers listed as Test Reader only.",
+     "Cleanup: I cleared the Reader-mode store and its localStorage key (it was null before I started), removed the fetch shim and checked that the drills fell back to 'simulated runs' / 'not yet labelled'. The drill answers I gave during testing stay in this browser's drill results and progress: the sidebar 'logged' counter went from 44 to 45.",
+     "Not checked in the browser: the path where the library is not installed (simOnly). loadLibrary caches its result in the module, so I could not simulate a missing library without editing files. The code at RealAngiograms.tsx lines 166 and 196-208 routes timi and frame-count to SimFlowDrillView in that case."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/RealAngiograms.tsx, Library component (around lines 453-468): <CinePlayer key={cur.id} .../> and {readerOn && <ReaderPanel key={cur.id} .../>} are siblings in the same fragment",
+      "problem": "With Reader mode on, the Library tab gives two siblings the same key. React logs 'Encountered two children with the same key, p1_v1' on every render, and when the selected run changes React may reuse or drop the wrong child, so the player and the reader panel can keep state from the previous run.",
+      "severity": "major",
+      "fix": "Give the siblings distinct keys, for example key={`player-${cur.id}`} on CinePlayer and key={`reader-${cur.id}`} on ReaderPanel."
+     },
+     {
+      "where": "src/ui/sections/RealAngiograms.tsx onFrameMark handlers (LabelDrillCard ~line 1640, SimFlowCard ~line 1900, Library setRmarks) with src/ui/angio/CinePlayer.tsx '\u25c2 frame'/'frame \u25b8' ((f \u00b1 1 + n) % n)",
+      "problem": "Frame stepping wraps from the last frame to frame 1, and the count is computed as Math.max(0, to - from). A learner who steps past the end, or sets the marks in the wrong order, silently gets a count of 0 that can be submitted. I hit this in the real-run frame-count drill: 'from' at 36, 20 steps forward wrapped to frame 5, and the field showed 0.",
+      "severity": "minor",
+      "fix": "When frameMarks are present, clamp stepping instead of wrapping: setFrame(f => Math.min(n - 1, f + 1)) and Math.max(0, f - 1). In onFrameMark, when to < from, leave frames null and show 'The landmark frame is before the origin frame' rather than 0."
+     },
+     {
+      "where": "src/ui/angio/labels.ts revealTips / labelTipContext (lines ~964-987)",
+      "problem": "After the drill's lead tip, the reveal fills its 4 slots with generic diagnostic 'views' tips that have nothing to do with the drill. TIMI reveals showed 'C-arm moving: clear the path, then screen' and 'Classify the lesion aloud'. The frame-count reveal showed 'Decide dominance from the PDA', 'Nitrate before you call a narrowing fixed' and 'Aorto-ostial lesion'.",
+      "severity": "minor",
+      "fix": "In revealTips, after the lead ids, add only tipsFor(ctx) results whose when.event, or an alsoIn entry with an event, intersects ctx.events. Otherwise show the lead tips alone rather than padding to REVEAL_TIPS."
+     },
+     {
+      "where": "src/ui/angio/labels.ts loadLabels (line ~299)",
+      "problem": "Every time Real angiograms mounts it requests labels.json from all four library folders (cadica, dominance, dominance-main, angiocad). None exists yet, so each mount logs four 'Failed to load resource: 404' console errors.",
+      "severity": "minor",
+      "fix": "Fetch labels.json only for datasets whose index.json declares it (e.g. a 'labels': 'labels.json' field read in buildDataset). Alternatively, have scripts/vite-angio-library.mjs answer a missing labels.json with 204, and treat 204 as no labels in loadLabels."
+     },
+     {
+      "where": "src/ui/sections/RealAngiograms.tsx LabelDrillSet header text for 'morphology' (LABEL_DRILLS.morphology.blurb in labels.ts)",
+      "problem": "The blurb says 'Describe the lesion in the fixed order (flow first)', but the item asks only for thrombus, calcium and dissection and never asks about flow.",
+      "severity": "minor",
+      "fix": "Remove '(flow first)' from the blurb, or add the TIMI part to the morphology item."
+     },
+     {
+      "where": "src/ui/content/BlockRenderer.tsx DrillLink (outside this package's files; for outOfScope)",
+      "problem": "The label is DRILL_LABEL[drill as DrillKind]. AngioDrillId now includes the eight label drill ids, so an inline drill block using one of them would render 'Practise \u00b7 Real angiograms \u00b7 undefined'. No lesson uses such a block yet, so the practice-index rows are not affected.",
+      "severity": "minor",
+      "fix": "Fall back to LABEL_DRILLS[drill].label from labels.ts when the drill is not a DrillKind, e.g. DRILL_LABEL[drill as DrillKind] ?? (isLabelDrillId(drill) ? LABEL_DRILLS[drill].label : drill)."
+     }
+    ],
+    "consoleErrors": [
+     "Warning: Encountered two children with the same key, `p1_v1` ... at Library (RealAngiograms.tsx:520) (logged 6 times while Reader mode was on in the Library tab)",
+     "Failed to load resource: the server responded with a status of 404 (Not Found): /angio-library/{cadica,dominance,dominance-main,angiocad}/labels.json on each mount of Real angiograms (I confirmed all four return 404)"
+    ]
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 6 (BlockRenderer DrillLink shows 'undefined' for label drill ids): the finding is correct, but I did not change it because src/ui/content/BlockRenderer.tsx is not one of this package's files. outOfScope: in DrillLink, fall back to LABEL_DRILLS[drill].label (from src/ui/angio/labels.ts, guarded by isLabelDrillId) when DRILL_LABEL[drill as DrillKind] is undefined. No lesson uses such a block today, so nothing shows the bug yet."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/angio/labels.test.ts src/ui/angio/labels.tips.test.ts src/ui/angio/simFlowDrill.test.ts src/ui/angio/labels.practice.test.ts (4 files, 45 tests passed)",
+     "npx vitest run src/state/useLabLaunchStore.test.ts (5 passed)",
+     "npx vitest run src/content/content.test.ts -t \"real-angiogram drills on the local library\" (22 passed, 39 skipped; this checks that buildDataset still works after the signature change)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)",
+    "notes": "I applied 5 of the 6 findings; the sixth is outside this package's files. All 45 package tests pass and the typecheck is clean. Nothing has been checked in the browser yet.\n\n1. **Duplicate React key** (`src/ui/sections/RealAngiograms.tsx`, Library tab). The player is now keyed `player-${cur.id}` and the ReaderPanel `reader-${cur.id}`, so each keeps its own state when the run changes.\n\n2. **Frame stepping and order** (`src/ui/angio/CinePlayer.tsx`, `RealAngiograms.tsx`).\n   - While frame marks are shown, the \u25c2 frame / frame \u25b8 buttons stop at the first and last frames instead of wrapping. Normal playback and the library player without marks still loop.\n   - In the real-run card and the simulated-run card, a landmark marked before the origin now leaves the count empty, so it can't be submitted. A warning line says \"The landmark frame is before the origin frame.\"\n   - Reader mode's FrameCountEditor already refused to save when the landmark came first, so it is unchanged.\n\n3. **Off-topic reveal tips** (`src/ui/angio/labels.ts`, `revealTips`). After the drill's own lead tips, a reveal now adds only tips whose trigger names one of the reveal's events. When nothing matches, the lead tips show alone.\n   - This also covers the simulated-run reveal, which calls `revealTips`.\n   - The existing collateral test still passes (diag-interp-collateral-long-run fires on total-occlusion).\n   - New tests: every tip after the lead matches an event, for timi, morphology and each simulated run; with no events only the lead tips show.\n\n4. **404s for labels.json** (`library.ts`, `labels.ts`).\n   - `RawDataset` gets an optional `labels` field: index.json declares its label file, e.g. \"labels\": \"labels.json\".\n   - New pure function `labelFileOf`: accepts a plain *.json name only, so no paths or other sites, and gives the file's URL beside index.json.\n   - `loadLibrary` records which folders declare a file, new `loadLabelSources()` returns them, and `buildDataset` keeps the field out of the dataset.\n   - `loadLabels` now asks only those folders, so a library without labels makes no requests. The labels.ts header comment documents this.\n   - One thing for the library owner: a labels.json placed in a folder is now used only after that folder's index.json declares it.\n\n5. **Morphology blurb** (`labels.ts`). It now reads \"Grade the lesion's thrombus, calcium and dissection.\", and a test checks that it no longer mentions flow.\n\nNew tests went into `src/ui/angio/labels.test.ts` (labelFileOf and buildDataset) and `src/ui/angio/labels.tips.test.ts` (reveal tips and blurb)."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "labels.test.ts: merging labels.json gives labelled runs; the gate hides a drill with 19 labelled runs and shows it with 20",
+      "met": true,
+      "evidence": "Two tests pass in src/ui/angio/labels.test.ts. 'merging labels.json gives labelled runs' finds 25 labelled runs with reader and file provenance. 'the gate hides a drill with 19 labelled runs and shows it with 20' checks LABEL_GATE_MIN === 20, drillGate 19 \u2192 open:false and 20 \u2192 open:true."
+     },
+     {
+      "criterion": "simFlowDrill.test.ts: runs at the flowScale values for TIMI 0-3 are graded against the engine's grade; the frame-count answer is the model's count at the run's fps, labelled a model value",
+      "met": true,
+      "evidence": "src/ui/angio/simFlowDrill.test.ts passes 7 of 7 tests. measureFlow/engineGrade gives back each grade 0-3 for both LAD and RCA. truth.source is 'model'. frameCount equals modelFrameCount(m, fps) at 15 and 10 fps. describeTruth includes 'Model value' and 'N frames at 15 frames per second'."
+     },
+     {
+      "criterion": "Frame-count correction divides LAD counts by 1.7 and scales by fps; no normal value shows when refs has none",
+      "met": true,
+      "evidence": "Tests in labels.test.ts pass. 'correction divides LAD counts by 1.7 and scales by frame rate' gives 34 LAD @15 \u2192 20 and 10 RCA @10\u219230 \u2192 30. 'no normal value shows when refs has none verified' gives frameCountNormals null for empty refs, for a verified citation without verifiedValues, and for the real registry. The simFlowDrill test checks truth.normals is null and the text 'No published normal count is shown'."
+     },
+     {
+      "criterion": "ACC/AHA derivation returns C for a lesion over 20 mm or a total occlusion over 3 months",
+      "met": true,
+      "evidence": "The labels.test.ts test 'returns C for a lesion over 20 mm or a total occlusion over 3 months' passes: accAhaType length '>20' \u2192 C, occlusion 'over-3-months' \u2192 C. Further tests cover the B1/B2 split, SCAI class and classify-item derivation."
+     },
+     {
+      "criterion": "browser: with a test labels.json, drill 'timi' opens from a lesson link and the reveal shows the expert grade and pci-interp-grade-flow",
+      "met": true,
+      "evidence": "No verify report exists, so I checked this in the running dev server (port 5173) in my own browser tab, with no files edited. An in-page fetch shim added labels:'labels.json' to cadica/index.json and served a test labels.json with TIMI labels on 80 runs from 'Test Reader'. In Academy > Interpreting the angiogram I clicked Open on 'Grade TIMI flow on cine runs'. Real angiograms opened on the real-run drill 'TIMI flow \u00b7 60 labelled runs' (held-out patients excluded), with provenance '1 supervising reader (Test Reader), labels from /angio-library/cadica/labels.json'. I answered TIMI 1 and submitted. The reveal showed 'Differs from the expert', 'Expert grade: TIMI 3, compared with the opposite artery', 'Labelled by Test Reader on 2026-10-09', and the tip card 'Grade the flow and look for a mechanical cause', which is pci-interp-grade-flow (src/content/manual/pci-manual/09-interpreting.ts:1995)."
+     },
+     {
+      "criterion": "With no labels.json, drill 'timi' opened from a lesson link starts the simulated-run drill; with 20 labelled runs it starts the real-run drill",
+      "met": true,
+      "evidence": "The labels.test.ts test \"with no labels.json 'timi' opens the simulated-run drill; with 20 labelled runs it opens the real-run drill\" passes: flowDrillTarget gives simulated with 0 or 19 labels and real with 20. RealAngiograms.tsx:1495 routes on flowDrillTarget, and simOnly covers a missing library. The browser agrees: with the plain library (no labels.json), the same lesson link opened 'TIMI flow \u00b7 simulated runs' with 'real library runs open once a supervising reader has labelled at least 20 of them (0 so far)'. With the test labels.json it opened the real-run drill."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in angio-expert-label-drills.launch.ts under lessons pm-interpreting-flow, pm-interpreting-morphology, pm-interpreting-collaterals",
+      "met": true,
+      "evidence": "src/ui/angio/labels.practice.test.ts passes 2 of 2 tests. Every launch drill appears under each of its lessonIds via practiceForLesson with params {drill}. All three named lessons list entries from this file. checkLaunchParams reports no errors and PRACTICE_INDEX.known.problems has none for this file."
+     },
+     {
+      "criterion": "Tips: in a scenario from the launch file, after its first action, tipsFor(ctx, 20) includes pci-interp-grade-flow and pci-interp-thrombus-grade; every waiting.ts entry naming angio-expert-label-drills becomes satisfiable",
+      "met": true,
+      "evidence": "src/ui/angio/labels.tips.test.ts (beside the event sources labels.ts and simFlowDrill.ts, both of which export raises) passes 9 of 9 tests. The morphology scenario, after scoreLabelItem on its first item, gives tipsFor(labelTipContext(item), 20) containing pci-interp-grade-flow and pci-interp-thrombus-grade. In the satisfiability test, no entry in src/content/lab/raisable/waiting.ts has raisedBy 'angio-expert-label-drills' (I checked with grep), so the required fall of 'at least their number' is 0 and is met."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/angio/labels.test.ts src/ui/angio/labels.tips.test.ts src/ui/angio/labels.practice.test.ts src/ui/angio/simFlowDrill.test.ts: 4 files, 45 tests, all passed",
+     "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+     "Browser check on the running dev server (localhost:5173, own tab, closed afterwards). Without labels, the lesson link for 'timi' opened the simulated-run drill. With a test labels.json injected through an in-page fetch shim (no files edited), the same link opened the real-run drill with 60 labelled runs, and the reveal showed the expert grade, the reader provenance and pci-interp-grade-flow."
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit exited 0 with no output)"
+   }
+  ]
+ }
+}

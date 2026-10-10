@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CathMaster Live Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
+<style>
+  /* Development page: live view of the build agents (served only by the Vite dev server). Clinical Graphite tokens. */
+  :root {
+    color-scheme: dark;
+    --ground: #0e1013; --surface: #15181c; --raised: #1a1e23; --line: #22262c; --line-strong: #2e343c;
+    --ink: #eceef1; --soft: #a6adb8; --faint: #858d99; --accent: #4f8ef7; --tint: #1b2230;
+    --good: #4cc38a; --warn: #e9b95a; --bad: #e5534b; --wait: #3a414a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--ground); color: var(--ink); font: 14px/1.5 "IBM Plex Sans", system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 22px 20px 48px; display: flex; flex-direction: column; gap: 18px; }
+  .num, .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+  h2 { margin: 0; font-size: 14.5px; font-weight: 600; }
+  .small { font-size: 12.5px; color: var(--faint); }
+  .soft { color: var(--soft); }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .pad { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; }
+  .status { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 15px; border: 1px solid var(--line-strong); font-size: 13px; }
+  .status.working { border-color: var(--accent); color: var(--ink); }
+  .status.idle { color: var(--soft); }
+  .status.offline { border-color: var(--bad); color: var(--bad); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; background: var(--wait); }
+  .working .dot { background: var(--accent); animation: beat 1.4s ease-in-out infinite; }
+  @keyframes beat { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @media (prefers-reduced-motion: reduce) { .working .dot { animation: none; } }
+  .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--faint); align-items: center; }
+
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 980px) { .grid2 { grid-template-columns: 1fr; } }
+
+  .agents { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+  .agent { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .agent .what { font-weight: 600; }
+  .agent .subj { color: var(--soft); }
+  .agent .now { font-size: 13px; color: var(--ink); background: var(--raised); border-radius: 6px; padding: 6px 8px; overflow-wrap: anywhere; }
+  .agent ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; color: var(--faint); }
+  .agent ol li { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 8px; }
+  .agent ol li span:last-child { overflow-wrap: anywhere; }
+  .say { color: var(--soft); font-style: italic; }
+  .empty { color: var(--faint); padding: 18px; text-align: center; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 1px; background: var(--line); border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+  .kpi { background: var(--surface); padding: 10px 12px; }
+  .kpi .num { font-size: 20px; font-weight: 500; display: block; line-height: 1.2; }
+  .kpi .lbl { font-size: 12px; color: var(--soft); }
+  .bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--raised); }
+  .bar span { display: block; height: 100%; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--soft); }
+
+  .log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; max-height: 420px; overflow: auto; }
+  .log li { display: grid; grid-template-columns: 62px 14px minmax(0, 1fr); gap: 8px; padding: 5px 0; border-top: 1px solid var(--line); font-size: 13px; align-items: baseline; }
+  .log li:first-child { border-top: 0; }
+  .mark { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .mark.started { background: var(--accent); }
+  .mark.finished { background: var(--good); }
+  .mark.failed { background: var(--bad); }
+  .new { animation: flash 2.4s ease-out; }
+  @keyframes flash { from { background: var(--tint); } to { background: transparent; } }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-weight: 500; color: var(--faint); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.n { text-align: right; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  .chip { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 10px; font-size: 11.5px; border: 1px solid var(--line-strong); color: var(--soft); white-space: nowrap; }
+  .chip.done { border-color: var(--good); color: var(--good); }
+  .chip.running, .chip.active { border-color: var(--accent); color: var(--accent); }
+  .chip.failed { border-color: var(--bad); color: var(--bad); }
+  .scroll { overflow: auto; max-height: 360px; }
+  .files li { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 8px; padding: 3px 0; font-size: 12.5px; }
+  .files { list-style: none; margin: 0; padding: 0; }
+  .phase { margin-top: 8px; font-size: 12.5px; color: var(--soft); font-weight: 500; }
+  .pkgs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pkg { font-size: 12px; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--raised); color: var(--soft); }
+  .pkg.done { border-color: var(--good); color: var(--good); }
+  .pkg.running, .pkg.started { border-color: var(--accent); color: var(--ink); }
+  .pkg.failed { border-color: var(--bad); color: var(--bad); }
+  svg text { fill: var(--faint); font-size: 10px; font-family: "IBM Plex Mono", monospace; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span class="small">CathMaster · development</span>
+      <h1>Live build</h1>
+    </div>
+    <div class="meta">
+      <span id="status" class="status idle"><span class="dot"></span><span id="status-text">Connecting</span></span>
+      <span id="clock" class="num"></span>
+      <span id="updated"></span>
+    </div>
+  </header>
+
+  <section aria-label="Right now">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><h2>Right now</h2><span class="small" id="now-count"></span></div>
+    <div class="agents" id="agents"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel pad" aria-label="Progress">
+      <h2>Progress</h2>
+      <div id="progress"></div>
+      <div id="labplan"></div>
+    </section>
+    <section class="panel pad" aria-label="Activity">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h2>Activity</h2><span class="small">agents starting and finishing</span></div>
+      <ul class="log" id="log"></ul>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel pad" aria-label="Workflow runs">
+      <h2>Workflow runs</h2>
+      <div class="scroll"><table id="runs"></table></div>
+    </section>
+    <section class="panel pad" aria-label="Machine and files">
+      <h2>The machine</h2>
+      <div id="machine"></div>
+      <svg id="spark" viewBox="0 0 300 60" width="100%" height="60" role="img" aria-label="Load average over the last minutes"></svg>
+      <div id="tests" class="small"></div>
+      <h2 style="margin-top:6px">Files changed in the last 90 minutes</h2>
+      <ul class="files scroll" id="files"></ul>
+    </section>
+  </div>
+  <p class="small">This page reads the build logs on this Mac every three seconds through the development server (<span class="mono">/__build/status</span>). It works only while <span class="mono">npm run dev</span> is running. The milestone summary is also on the <a href="https://claude.ai/artifact/3wfEEMo5xajNHrfPRUwiak" target="_blank" rel="noopener">build dashboard</a>.</p>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v; else n.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) n.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return n;
+};
+const fmt = (n) => Number(n || 0).toLocaleString("en-GB");
+const ago = (iso) => {
+  if (!iso) return "";
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return `${Math.round(s)} s`;
+  if (s < 3600) return `${Math.floor(s / 60)} min`;
+  if (s < 86400) return `${Math.floor(s / 3600)} h ${Math.floor((s % 3600) / 60)} min`;
+  return `${Math.floor(s / 86400)} d`;
+};
+const clock = (iso) => (iso ? new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "");
+const elapsed = (iso) => {
+  if (!iso) return "";
+  const s = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+  return h ? `${h}:${String(m).padStart(2, "0")}:${String(ss).padStart(2, "0")}` : `${m}:${String(ss).padStart(2, "0")}`;
+};
+
+let data = null;
+let lastOk = 0;
+let seenLog = new Set();
+const loadHistory = [];
+
+function renderAgents() {
+  const box = $("#agents");
+  box.textContent = "";
+  const list = data?.running || [];
+  $("#now-count").textContent = list.length ? `${list.length} agent${list.length > 1 ? "s" : ""} working` : "";
+  if (!list.length) {
+    box.append(el("div", { class: "panel empty" }, "No agent is working right now. When the next batch starts, each agent appears here with what it is doing."));
+    return;
+  }
+  for (const a of list) {
+    const last = a.activity[a.activity.length - 1];
+    const card = el("article", { class: "agent" },
+      el("div", { style: "display:flex;justify-content:space-between;gap:10px;align-items:baseline" },
+        el("span", { class: "what" }, a.what),
+        el("span", { class: "num small", "data-elapsed": a.startedAt || "" }, elapsed(a.startedAt))),
+      a.subject ? el("div", { class: "subj" }, a.subject) : null,
+      el("div", { class: "small" }, a.runName),
+      last ? el("div", { class: `now ${last.kind === "say" ? "say" : ""}` }, last.text) : el("div", { class: "now soft" }, "Starting up"),
+      el("ol", {}, a.activity.slice(0, -1).reverse().map((x) => el("li", {}, el("span", { class: "num", "data-ago": x.t }, ago(x.t)), el("span", { class: x.kind === "say" ? "say" : "" }, x.text)))));
+    box.append(card);
+  }
+}
+
+function renderProgress() {
+  const p = $("#progress");
+  p.textContent = "";
+  const c = data?.curriculum;
+  if (c) {
+    const t = c.totals;
+    p.append(el("div", { class: "small" }, `Curriculum: ${t.done} of ${t.modules} modules finished · counts as of ${clock(c.updated) || c.updated}`));
+    const k = el("div", { class: "kpis" });
+    [[`${t.topicsTaught}/${t.topics}`, "topics taught"], [fmt(t.lessons), "lessons"], [fmt(t.checks), "inline questions"], [fmt(t.quiz), "quiz questions"], [fmt(t.cases), "branching cases"], [fmt(t.tips), "lab tips"], [fmt(t.refs), "new references"], [fmt(t.fixed), "issues fixed"]].forEach(([n, l]) =>
+      k.append(el("div", { class: "kpi" }, el("span", { class: "num" }, n), el("span", { class: "lbl" }, l))));
+    p.append(k);
+  }
+  const lp = $("#labplan");
+  lp.textContent = "";
+  const pk = data?.labPlan || [];
+  if (!pk.length) {
+    lp.append(el("p", { class: "small" }, "The lab build plan appears here once the planning workflow has written it."));
+    return;
+  }
+  const n = (s) => pk.filter((x) => x.state === s).length;
+  const done = n("done"), run = n("running") + n("started"), failed = n("failed"), wait = pk.length - done - run - failed;
+  lp.append(el("div", { style: "display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-top:6px" }, el("h2", {}, "Lab build"), el("span", { class: "small" }, `${done} of ${pk.length} work packages done · ${run} in progress${failed ? ` · ${failed} need attention` : ""}`)));
+  const bar = el("div", { class: "bar" });
+  [[done, "var(--good)"], [run, "var(--accent)"], [failed, "var(--bad)"], [wait, "var(--wait)"]].forEach(([v, c]) => v && bar.append(el("span", { style: `width:${(100 * v) / pk.length}%;background:${c}` })));
+  lp.append(bar);
+  const phases = [...new Set(pk.map((x) => String(x.phase ?? "")))];
+  for (const ph of phases) {
+    const items = pk.filter((x) => String(x.phase ?? "") === ph);
+    lp.append(el("div", { class: "phase" }, ph ? `Phase ${ph}` : "Unscheduled", el("span", { class: "small" }, ` · ${items.filter((x) => x.state === "done").length}/${items.length}`)));
+    lp.append(el("div", { class: "pkgs" }, items.map((x) => el("span", { class: `pkg ${x.state}`, title: `${x.id} · ${x.lab} · ${x.size || ""} ${x.priority || ""}` }, x.title || x.id))));
+  }
+}
+
+function renderLog() {
+  const ul = $("#log");
+  ul.textContent = "";
+  const items = data?.log || [];
+  if (!items.length) ul.append(el("li", { class: "small" }, "", "", "Nothing yet."));
+  for (const x of items) {
+    const key = `${x.t}|${x.kind}|${x.what}|${x.subject}`;
+    const fresh = seenLog.size && !seenLog.has(key);
+    ul.append(el("li", { class: fresh ? "new" : "" },
+      el("span", { class: "num small", "data-ago": x.t }, ago(x.t)),
+      el("span", { class: `mark ${x.kind}` }),
+      el("span", {}, x.kind === "started" ? "Started: " : x.kind === "failed" ? "Failed: " : "Finished: ", el("b", { style: "font-weight:500" }, x.what), x.subject ? ` · ${x.subject}` : "")));
+  }
+  seenLog = new Set(items.map((x) => `${x.t}|${x.kind}|${x.what}|${x.subject}`));
+}
+
+function renderRuns() {
+  const t = $("#runs");
+  t.textContent = "";
+  t.append(el("thead", {}, el("tr", {}, el("th", {}, "Run"), el("th", {}, "State"), el("th", { class: "n" }, "Done"), el("th", { class: "n" }, "Failed"), el("th", {}, "Last activity"))));
+  const b = el("tbody");
+  for (const r of data?.runs || [])
+    b.append(el("tr", {},
+      el("td", {}, r.name, el("div", { class: "small mono" }, r.id)),
+      el("td", {}, el("span", { class: `chip ${r.active ? "active" : "done"}` }, r.active ? `${r.live} working` : "finished")),
+      el("td", { class: "n" }, `${r.done}/${r.total}`),
+      el("td", { class: "n" }, r.failed || "–"),
+      el("td", { class: "small", "data-ago": r.lastActivity || "" }, r.lastActivity ? `${ago(r.lastActivity)} ago` : "")));
+  t.append(b);
+}
+
+function renderMachine() {
+  const m = data?.machine;
+  if (!m) return;
+  const box = $("#machine");
+  box.textContent = "";
+  const hot = m.load[0] > m.cores * 1.2;
+  box.append(el("div", { style: "display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline" },
+    el("span", {}, el("span", { class: "num", style: `font-size:22px;color:${hot ? "var(--warn)" : "var(--good)"}` }, m.load[0].toFixed(1)), el("span", { class: "small" }, ` load on ${m.cores} cores`)),
+    el("span", { class: "small" }, `5 min ${m.load[1]} · 15 min ${m.load[2]}`),
+    el("span", { class: "small" }, `${m.freeGb} of ${m.totalGb} GB memory free`),
+    el("span", { class: "small" }, `up ${m.uptimeH} h`)));
+  loadHistory.push(m.load[0]);
+  if (loadHistory.length > 200) loadHistory.shift();
+  const svg = $("#spark");
+  const max = Math.max(m.cores * 1.5, ...loadHistory);
+  const pts = loadHistory.map((v, i) => `${(i / Math.max(1, loadHistory.length - 1)) * 296 + 2},${58 - (v / max) * 52}`);
+  const coreY = 58 - (m.cores / max) * 52;
+  svg.innerHTML = `<line x1="2" x2="298" y1="${coreY}" y2="${coreY}" stroke="var(--line-strong)" stroke-dasharray="3 3"/><text x="4" y="${coreY - 3}">${m.cores} cores</text>` +
+    (pts.length > 1 ? `<polyline points="${pts.join(" ")}" fill="none" stroke="${hot ? "var(--warn)" : "var(--accent)"}" stroke-width="1.6"/>` : "");
+  const t = data?.tests;
+  $("#tests").textContent = t ? `Last whole-suite test run (${t.file}, ${ago(t.at)} ago): ${t.tests || "?"}${t.ok ? "" : " (check the log)"}` : "";
+  const f = $("#files");
+  f.textContent = "";
+  for (const x of data?.changed || []) f.append(el("li", {}, el("span", { class: "num small", "data-ago": x.t }, ago(x.t)), el("span", { class: "mono", style: "font-size:12px;overflow-wrap:anywhere" }, x.path)));
+  if (!(data?.changed || []).length) f.append(el("li", { class: "small" }, "", "No changes in the last 90 minutes."));
+}
+
+function renderStatus() {
+  const s = $("#status");
+  const offline = Date.now() - lastOk > 12000;
+  s.className = `status ${offline ? "offline" : data?.working ? "working" : "idle"}`;
+  $("#status-text").textContent = offline ? "Dev server not reachable" : data?.working ? `Working: ${data.running.length} agent${data.running.length > 1 ? "s" : ""}` : "Idle";
+  $("#updated").textContent = lastOk ? `updated ${ago(new Date(lastOk).toISOString())} ago` : "";
+}
+
+async function poll() {
+  try {
+    const r = await fetch("/__build/status", { cache: "no-store" });
+    const j = await r.json();
+    if (j.error) throw new Error(j.error);
+    data = j;
+    lastOk = Date.now();
+    renderAgents(); renderProgress(); renderLog(); renderRuns(); renderMachine();
+  } catch (e) {
+    console.warn("build status:", e);
+  }
+  renderStatus();
+}
+
+// tick relative times every second without refetching
+setInterval(() => {
+  $("#clock").textContent = new Date().toLocaleTimeString("en-GB");
+  document.querySelectorAll("[data-ago]").forEach((n) => { const t = n.getAttribute("data-ago"); if (t) n.textContent = n.closest("td") ? `${ago(t)} ago` : ago(t); });
+  document.querySelectorAll("[data-elapsed]").forEach((n) => { const t = n.getAttribute("data-elapsed"); if (t) n.textContent = elapsed(t); });
+  renderStatus();
+}, 1000);
+poll();
+setInterval(poll, 3000);
+// background tabs throttle timers: catch up as soon as the page is visible again
+document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
+window.addEventListener("focus", () => poll());
+</script>
+</body>
+</html>

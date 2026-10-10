@@ -1,0 +1,99 @@
+{
+ "package": "found-case-model-types",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built found-case-model-types. src/types/index.ts now holds the shared case-model types, and every addition is optional. AnatomyVariant gains the 16 new variants. Lesion gains the optional fields eccentricity, orientationDeg, taperMm, branchAt, morphology (LesionMorphology), nitrateResponsive, scadType, calcium (0|1|2), calciumArcDeg, thrombusGrade (0..5), lipid {arcDeg, capUm}, sites (LabEvent[]), medina, sideBranch {vessel, angleDeg, diameterMm}, role and cto {stump, lengthMm, collaterals}. New types: CollateralChannel {donor, recipient, type, wernerCC, rentrop, tortuosity}; Graft {id?, conduit, target, position, proximalSite, status, ringMarker, sequential?}; and CaseChart (age, sex, height, weight, creatinine, eGFR, echo, drugs with last-dose times, allergies, pregnancy, prior fluoroscopy procedures, skin findings, operation note, arm pressures, arrest history, ECG id, consent scope, previous catheters), with their small helper types. AnatomyCase gains optional scenarioId, events (LabEvent[]), chart and grafts. Nothing outside the types changes at runtime. The random generator's VARIANT_POOL was not touched, so no new variant appears in a random case. Before editing, I recorded SHA-256 digests of 200 seeded random cases and of the 100-case library; the new test checks the generator's output still matches them.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/types/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/types/caseModel.test.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/types/caseModel.test.ts (7 tests: every AnatomyVariant is listed exactly once, checked at compile time and at run time; 200 random cases contain no new variant; the 200 random cases and the case library match the SHA-256 digests taken before the change; generated cases carry no new fields at case or lesion level; preset batches and 28 daily cases draw no new variant; a full CTO, bifurcation and SCAD lesion, a graft, a chart and a case using all of them typecheck)"
+    ],
+    "testsRun": [
+     "npx vitest run src/types/caseModel.test.ts src/simulation/caseGenerator.test.ts: 2 files, 16 tests passed",
+     "npx vitest run src/ui/lab/lab.test.ts src/simulation/engagement.test.ts: 2 files, 22 tests passed (consumers of the types)",
+     "Before the change: a temporary vitest file printed the digests of 200 generateRandomCase('case-model-<i>') cases and of CASE_LIBRARY; I copied them into the new test and then deleted the temporary file"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0. The test first used node:crypto, which failed the typecheck because the app tsconfig has no Node types. It now uses globalThis.crypto.subtle (WebCrypto), with the same SHA-256 digests.",
+    "acceptance": [
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean with no other file changed",
+      "status": "met",
+      "evidence": "tsc exit 0. I edited only src/types/index.ts and created src/types/caseModel.test.ts. Compared with the snapshot in datasets/tmp/wp-snapshots/found-case-model-types/src/types/index.ts, the only removed line is the old final line of the AnatomyVariant union, `| \"radial-loop\";`, which lost its semicolon when the union was extended. Everything else is added."
+     },
+     {
+      "criterion": "caseModel.test.ts: 200 random cases from caseGenerator contain none of the new variants and equal their pre-change JSON for a fixed seed set",
+      "status": "met",
+      "evidence": "The tests '200 random cases contain none of the new variants' and '200 random cases equal their pre-change JSON for the fixed seed set' pass. The seeds are case-model-0 to case-model-199. The SHA-256 of the whole JSON set (f5737a38...) and of the first and last cases was taken before the types were edited. The test also checks the case library digest (ea4a0e94...), confirms that no generated or library case has a field the old AnatomyCase or Lesion lacked, and confirms that preset batches and daily cases draw no new variant."
+     }
+    ],
+    "outOfScope": [
+     "src/simulation/anatomy.ts (lines 113-116) matches 'anomalous-rca-left-sinus' and 'anomalous-lcx-right-sinus' as plain strings through a hasAny helper, because those names were not in the union before. They are typed now, so the workaround can be replaced by the typed `has` the next time someone edits that file (diag-anatomy-variants lists anatomy.ts). Nothing breaks if it is left."
+    ],
+    "notes": "The snapshot is at datasets/tmp/wp-snapshots/found-case-model-types/ (src/types/index.ts plus .started). caseModel.test.ts did not exist before.\n\nChoices the design left open, for downstream packages to rely on:\n- `sites` and `AnatomyCase.events` are typed as LabEvent[], using `import type` from src/content/lab/tips.ts. tips.ts already type-imports from types, so this is a type-only cycle with nothing at runtime. found-tips-vocabulary is editing tips.ts at the same time; tsc stayed clean against its current state.\n- `calcium` is 0|1|2 to match the existing PCI engine (coronaryWire.ts, guide.ts, ivus.ts). `thrombusGrade` is 0..5. `wernerCC` is 0..2 and `rentrop` is 0..3, which are the scales named in lab request pm-interpreting. Collateral `tortuosity` is a model scale 0|1|2. I wrote no clinical definitions of these grades from memory.\n- `lipid` is {arcDeg, capUm}, the shape pci-bench-imaging-unify names.\n- `branchAt` is a 0..1 fraction along the lesion, proximal to distal shoulder, where a side branch leaves.\n- `medina` is a readonly tuple [0|1, 0|1, 0|1].\n- Graft has an optional `id`. `proximalSite` is one of 'aorta-high', 'aorta-mid', 'aorta-low', 'left-subclavian', 'right-subclavian' or 'composite', following the site ordering in diag-grafts-svg. `sequential` is a list of {target, position}.\n- In CaseChart only ageY, sex ('M'|'F', as PatientProfile has it), heightCm and weightKg are required; every other item is optional. I named age `ageY` and eGFR `egfr` to match PatientProfile, so a downstream package reading the design's plain 'age' and 'eGFR' should use these names.\n- `consentScope` is 'diagnostic-only', 'diagnostic-and-ad-hoc-pci' or 'planned-pci'.\n- Drug last-dose times are `lastDoseHoursAgo`, counted from the procedure start.\n\nThe new variants are not exported as a runtime list, so the types file stays types-only; the test file keeps the lists and proves at compile time that together they cover the whole union. I did not use the browser."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve. The package is complete and correct, and the minor points below are optional comment and test-robustness fixes. Every design item is in src/types/index.ts, and every addition is optional. Two names differ from the design's wording: age is ageY and eGFR is egfr, matching PatientProfile, and the builder documented both. Graft also gained an optional id. The diff against the snapshot only adds lines, apart from the old final `| \"radial-loop\";` line, which lost its semicolon. caseGenerator.ts, including VARIANT_POOL, was not modified after .started. Nine other src files changed after .started, and all of them belong to the two concurrent packages: tips.ts, tips.test.ts and validate.ts to found-tips-vocabulary; schema.ts, validateLaunch.ts, useUiStore.ts, useLabLaunchStore.ts, BlockRenderer.tsx and practiceIndex.ts to found-launch-links. There is no runtime change, so shared engines and untouched labs behave as before. Every clinical statement in the comments traces to module or lab-request text: the SCAD types to 09-interpreting.ts line 734 (\"Brilakis describes three angiographic types\"), occlusion as TIMI thrombus grade 5 to 09-interpreting.ts lines 1410 and 1815, the Werner CC0-CC2 and Rentrop 0-3 scales to pm-interpreting.json line 96, and the graft ostium order to cp-prior-cabg.json. The import of LabEvent is type-only; tips.ts already imports types from this file, so the cycle has no runtime effect. Every event named in the comments and tests (cto, bifurcation, aorto-ostial-lesion, branch-ostial-lesion) is in LAB_EVENTS. tsconfig.app.json includes src, so the compile-time exhaustiveness check in the test runs under tsc. The tests check both acceptance criteria: 200 seeded random cases contain no new variant and match the pre-change SHA-256 digests, and the full and per-case digests are checked. They also check the case library, preset batches, daily cases and that generated cases carry no new keys. I ran npx vitest run src/types/caseModel.test.ts src/simulation/caseGenerator.test.ts (2 files, 16 tests passed) and npx tsc -p tsconfig.app.json --noEmit (exit 0). The package has no UI, render path or tip integration (the plan says \"None directly\").",
+    "findings": [
+     {
+      "where": "src/types/index.ts, the comment above GraftProximalSite (the line beginning 'Where a graft's proximal end arises')",
+      "problem": "The comment states an anatomical ordering (circumflex grafts highest, LAD and diagonal grafts just above the left ostium, RCA grafts lowest and anterior) but names no source. The project rule is that clinical statements cite module or lab-request text. The ordering is correct and comes from docs/curriculum/lab-requests/cp-prior-cabg.json (\"Oxford's usual order\"), but the comment does not say so, unlike the SCAD, Werner and Rentrop comments, which do name their sources.",
+      "severity": "minor",
+      "fix": "Name the source at the end of the sentence. For example, replace 'RCA grafts lowest and anterior.' with 'RCA grafts lowest and anterior (Oxford's usual order, lab request cp-prior-cabg).'"
+     },
+     {
+      "where": "src/types/caseModel.test.ts, PRE_CHANGE.library and the test 'the case library is unchanged and carries no new variant or field'",
+      "problem": "This goes beyond the acceptance criterion, which covers 200 random cases only. A later package that legitimately edits CASE_LIBRARY, or adds a new variant to VARIANT_POOL as the design expects, will fail this file with nothing but a hash mismatch, and nothing in the file says the digests should then be refreshed. That invites someone to delete the test or to change hashes blindly.",
+      "severity": "minor",
+      "fix": "Add one line to the header comment: 'When a later package intentionally changes caseGenerator (for example adds a variant to VARIANT_POOL with a low prior) or CASE_LIBRARY, regenerate these digests in that package and say so in its report.' Optionally, keep the library check structural (no new variant, no new keys) and drop the library hash."
+     },
+     {
+      "where": "src/types/index.ts, `export type ChartSex = \"M\" | \"F\";`",
+      "problem": "This repeats `Sex` from src/simulation/patient/patient.ts (line 33) with the same values. If one copy changes, the two can drift apart. index.ts already imports types from src/simulation, so it could reuse `Sex` directly.",
+      "severity": "minor",
+      "fix": "Optional: replace the definition with `import type { Sex } from \"../simulation/patient/patient\";` and `export type ChartSex = Sex;`. Check first that patient.ts has no runtime import of ../types that would matter. A type-only import makes no runtime cycle. Alternatively, leave it and add a comment saying it must match Sex in patient.ts."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 3,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/types/caseModel.test.ts (7 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors reported",
+    "notes": "I checked all three findings against the code and applied each one.\n1. The GraftProximalSite comment in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/types/index.ts now names its source (\"Oxford's usual order, lab request cp-prior-cabg\"). I checked the ordering against docs/curriculum/lab-requests/cp-prior-cabg.json and it matches.\n2. The header of /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/types/caseModel.test.ts now says that a later package which intentionally changes caseGenerator (for example by adding a low-prior variant to VARIANT_POOL) or CASE_LIBRARY should regenerate the digests itself and say so in its report. The library hash check stays as it was.\n3. ChartSex is now `export type ChartSex = Sex;`. Sex comes in through a type-only import from ../simulation/patient/patient. patient.ts only uses `import type` from ../../types, so the two files refer to each other at type level only and nothing loops at run time. A comment says the type is reused so the two definitions cannot drift apart.\nThe package test file passes 7 of 7 and the typecheck is clean. I edited only the package's two listed files."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean with no other file changed",
+      "met": true,
+      "evidence": "The typecheck exited 0 with no output. tsconfig.app.json includes all of src, and --listFilesOnly confirms src/types/caseModel.test.ts is in the program, so the test's compile-time checks were typechecked too: the exhaustive AnatomyVariant list, the satisfies lists and the full Lesion/Graft/CaseChart/CollateralChannel shape check. Of the files this package touches, only src/types/index.ts and src/types/caseModel.test.ts changed (both 07:01). caseGenerator.ts last changed Jul 2, utils/random.ts Jul 1 and patient.ts Oct 5. index.ts imports Sex from patient.ts, which already exported it, so patient.ts did not need editing. The other src files modified after the plan was written (06:47) belong to the two wave-1 packages running alongside this one, found-tips-vocabulary (tips.ts, tips.test.ts, validate.ts) and found-launch-links (schema.ts, validateLaunch.ts, content.test.ts, useUiStore.ts, useLabLaunchStore*, practiceIndex*, BlockRenderer.tsx, CaseStudies.tsx, fixtures). Not this package."
+     },
+     {
+      "criterion": "caseModel.test.ts: 200 random cases from caseGenerator contain none of the new variants and equal their pre-change JSON for a fixed seed set",
+      "met": true,
+      "evidence": "npx vitest run src/types/caseModel.test.ts passed 7 of 7. Those tests cover: 200 seeded generateRandomCase cases contain no new variant; the SHA-256 digests of the first case, the last case and all 200 match the pre-change values; CASE_LIBRARY (100 cases) is unchanged with no new variant; generated and library cases carry no scenarioId, events, chart or grafts and no new Lesion fields; preset batches and 28 daily cases draw no new variant. The digests are stable because caseGenerator's runtime inputs (caseGenerator.ts, utils/random.ts) are unchanged and imports into it are type-only. The design items are all present in src/types/index.ts: the 16 new AnatomyVariant members; the optional Lesion fields eccentricity, orientationDeg, taperMm, branchAt, morphology, nitrateResponsive, scadType, calcium 0-2, calciumArcDeg, thrombusGrade 0-5, lipid, sites (LabEvent[]), medina, sideBranch, role and cto; CollateralChannel; Graft with an optional sequential list; optional AnatomyCase fields scenarioId, events, chart and grafts; and a CaseChart covering every listed item. Comments in the type file cite their sources, and spot checks confirm them: 05-prior-cabg.ts gives the graft order, ivus.ts uses calcium 0|1|2, and the manual modules mention Werner and Rentrop."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/types/caseModel.test.ts (7 passed)",
+     "npx tsc -p tsconfig.app.json --noEmit (exit 0, no errors; caseModel.test.ts confirmed in the program via --listFilesOnly)"
+    ],
+    "tsc": "clean (exit 0). Note for whoever closes the package: caseModel.test.ts uses the LabEvent values 'cto' and 'bifurcation'. Those come from found-tips-vocabulary, which is running in parallel and renamed 'chronic-occlusion' to 'cto'. Both values are in src/content/lab/tips.ts now. If that package's change were reverted, this test file would stop typechecking even though found-case-model-types lists no dependency."
+   }
+  ]
+ }
+}

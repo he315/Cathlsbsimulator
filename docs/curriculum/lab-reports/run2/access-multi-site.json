@@ -1,0 +1,274 @@
+{
+ "package": "access-multi-site",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built access-multi-site: one full case can now hold several access sites, and each site has its own puncture model, wire route, sheath, closure and delayed events. The fields the rest of the lab already read (access, site, pm, route, sheath, radial, femoral, delayed and the radial closure results) are now getters and setters on the active site. addSite(kind, side) works after the planned site has been punctured: radial artery of either arm, or femoral artery or vein of either groin. setActiveSite only switches with the wire and catheter out. closureDone() and finish() need every site that had a sheath to be closed. Each site draws its delayed events on its own seed, and a scenario's delayed events are added once per case, so no bleed is counted twice. buildRoute3D accepts a left groin (the right limb mirrored across the midline), and the femoral angiogram's branches now mirror for the left groin. truth() and the handover note list every site and line. The new scenario 'crossover-heparinised' opens a heparinised radial case at fluoroscopy with the wire unable to pass. A heparinised femoral crossover records a ledger decision that counts as expected only when the artery was imaged on ultrasound and the groin screened on fluoroscopy before the needle. In the UI there is a site selector on the ultrasound, fluoroscopy and closure views, an 'Another site\u2026' control in the access picker, a venous-sheath closure button, and a sites-and-lines field in the handover.\n\nHow the work happened: the lead's note said the first attempt failed before doing any work, but its transcript shows it had already written most of the simulation layer (caseSession.ts, route.ts, procedure.ts, autopilot.ts, the crossover scenario and both multiSite test files) before a network error stopped it. I deleted its snapshot folder before I noticed this. I rebuilt the true pre-work snapshot from that attempt's own full reads of the four files it edited; the line counts (2415, 518, 391, 294) match its own wc output. datasets/tmp/wp-snapshots/access-multi-site/NOTE.txt records this. I kept its work after reviewing it rather than starting over, and then finished the UI and fixed two things in the scoring.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/route.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/procedure.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/autopilot.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/crossover.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/crossover.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/UltrasoundView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/ClosurePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/HandoverPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/AccessPicker.tsx"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/multiSite.test.ts (13 tests: addSite, refusals, one-site behaviour, left-groin segment lengths, left-groin crossover to the root, crossover scenario start, the guidance decision with neither, ultrasound only, fluoroscopy only and both, the probe-on rule, no decision without anticoagulation, delayed events per site with no double count, femoral vein site, handover sites)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/multiSite.tips.test.ts (8 tests: tips at closure and femoral phases, the case panel shows the crossover tip at the groin, the route of each site's closure, ledger tip and lesson resolve, practiceIndex entries for both lessons, waiting.ts entries naming the package)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/siteSelector.test.ts (4 tests, server-rendered with the store mocked: the site selector switches the ultrasound view between wrist and groin, the selector on the fluoroscopy and closure views, the access picker's site options, the handover's sites field)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/multiSite.test.ts src/simulation/session/multiSite.tips.test.ts src/ui/access/siteSelector.test.ts: 3 files, 25 tests passed",
+     "npx vitest run src/simulation/session/caseSession.test.ts src/simulation/session/scenarios.test.ts src/simulation/session/handover.test.ts src/simulation/session/ledgerTips.test.ts src/simulation/procedure.test.ts src/simulation/access/access.test.ts: 6 files, 81 tests passed (caseSession.test.ts unchanged, byte-identical to the snapshot)",
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts src/state/useProcedureStore.test.ts src/ui/content/practiceIndex.test.ts: 41 passed, 1 failed. caseTips.reach.test.ts 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips' fails because waiting.ts was changed at 18:53 by the parallel package repair-launch-fixture-and-tip-ties, which moved the two cold-leg tips to access-cx-endovascular-control. That makes the test's expected set stale. Not caused by this package: caseTips.ts is untouched and the limb-ischaemia raises in caseSession.ts are unchanged.",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/content.test.ts src/progress/progress.test.ts: 132 passed",
+     "npx vitest run src/ui/lab/integration.test.ts src/ui/lab/labRun.test.ts src/ui/lab/useContextTips.test.ts src/simulation/diagnosticScenarios/launch.test.ts src/simulation/pci/scenarios/launch.test.ts: 52 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: passes with no errors.",
+    "acceptance": [
+     {
+      "criterion": "Existing session tests pass unchanged through the getters",
+      "status": "met",
+      "evidence": "caseSession.test.ts is byte-identical to the snapshot and its 14 tests pass; scenarios, handover and ledgerTips tests (47 with the tips file) also pass through the getters."
+     },
+     {
+      "criterion": "After a radial sheath, addSite('femoral','right') allows a second puncture; finish() refuses until both sites are closed",
+      "status": "met",
+      "evidence": "multiSite.test.ts 'after a radial sheath, addSite(...) allows a second puncture; finish() refuses until both sites are closed': the femoral puncture and sheath succeed; finish() returns null with the femoral site closed and the radial still in ('every access site' message); it succeeds after the radial closure and lists two sheaths."
+     },
+     {
+      "criterion": "A left femoral route has the same segment lengths as the right within 5%",
+      "status": "met",
+      "evidence": "multiSite.test.ts 'a left femoral route has the same segment lengths as the right within 5%': same segment ids, each length within 5%, total length within 5%, left limb at +x, aorta shared. A second test takes a left-groin crossover through to the root."
+     },
+     {
+      "criterion": "A heparinised crossover puncture without an ultrasound image of the artery records a failed decision",
+      "status": "met",
+      "evidence": "multiSite.test.ts: with neither ultrasound nor fluoroscopy, 'crossover-puncture-guided' is correct=false with tip access-crossover-anticoagulated-care and lesson pm-antithrombotics-oac. Fluoroscopy only also fails ('no ultrasound image of the artery'), as does ultrasound only. Only both together pass, following the tip text 'Use ultrasound and fluoroscopy'. The earlier attempt had accepted either one alone; I tightened this. The ultrasound image counts only with the probe on the skin, which is off by default at an added site, so a learner who never places the probe gets a failed decision in the app."
+     },
+     {
+      "criterion": "browser: the site selector switches the ultrasound view between wrist and groin",
+      "status": "needs-browser",
+      "evidence": "Not checked in the browser, as instructed. siteSelector.test.ts covers the same thing headlessly: the server-rendered UltrasoundView shows 'Ultrasound, right wrist' with no selector in a one-site case; after addSite it shows 'Ultrasound, right groin' with buttons [Right radial, Right femoral]; after setActiveSite back it shows the wrist. The fluoroscopy and closure views show the same selector."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in crossover.launch.ts under lessons pm-antithrombotics-heparin, pm-antithrombotics-oac",
+      "status": "met",
+      "evidence": "multiSite.tips.test.ts 'practiceIndex lists every scenario in crossover.launch.ts ...': one procedure entry per lesson for crossover-heparinised with params {scenario, start:'sheath-in', workspace:'fluoro'}; both lesson ids resolve; no practice-index problems for the file."
+     },
+     {
+      "criterion": "Tips: in a crossover.launch.ts scenario, tipsFor(ctx,20) at phase 'closure' includes access-femoral-sheath-act and at phase 'femoral' includes access-crossover-anticoagulated-care; every waiting.ts entry naming access-multi-site becomes satisfiable",
+      "status": "met",
+      "evidence": "multiSite.tips.test.ts: after the crossover the closure context {lab:'access', phase:'closure', route:'femoral'} includes access-femoral-sheath-act, and the femoral phase context includes access-crossover-anticoagulated-care. The case panel (selectCaseTips) shows the crossover tip at the groin before the puncture. The current waiting.ts names access-multi-site in no WAITING_TIPS or DEFERRED_RETARGETS entry (the test asserts the count is 0), so 'falls by at least their number' holds trivially with 0. Both tips are satisfiable from the full case's raises. The package raises no new tip event names; the active site's route goes through the existing caseTips.ts raises."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/access/caseTips.reach.test.ts (proc-tip-context): its SCENARIO_ONLY expectation is stale since repair-launch-fixture-and-tip-ties moved the two cold-leg tips out of the proc-tip-context group in waiting.ts. That test or the repair package needs to update the expected set; this package did not edit either file.",
+     "docs/realism/facts: crossover.ts labels WIRE_STALL_MM (0.05 mm, the stall test the scenario uses to stop the wire) as a MODEL PARAMETER in code only. A facts entry is needed, but docs/realism/facts is not in this package's file list. There are no new doses, thresholds or device dimensions; the ACT and band values used are the existing sourced ones."
+    ],
+    "notes": "Earlier attempt and snapshot: transcript agent-ab31c974382b09604 (workflow wf_7cf449bd-b7a) did roughly 85 tool calls of real work before the network error, so the build lead's note was mistaken. I deleted its 12:33 snapshot folder before noticing. The snapshot now holds the true pre-package state, rebuilt from that attempt's full reads of caseSession.ts, route.ts, procedure.ts and autopilot.ts. The UI files and caseSession.test.ts were never touched by it (their modification times predate it), so the copies taken now are the originals. crossover.ts and crossover.launch.ts did not exist before the package. NOTE.txt in the snapshot folder explains this for reviewers.\n\nChanges I made on top of the earlier work:\n1. Per-site probeOn state, with setProbeOn(). It is on at the planned site, so existing behaviour is unchanged, and off at an added site. Without it, the view's per-frame image report would have marked every crossover as ultrasound-guided, because the needle is placed from inside the ultrasound view.\n2. The crossover decision now needs both ultrasound and fluoroscopy, matching the tip text. The autopilot's crossover() takes ultrasound and fluoroscopy options. It records a groin screening without booking any dose.\n3. The femoral angiogram's SFA and PFA offsets are mirrored for the left groin; they were hard-coded for the right.\n4. All of the UI work.\n\nFluoroscopy view: the limb anatomy is rebuilt lazily when the active site's route changes, so the renderer and the dose meter are not recreated, and the table goes back to the new route's first station.\n\nClosure panel: it moves to Recovery only once no other site is still open.\n\nHandover: it offers all six site and side combinations, so the list does not reveal which sites were used.\n\nThe site selector marks a site 'closed' only after the learner has closed it themselves; it shows no other answer.\n\nDesign choices to review: an added left groin uses its own anatomy seed (`${seed}:left-groin`). A femoral vein site reuses the groin anatomy with the vein (cfv) as the target, and it is closed by taking the sheath out and holding pressure.\n\nsiteSelector.test.ts mocks useProcedureStore with a plain selector hook, because a server render of a zustand store reads its initial state, which has no session."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "The package mostly meets its plan, but one engine bug needs fixing before it is accepted (accept after fixes). The design is implemented: per-site state behind getters on the active site, addSite and setActiveSite, closureDone() across all sites, the left-groin mirror in route.ts, a per-site delayed-event seed with scenario events added once, a site list in truth() and the handover, the crossover-heparinised scenario and launch file, and a selector on the ultrasound, fluoroscopy and closure views. I ran the checks myself. The three package test files pass (25/25). caseSession.test.ts is byte-identical to its snapshot, and caseSession, scenarios, handover, ledgerTips, procedure and access tests pass (81/81). npx tsc -p tsconfig.app.json --noEmit is clean. caseTips.reach.test.ts fails 1 of 42. That failure comes from another package: waiting.ts lines 512-517 now put the cold-leg tips under access-cx-endovascular-control. The tests are meaningful and cover every non-browser acceptance item. Requiring both ultrasound and fluoroscopy before the crossover puncture is correct: lab request pm-antithrombotics#7 asks for 'ultrasound and fluoroscopy guided', and so does the tip text. Shared engines keep their defaults (buildRoute3D's side parameter is optional and defaults to right; the right femoral lateral and the angiogram offsets are unchanged). One-site behaviour is unchanged: the per-site band threshold expression is the same as catheterFr(). I found no unsourced clinical numbers and no ground truth on live screens. The UI uses existing Clinical Graphite classes and British English. Every src file newer than .started that is not in the package list belongs to another package's file list (tips.ts, waiting.ts, content.test.ts, mentor/*, Settings*, physics/types.test.ts). Two things are left open. The browser criterion was not checked in the browser; siteSelector.test.ts covers it only headlessly. The four rebuilt snapshot files cannot be checked independently, although every diff hunk is coherent multi-site work.",
+    "findings": [
+     {
+      "where": "src/simulation/session/caseSession.ts setActiveSite() and femoralManual()/femoralDevice() (spend(..., () => this.afterClosure()))",
+      "problem": "Femoral closure runs afterClosure() in a deferred spend callback, so it acts on whichever site is active when the time lapse ends. setActiveSite() does not check this.busy. I reproduced it in a scratch test: crossover-heparinised, crossover(s,'right'), s.femoralManual(15,3) (busy true), s.setActiveSite(radialId) returns true, then runPending(). Result: the radial sheath is set to null without any closure, the femoral site gets no delayed events and no sheathHistory, and closureDone() stays false, so the case cannot be finished. The UI's selector is disabled while busy, which hides this in the app, but the session API itself corrupts state.",
+      "severity": "major",
+      "fix": "Add a busy guard at the top of setActiveSite: `if (this.busy) { this.say(\"Wait for the step in hand to finish.\", \"technique\"); return false; }`. Also bind the closure to its site. In femoralManual and femoralDevice capture `const site = this.activeSite`, and pass `() => this.afterClosure(site)` to spend. Then make afterClosure(site = this.activeSite) read and write site.delayed, site.closure.femoral, site.closure.radial and site.sheath (or set this.activeIdx = this.sites.indexOf(site) while it runs) instead of the active-site getters. Add a multiSite.test.ts case: femoralManual, then setActiveSite(radial) is refused (or the closure still lands on the femoral site), and the radial sheath is still in."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts truth() (one-site fallback when sites.length > 1 but fewer than two sites had a sheath)",
+      "problem": "The fallback reads this.access, this.sheath and this.femoral from the active site. addSiteBlocked() allows a new site after closure (the plan's 'opposite groin for a bleed' path). If that site gets no sheath, truth() describes the empty new site. I reproduced it: radial case fastForward to recovery, then addSite('femoral','right'). truth() returns {site:'femoral', sheath:'', closure:'manual'}, while finish() reports access 'radial-right' with the 6 Fr sheath. A correct handover note is then graded wrong on site, sheath and closure.",
+      "severity": "minor",
+      "fix": "In truth(), when this.sites.length > 1, take the one-site fields from `const one = used[0] ?? this.workingSite()` and not from the active site: site: one.route, sheath: one.sheath?.id ?? one.sheathHistory, closure from one.closure.femoral or 'radial-band', and bandOffHours from one.closure.bandHours when one.siteKind === 'radial'. Add a test: add a site after closure without puncturing it, then truth() still names the radial site."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts addSiteBlocked()",
+      "problem": "The 'Puncture the planned site first' rule checks the active site, not the planned one. After the learner adds a site and before puncturing it, any further addSite is refused with a message about the planned site, which is wrong. One example is a femoral vein beside a just-added femoral artery; another is correcting a wrong-side choice. An unused added site also can never be removed, so it stays in every selector and switches the handover to its multi-site layout.",
+      "severity": "minor",
+      "fix": "Apply the rule to this.sites[0]: `const p = this.sites[0]; if (this.sites.length === 1 && p.pm.st.passes === 0 && !p.sheath) return 'Puncture the planned site first; ...'`. Keep the midPuncture check for the active site. Optionally add removeSite(id) for an added site with pm.st.passes === 0 and no sheath."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts noteProbeImage() (called every B-mode frame from src/ui/access/UltrasoundView.tsx)",
+      "problem": "This runs in the ultrasound render loop at up to 30 frames/s. Each call allocates a closure for st.site.tubes.find and a tubeAt() result, and it keeps working after usImagedAt is already set. That breaks the rule against per-frame allocations in render paths, and the view ignores the return value.",
+      "severity": "minor",
+      "fix": "Cache the target tube on AccessSiteState in makeSite (e.g. `target: site.tubes.find(t => t.id === site.arteryId) ?? null`). In noteProbeImage, return early with `if (!st.probeOn) return false; if (st.usImagedAt !== null) return true;` before the geometry. The view keeps calling it unchanged."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts removeSheathAndCompress() at a femoral-vein site",
+      "problem": "At a femoral vein site, `planned = st.siteKind === 'femoral-vein'` treats any sheath as a correct venous closure. A sheath that went into the artery (sheath.venous false; flushSheath says 'This sheath is in the artery, not the vein') is pulled under 'Pull the venous sheath and hold pressure' with no complication or ledger entry. A venous-site closure also emits no 'closure' event, unlike arterial closures.",
+      "severity": "minor",
+      "fix": "Use `const planned = st.siteKind === 'femoral-vein' && wasVenous;`. For an arterial sheath at a vein site, record a minor complication (an existing id, or a new MODEL-labelled one). Emit `this.emit('closure', { delayed: [], site: st.id })` when a venous site closes, so the tip context sees each site's closure."
+     },
+     {
+      "where": "src/simulation/session/scenarios/crossover.ts WIRE_STALL_MM; docs/realism/facts",
+      "problem": "WIRE_STALL_MM (0.05 mm) is labelled MODEL PARAMETER only in code. The project rule asks for MODEL PARAMETER labels in docs/realism/facts. That folder is outside this package's file list, and the builder already reported it under outOfScope.",
+      "severity": "minor",
+      "fix": "Build lead: add a docs/realism/facts entry for WIRE_STALL_MM (scenario control parameter, not a clinical value), or assign it to a docs package."
+     },
+     {
+      "where": "src/ui/access/caseTips.reach.test.ts ('every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips')",
+      "problem": "Fails: expected ['access-closure-cold-leg', ...], received []. I confirmed the cause is outside this package. waiting.ts lines 512-517 (edited by repair-launch-fixture-and-tip-ties) moved the cold-leg tips under raisedBy access-cx-endovascular-control. This package edits neither file.",
+      "severity": "minor",
+      "fix": "Build lead: have repair-launch-fixture-and-tip-ties, or the owner of caseTips.reach.test.ts, change the SCENARIO_ONLY expectation to an empty set or drop that exception. No change in access-multi-site."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 6 (WIRE_STALL_MM label in docs/realism/facts): I agree with it, but docs/realism/facts is outside this package's file list. The build lead needs to add a facts entry for WIRE_STALL_MM in src/simulation/session/scenarios/crossover.ts. It is a scenario control parameter, not a clinical value. It is already listed under outOfScope.",
+     "Finding 7 (src/ui/access/caseTips.reach.test.ts expects the cold-leg tips): the failure comes from waiting.ts lines 512-517, which repair-launch-fixture-and-tip-ties edited. Neither file belongs to this package, so nothing changes in access-multi-site. The build lead should have the owner of that test change or drop its SCENARIO_ONLY exception."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/multiSite.test.ts (19 passed, including 6 new regression tests)",
+     "npx vitest run src/simulation/session/multiSite.tips.test.ts src/ui/access/siteSelector.test.ts (12 passed)",
+     "npx vitest run src/simulation/session/caseSession.test.ts src/simulation/session/handover.test.ts (24 passed)",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts src/simulation/session/scenarios.test.ts (29 passed)"
+    ],
+    "tsc": "clean: npx tsc -p tsconfig.app.json --noEmit exited 0 with no errors",
+    "notes": "I checked each finding against the code before changing anything. Five were correct and are fixed. The other two need files outside this package.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/HandoverPanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/multiSite.test.ts\n\n1. **Closure acting on the wrong site (major).** `setActiveSite()` now refuses to switch while a timed step is running, with \"Wait for the step in hand to finish.\"\n   - `femoralManual()` and `femoralDevice()` now record which site they started at and pass it to `afterClosure(site)`.\n   - `afterClosure` makes that site active while it does the closure work (split out into a new `drawClosure(site)`). It then puts the previous active site back before `onSiteClosed` runs.\n   - A new test checks the switch is refused. It also forces the active site to move during the compression and checks the closure still lands on the femoral site, with the radial sheath still in.\n\n2. **truth() describing an empty added site.** When the case has more than one site but fewer than two had a sheath, truth() now describes `used[0] ?? workingSite()` instead of the active site. That covers access site, sheath, closure, band-off time and checks.\n   - The helper `lastSheath()` was no longer used, so I removed it.\n   - A new test adds a site after closure and checks truth() still names the radial site, its sheath and the band.\n\n3. **\"Puncture the planned site first\" checked the wrong site.** The rule now applies only to the planned site, and only while it is the case's only site. The mid-puncture check still applies to the active site.\n   - A new test adds a femoral vein site while an added femoral artery site is still unpunctured.\n   - I did not add the optional `removeSite()`. It would need new UI, which the review did not ask for.\n\n4. **Allocation in the ultrasound render loop.** Each site now stores its target vessel once, in a new field `AccessSiteState.target`.\n   - `noteProbeImage()` returns false at once when the probe is off. It returns true at once when the vessel has already been imaged, without redoing the geometry.\n   - One behaviour change: after the first image it keeps returning true even if the probe moves away. Nothing in the app or autopilot uses the return value, and the doc comment now says this.\n   - A new test covers this.\n\n5. **Arterial sheath at a femoral vein site.** Pulling a sheath at a vein site now counts as the venous closure only if the sheath was in the vein.\n   - A sheath that went into the artery is removed as a misplaced sheath: the site stays open and no sheath is recorded for the handover.\n   - It records a new minor complication, `arterial-sheath-at-vein`, labelled MODEL PARAMETER in the code. I added it to the handover's complication list so the learner can report it.\n   - A venous-site closure now emits a closure event naming the site, like arterial closures do.\n   - Two new tests cover the misplaced sheath and the venous closure event.\n\nNot fixed here:\n- **Finding 6:** the build lead needs to add a docs/realism/facts entry for `WIRE_STALL_MM`.\n- **Finding 7:** the caseTips.reach.test.ts failure belongs to whoever owns that test or waiting.ts."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened Full procedure in a new tab (tab-3). Ran __caseSession.scenario('crossover-heparinised','sheath-in'): it reached the stage with a 6 Fr right radial sheath and the catheter in the arm.",
+     "Launched through the lesson-link path (useLabLaunchStore.request('procedure', {scenario:'crossover-heparinised', start:'sheath-in', workspace:'fluoro'})). It opened on the Fluoroscopy workspace. An exposed forearm frame showed the wire and catheter stopped in the arm (wire 166 mm, catheter 151 mm).",
+     "'Another site\u2026' select (AccessPicker) with the catheter in: choosing Left femoral artery was refused. The attending said 'Take the catheter and wire out before you start at another site.' and no site was added.",
+     "After removeCatheter, chose Right femoral artery in the select. A second site was added and made active, and the workspace moved to Access. The header read 'Ultrasound, right groin' with a selector [Right radial, Right femoral] and 'probe off the skin'. The selector also appears in the top-bar picker.",
+     "BROWSER ACCEPTANCE: clicked 'Right radial' in the ultrasound header. The view switched to 'Ultrasound, right wrist', the B-mode drew the wrist image (artery with sheath), and the log said 'Working at the right radial artery.' Clicking 'Right femoral' switched back to 'Ultrasound, right groin'. 'Probe on the skin' gave a groin B-mode at depth 4.6 cm and set usImagedAt. MET.",
+     "Crossover scoring in the app: a right femoral puncture after an ultrasound image but no groin fluoroscopy recorded 'crossover-puncture-guided' correct=false ('Ultrasound of the artery before the puncture; the groin not screened on fluoroscopy', tip access-crossover-anticoagulated-care, lesson pm-antithrombotics-oac). A puncture with neither recorded 'Punctured without ultrasound or fluoroscopy', correct=false.",
+     "Fluoroscopy view with a femoral site active: the selector is shown, the table stations are Groin/Pelvis/Abdomen/Descending aorta/Arch and root, and an exposed groin frame (__accessFluoroDraw) set the site's fluoroAt. A held (unexposed) frame does not count.",
+     "Left femoral site: its stations mirror the right across x0\u22484 mm (groin +80/-72, pelvis +40/-32). Hip bones drawn by limbExtras are mirrored: neck and shaft lateral, pubic ramus medial.",
+     "setActiveSite between the radial, left femoral and right femoral sites works with the wire out.",
+     "Closure workspace with two sheaths: selector shown, 'Still to close: right radial.' shown. finish() returned null with the log line 'The case is not finished until every access site is closed.' Closed the radial through the UI (Apply the band, Pull the sheath out under the band, Haemostasis done): the site was marked '\u00b7 closed', the panel stayed on Closure, and the log said 'Still to close: the right femoral artery'. Then Measure ACT (226 s, the attending advised waiting) and 'Pull the sheath and compress' closed the femoral site. closureDone() became true and the workspace moved to Recovery. Ledger: femoral-act false, femoral-compression true.",
+     "Venous sheath: added the right femoral vein, punctured it (venous flashback, sheath.venous=true). The Closure panel showed only 'Pull the venous sheath and hold pressure'. Clicking it closed the site ('Right femoral vein \u00b7 closed', 'Still to close: right radial.').",
+     "Tips in the app: at closure on the femoral site, the context is {lab:'access', phase:'closure', route:'femoral'} and tipsFor(ctx,20) includes access-femoral-sheath-act (index 7 of 18). The panel's limited list does not show it. At the added left femoral site before puncture, the case tips panel shows access-crossover-anticoagulated-care.",
+     "Handover: the fieldset 'Access sites and lines (every sheath placed)' lists all six site options. truth().sites = ['radial:right','femoral:right'] for the two-sheath case.",
+     "Console: no errors during the whole session, only WebGL readback performance warnings. The Vite dev server fully reloaded the page once mid-test (another package editing files), so I re-ran the scenario."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx line ~318-323 (guided readout) with src/simulation/session/caseSession.ts removeCatheter()/addSite()/setActiveSite()",
+      "problem": "After the radial catheter came out and a femoral site was added, the guided readout on the new site's fluoroscopy view said 'abdominal aorta \u00b7 wire 166 mm' with no wire in the body. removeCatheter() leaves wire.pos at the radial value (166 mm), and the readout maps that onto the new site's femoral route. In a one-site case the stale number was harmless; with several sites it names the wrong vessel at the wrong site.",
+      "severity": "minor",
+      "fix": "In AccessFluoroView, render the readout and TipDial only when s.wireInBody, i.e. `{readouts && s.wireInBody && (...)}`. Alternatively, reset `this.wire = initialWire()` in removeCatheter() or in setActiveSite()/addSite() (both in caseSession.ts, this package's file)."
+     },
+     {
+      "where": "src/simulation/session/scenarios/crossover.ts (header comment) and the launch link in crossover.launch.ts",
+      "problem": "The scenario's comment says 'Nothing on screen names the loop or says the radial route has failed'. The case opens in guided mode, though, and the guided fluoroscopy readout shows 'radial loop \u00b7 wire 166 mm \u00b7 catheter 151 mm', which names the loop. Guided aids are allowed to show ground truth, so this breaks no rule, but the comment does not match what the learner sees.",
+      "severity": "minor",
+      "fix": "Either change the comment to say that only the guided readout names the segment, or, if the loop should stay hidden, add `mode` to the link params in crossover.launch.ts (e.g. params: { workspace: 'fluoro', mode: '<unguided mode id>' }) so the readout is off."
+     },
+     {
+      "where": "Fluoroscopy at a LEFT femoral site (AccessFluoroView with the left-groin route from route.ts buildRoute3D(..., 'left') / limbExtras)",
+      "problem": "Exposed AP frames at the left Groin and Pelvis stations show a thin, straight, radiodense vertical line across the whole frame. Seen in two separate cases, at a different x each time. It does not appear at the same stations for the right femoral site in the same case, and no wire, catheter or sheath was in at the left site. I did not identify the cause. limbExtras for the left route returns the expected 12 mirrored primitives, none of them a long thin vertical one.",
+      "severity": "minor",
+      "fix": "Reproduce: crossover scenario, remove the catheter, addSite('femoral','left'), workspace fluoro, __accessFluoroDraw({station:'groin', view:'ap'}). Then turn off the extras one at a time (bones, the sheath tubes, the dummy catheterNodes {0,3000,0}->{1,3001,0}) to find which primitive draws the line. Check also whether the mirrored route geometry (mirrorFemoralLimb on main.pts/region) leaves a sample at the unmirrored position that something downstream draws."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx (extras: sheath tube only for the active site)",
+      "problem": "Only the active site's sheath is drawn. With sheaths in both groins, screening one groin does not show the other groin's sheath, even when it would fall inside the 25 cm field. This is a small realism gap rather than an acceptance failure.",
+      "severity": "minor",
+      "fix": "Draw the sheathPolyline of every site with a sheath in, using each site's wireRoute.geom (100 mm femoral, 70 mm radial), not only s.sheath."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [
+     "Finding 3 (thin vertical line at the LEFT groin and pelvis): not fixed in this package, because the cause is outside its files. I traced it in the running app. Removing all 12 limbExtras primitives left the line in place, and so did moving the dummy catheter nodes. Switching off only the table hardware (buildXrayScene hardware with table:false) removed it at the pelvis station: the line at columns 239-241 disappeared. The line is the 1.5 mm carbon-fibre end wall of the table top in src/render/xray/hardware.ts, at world x = +/-229.25 mm, which is 40 mm deep and 2400 mm long. It falls inside the field because toWorld (src/simulation/anatomy.ts) rotates the whole aortic-frame route about the aortic root by the aortic tilt. That moves the caudal limb roughly 200 mm towards the patient's left in world coordinates. The camera centre sat at world x of about 278 at the left groin (aortic x 80) and about 215 at the left pelvis, so the left groin lies beyond the table edge. The right groin, at world x of about 130, does not. The x varies from case to case because the tilt and the groin position vary with the patient. Fixing it means making the limb route and limb extras compensate for the render-only aortic tilt, or placing the table relative to the tilted pelvis. That belongs to the anatomy, render or hardware owner, or to the femoral-site package that is planned to rework limbExtras (lab-build-plan.json around line 4114), not to this package. I tried and then reverted an experimental change that recentred the hip soft-tissue block, because it did not affect the line. route.ts is byte-identical to its state before this fix pass."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/access/siteSelector.test.ts (5 passed, including the new readout test)",
+     "npx vitest run src/simulation/session/multiSite.test.ts src/simulation/session/multiSite.tips.test.ts (27 passed)",
+     "npx vitest run src/simulation/session/caseSession.test.ts (14 passed)",
+     "Checked in the app on the port 5173 dev server (in a separate tab, now closed): the crossover scenario shows 'radial loop \u00b7 wire 166 mm \u00b7 catheter 151 mm'. After removeCatheter and addSite('femoral','left') the readout is gone, and the groin frame still draws with the radial sheath in place."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "Applied:\n1) Stale guided readout (finding 1). In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx the readout now appears only when the wire or the catheter is in. The segment name and wire depth show only while s.wireInBody, and the catheter depth only while it is in. I did not reset this.wire in caseSession.addSite or setActiveSite. Resetting would also clear wire.spasm, which the radial-spasm logic reads, and loadCatheter already resets the wire on every catheter insertion, so the view-side gate is the narrower fix. TipDial is left as it was. I added a test to /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/siteSelector.test.ts: the crossover scenario shows ' \u00b7 wire N mm', and after the catheter comes out and a left femoral site is added, neither the wire nor the catheter readout appears.\n2) Crossover comment (finding 2). I took the comment option, not a launch-mode change, because guided aids may show ground truth. The header of /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/crossover.ts now says that no message says the radial route has failed. It also says that only the guided readout names the segment (the loop), that the lesson link sets no mode so the learner's level decides, and that nothing on screen names the loop in the other modes. I confirmed this against ProcedureLab (readouts = policy.wireReadout || guided). crossover.launch.ts is unchanged.\n3) Sheaths at every site (finding 4). AccessFluoroView now draws the sheathPolyline of every site with a sheath in, each on its own wireRoute.geom.path: 100 mm for a femoral route, 70 mm for a radial one. Before, it drew only the active site's sheath on the active route. A femoral-vein site keeps its arterial route geometry, as the single-site code already did.\nOut of scope, for the lead: the left-groin line comes from the table end wall in src/render/xray/hardware.ts. The underlying defect is that the aortic-tilt rotation in toWorld (src/simulation/anatomy.ts) moves the femoral limb about 200 mm towards the patient's left. With that shift the left groin lies off the table top, and the right groin is also off-centre on the table. This needs a fix in the anatomy, render or hardware code, or in the femoral-site package's limbExtras rework. No temporary debug hooks remain in the source; I checked with grep."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "Existing session tests pass unchanged through the getters",
+      "met": true,
+      "evidence": "src/simulation/session/caseSession.test.ts is byte-identical to the pre-package snapshot (diff against datasets/tmp/wp-snapshots/access-multi-site/src/simulation/session/caseSession.test.ts shows no difference). npx vitest run on that file: 14/14 passed. The other session tests also pass: handover.test.ts 10/10, ledgerTips.test.ts 5/5, scenarios.test.ts 24/24, procedure.test.ts 12/12 and access.test.ts 16/16."
+     },
+     {
+      "criterion": "After a radial sheath, addSite('femoral','right') allows a second puncture; finish() refuses until both sites are closed",
+      "met": true,
+      "evidence": "multiSite.test.ts has a test with this exact name. It checks that sites goes from 1 to 2, the getters read the new site, gainAccess puts in a second sheath, finish() returns null before closure and again after the femoral closure alone (the attending says 'every access site'), and it returns a summary with 2 sheaths once both sites are closed. Passed (19/19 in the file)."
+     },
+     {
+      "criterion": "A left femoral route has the same segment lengths as the right within 5%",
+      "met": true,
+      "evidence": "multiSite.test.ts 'a left femoral route has the same segment lengths as the right within 5%' calls buildRoute3D('femoral', caseData, model, 0, 'left'). It checks that the segment ids match, each segment length and the total path length are within 5%, and the lateral sides are mirrored. Passed. A second test runs a left-groin crossover to the aortic root. Passed."
+     },
+     {
+      "criterion": "A heparinised crossover puncture without an ultrasound image of the artery records a failed decision",
+      "met": true,
+      "evidence": "multiSite.test.ts 'a heparinised crossover puncture without an ultrasound image of the artery records a failed decision' finds the decision crossover-puncture-guided with correct=false, the access-crossover-anticoagulated-care tip and lesson pm-antithrombotics-oac. Further tests cover fluoroscopy without ultrasound, ultrasound without fluoroscopy, a fully guided puncture (correct) and a patient who is not anticoagulated (no decision scored). All passed."
+     },
+     {
+      "criterion": "browser: the site selector switches the ultrasound view between wrist and groin",
+      "met": true,
+      "evidence": "No verify report exists. The new test file src/ui/access/siteSelector.test.ts renders UltrasoundView to static markup. The selector is absent with one site. After addSite('femoral','right') the view shows 'Ultrasound, right groin' with buttons Right radial and Right femoral, and the femoral button is pressed. After setActiveSite(radial) it shows 'Ultrasound, right wrist' with the radial button pressed. It also covers the selector on AccessFluoroView and ClosurePanel and in AccessPicker. 5/5 passed."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in crossover.launch.ts under lessons pm-antithrombotics-heparin, pm-antithrombotics-oac",
+      "met": true,
+      "evidence": "multiSite.tips.test.ts 'practiceIndex lists every scenario in crossover.launch.ts under lessons ...' finds exactly one practiceForLesson entry per lesson for crossover-heparinised, with params {scenario, start:'sheath-in', workspace:'fluoro'}, and no practice-index problems for crossover.launch. Passed. practiceIndex.test.ts 10/10 and content.test.ts 61/61 (launch validation) also pass."
+     },
+     {
+      "criterion": "Tips: in a crossover.launch.ts scenario, at phase 'closure' tipsFor(ctx,20) includes access-femoral-sheath-act, at phase 'femoral' access-crossover-anticoagulated-care; waiting.ts entries naming access-multi-site become satisfiable",
+      "met": true,
+      "evidence": "New test file multiSite.tips.test.ts (8/8 passed). It drives crossover-heparinised converted to the right femoral artery. The closure context (route femoral) gives access-femoral-sheath-act and the femoral phase context gives access-crossover-anticoagulated-care. Each site's closure reports its own route. waiting.ts currently has no WAITING_TIPS or DEFERRED_RETARGETS entry with raisedBy 'access-multi-site' (confirmed by grep), so the required drop in the waiting count is zero, which the test asserts. Both named tips are satisfiable from the case's raises. reachability.test.ts passes 5/5."
+     },
+     {
+      "criterion": "Package tests pass and typecheck clean",
+      "met": true,
+      "evidence": "These files pass: multiSite.test.ts 19/19, multiSite.tips.test.ts 8/8, siteSelector.test.ts 5/5, caseSession.test.ts 14/14, scenarios/handover/ledgerTips 39/39, access/procedure 28/28, practiceIndex/reachability/caseTips.test 37/37 and content.test.ts 61/61. npx tsc -p tsconfig.app.json --noEmit printed no errors."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/access/caseTips.reach.test.ts:97 (owned by proc-tip-context, not this package)",
+      "problem": "The test 'every waiting.ts entry naming proc-tip-context becomes satisfiable, except the cold-leg tips a scenario must raise' fails: it expects notYet to equal ['access-closure-cold-leg','access-cx-cold-leg-six-ps'] but gets []. The cause is waiting.ts (edited 18:59 by another package, not access-multi-site), which moved the two cold-leg tips from the proc-tip-context group to the access-cx-endovascular-control group (waiting.ts around line 512). The test's own comment says it will fail when that move happens. The test is out of scope for this package and does not affect its acceptance.",
+      "severity": "minor",
+      "fix": "In a package that owns caseTips.reach.test.ts (or a small repair package), set SCENARIO_ONLY to an empty set or remove it, and change the assertion at line 97 to expect(notYet).toEqual([]). Then fix line 106 to expect(fresh.length).toBe(group!.tips.length - already.length), because the cold-leg tips are no longer in the proc-tip-context group."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/caseSession.test.ts (14/14 pass)",
+     "npx vitest run src/simulation/session/multiSite.test.ts (19/19 pass)",
+     "npx vitest run src/simulation/session/multiSite.tips.test.ts (8/8 pass)",
+     "npx vitest run src/ui/access/siteSelector.test.ts src/simulation/access/access.test.ts src/simulation/procedure.test.ts (33/33 pass)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts (39/40; the one failure is caseTips.reach.test.ts, owned by proc-tip-context and stale after another package's waiting.ts edit)",
+     "npx vitest run src/simulation/session/scenarios.test.ts src/simulation/session/handover.test.ts src/simulation/session/ledgerTips.test.ts (39/39 pass)",
+     "npx vitest run src/content/content.test.ts (61/61 pass)",
+     "diff of caseSession.test.ts against pre-package snapshot (identical)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit printed no errors)"
+   }
+  ]
+ }
+}

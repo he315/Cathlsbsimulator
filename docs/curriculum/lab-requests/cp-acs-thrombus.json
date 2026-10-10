@@ -1,0 +1,126 @@
+[
+  {
+    "lab": "cathlab",
+    "what": "12-lead ECG reading step before an ACS diagnostic case: the case pre-brief shows a 12-lead ECG (rendered by the existing ecg12 engine) with one of the 2023 ESC supplementary patterns: anterior, inferior, lateral or inferior with V3R/V4R elevation (RV), posterior (V1-V3 depression with V7-V9 elevation of at least 0.5 mm), multilead depression with aVR/V1 elevation, LBBB or paced rhythm, RBBB. The learner must name the territory, the predicted culprit artery and level, and whether the pattern activates the reperfusion pathway, before the first injection. The lab then raises 'st-elevation' (and 'hypotension' where the scenario says so) so that the STEMI tips appear, and the debrief compares the prediction with the angiogram. Where the real-angiogram library has a matching CADICA run, link it so the learner finds the occlusion.",
+    "learnerDoes": "Reads the ECG, writes down territory, artery and level (for example V4R elevation means RCA upstream of its RV branches), chooses the engagement order (left first for a non-anterior STEMI), then confirms or refutes the prediction on the angiogram.",
+    "success": "Correct territory and artery in at least 4 of 5 ECGs; correct activation decision for posterior, LBBB/paced and RBBB patterns; engagement order matches Brilakis Fig. 20.1.",
+    "tips": [
+      "diag-stemi-predict-artery",
+      "diag-stemi-engagement-order"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-ecg"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "STEMI transfer and reperfusion-decision scenario with a running clock from the time of the diagnostic ECG: the referring hospital's distance and the PCI centre's availability set the expected diagnosis-to-PCI time. The learner chooses primary PCI or fibrinolysis (with a tenecteplase weight-band and age check, the age-adjusted co-therapy from 2023 ESC Table S10 (aspirin; clopidogrel 300 mg load, or 75 mg over 75; enoxaparin with or without the IV bolus by age, or weight-adjusted UFH), and the absolute and relative contraindication lists), then reassesses at 90 minutes (ST resolution percentage, pain, haemodynamics) and chooses rescue PCI or angiography at 2-24 hours. Choosing primary PCI beyond 120 minutes, a full-dose lytic or under-75 co-therapy at 75 or over, or a GP IIb/IIIa inhibitor on top of the lytic should change the outcome. Then run the patient from arrival straight to the table into the PCI lab, timed.",
+    "learnerDoes": "Makes the reperfusion decision from the clock, doses and checks contraindications, judges lysis success, and runs the primary or rescue PCI with radial access and prompt femoral conversion if the radial route delays engagement.",
+    "success": "Decision consistent with Oxford's 120-minute rule from diagnosis; half-dose tenecteplase and over-75 co-therapy at 75 or over; rescue PCI for less than 50% ST resolution at 90 minutes; diagnosis-to-device time recorded.",
+    "tips": [
+      "pci-stemi-after-lysis",
+      "diag-stemi-radial-convert"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-reperfusion",
+      "cp-acs-thrombus-ppci"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Acute occlusion behaviour in the circumflex STEMI scenario (and a new proximal RCA STEMI scenario): TIMI 0 flow until the wire crosses; wire tip position uncertain (option of the wire entering a small side branch near the occlusion); a 2.0 mm balloon at 6-8 atm restoring TIMI 2-3 flow when correctly placed; persistent no flow when the balloon is inflated proximal to the lesion or the wire is in a branch (allowing a second wire); thrombus burden graded on the TIMI thrombus scale, with ongoing ischaemia shown by persisting ST elevation and pain. The lab should raise 'total-occlusion', 'thrombus', 'slow-flow' and 'no-reflow' events.",
+    "learnerDoes": "Crosses with a soft workhorse wire, confirms position, restores flow with a small low-pressure balloon, rewires with a second wire if the first is in a branch, then grades thrombus and states whether ischaemia is ongoing.",
+    "success": "Flow restored before any stent; no balloon inflated over a wire outside the vessel; correct branch of Brilakis's thrombus algorithm named.",
+    "tips": [
+      "pci-acs-restore-flow",
+      "pci-stemi-reperfusion-rhythm",
+      "pci-thrombus-large-decision"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-ppci",
+      "cp-acs-thrombus-thrombus"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Expose the aspiration thrombectomy device already defined in the engine in the circumflex STEMI scenario, with Brilakis's nine steps modelled: catheter size versus guide size (7 Fr needs a 7 Fr guide; 6 Fr will not pass beside a buddy wire in a 6 Fr guide), loading on the monorail lumen versus the aspiration lumen, syringe connection through the switch segment, suction started before or after reaching the thrombus, pass speed, suction kept or released during withdrawal, guide aspiration and discard, inspection of the aspirate and repeat angiography. Releasing suction early or injecting before clearing the guide should produce distal or systemic embolisation (with a stroke flag in the debrief). A plugged tip (no blood return) and a non-advancing catheter (tortuosity, poor support) should occur in some runs.",
+    "learnerDoes": "Chooses and prepares the catheter, aspirates in slow passes under suction, withdraws under suction, clears the guide, inspects the aspirate and repeats the angiogram; manages no return and non-delivery.",
+    "success": "No embolic event from technique; thrombus grade reduced; all nine steps performed in order; correct bail-out chosen for no return and for a catheter that will not advance.",
+    "tips": [
+      "pci-aspiration-match-guide",
+      "pci-aspiration-monorail-lumen",
+      "pci-aspiration-suction-passes",
+      "pci-aspiration-withdraw-suction",
+      "pci-aspiration-no-return",
+      "pci-aspiration-deliver-fail"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-aspiration"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Thrombus management choices after flow is restored: (a) a deferred strategy (24-48 hours of intense antithrombotic therapy, then a repeat angiogram with a reduced thrombus) available only when there is no ongoing ischaemia; (b) thrombectomy, filter or laser (with a 5-minute laser warm-up timer); (c) direct stenting; (d) stenting over thrombus with a chance of embolisation and undersizing; (e) no stent after aspiration, accepted only when TIMI 3 flow, thrombus grade 3 or less, no significant residual stenosis and no distal embolisation are all present. Routine deferral in a patient with a small thrombus should be allowed but lead to reocclusion in some runs (DANAMI-3-DEFER).",
+    "learnerDoes": "Chooses between deferral, thrombectomy, direct stenting, stenting over thrombus and no stent according to thrombus size, ischaemia and the residual stenosis.",
+    "success": "Choice matches Brilakis Fig. 20.2 branch; no-stent strategy only when all four Escaned conditions are met; laser switched on before it is needed.",
+    "tips": [
+      "pci-thrombus-large-decision",
+      "pci-laser-warm-up",
+      "pci-thrombus-stent-trap",
+      "pci-thrombus-no-stent-criteria"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-thrombus"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Proximal RCA STEMI scenario with right ventricular involvement driven by the patient engine: V4R elevation on the pre-brief ECG, hypotension that worsens if nitrate is given, complete heart block (raising 'bradycardia' with vessel RCA) that recovers after reperfusion, external pacing and a femoral venous route for a temporary wire, and right heart catheter values (RA, PA systolic and diastolic, PCWP) from which the learner calculates PAPi. Shock persisting after reperfusion should offer fluid challenges (harmful once RA is above about 12 mmHg), noradrenaline, dobutamine, AV-sequential versus ventricular-only pacing, and RV support device, LV device and VA-ECMO choices.",
+    "learnerDoes": "Withholds nitrate, gives saline, treats the block with atropine and pacing, engages the left system first, treats the RCA, then reads RA and PAPi, stops fluid at a high RA, starts noradrenaline, restores AV synchrony, and chooses a device matched to the failing ventricle only if shock persists.",
+    "success": "No nitrate given in hypotension; pacing in place before high-grade block causes pauses; PAPi calculated correctly; noradrenaline and AV-synchronous pacing before a device; RV support chosen for isolated RV failure with persisting shock.",
+    "tips": [
+      "diag-rv-infarct-no-nitrate",
+      "pci-rca-av-block",
+      "mcs-rv-failure-numbers"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-rv-posterior"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Post-infarct shock scenarios linked from the mechanical complications lesson: ventricular septal rupture (saturation step-up at RV/PA level, Qp:Qs calculation with the mixed venous formula and 98% pulmonary vein substitute, large v waves on the wedge) and papillary muscle rupture (large v waves without a step-up, hyperdynamic LV, ventriculogram MR grade III-IV), each with an IABP bridge decision checked against the contraindications.",
+    "learnerDoes": "Runs an oximetry series, calculates Qp:Qs, compares the wedge traces, grades MR on the ventriculogram with the catheter clear of the mitral apparatus, and chooses the bridge.",
+    "success": "Correct Qp:Qs within 0.1; correct distinction between VSR and papillary rupture; no IABP in significant aortic regurgitation.",
+    "tips": [
+      "haemo-post-mi-shunt-run",
+      "haemo-v-wave-not-specific",
+      "diag-lv-gram-post-mi-shock"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-mechanical"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "MINOCA branching step with an OCT bench view: a non-obstructive angiogram in an infarct, with OCT pullbacks showing plaque rupture, erosion with thrombus, or a normal vessel; then a next-investigation decision (ventriculogram with LVEDP, intracoronary GTN or verapamil with repeat runs, acetylcholine or ergonovine provocation, echo for a shunt, cardiac MRI, CT for dissection or pulmonary embolism), with SCAD and a myocardial bridge as angiographic findings to spot, and myocarditis and takotsubo taught as mimics that end the MINOCA label.",
+    "learnerDoes": "Images the ambiguous segment, names the finding, records the LVEDP, and chooses the next investigation that matches the clues.",
+    "success": "Correct OCT finding; CMR chosen when the diagnosis remains unclear; no stent placed without a proven culprit.",
+    "tips": [
+      "diag-minoca-lv-gram",
+      "pci-oct-unclear-culprit",
+      "diag-culprit-not-obvious"
+    ],
+    "lessonIds": [
+      "cp-acs-thrombus-minoca"
+    ],
+    "priority": "P3"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "lab": "procedure",
+    "what": "A closure stage that opens with the femoral closure algorithm: the end-of-case state (ACT, blood pressure, sheath size and length, whether a staged PCI or support device is planned, ooze around the sheath) and the sheath side-arm femoral angiogram in the ipsilateral oblique, with patient presets for puncture height (over the femoral head; above the lowest point of the inferior epigastric artery; at or below the bifurcation; into a small accessory profunda), artery diameter (above or below 5 mm), atheroma and anterior-wall calcium, and an old collagen-plug filling defect.",
+    "learnerDoes": "Answers the four algorithm questions in order (sheath out or stays; device eligible; high stick; ACT below 180 s if no device), names the puncture height, bifurcation relation, size and calcium on the angiogram, and chooses: keep and suture the sheath (swapping a long sheath for 10–13 cm), suture-mediated device, collagen plug, or manual compression after the ACT falls.",
+    "success": "Choice matches the algorithm: no device below the bifurcation, in a branch, under 5 mm or in diseased artery; no collagen plug in a high stick; no suture device in heavy calcium; no hand compression above an ACT of 180 s; sheath kept when a staged PCI or support device is due within hours. Devices are discouraged above an ACT of 300 s.",
+    "tips": [
+      "access-closure-sheath-stays",
+      "access-closure-device-criteria",
+      "access-closure-high-stick",
+      "access-planning-closure-infection",
+      "access-closure-reprep-skin"
+    ],
+    "lessonIds": [
+      "pm-closure-plan"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Hands-on femoral manual compression: an ACT readout that falls over (simulated) time, an optional protamine dose (1–1.5 mg per 100 units of heparin, maximum 50 mg) with a chance of hypotension 5–10 minutes later, a blood-pressure control step, a preparation checklist (telemetry and NIBP, atropine and fluids ready, saline running, sterile gloves), a draggable hand position relative to the skin nick and the arterial hole, a pressure control the learner holds and adjusts, and a timer. Outcomes depend on choices: groin haematoma growing when the hands are too low or to the side, pressure too light, ACT high or BP high; pseudoaneurysm risk with inadequate pressure; loss of distal pulses with overzealous pressure; a vasovagal event (heart rate falls before BP) during compression, raising the event \"bradycardia\"; and a retroperitoneal bleed after closure (tachycardic hypotension, sweating, back or suprapubic pain, a dented bladder on fluoroscopy), raising the event \"hypotension\". The optional protamine dose should only be allowed once all coronary equipment is out, with a warning about stent thrombosis after stenting.",
+    "learnerDoes": "Decides when the sheath may come out, prepares, places the fingers above the skin puncture, pulls the sheath with a small back-bleed, holds firm pressure for about 2–3 minutes per French size, checks haemostasis, the groin and the distal pulses, applies a clear dressing, removes an arterial sheath before a venous one, and treats a vasovagal event with leg elevation, atropine and fast saline while keeping pressure on.",
+    "success": "Haemostasis without haematoma or loss of pulses; sheath pulled at ACT below 180 s (Brilakis) or within the Oxford window (below 150–200 s or after 3–4 h); compression time at least 12 minutes for 6 Fr or 16 minutes for 8 Fr by Brilakis's rule (Oxford mode: about 8–10 minutes); vasovagal recognised and treated; tachycardic hypotension with back pain prompts general measures (large-bore access, saline, crossmatch, pressure over the groin) and a search for retroperitoneal bleeding, with anticoagulation reversed once the bleed is established.",
+    "tips": [
+      "access-femoral-sheath-act",
+      "access-compression-prepare",
+      "access-compression-hands-above",
+      "access-compression-bleeding",
+      "access-compression-vasovagal",
+      "access-closure-hypotension-retroperitoneal"
+    ],
+    "lessonIds": [
+      "pm-closure-femoral-compression"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Stepwise collagen-plug deployment replacing the one-click closure option: device size selection against the sheath (6 Fr device for 6–7 Fr, 8 Fr for 8 Fr; wire compatibility), wire to the aorta on fluoroscopy, insertion sheath and locator with a drip-hole blood indicator that switches on and off with depth, dilator and wire removal with a sheath-movement detector, device insertion until it clicks, anchor deployment with a resistance cue and a coloured-band indicator, withdrawal at an angle, tamping with a resistance gate, and suture cutting below the marker. Failure modes: anchor catching early, anchor pulled through with an undersized device or a forceful pull, plug deployed inside the artery when the sheath is too deep, the tamper is pushed before resistance or the puncture is below the bifurcation (cold leg), and retroperitoneal bleeding after a high stick.",
+    "learnerDoes": "Chooses the device size, finds the arterial wall with the drip hole (flow on, back until it stops, forward until it returns), keeps the sheath still, deploys and seats the anchor, withdraws at about 45°, tamps only after resistance for 8–10 seconds, cuts below the marker, and manages each failure (re-advance and pull back; manual pressure, reversal and angiography; urgent imaging and surgical referral).",
+    "success": "Haemostasis with a correctly seated anchor and no intra-arterial plug; any failure recognised and managed as Brilakis describes.",
+    "tips": [
+      "access-plug-locator-drip",
+      "access-plug-no-tamp-before-resistance",
+      "access-plug-size-to-sheath",
+      "access-closure-cold-leg"
+    ],
+    "lessonIds": [
+      "pm-closure-plug-device"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Stepwise suture-mediated closure: marker lumen flush, wire to the distal aorta, track preparation with a haemostat (skipping it makes the device stick), advance until the wire exit port reaches the skin, wire out, advance until pulsatile marker flow, device angle control (45° target), lever to open the foot, pull back until marker flow stops, plunger to fire, cut the anterior suture, foot closed, withdrawal to the exit port with an option to reinsert the wire, knot pushed down the blue limb and locked with the white-tipped limb, trimmer. Failure modes: device will not advance (scar, poor track, kinked wire), suture cut or loose (angle not 45°, forceful pull), device will not retract, over-tightened knot with a cold leg. Reuse the same sequence for the double pre-close in the large-bore lesson (pm-access) and for tightening pre-placed sutures at microaxial pump removal with a contralateral iliac balloon.",
+    "learnerDoes": "Performs each step, keeps the device at 45°, reinserts the wire before removal when the stitch is doubtful, deploys a second device over the wire when the suture is loose, and manages a stuck device by gentle rotation and surgical referral.",
+    "success": "Haemostasis with wire access kept whenever closure was in doubt; no loss of access; failures managed as Brilakis describes.",
+    "tips": [
+      "access-suture-45-foot",
+      "access-suture-keep-wire",
+      "access-suture-loose-second-device",
+      "access-closure-cold-leg"
+    ],
+    "lessonIds": [
+      "pm-closure-suture-device"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Radial closure stage that opens with a high ACT and a large sheath (for example 7 Fr, ACT above 300 s, a glycoprotein IIb/IIIa inhibitor or cangrelor infusion running): a side-arm vasodilator step, a band that can be positioned relative to the skin puncture and the (more proximal) arterial puncture, an inflation control in mL, a pulse-oximeter plethysmograph on the index finger that responds to radial patency, an ulnar-compression button, a timer for band duration, and outcomes: forearm bleeding with a band too distal, wrist haematoma with a band too proximal, a gripped sheath in spasm (with avulsion if pulled by force), a haematoma just proximal to the band, and radial occlusion risk that rises with occlusive or prolonged compression.",
+    "learnerDoes": "Removes the sheath at the end of the case regardless of ACT, gives the vasodilator mixed with blood, places the band just above the puncture, inflates 10–15 mL as the sheath comes out, deflates to the bleeding point and adds 2–3 mL, compresses the ulnar artery and loosens the band until the plethysmograph returns (or switches to manual compression if it bleeds), treats spasm without traction, adds a second band for a proximal haematoma, and sets the band to come off at 1–2 hours.",
+    "success": "Haemostasis with a persistent plethysmograph trace during ulnar compression, no forceful pulls, band time of 2 hours or less, and correct handling of bleeding and haematoma.",
+    "tips": [
+      "access-radial-remove-now",
+      "access-radial-band-inflation",
+      "access-radial-patency-check",
+      "access-radial-band-bleeding",
+      "access-radial-spasm-no-traction"
+    ],
+    "lessonIds": [
+      "pm-closure-radial"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Closure-stage context for lab tips. The tip trigger vocabulary (TipTrigger, LabContext in src/content/lab/tips.ts) has no access-route field, and tipsFor() ranks caution and bailout tips above do tips, so at phase \"closure\" the femoral caution tips (high stick, plug tamping, plug sizing) crowd out the radial technique tips during a radial closure. Requested: a route field on TipTrigger and LabContext (\"radial\" | \"femoral\"), filtered like the other conditions, and the access lab reporting the route being closed together with phase \"closure\". The module's tips already carry the route on their trigger through spread constants (FEMORAL, RADIAL in src/content/manual/pci-manual/13-closure.ts), which compile now and are type-checked once the field exists, so only tips.ts and the access lab need to change. Routes set: femoral = access-closure-sheath-stays, access-closure-device-criteria, access-closure-high-stick, access-closure-reprep-skin, access-compression-prepare, access-compression-hands-above, access-compression-bleeding, access-compression-vasovagal, access-closure-hypotension-retroperitoneal, access-plug-locator-drip, access-plug-no-tamp-before-resistance, access-plug-size-to-sheath, access-closure-cold-leg, access-suture-45-foot, access-suture-keep-wire, access-suture-loose-second-device; radial = access-radial-remove-now, access-radial-band-inflation, access-radial-patency-check, access-radial-band-bleeding. Phase note: access-radial-band-bleeding triggers at phase \"closure\" only (not the \"radial\" puncture phase), since the band is not on until the sheath is out.",
+    "learnerDoes": "Sees only the tips for the route being closed, with the radial technique tips visible during a radial closure.",
+    "success": "During a radial closure no femoral device or compression tip appears and all three radial technique tips are shown; during a femoral closure no radial tip appears.",
+    "tips": [
+      "access-radial-remove-now",
+      "access-radial-band-inflation",
+      "access-radial-patency-check",
+      "access-closure-high-stick",
+      "access-plug-no-tamp-before-resistance",
+      "access-plug-size-to-sheath",
+      "access-compression-prepare",
+      "access-compression-hands-above"
+    ],
+    "lessonIds": [
+      "pm-closure-radial",
+      "pm-closure-femoral-compression"
+    ],
+    "priority": "P1"
+  }
+]

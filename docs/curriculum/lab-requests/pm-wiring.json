@@ -1,0 +1,185 @@
+[
+  {
+    "lab": "pci",
+    "what": "Guide choice at the start of every PCI-lab case (today the guide is fixed per scenario), with a support model. Offer extra-support left curves (EBU/XB 3.0, 3.5, 3.75, 4.0, 4.5), JL3.5–5, AL1–2, AR1–2, JR4, Ikari left and right, Williams right, hockey stick and multipurpose, in 5–8 Fr and 90/100/125 cm. Support should rise with French size (8 > 7 > 6 Fr), with extra-support over JL for the left and AL over JR for the RCA, with femoral over radial access, and with the matching radial side (right radial for left coronary PCI, left radial for RCA PCI). Equipment rules: a 2.0 mm rotational burr, V-stenting and simultaneous kissing stents need 7 Fr. Root size from the scenario CT: JL size = ascending aorta diameter in cm + 1; a dilated root brings the RCA anterior.",
+    "learnerDoes": "Chooses the guide shape, curve, French size and length from the access route, the target vessel, the aortic root and the planned equipment, and states the support expected.",
+    "success": "Guide matches the manuals' recommendations for the scenario (no JL for left PCI, no JR for radial RCA PCI, French size sufficient for the planned devices); a weak guide visibly backs out when a device meets resistance; the debrief names the choice and the reason.",
+    "tips": [
+      "pci-guide-left-extra-support",
+      "pci-guide-rca-support",
+      "pci-planning-guide-size"
+    ],
+    "lessonIds": [
+      "pm-wiring-guide-choice"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Guide engagement as the first PCI-lab step, reusing the diagnostic engagement engine with guide handling (thinner wall, softer tip, less torque fidelity than a diagnostic catheter). Model engagement depth (about 2–3 mm optimal; deep seating adds support but raises dissection, damping and ischaemia risk), coaxiality that is only judged correctly in two orthogonal views, and the pressure trace. Add damping from an ostial lesion or a small target vessel that resolves when the guide is disengaged (an Amplatz disengaged by the lifting manoeuvre, not a straight pull), and damping from other causes (debris, kink, transducer) that does not resolve off the ostium and must be handled by the damping algorithm, removing the guide without injecting or passing a wire if aspiration fails. Allow a 0.014 inch wire to hold position while the guide waits just outside, with intermittent engagement for injections and device delivery; disengaging by turning the guide to a non-coaxial position keeps the wire, whereas pulling the guide back can drag the wire out. Guides move after each device withdrawal (back out or dive deeper). Injecting into a damped guide, or with the tip pointing at the left main roof, causes coronary or aorto-coronary dissection.",
+    "learnerDoes": "Seats the guide, names the trace, checks coaxiality in two views, sets the depth, manages a guide that damps on an ostial lesion by working with it disengaged over a wire, and re-checks the guide after every device withdrawal.",
+    "success": "No injection into a damped or ventricularised guide; coaxiality confirmed in two views before wiring; depth corrected when deep; guide re-checked after each withdrawal; with a wire in place, the guide is turned off the ostium rather than pulled back.",
+    "tips": [
+      "pci-guide-seat-three-marks",
+      "pci-guide-damped-work-outside",
+      "pci-mon-false-hypotension"
+    ],
+    "lessonIds": [
+      "pm-wiring-guide-seat"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Guide position steering the wire: suboptimal engagement (not coaxial, too deep or damped) that stops the wire leaving the guide tip, a guide that sends the wire into the RCA conus branch, or (with a large left curve) sends it repeatedly into the circumflex when the target is the LAD. Allow re-seating the guide, a smaller curve, or leaving the first wire in the wrong branch to stabilise the guide while a second wire is directed into the target.",
+    "learnerDoes": "Recognises that the guide is the problem and fixes it before changing wires.",
+    "success": "Target wired after correcting the guide or with a second wire; no escalation to aggressive wires for a direction problem.",
+    "tips": [
+      "pci-guide-wire-direction"
+    ],
+    "lessonIds": [
+      "pm-wiring-guide-seat",
+      "pm-wiring-tortuosity"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "Wire choice from the seven categories (workhorse, polymer-jacketed soft non-tapered, soft tapered and stiff, stiff tip, support including the waved type, atherectomy, externalisation, pressure), with escalation and de-escalation scored in the debrief: workhorse first; in tortuosity advanced workhorse, then hydrophilic-tipped, then soft non-tapered polymer-jacketed; exchange back to a workhorse (or support or atherectomy wire) through a microcatheter before balloons and stents. Polymer-jacketed and stiff tips carry a higher risk of dissection and of distal perforation if left in place during delivery.",
+    "learnerDoes": "Chooses a first wire for the lesion, escalates only after failure, and exchanges back before device delivery.",
+    "success": "Workhorse used first in non-CTO scenarios; any non-workhorse crossing wire exchanged before balloon or stent; waved support and atherectomy wires never used to cross.",
+    "tips": [
+      "pci-wire-start-workhorse",
+      "pci-wire-expect-two-bring-microcatheter",
+      "pci-wire-support-wire-exchange-in"
+    ],
+    "lessonIds": [
+      "pm-wiring-wire-choice"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "Tip-shape choice before wiring: distal bend length relative to the vessel diameter, bend angle, and an optional larger proximal second bend. The shape changes how easily the wire selects branches: a distal bend longer than the vessel is wide catches the wall; a small bend crosses small vessels and tight lesions; two bends extend reach in large vessels and at angulated ostia. Allow reshaping (through a microcatheter without losing position), and tip damage from forced manipulation that makes the wire steer badly until it is replaced.",
+    "learnerDoes": "Shapes the tip for the target vessel and lesion, reshapes when the wire fails, and replaces a damaged tip.",
+    "success": "First shape within the manuals' rule (distal bend shorter than the vessel diameter); reshaping used before wire escalation.",
+    "tips": [
+      "pci-wire-shape-small-first"
+    ],
+    "lessonIds": [
+      "pm-wiring-shape-load"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Table steps at the start of each PCI-lab case, mirroring the Full procedure: Y-connector with a standard rotating or automated haemostatic valve, introducer, torque device. Tip damage if the tip is not hidden in the introducer, if the introducer is not pushed fully through the valve (tip into the side arm), or if the wire is forced past a balloon or guide extension in the guide. Guide length 90 or 100 cm with wire shaft markers at 90 and 100 cm; a torque device set about 90 cm from the tip as a stop; a wire that runs out of the guide during an unscreened injection. An open valve shows false hypotension and lets air in; back-bleeding before injection after exchanges.",
+    "learnerDoes": "Loads the wire through the introducer and valve, sets the torque-device stop, advances to the guide tip under fluoroscopy, closes the valve, and back-bleeds after exchanges.",
+    "success": "No tip damage on loading; wire does not leave the guide unintentionally (or, if it does, is left in place, located by injection and redirected); no injection without back-bleeding after an exchange.",
+    "tips": [
+      "pci-wire-load-through-valve",
+      "pci-wire-stop-at-guide-tip",
+      "pci-mon-false-hypotension"
+    ],
+    "lessonIds": [
+      "pm-wiring-shape-load"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "Wire navigation as an entrustment exercise, including held-out exam cases: view selection that changes how easy wiring is (caudal to choose LAD or circumflex at the left main; RAO or AP cranial along the LAD; RAO or LAO caudal along the circumflex; LAO to the distal RCA, LAO or AP cranial into the PDA and posterolateral branch), a stored reference frame or roadmap, small intermittent injections, a tip that becomes restrained under plaque (withdraw and readvance, or parallel wire; forcing it dissects), small knuckles, two wires that must be kept apart, distal wire position that drifts during device delivery (perforation if it enters a small distal branch; loss of position if it falls back proximal to the lesion).",
+    "learnerDoes": "Chooses views, wires to and across the lesion with a free tip, confirms the position in an orthogonal view, parks the wire distally in a safe branch and keeps the tip in view during delivery.",
+    "success": "Lesion crossed without dissection; orthogonal confirmation before the first balloon; no distal perforation or wire loss; contrast and fluoroscopy within limits.",
+    "tips": [
+      "pci-wire-left-views",
+      "pci-wire-rca-views",
+      "pci-wire-keep-tip-free",
+      "pci-wire-not-crossing-ladder",
+      "pci-wire-organise-two-wires",
+      "pci-mon-wire-tip-collimation"
+    ],
+    "lessonIds": [
+      "pm-wiring-navigate"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Subintimal wire recognition: after a forced crossing, the wire takes an abnormal course in the orthogonal view, moves abnormally with each beat, and provokes ventricular ectopics; distal flow slows. IVUS (where available in the lab) shows the wire outside the true lumen. A distal microcatheter injection extends the dissection; ballooning or stenting over the wire closes the vessel.",
+    "learnerDoes": "Keeps the wire as a marker, confirms the position, passes a second wire into the distal true lumen and only then treats the lesion.",
+    "success": "No balloon or stent over a subintimal wire; no distal microcatheter injection; true-lumen wire confirmed before treatment.",
+    "tips": [
+      "pci-wire-confirm-true-lumen"
+    ],
+    "lessonIds": [
+      "pm-wiring-navigate"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "A tortuous circumflex and obtuse marginal scenario with an acutely angled branch: wire prolapse into the main vessel, loss of torque, and the four solutions (different wire and larger bend, including a polymer-jacketed wire that prolapses less; straight, angulated or dual-lumen microcatheter; reversed (hairpin) polymer-jacketed wire bent about 3 cm from the tip, loaded bend first, overshoot and pull back, with dissection risk; deflection balloon inflated just beyond the branch origin, causing ischaemia while inflated). After a supportive wire is in place, pseudolesions appear at the bends: unaffected by intracoronary nitrate (given first to exclude spasm), resolving when the wire is partly withdrawn so that its soft distal segment lies just beyond the lesion (withdrawing it behind the lesion is scored as an error, because an acute closure could then not be treated); stenting them is scored as an error.",
+    "learnerDoes": "Works through the solutions, wires the branch, gives intracoronary nitrate, recognises pseudolesions and confirms them by partial wire withdrawal (keeping the wire across the lesion) before any stent.",
+    "success": "Branch wired without dissection; no stent placed in a pseudolesion; dissection excluded before equipment removal.",
+    "tips": [
+      "pci-wire-prolapse-four-solutions",
+      "pci-wire-reversed-hairpin",
+      "pci-wire-pseudolesion-pullback"
+    ],
+    "lessonIds": [
+      "pm-wiring-tortuosity"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "A microcatheter device in the PCI lab, in five categories (large, small, angulated with fixed or deflectable tip, dual-lumen, plaque modification), loaded together with the wire. It supports the wire, allows reshaping and exchanges without losing position, and allows distal contrast (then flushing). Over-rotation causes deformation, entrapment, tip fracture or wire binding; the plaque modification type turns in a set direction with a turn limit. Removal over a 180–190 cm wire as the final step: trapping (balloon beside the wire, 2.5 mm for 6–7 Fr and 3.0 mm for 7–8 Fr guides, at least 20 mm, 15–20 atm near the primary curve, then back-bleed; 6 Fr cannot trap over-the-wire balloons or large re-entry devices; angulated deflectable type needs 8 Fr), hydraulic exchange (14–20 atm held; never with polymer-jacketed or stiff-tip wires; avoided in CTO PCI in general and for over-the-wire or re-entry balloons), extension wire (matching maker, tight joint), circumcision (segmental cutting, wire must not be nicked). Injecting without back-bleeding after trapping causes coronary air embolism.",
+    "learnerDoes": "Decides when a microcatheter is needed, chooses its category, uses it for exchanges, and removes it with the right technique for the wire and guide.",
+    "success": "Wire position maintained through removal; no hydraulic exchange over a polymer-jacketed or stiff-tip wire; back-bleed before the next injection; no microcatheter damage from over-rotation.",
+    "tips": [
+      "pci-microcath-when-needed",
+      "pci-microcath-no-overspin",
+      "pci-microcath-hydraulic-limits",
+      "pci-microcath-cannot-trap",
+      "pci-trap-then-backbleed"
+    ],
+    "lessonIds": [
+      "pm-wiring-microcatheters",
+      "pm-wiring-wire-choice"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "lab tips vocabulary",
+    "what": "Two triggers this module could not express precisely: an event for a wire that has run out of the guide into the artery unintentionally (for example during an unscreened injection), and an event for a second wire being advanced while a balloon, stent or guide extension is already in the guide. Both would let the tips pci-wire-stop-at-guide-tip and pci-wire-load-through-valve appear only when relevant instead of throughout the wire phase.",
+    "learnerDoes": "Sees the tip at the moment the event happens.",
+    "success": "Tips appear on the event rather than for the whole wire phase.",
+    "tips": [
+      "pci-wire-stop-at-guide-tip",
+      "pci-wire-load-through-valve"
+    ],
+    "lessonIds": [
+      "pm-wiring-shape-load"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "lab tips vocabulary",
+    "what": "Three more events this module needs and LAB_EVENTS lacks: (1) 'wire-prolapse', raised when the wire repeatedly passes an angulated target branch and continues down the main vessel or cannot advance through tortuosity (Brilakis 8.6.3.3), distinct from 'wire-side-branch' (wire in an unintended branch, Brilakis 8.6.3.2); (2) 'new-narrowing-tortuous', raised when new narrowings appear at bends after a supportive wire or microcatheter straightens a tortuous vessel (Brilakis 8.7.4, 18.8.3, 25.2.6); (3) 'microcatheter-removal', raised when the operator starts to withdraw a microcatheter or over-the-wire device over a short wire (Brilakis 8.9.2). Until they exist, pci-wire-prolapse-four-solutions and pci-wire-reversed-hairpin trigger on 'wire-side-branch' with conditional wording, pci-wire-pseudolesion-pullback on the lesion-prep and stent phases together with 'microcatheter-needed', and pci-microcath-hydraulic-limits and pci-microcath-cannot-trap on the wire and lesion-prep phases together with 'microcatheter-needed'. No lab raises 'microcatheter-needed' yet (src/ui/lab/pciTips.ts), so these three tips stay silent until the PCI lab raises it or the new events.",
+    "learnerDoes": "Sees each tip at the moment its problem arises.",
+    "success": "The prolapse tips no longer appear for a simple side-branch entry; the pseudolesion tip appears only when new narrowings appear; the removal tips appear only during microcatheter removal.",
+    "tips": [
+      "pci-wire-prolapse-four-solutions",
+      "pci-wire-reversed-hairpin",
+      "pci-wire-pseudolesion-pullback",
+      "pci-microcath-hydraulic-limits",
+      "pci-microcath-cannot-trap"
+    ],
+    "lessonIds": [
+      "pm-wiring-tortuosity",
+      "pm-wiring-microcatheters"
+    ],
+    "priority": "P2"
+  }
+]

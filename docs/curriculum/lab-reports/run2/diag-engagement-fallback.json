@@ -1,0 +1,39 @@
+{
+ "package": "diag-engagement-fallback",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "engagement.test.ts: with physics off, engagement uses difficultyScaled false by default; the THRESH row for 'advanced' is the single fixed set; the scaled behaviour is reachable only through { difficultyScaled: true }",
+      "met": true,
+      "evidence": "src/simulation/engagement.ts: engagementThresholds() returns FIXED_ENGAGEMENT_THRESHOLDS (= THRESH.advanced, frozen) unless opts.difficultyScaled === true; computeEngagement's opts defaults to a frozen empty object. No non-test file in src passes difficultyScaled (grep). Tests 'with physics off, engagement uses difficultyScaled false by default and the advanced row is the single fixed set' and 'the scaled behaviour is reachable only through { difficultyScaled: true }' pass. Conus over-selection uses its own fixed, difficulty-free tolerance (CONUS_OVERSELECTION_THRESHOLDS, labelled MODEL PARAMETERS with a reason in the code), so it does not reintroduce a difficulty dependence, and a test covers it."
+     },
+     {
+      "criterion": "engagement.test.ts: beginner and advanced difficulty give identical engagement classification for the same tip pose across 200 seeded poses",
+      "met": true,
+      "evidence": "The test of that name builds 200 poses from Rng('diag-engagement-fallback') over 4 anatomies and 8 catheters, asserts toEqual for beginner, intermediate and advanced, checks the poses cover the selective-lm, selective-rca, non-selective and coaxial/near classes, and checks that the legacy scaling would have classified some of them differently. It passes."
+     },
+     {
+      "criterion": "pressure.test.ts passes, with any case that relied on the beginner radius moved inside the fixed radius; lab.test.ts and integration.test.ts pass unchanged",
+      "met": true,
+      "evidence": "src/simulation/pressure.test.ts passes (6 tests) and includes a difficulty-identity check over aimed poses. src/ui/lab/lab.test.ts (12) and src/ui/lab/integration.test.ts (9) pass."
+     },
+     {
+      "criterion": "types.test.ts: getPhysicsDevices() returns null with no implementation and a fixture implementation placed under impl/ otherwise",
+      "met": true,
+      "evidence": "src/ui/physics/types.ts globs ./impl/*.ts eagerly (test files excluded) and resolves the lowest order, then id. src/ui/physics/impl/ does not exist yet, so getPhysicsDevices() returns null. types.test.ts (7 tests, all pass) covers null with no implementation, the real impl/ folder giving null or its first entry, the fixture at src/ui/physics/__fixtures__/impl/fixture.ts being resolved, ordering, validation errors, and the fixture taking init, load, command and step and returning a reading with vessel, depth, coaxiality, wallForce, openFraction, prolapsed and costMs."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts (3 files, 28 tests passed)",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts (2 files, 21 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no output (clean)"
+   }
+  ]
+ }
+}

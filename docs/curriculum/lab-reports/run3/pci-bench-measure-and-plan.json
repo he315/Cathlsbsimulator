@@ -1,0 +1,345 @@
+{
+ "package": "pci-bench-measure-and-plan",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built most of pci-bench-measure-and-plan inside its eight listed files. One gap remains: the bench screen (src/ui/sections/PciBench.tsx), which this package may not edit, still shows its own slice read-out. That read-out includes EEM area and plaque burden, so the exam-mode criterion is only partly met until that file is changed.\n\nWhat was built:\n- **Engine (src/simulation/pciBench.ts).** Each lesion now states a goal and a patient. The modality reasons come from pm-imaging-when-which. Lesions can also carry extra plaques, a piecewise EEM, two branch pullbacks that share the left main segment, and an ostium with the aorta proximal to it. Frames in the aorta show an aortic lumen wider than the field of view. With OCT, frames from the aorta through the first 5 mm past the ostium are uncleared blood (benchFrameAt reports region and measurability). The landing-zone truth now also excludes the lipid pool. A sizing function applies Brilakis's distal-reference rules (lumen + 0.25 mm or EEM \u2212 0.25 mm, read both ways the module describes).\n- **Consequences in deploy().** An edge on lipid or on plaque burden over 50% dissects once stretched. A stent larger than the distal reference allows dissects the distal edge. OCT runs add their flush to imagingContrastMl, using the module's 4 mL/s \u00d7 4 s for the left system and 3 \u00d7 3 for the RCA. The new options argument is optional, so existing callers are unchanged.\n- **Five new presets.** ostial-lm-ivus, distal-lm-two-branch, aorto-ostial-rca, ckd-ivus (age 76, eGFR 24, from the module) and acs-culprit-oct are in MEASURE_LESIONS. They are kept out of BENCH_LESIONS because core.launch.ts and its test require the picker list to stay exactly as it is. BENCH_BY_ID holds both lists, so launchBench opens the new presets.\n- **Grading (src/simulation/bench/measure.ts).** gradeModality, planTruth, gradePlan, exactPlan and lmSegmentCheck. Left main thresholds: IVUS 6.0 mm\u00b2, or 4.5 mm\u00b2 with the population toggle; OCT 5.4 mm\u00b2. Physiology is accepted in the 4.5\u20136.0 grey zone. Segment targets after stenting are 5, 6, 7 and 8 mm\u00b2, and the calcium score follows Fujino. The module also holds the pure geometry the tools use (polygon area, mean diameter, arc, frame and marker snapping).\n- **Measuring tools (src/ui/imaging/MeasureTools.tsx).** Trace, caliper, arc protractor and thickness caliper, with thickness refused on IVUS. Pullback markers snap to frames and to each other and give the length. The tools only report what the learner measured, so they are usable in the PCI lab as well.\n- **Plan form (src/ui/bench/PlanForm.tsx).** The form, a zustand plan store per lesion, a review table and the grey-zone hand-off. The hand-off is offered only when the learner's own MLA falls in the IVUS grey zone, and it calls openSim('physiology', {scenario:'lm-intermediate'}).\n- **Image step (src/ui/bench/ImagePanel.tsx).** Shows the goal and patient, then a reason picker and the commitment to a modality. Then come pullback runs per branch, the operator-visible contrast count for OCT, the measuring workspace with an uncleared-blood overlay for OCT, and the plan. The old pre-PCI truth table is gone. The comparison with the frames appears after entry only in guided mode; guided and exam block moving on until the plan is entered.\n- **Debrief (src/ui/bench/AssessPanel.tsx).** Adds the modality grade and what a wrong choice cost, the plan graded against the frames, imaging contrast, and the left main segment table.\n- **Launch file.** src/content/lab/presets/pci-bench/measure.launch.ts lists all five presets under pm-imaging-when-which, pm-imaging-planning and pm-imaging-optimisation, plus left main, ostial and ACS lessons.\n\nRecalibration: existing pciBench, ivus, benchTips and imaging tests pass unchanged. In one existing benchTips.scenario test the stent edge now dissects at any stretch rather than above 1.1\u00d7 the lumen; that test already expected a dissection.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/measure.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/measure.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/imaging/MeasureTools.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/ImagePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/PlanForm.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/AssessPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/pci-bench/measure.launch.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/measure.test.ts (16 tests: focal-lad grading and tolerances, proximal-reference flag plus distal edge dissection, plaque and lipid edge dissections, modality choice and limitations, ostial aorta and uncleared frames, grey zone and population threshold, OCT contrast, IVUS calcium thickness, two-branch pullbacks and LCx-only ostial lesion, segment targets after stenting, frame/geometry consistency of every preset and branch, tool geometry)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/benchTips.measure.test.ts (9 tests beside the event source benchTips.ts: launch file against MEASURE_LESIONS, validation, practiceIndex under the three imaging lessons, launches, tips at phase imaging, plan\u2192imaging phase, LM vessel and aorto-ostial event, waiting.ts entries)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/PlanForm.test.ts (7 SSR tests: no plaque-burden or truth read-out before the plan in exam mode, guided comparison only after entry, grey-zone hand-off, draft to plan, debrief grading and segment table, measuring tool limits)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/measure.test.ts src/ui/bench/PlanForm.test.ts src/ui/lab/benchTips.measure.test.ts src/simulation/pciBench.test.ts src/simulation/pci/ivus.test.ts src/ui/lab/benchTips.test.ts src/ui/lab/benchTips.scenario.test.ts src/ui/imaging/imaging.test.ts src/ui/content/practiceIndex.test.ts: 9 files, 113 tests passed",
+     "npx vitest run src/content/content.test.ts src/content/lab/reachability.test.ts: 2 files, 66 tests passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (the include covers src, test files too; AngioPci and the other pciBench importers compile unchanged)",
+    "acceptance": [
+     {
+      "criterion": "measure.test.ts: correct entries for focal-lad pass; a stent sized to the proximal reference is flagged and deploy() reports a distal edge dissection; an edge on the lipid pool reports an edge dissection",
+      "status": "met",
+      "evidence": "measure.test.ts 'focal-lad: entries graded against the frames': exactPlan grades 12/12. A 4.0 mm stent (proximal reference) gets the flag 'proximal-reference', and deploy() reports a dist-edge dissection whose text names the distal reference, while 3.5 mm does not dissect. 'edges on lipid': for lipid-acs and acs-culprit-oct a distal edge on the pool gives 'Distal edge landed on the lipid pool: edge dissection.', and edges beyond the pool give none."
+     },
+     {
+      "criterion": "OCT for 'ostial-lm-ivus' is wrong and its aorta frames have no measurable lumen",
+      "status": "met",
+      "evidence": "measure.test.ts: gradeModality(ostial-lm-ivus, OCT) gives ok false, expected IVUS, and a consequence that names the aorta. benchFrameAt for every frame before aortaMm, in both modalities, gives region 'aorta', lumenMeasurable false, and a lumen radius wider than the field of view. With OCT the ostial MLA frame is 'uncleared', so planTruth.mla is null. Engine level only: the bench screen's main view still calls ivusFrame directly (see outOfScope)."
+     },
+     {
+      "criterion": "'distal-lm-two-branch' is graded correct only with both pullbacks; a short circumflex ostial lesion shows only on the LCx pullback",
+      "status": "met",
+      "evidence": "measure.test.ts 'distal-lm-two-branch': with LAD and LCx every item passes; with LAD only, the 'pullbacks' and 'seg-lcx' items fail with flag not-imaged. The LCx ostium measures under 5 mm\u00b2 only on the LCx frames, over a span longer than 0 and shorter than 5 mm. The LAD ostium on the LAD frames is above 6 mm\u00b2. The left main frames are shared to within 1%."
+     },
+     {
+      "criterion": "browser: in exam mode no plaque-burden read-out is in the DOM before the plan is submitted",
+      "status": "partly",
+      "evidence": "PlanForm.test.ts shows, by server render in exam mode, that ImagePanel (chooser, workspace and form), PlanForm and MeasureTools contain no 'plaque burden', no EEM area, no MLA truth value, no pre-PCI table and no comparison. The bench screen src/ui/sections/PciBench.tsx (not in this package's list) still always renders its slice read-out with 'EEM area' and 'Plaque burden' once a modality is chosen. The DOM criterion therefore fails until that file gates the rows (see outOfScope). Not checked in a browser."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/pci-bench/measure.launch.ts under lessons pm-imaging-when-which, pm-imaging-planning, pm-imaging-optimisation",
+      "status": "met",
+      "evidence": "benchTips.measure.test.ts 'practiceIndex lists every scenario\u2026': each of the five scenarios is listed under all three lessons (and its extra lessons), with source measure.launch.ts and params.scenario equal to the id. buildKnownLaunch reports no problems and validateLaunchLinks reports no pci-bench errors. content.test.ts and practiceIndex.test.ts pass."
+     },
+     {
+      "criterion": "Tips: in a scenario from measure.launch.ts, at phase 'imaging', tipsFor(ctx, 20) includes pci-img-choose-by-goal and pci-img-calcium-score; every waiting.ts entry naming pci-bench-measure-and-plan becomes satisfiable",
+      "status": "met",
+      "evidence": "benchTips.measure.test.ts: in acs-culprit-oct and aorto-ostial-rca on OCT at the image step, phase is 'imaging' and tipsFor(ctx, 20) contains both tips. Ostial LM reports vessel LM and the aorto-ostial-lesion event, with pci-lm-ivus-for-ostium and pci-img-lm-threshold. No waiting.ts entry names this package (asserted as []), so there is nothing to make satisfiable and the pci waiting count is unchanged; reachability.test.ts passes."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/sections/PciBench.tsx (owned by pci-bench-imaging-unify, not in this package's list). The package's screen behaviour needs these edits: (1) pass lesion={l} and mode={run.mode} to <ImagePanel>. Without them the panel cannot show the goal and patient before the modality is chosen, and it treats every run as unguided. (2) Gate the slice read-out rows (EEM area, Lumen area, Plaque burden, Calcium here; lines ~281-288) so they show only when run.mode === 'guided' and useBenchPlanStore.getState().records[l.id]?.submitted is set. In supervised, independent and exam modes hide them until the debrief. This is what the browser exam-mode criterion needs. (3) Build the main frame with benchFrameAt(l, x, modality, branch) instead of ivusFrame(benchIvusContext(...)), so aorta and uncleared OCT frames read 'not measurable'. Add a branch selector for lesions with branches (benchPullbacks). (4) Pass { imagingRuns: record.runs.length + 1 } to deploy(). (5) In restart() call useBenchPlanStore.getState().reset(lesionId). (6) In finish() log the plan's gradePlan items as decisions (lessonId pm-imaging-planning). Optionally expose the plan on __lab.bench. (7) If wanted, add MEASURE_LESIONS to the lesion picker, titled from measure.launch.ts. Today they open only by launch; a launched preset is not among the picker's options.",
+     "src/ui/lab/benchTips.ts (owned by pci-bench-imaging-unify): `raises` derives case events from BENCH_LESIONS only. It should use ALL_BENCH_LESIONS (exported from pciBench.ts) so the presets' aorto-ostial-lesion event is declared. That would make pci-img-ostial-coverage (requires aorto-ostial-lesion) satisfiable on the bench. The event is already raised at runtime for ostial-lm-ivus and aorto-ostial-rca.",
+     "docs/realism/facts: record these MODEL PARAMETERS (each is also labelled in code). MP_AORTA_LUMEN_MM 30; MP_OCT_OSTIAL_UNCLEARED_MM 5 (the module says OCT cannot clear an ostial left main or aorto-ostial segment but gives no length); MP_TWO_BRANCH_POC_MM 12. Grading tolerances (MLA 0.5 mm\u00b2, references 0.25 mm, landing 1 mm, arc 30\u00b0, thickness 0.1 mm, calcium length 1 mm, stent length 2 mm). MP_REFERENCE_WINDOW_MM 10 and MP_REFERENCE_PB_MARGIN 0.02; MP_LM_SEGMENT_MM {poc 3, ostium 3}; MP_NO_TAPER_MM 0.25. The distal-oversize dissection severity rule. The geometry of the five new teaching lesions.",
+     "Physiology preset 'lm-intermediate' does not exist yet; it is declared by physiology-left-main-and-ostial. Until then the grey-zone hand-off opens the physiology lab without a preset (launchPreset returns null and the request is ignored)."
+    ],
+    "notes": "Snapshot: datasets/tmp/wp-snapshots/pci-bench-measure-and-plan/ holds pciBench.ts, ImagePanel.tsx and AssessPanel.tsx as they were. The other five listed files are new. .started is created. No file outside the list was edited apart from the three new test files.\n\nDesign decisions:\n- **Presets kept out of BENCH_LESIONS.** benchTips.scenario.test.ts (another package's file) requires core.launch.ts scenarios to equal BENCH_LESIONS exactly, and ivus.test.ts iterates BENCH_LESIONS. The five presets therefore live in MEASURE_LESIONS, with ALL_BENCH_LESIONS and BENCH_BY_ID covering both.\n- **Goals added to the six existing lesions.** These are data only, no geometry change.\n- **preImaging gains `lesionId`.** It now starts at the ostium for ostial lesions, uses the distal reference in place of the missing proximal reference there, and excludes the lipid pool from landing zones. Existing lesions without lipid are unchanged.\n- **Proximal-reference rule uses nominal diameter.** deploy() judges proximal sizing on the stent's nominal diameter (the sizing decision), so a correctly sized 3.5 mm stent deployed at 12 atm (3.75 mm on the catalogue chart) does not trigger it.\n- **Plan in a zustand store (useBenchPlanStore in PlanForm.tsx).** The image step and the debrief are separate components, and PciBench.tsx cannot be changed to carry the plan between them. Components also read getState() as a fallback so a server render and the first render after a commit see the record.\n- **Reason required only in guided and exam.** The modality reason is required before committing only in those modes, following the forms-block-only-in-guided-and-exam rule; in other modes it is optional.\n\nSources: every quoted threshold and rule cites src/content/manual/pci-manual/15-imaging.ts (pm-imaging-when-which, pm-imaging-oct, pm-imaging-planning, pm-imaging-optimisation; Brilakis and Oxford locations as stated there).\n\nKnown limitation: a relaunch into the same lesion with the same modality preset keeps that lesion's earlier plan record until restart() resets the store, which needs the PciBench.tsx edit above."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/simulation/pciBench.ts deploy() (profile, proxEdgePB, maxMalapposition) for presets with `ostial` (ostial-lm-ivus, aorto-ostial-rca)",
+      "problem": "deploy() does not treat the aorta as aorta, so it penalises the coverage the presets teach. The teaching says to cover the ostium with the stent just protruding into the aorta. Probe (IVUS, nominal pressure, 12 mm stent): on ostial-lm-ivus with a 4.5 mm stent and proxEdge 3 (protruding 1 mm), the portion in the aorta is scored against lumen()=eem() (plaque burden is 0 there), so maxMalapposition is 0.47 mm and the 'Malapposition < 0.4 mm' criterion fails. With proxEdge 4 (exactly at the ostium), proxEdgePB is plaqueBurden(l,4)=0.50, so the 'Plaque burden < 50% at both edges' criterion fails. No position covers the ostium and passes both. aorto-ostial-rca passes malapposition only by chance (0.34 mm). The planTruth/gradePlan proximal landing (the ostium) therefore conflicts with the deploy score.",
+      "severity": "major",
+      "fix": "In deploy(), when l.ostial is set: (a) exclude profile points with inAorta(l, p.x) from the malapposition and expansion inputs (protrusion into the aorta is not malapposition); (b) when x0 <= l.ostial.aortaMm (the ostium is covered), take proxEdgePB as 0, or skip the proximal-edge plaque-burden check and the proximal edgeDiss; (c) when x0 > l.ostial.aortaMm + 0.5, add an 'ostium not covered' event or geographic-miss note. Add a measure.test.ts case: on both ostial presets, a distal-sized stent with proxEdge = aortaMm - 1 that reaches the distal landing zone passes the malapposition and edge criteria, and one starting 1 mm inside the ostium is flagged."
+     },
+     {
+      "where": "src/ui/sections/PciBench.tsx (owned by pci-bench-imaging-unify and later packages; not in this package's list)",
+      "problem": "The design is wired into the components but not into the screen, so on the live bench most of it is inert. (1) <ImagePanel> gets neither lesion nor mode. With modality null, pre is null and the panel cannot find the lesion, so the goal, the patient and the reason picker are never shown before the choice. reasonId is then always null, so the debrief's 'Reason for the modality' item always fails. With mode undefined, exam and guided blocking does nothing and the guided comparison never appears. (2) The slice read-out (lines ~281-288: EEM area, Lumen area, Plaque burden) still renders in every mode, so the acceptance criterion 'browser: in exam mode no plaque-burden read-out is in the DOM before the plan is submitted' fails. (3) The main frame is built with ivusFrame(benchIvusContext(...)), not benchFrameAt, so aorta and uncleared-OCT frames read as measurable vessel there. (4) canGo('prep') requires only a modality, so the step tabs bypass the 'enter the plan first' block in exam and guided. (5) deploy() is called without imagingRuns, and restart() does not reset useBenchPlanStore, so a relaunch with the same modality keeps the old submitted plan. The disabled form then cannot be re-entered, and in exam the block is already lifted.",
+      "severity": "major",
+      "fix": "Route as a follow-up to the PciBench.tsx owner (or amend the plan to add src/ui/sections/PciBench.tsx to this package). Pass lesion={l} and mode={run.mode} to ImagePanel. Render the slice-read-out rows only when run.mode === 'guided' && useBenchPlanStore.getState().records[l.id]?.submitted, or at step 'optimise'/'assess'. Build the main frame with benchFrameAt(l, x, modality, branch, st, deployed).frame and show 'not measurable' when !lumenMeasurable. In canGo('prep'|'stent'), when run.mode is 'guided' or 'exam', also require records[l.id]?.submitted. Pass {imagingRuns: record.runs.length + 1} to every deploy() call. In restart(), and in load() for a launch, call useBenchPlanStore.getState().reset(lesionId). In finish(), log the gradePlan items as decisions with lessonId pm-imaging-planning. Then add a browser or SSR test of PciBench in exam mode asserting no /plaque burden/i before submit."
+     },
+     {
+      "where": "src/simulation/bench/measure.ts planTruth(), postDilSizes (line ~310)",
+      "problem": "The proximal post-dilatation balloon must be 'a larger, shorter balloon chosen from the proximal reference', but postDilSizes is not filtered against the stent. On focal-lad the stent sizes are [3.5] and the post-dilatation sizes are 3.5/3.75/4, so a 3.5 mm NC balloon on a 3.5 mm stent is graded a correct proximal optimisation. long-taper and small-diagonal behave the same way, with overlapping sizes.",
+      "severity": "minor",
+      "fix": "In planTruth, keep only postDilSizes greater than Math.max(...stentSizes). In gradePlan, also require pd > plan.stentDiameterMm when a stent is entered. Add a test that focal-lad with postDilMm 3.5 and stentDiameterMm 3.5 fails 'post-dil'."
+     },
+     {
+      "where": "src/simulation/bench/measure.ts gradePlan() 'reason' item (line ~414) with src/ui/bench/ImagePanel.tsx needReason",
+      "problem": "The reason is optional in supervised and independent modes, as the builder chose, but gradePlan always scores a missing reason as wrong. A learner in those modes loses a point for leaving out an optional field. On the current screen the picker is never shown (see the PciBench.tsx finding), so the item always fails.",
+      "severity": "minor",
+      "fix": "Push the 'reason' item only when plan.reasonId is set or the mode requires a reason. Either add an optional `requireReason` to BenchPlan, set from the mode, or leave a null reason ungraded (given 'not stated', not counted in total)."
+     },
+     {
+      "where": "src/ui/bench/AssessPanel.tsx (contrast row) vs src/simulation/pciBench.ts deploy() imagingContrastMl",
+      "problem": "Two inconsistent sources for imaging contrast. AssessPanel counts record.runs.length + 1, while result.imagingContrastMl uses deploy's default of 2 runs. On distal-lm-two-branch with OCT (LAD and LCx runs), the debrief shows 48 mL (3 runs) and the result says 32 mL. Any future consumer of result.imagingContrastMl (metrics, run log) will disagree with the debrief.",
+      "severity": "minor",
+      "fix": "Use one source. Have the screen pass imagingRuns (see the PciBench.tsx finding) and have AssessPanel show result.imagingContrastMl, or have AssessPanel ignore result.imagingContrastMl and document that deploy's figure is a default."
+     },
+     {
+      "where": "src/ui/bench/ImagePanel.tsx, reasonId useState (line ~106)",
+      "problem": "The chosen reason is component state and is never reset. After restart() or a lesion change, PciBench keeps ImagePanel mounted with modality null, so the chooser opens with the previous lesion's reason already selected. That pre-fills part of the graded answer in exam mode.",
+      "severity": "minor",
+      "fix": "Reset it with useEffect(() => setReasonId(null), [l?.id, modality === null]), or key the chooser by the lesion id and run."
+     },
+     {
+      "where": "src/ui/lab/benchTips.ts raises (owned by pci-bench-imaging-unify)",
+      "problem": "raises.events is derived from BENCH_LESIONS only. The aorto-ostial-lesion event raised at runtime by ostial-lm-ivus and aorto-ostial-rca is therefore not declared to the reachability report, so tips requiring it (e.g. pci-img-ostial-coverage) stay unreachable on the bench. That falls short of the tip integration's 'its event source exports raises for the reachability report'.",
+      "severity": "minor",
+      "fix": "Route as a follow-up to the benchTips.ts owner: import ALL_BENCH_LESIONS and use ALL_BENCH_LESIONS.flatMap(benchCaseEvents) in raises.events. Then re-run src/content/lab/reachability.test.ts and update waiting.ts entries that become satisfiable."
+     },
+     {
+      "where": "docs/realism/facts (no file in this package's list)",
+      "problem": "The rules require a value with no module source to be labelled MODEL PARAMETER in docs/realism/facts. The new MODEL PARAMETERS are labelled only in code: MP_AORTA_LUMEN_MM 30, MP_OCT_OSTIAL_UNCLEARED_MM 5, MP_TWO_BRANCH_POC_MM 12, MEASURE_TOLERANCE, MP_REFERENCE_WINDOW_MM 10, MP_REFERENCE_PB_MARGIN 0.02, MP_LM_SEGMENT_MM, MP_NO_TAPER_MM 0.25, the distal-oversize severity rule, and the geometry of the five presets.",
+      "severity": "minor",
+      "fix": "Add a facts entry (e.g. docs/realism/facts/pci-bench-measure.md) listing each constant with its value, its file and line, and 'MODEL PARAMETER (no module source)'. Note that MP_OCT_OSTIAL_UNCLEARED_MM rests on the pm-imaging-when-which pitfall 'failing to clear the ostium' and that the module gives no length. Route it to whichever package owns the facts files, or amend this package's file list."
+     }
+    ],
+    "verdict": "Changes requested. The engine and grading work largely implements the design, and the sourcing checks out: the LM thresholds 6.0, 4.5 and 5.4 mm\u00b2, the 5-6-7-8 segment targets, the Fujino score, the lumen + 0.25 / EEM \u2212 0.25 sizing rule, the OCT flush of 4\u00d74 and 3\u00d73 mL, and eGFR 24 / age 76 are all in src/content/manual/pci-manual/15-imaging.ts. New constants are labelled MODEL PARAMETER in code. Shared engines (criteria.ts, ivus.ts, equipment.ts) are untouched. deploy()'s new options argument is optional, and deploy is only called from the bench.\n\nI ran the package's test files plus the related ones: 10 files, 118 tests passed. These were measure, PlanForm, benchTips.measure, pciBench, benchTips, benchTips.scenario, ivus, imaging, practiceIndex and reachability. `npx tsc -p tsconfig.app.json --noEmit` exits 0.\n\nThe tests are meaningful, not tautological. They exercise frame truth against lumen() and eem(), the tolerances on both sides, the proximal-reference flag together with the deploy() distal dissection, the lipid-edge dissection, the aorta and uncleared frames, both branch pullbacks with the LCx-only ostial lesion, the population toggle, SSR exam-mode leak checks of the package's components, and the named tips at phase 'imaging'.\n\nMy probes with vite-node found the following:\n- The plan the frames call for (exactPlan) deploys without dissection on all 11 lesions.\n- deploy()'s oversize rule agrees with the graded stent sizes on every lesion.\n- gradePlan takes about 0.3 ms per call.\n- There are no per-frame allocations in render paths.\n- UI uses the design-system classes and British English.\n- The only files modified since .started outside the list are access, hypotension, pressure and transducer files, and none of them import the bench, so another package plausibly changed them.\n\nTwo blocking problems remain:\n1. Ostial presets: deploy() scores the aorta portion of a protruding stent as malapposition, and the ostium edge as plaque burden 50%. Correct ostial coverage cannot pass both criteria. This is fixable inside pciBench.ts.\n2. The screen integration is missing. src/ui/sections/PciBench.tsx is not in this package's list. It still renders EEM area and plaque burden in every mode, does not pass lesion or mode to ImagePanel, lets the step tabs skip the plan, and never resets the plan store. As a result the exam-mode DOM acceptance criterion fails, and on the live bench the goal, reason and blocking features do nothing. This must be routed to the PciBench.tsx owner, or the plan amended.\n\nThe minor findings, three of which also need other packages (benchTips raises, the realism facts file, the contrast source), are listed with exact fixes."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 2 (src/ui/sections/PciBench.tsx wiring: lesion/mode props, slice read-out in exam mode, benchFrameAt main frame, canGo plan block, imagingRuns passed to deploy, plan-store reset on restart/load, gradePlan decisions logged): the finding is correct but PciBench.tsx is not in this package's file list. Not applied here; it needs to go to the PciBench.tsx owner (pci-bench-imaging-unify) or the plan needs amending. The components already take the props: ImagePanel takes lesion and mode, useBenchPlanStore.reset(lesionId) exists, deploy takes {imagingRuns: record.runs.length + 1}, and benchFrameAt(...).lumenMeasurable is there. Until that file changes, the exam-mode 'no plaque-burden read-out before submit' criterion stays unmet.",
+     "Finding 7 (src/ui/lab/benchTips.ts raises.events built only from BENCH_LESIONS): correct but out of scope, since benchTips.ts belongs to pci-bench-imaging-unify. The fix for that owner is ALL_BENCH_LESIONS.flatMap(benchCaseEvents) in raises.events, then a rerun of src/content/lab/reachability.test.ts and an update of the waiting.ts entries that become reachable.",
+     "Finding 8 (docs/realism/facts entry for the new MODEL PARAMETERS): correct but no facts file is in this package's list. It should go to the facts owner or be added to the plan as docs/realism/facts/pci-bench-measure.md. The entry should list MP_AORTA_LUMEN_MM 30, MP_OCT_OSTIAL_UNCLEARED_MM 5 (resting on the pm-imaging-when-which pitfall 'failing to clear the ostium', for which the module gives no length), MP_TWO_BRANCH_POC_MM 12, MEASURE_TOLERANCE, MP_REFERENCE_WINDOW_MM 10, MP_REFERENCE_PB_MARGIN 0.02, MP_LM_SEGMENT_MM, MP_NO_TAPER_MM 0.25, the severity rule for a stent oversized to the distal reference, and the geometry of the five presets."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/measure.test.ts src/ui/bench/PlanForm.test.ts src/ui/lab/benchTips.measure.test.ts src/simulation/pciBench.test.ts (53 passed; measure.test.ts now 21 tests)",
+     "npx vitest run src/ui/lab/benchTips.scenario.test.ts src/ui/lab/benchTips.test.ts src/ui/imaging/imaging.test.ts src/simulation/pci/ivus.test.ts src/simulation/angioPci.test.ts (69 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked each finding against the code; 5 are fixed and 3 are out of scope. All 122 tests in the 9 files I ran pass, and the typecheck is clean.\n\nFixed:\n\n1. **Ostial stents (major), src/simulation/pciBench.ts deploy().** The part of the stent inside the aorta (inAorta) no longer counts towards malapposition, expansion, the minimum stent area or perforation. If the stent starts at or before the ostium, there is no coronary proximal edge: proxEdgePB is 0 and no proximal edge dissection is raised. An ostial stent has no proximal reference, so the distal reference stands in for both expansion halves and for the average reference area, as preImaging already does. The result has a new field, ostiumCovered. Ostial lesions get a new criterion, 'Ostium covered (stent reaches the aorta)'; other lesions are unchanged.\n   - I added a criterion rather than a new EventKind so that other modules' event handling is untouched.\n   - A probe on both ostial presets confirms the fix. A distal-sized stent starting 1 mm in the aorta, or exactly at the ostium, now passes the malapposition and edge criteria. One starting 1 mm inside the ostium fails the ostium criterion and is a geographic miss, with a proximal edge dissection.\n   - On aorto-ostial-rca a short stent still fails the expansion criterion because of the unprepared calcium. That is expected.\n   - AssessPanel shows 'ostium covered' in place of the proximal edge plaque burden in that case.\n   - New tests in measure.test.ts cover both presets and a non-ostial control.\n\n2. **Post-dilatation size (minor), measure.ts.** planTruth now keeps only post-dilatation sizes larger than the largest distal stent size. gradePlan also requires the balloon to be larger than the learner's stent, and the expected text says so. Test added: focal-lad with a 3.5 mm stent and a 3.5 mm balloon fails 'post-dil'.\n\n3. **Optional reason (minor).** BenchPlan has a new optional requireReason. The reason item is graded only when a reason is given or the mode requires one. requireReason is stored on the plan record: commit() takes it as an optional fourth argument, and ImagePanel passes needReason (guided or exam). draftToPlan carries it into the plan. Test added.\n\n4. **Two contrast figures (minor).** AssessPanel stays the single source for the debrief: it uses the record's runs plus the final pullback, and falls back to result.imagingContrastMl only when there is no record. Comments in DeployOptions and AssessPanel now say that deploy's figure is a default (two runs) unless the caller passes imagingRuns. The two figures will only agree on screen once PciBench.tsx passes imagingRuns (see the rejected finding 2).\n\n5. **Stale reason (minor), ImagePanel.tsx.** A useEffect clears reasonId when the lesion changes or the modality chooser reopens.\n\nOut of scope (details in the rejected list): finding 2 needs changes to src/ui/sections/PciBench.tsx, finding 7 to src/ui/lab/benchTips.ts, and finding 8 a new docs/realism/facts entry. None of these files is in this package's list.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/measure.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/measure.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/PlanForm.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/ImagePanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/AssessPanel.tsx"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-51) at http://localhost:5173 and went to PCI bench (IVUS/OCT). Drove the lab through window.__lab.bench.launch/state/context/tips. Closed the tab at the end.",
+     "ostial-lm-ivus, exam mode, before any choice: the chooser offered only the IVUS and OCT buttons. It showed no Goal or Patient row and no Reason picker, because PciBench.tsx does not pass `lesion` and ImagePanel only looks the lesion up from `pre`, which is null until a modality is chosen.",
+     "ostial-lm-ivus, exam, OCT committed: context phase was 'imaging', vessel LM, events [aorto-ostial-lesion, left-main-lesion, large-vessel]. tips() was empty, as expected in exam. The main view panel (PciBench.tsx) read 'EEM area 20.83 mm\u00b2', 'Lumen area 14.56 mm\u00b2' and 'Plaque burden 30%' in the DOM before the plan was entered. The exam DOM acceptance criterion FAILS.",
+     "ostial-lm-ivus OCT, Run pullback: the workspace frame at 7 mm showed 'Blood not cleared: the flush escapes into the aorta at the ostium.' and the uncleared-blood overlay. Imaging contrast went from 0 to 16 mL after one run (4 mL/s x 4 s, left system). The Goal row appeared in the workspace.",
+     "Exam mode: 'Plan preparation \u2192' stayed enabled with no plan entered. On ckd-ivus in exam I chose IVUS, ran the pullback and went straight to Prepare, then stent, deploy and debrief, without entering a plan. The block on moving on in exam mode does not work in the app because `mode` is not passed to ImagePanel.",
+     "distal-lm-two-branch, guided, IVUS: two pullbacks ('Run lad pullback', 'Run circumflex pullback') both ran and became 'View ...'. The plan form showed separate Left main, LAD ostium and Circumflex ostium MLA fields. Tips included pci-img-lm-threshold and pci-lm-ivus-for-ostium.",
+     "Grey-zone hand-off: typing 5.2 into 'Left main minimum lumen area' (IVUS, left main) showed 'Minimum lumen area between 4.5 and 6.0 mm\u00b2: physiology can settle significance.' and an 'Open the physiology lab' button. Clicking it opened the Pressure wire lab on its default case '1. Intermediate mid-LAD lesion' (lad-intermediate), not lm-intermediate. No source file defines lm-intermediate yet.",
+     "Guided mode, 'Enter the plan': the form showed 'Plan recorded. It is compared with the frames in the debrief.' The guided comparison (PlanReview) never appeared, because `mode` is undefined in ImagePanel.",
+     "ckd-ivus debrief: shows MSA, expansion per half, edge plaque burden, Imaging contrast 0 mL, criteria, the event 'Distal edge landed in plaque and was stretched: edge dissection.' and the modality grade with its reason text. No plan section and no 'no plan entered' notice appeared, because the plan was never submitted.",
+     "aorto-ostial-rca, guided, OCT: context had aorto-ostial-lesion and vessel RCA, and tips included pci-ostial-ivus-not-oct. With the main view slider at 0.5 mm, PciBench's read-out showed 'EEM area 706.86 mm\u00b2, Lumen area 698.92 mm\u00b2, Plaque burden 1%' in the aorta, as if the blood had been cleared, which contradicts the workspace. One OCT run on the RCA added 9 mL (3 x 3).",
+     "Look: in the workspace screenshot the uncleared-blood texture is a square patch inside the circular OCT frame.",
+     "Lesion picker: after launching a MEASURE_LESIONS preset, the header select still reads '1. Focal mid-LAD stenosis' (value focal-lad) while the session is ostial-lm-ivus, distal-lm-two-branch, etc.",
+     "Once during testing the bench reset to focal-lad with no modality while I was idle between calls. This was most likely an HMR reload from another package editing files, and I could not reproduce it from this package's controls.",
+     "Console: no errors or warnings during the session."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/PciBench.tsx lines ~280-287 (slice read-out, BenchRow 'EEM area' / 'Plaque burden'), outside this package's file list",
+      "problem": "Acceptance criterion 'browser: in exam mode no plaque-burden read-out is in the DOM before the plan is submitted' fails. Exam mode on ostial-lm-ivus with OCT showed 'EEM area 20.83 mm\u00b2' and 'Plaque burden 30%' (and the lumen area) before any plan was entered. The same happens in supervised mode, which the design also says must hide them.",
+      "severity": "critical",
+      "fix": "In PciBench.tsx, read the plan record (useBenchPlanStore((s) => s.records[lesionId])). Render the EEM area, Plaque burden and Lumen area rows (and the calcium row) only when step !== 'image' || run.mode === 'guided' && record?.submitted, or simply when step is not 'image'. Better, drop the left-hand read-out on the image step, since ImagePanel's MeasureTools workspace already replaces it. This needs a follow-up package or an owner allowed to edit PciBench.tsx."
+     },
+     {
+      "where": "src/ui/sections/PciBench.tsx line ~303: <ImagePanel modality={modality} onModality=... pre={pre} next=... />",
+      "problem": "PciBench does not pass `lesion` or `mode` to ImagePanel, so every mode-dependent behaviour fails in the app. (a) Before the modality is chosen, l is undefined (pre is null), so the Goal, Patient and Reason picker never show and the reason is never recorded. (b) needReason is false, so guided and exam do not require a reason. (c) blocksMove is false, so in exam I reached Prepare, Stent and Deploy without entering a plan. (d) guided is false, so in guided practice 'Enter the plan' only says 'compared with the frames in the debrief' and PlanReview never appears. (e) The hand-off does not carry the mode.",
+      "severity": "critical",
+      "fix": "Change the call to <ImagePanel lesion={l} mode={run.mode ?? undefined} modality={modality} onModality={...} pre={pre} next={() => go('prep')} />, adapting run.mode to AssessmentMode if the types differ. Also make canGo('prep') in PciBench return false when (run.mode === 'guided' || run.mode === 'exam') && !useBenchPlanStore.getState().records[lesionId]?.submitted, so the step tabs cannot skip the plan either. This is outside the package's files and needs reporting in outOfScope or a follow-up."
+     },
+     {
+      "where": "src/ui/sections/PciBench.tsx frame = ivusFrame(imgCtx, x) (main pullback view)",
+      "problem": "The main view ignores the new ostial and aorta model. On aorto-ostial-rca with OCT at 0.5 mm it reads 'EEM area 706.86 mm\u00b2, Lumen area 698.92 mm\u00b2, Plaque burden 1%', an aortic lumen measured as if the blood had been cleared. The workspace beside it says 'Blood not cleared'. The OCT-for-ostium consequence is therefore only half visible, and the learner gets a contradiction.",
+      "severity": "major",
+      "fix": "In PciBench.tsx, build the main frame with benchFrameAt(l, x, modality, null). Show 'not measurable' (and the UnclearedBlood overlay) when !bf.lumenMeasurable, or remove the main view on the image step as above."
+     },
+     {
+      "where": "src/ui/bench/PlanForm.tsx GREY_ZONE_HANDOFF / measure.launch.ts comment",
+      "problem": "The 'Open the physiology lab' hand-off opens the Pressure wire lab on its default case '1. Intermediate mid-LAD lesion' (lad-intermediate), because no physiology preset 'lm-intermediate' exists yet (physiology-left-main-and-ostial is wave 23). A learner sent to settle a left main grey zone lands on an LAD case without being told.",
+      "severity": "major",
+      "fix": "Until the physiology preset exists, render the hand-off only when the physiology launch catalogue knows 'lm-intermediate' (check it through the practice index or the physiology launch file's scenario ids). Otherwise show the notice text without the button, or keep it and record the dependency in docs/curriculum waiting so physiology-left-main-and-ostial is known to close it."
+     },
+     {
+      "where": "src/ui/bench/AssessPanel.tsx (grade = record?.submitted ? gradePlan(...) : null)",
+      "problem": "When the learner reaches the debrief without submitting a plan, which is currently possible in every mode, the debrief has no plan section and does not say that the plan was missing. The exam score therefore does not reflect the skipped plan.",
+      "severity": "minor",
+      "fix": "When record exists and !record.submitted, render a line such as 'No pre-PCI plan was entered.' in the plan section, and count it as a failed plan item in the run's decisions."
+     },
+     {
+      "where": "src/ui/bench/ImagePanel.tsx Workspace pullback buttons: `Run ${p.label.toLowerCase()}`",
+      "problem": "Branch pullback buttons read 'Run lad pullback' and 'View lad pullback', with the acronym lowercased.",
+      "severity": "minor",
+      "fix": "Do not lowercase the label. Use `Run ${p.label}` / `View ${p.label}` with labels such as 'LAD pullback' and 'Circumflex pullback', or lowercase only the first character when it is not part of an acronym."
+     },
+     {
+      "where": "src/ui/bench/ImagePanel.tsx UnclearedBlood, filter #bench-blood",
+      "problem": "feTurbulence fills the whole filter region, so the speckle shows as a square brown patch inside the round OCT frame instead of a round cloud of blood.",
+      "severity": "minor",
+      "fix": "After the feColorMatrix add <feComposite in2=\"SourceAlpha\" operator=\"in\" />, or apply a <clipPath> with a circle r=70 to the textured circle, so the texture is clipped to the circle."
+     },
+     {
+      "where": "src/ui/sections/PciBench.tsx lesion <select> (BENCH_LESIONS only)",
+      "problem": "After launching one of the five MEASURE_LESIONS presets, the header picker still shows '1. Focal mid-LAD stenosis' (value focal-lad) while the session is a different lesion, which misleads the learner about what is loaded.",
+      "severity": "minor",
+      "fix": "In PciBench.tsx, when BENCH_LESIONS does not include lesionId, render an extra disabled option for the current lesion (PICKER_TITLE or l.vessel) so the select shows it, without adding it to BENCH_LESIONS, so core.launch.ts stays unchanged."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 1 (exam-mode EEM area / plaque burden / lumen area read-out before the plan): correct, but the read-out is in src/ui/sections/PciBench.tsx lines ~280-287, which is outside this package's files. OUT OF SCOPE, needs a follow-up: in PciBench.tsx drop the left-hand slice read-out on step 'image' (ImagePanel's MeasureTools workspace replaces it), or render it only when step !== 'image'.",
+     "Finding 2 (PciBench does not pass lesion or mode to ImagePanel; canGo('prep') lets the plan be skipped): correct, and ImagePanel already accepts both props, but the call site and canGo are in src/ui/sections/PciBench.tsx (line ~301 and ~219). OUT OF SCOPE, needs a follow-up: <ImagePanel lesion={l} mode={run.mode ?? undefined} modality={modality} onModality={...} pre={pre} next={() => go('prep')} />, and canGo('prep'|'stent') returns false when (run.mode === 'guided' || run.mode === 'exam') && !useBenchPlanStore.getState().records[lesionId]?.submitted.",
+     "Finding 3 (main pullback view measures the aortic lumen as cleared on aorto-ostial-rca OCT): correct, but the main view is built with ivusFrame(imgCtx, x) in src/ui/sections/PciBench.tsx line ~158. OUT OF SCOPE, needs a follow-up: build it with benchFrameAt(l, x, modality, null) and show 'not measurable' when !lumenMeasurable, or remove the main view on the image step.",
+     "Finding 5, second half (count the missing plan as a failed decision in the run): the run's decisions are recorded in finish() in src/ui/sections/PciBench.tsx, outside this package's files. OUT OF SCOPE: finish() should call r.decide({ id: 'pre-pci-plan', stage: 'imaging', label: 'Pre-PCI plan entered', correct: !!record?.submitted, ... lessonId: 'pm-imaging-planning' }) when a plan record exists. The debrief line was applied (see notes).",
+     "Finding 8 (header lesion picker shows focal-lad after launching a MEASURE_LESIONS preset): correct, but the <select> is in src/ui/sections/PciBench.tsx line ~241. OUT OF SCOPE, needs a follow-up: when BENCH_LESIONS does not include lesionId, render one extra disabled <option value={lesionId}> with l.title, leaving BENCH_LESIONS (and core.launch.ts) unchanged."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/bench/PlanForm.test.ts src/simulation/bench/measure.test.ts src/ui/lab/benchTips.measure.test.ts (38 passed)",
+     "npx vitest run src/simulation/pciBench src/ui/lab/benchTips (pciBench.test, benchTips.test, benchTips.measure.test, benchTips.scenario.test: 45 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I applied four of the eight findings inside the package's files. The other four (1, 2, 3 and 8) are correct, but all of them are in src/ui/sections/PciBench.tsx, which this package may not edit. Until that file is changed, two acceptance criteria still fail in the app: exam mode still shows the read-out before the plan, and the plan can still be skipped. The fix for each is in the rejected list.\n\nApplied:\n- **Finding 4, grey-zone hand-off** (src/ui/bench/PlanForm.tsx). New export greyZoneHandoffAvailable() checks whether any physiology launch file declares 'lm-intermediate'. It uses the existing practice index, so no physiology file was touched. PlanForm takes an optional handoffAvailable prop that defaults to that check. In the grey zone the notice 'physiology can settle significance' always shows. The 'Open the physiology lab' button shows only when the preset is declared, which is not yet the case, so the learner is no longer sent to the default LAD case. The button appears on its own once physiology-left-main-and-ostial lands its launch file. I updated the comments in src/content/lab/presets/pci-bench/measure.launch.ts and at the top of PlanForm.tsx to match.\n- **Finding 5, missing plan in the debrief** (src/ui/bench/AssessPanel.tsx). When a plan record exists but no plan was submitted, the debrief now shows a 'Pre-PCI plan' section with '\u2717 No pre-PCI plan was entered.' The other half of the finding, counting it as a failed decision in the run score, is in PciBench.tsx finish() and is in the rejected list.\n- **Finding 6, pullback button labels** (src/ui/bench/ImagePanel.tsx). New export inSentence() lowercases only the first letter, and leaves the label alone when its first word is an acronym. The buttons now read 'Run pullback', 'Run LAD pullback' and 'View circumflex pullback'.\n- **Finding 7, blood overlay** (ImagePanel.tsx UnclearedBlood). Added <feComposite in2=\"SourceAlpha\" operator=\"in\" /> after the feColorMatrix, so the speckle stays inside the circle instead of filling a square.\n\nTests added in src/ui/bench/PlanForm.test.ts:\n- The hand-off button shows with handoffAvailable true and is hidden with false, while the notice stays.\n- By default the button follows whether the catalogue declares 'lm-intermediate'.\n- The debrief shows the no-plan line for an unsubmitted record and not for a submitted one.\n- A new 'pullback buttons' test covers inSentence().\n\nThe blood-overlay change has no test because it is purely visual, and I did not check any of the fixes in the browser."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "measure.test.ts: correct entries for focal-lad pass; a stent sized to the proximal reference is flagged and deploy() reports a distal edge dissection; an edge on the lipid pool reports an edge dissection",
+      "met": true,
+      "evidence": "src/simulation/bench/measure.test.ts passes (21 tests). 'correct entries pass every item' checks that gradePlan(exactPlan(focal-lad)) has no failed items. 'a stent sized to the proximal reference is flagged...' checks flag 'proximal-reference' and a deploy() dissection event at 'dist-edge' whose text mentions the distal reference. 'edges on lipid' checks lipid-acs and acs-culprit-oct for a 'dist-edge' dissection whose text mentions lipid."
+     },
+     {
+      "criterion": "OCT for 'ostial-lm-ivus' is wrong and its aorta frames have no measurable lumen",
+      "met": true,
+      "evidence": "In measure.test.ts, the test 'OCT for 'ostial-lm-ivus' is wrong...' checks that gradeModality(OCT) gives ok=false with expected IVUS and a consequence that mentions the aorta. For every frame before aortaMm, in both modalities, it checks region 'aorta' and lumenMeasurable false. It also checks that the OCT planTruth MLA is null (region 'uncleared'). The test passes."
+     },
+     {
+      "criterion": "'distal-lm-two-branch' is graded correct only with both pullbacks; a short circumflex ostial lesion shows only on the LCx pullback",
+      "met": true,
+      "evidence": "The describe('distal-lm-two-branch') tests in measure.test.ts pass. A full plan with LAD and LCx has no failed items. LAD only fails the 'pullbacks' and 'seg-lcx' items and adds the 'not-imaged' flag. LCx ostial MLA is below 5 mm\u00b2 on the LCx pullback, while the LAD pullback is above 6 mm\u00b2 there, over less than 5 mm."
+     },
+     {
+      "criterion": "browser: in exam mode no plaque-burden read-out is in the DOM before the plan is submitted",
+      "met": false,
+      "evidence": "PlanForm.test.ts covers ImagePanel only when it is rendered alone, and that test passes. The real bench screen still leaks the read-out. In the running app (localhost:5173, PCI bench, launched via window.__lab.bench.launch({scenario:'focal-lad',start:'image',modality:'IVUS',mode:'exam'})), the mode bar showed 'Exam' and no plan had been submitted, yet document.body.innerText contained 'EEM area 11.64 mm\u00b2 / Lumen area 2.56 mm\u00b2 / Plaque burden 78%'. The cause is src/ui/sections/PciBench.tsx (lines ~272-279). It renders BenchRow 'EEM area', 'Lumen area', 'Plaque burden' and 'Calcium here' beside IntravascularView whenever frame && modality, whatever the mode or step. It also renders <ImagePanel> (line ~301) without lesion or mode. As a result, exam mode does not block 'Plan preparation' (the button was enabled, with no 'Enter the plan first' title), the reason is not required, and guided mode never shows the comparison after entry."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in measure.launch.ts under lessons pm-imaging-when-which, pm-imaging-planning, pm-imaging-optimisation",
+      "met": true,
+      "evidence": "The benchTips.measure.test.ts test 'practiceIndex lists every scenario under ...' passes for all 5 scenarios (ostial-lm-ivus, distal-lm-two-branch, aorto-ostial-rca, ckd-ivus, acs-culprit-oct). Launch validation passes. practiceIndex.test.ts and content.test.ts also pass."
+     },
+     {
+      "criterion": "Tips: in a measure.launch.ts scenario at phase 'imaging', tipsFor(ctx,20) includes pci-img-choose-by-goal and pci-img-calcium-score; waiting.ts entries naming the package become satisfiable",
+      "met": true,
+      "evidence": "benchTips.measure.test.ts passes (9 tests). For acs-culprit-oct and aorto-ostial-rca on OCT, the phase is 'imaging' and both tips are present. The phase is 'plan' before the commit. The ostial LM context has vessel LM and aorto-ostial-lesion. waiting.ts has no entries with raisedBy 'pci-bench-measure-and-plan' (checked by grep and by the test), so this part holds trivially. reachability.test.ts passes."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/sections/PciBench.tsx (lines ~272-279 slice read-out; line ~301 <ImagePanel .../>). This file is not in this package's file list; pci-bench-imaging-unify owns it, and pci-bench-bifurcation (wave 20) lists it next.",
+      "problem": "On the real bench screen, the live slice read-out (EEM area, Lumen area, Plaque burden, Calcium here) is in the DOM in exam mode before the plan is submitted. ImagePanel also gets no lesion or mode, so its exam and guided behaviour is unreachable in the app. That behaviour is the 'Enter the plan first' block, the required reason, and the guided comparison after entry. This breaks the acceptance criterion and the design rule that 'In supervised and exam modes the slice read-out and the pre-PCI table are hidden; in guided mode they appear after the learner's entry'. The implementer should have reported the needed PciBench.tsx change in outOfScope.",
+      "severity": "critical",
+      "fix": "Add src/ui/sections/PciBench.tsx to this package's files, or schedule a small repair package. In PciBench.tsx: (1) render <ImagePanel lesion={l} mode={run.mode} modality=... pre=... next=... />. (2) Read const planRec = useBenchPlanStore((s) => s.records[l.id]) from ../bench/PlanForm and compute showSlice = step !== 'image' ? run.mode === 'guided' || !!result : run.mode === 'guided' && !!planRec?.submitted, or at least hide the rows while step === 'image' && run.mode !== 'guided' or until planRec?.submitted. (3) Wrap the EEM area / Lumen area / Plaque burden / Calcium here BenchRows (keep the stent rows after deploy) in {showSlice && ...}. (4) Add a new test file, e.g. src/ui/sections/PciBench.measure.test.ts, that renders PciBench in exam mode via launchBench({scenario:'focal-lad',start:'image',modality:'IVUS',mode:'exam'}) and asserts /plaque burden/i is absent before submit. Alternatively, write a verify report from window.__lab.bench showing the same."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/measure.test.ts src/ui/bench/PlanForm.test.ts src/ui/lab/benchTips.measure.test.ts src/simulation/pciBench.test.ts (4 files, 54 passed)",
+     "npx vitest run src/ui/lab/benchTips.scenario.test.ts src/ui/lab/benchTips.test.ts src/ui/imaging/imaging.test.ts src/simulation/pci/ivus.test.ts src/content/lab/tips.test.ts src/ui/content/practiceIndex.test.ts (6 files, 96 passed, 1 skipped)",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/content.test.ts (2 files, 66 passed)",
+     "Browser (own background tab on localhost:5173, closed afterwards): window.__lab.bench.launch({scenario:'focal-lad',start:'image',modality:'IVUS',mode:'exam'}); the DOM contained 'Plaque burden 78%' before plan submission, and 'Plan preparation' was enabled"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: there are no errors in any file of this package. It reports 4 errors (TS2769, 'initial' not in 'Attributes') in src/ui/bedside/PacingLab.test.ts. That file belongs to the pacing package, which was being written at the same time (modified 12:17); it is not this package's file."
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "measure.test.ts: correct entries for focal-lad pass; a stent sized to the proximal reference is flagged and deploy() reports a distal edge dissection; an edge on the lipid pool reports an edge dissection",
+      "met": true,
+      "evidence": "src/simulation/bench/measure.test.ts 'focal-lad: entries graded against the frames' (exactPlan passes every item; stentDiameterMm 4 gives flag 'proximal-reference' and deploy() reports a dist-edge dissection naming the distal reference) and 'edges on lipid' (lipid-acs and acs-culprit-oct: a distal edge on the pool reports a dist-edge dissection containing 'lipid'). All 21 tests pass."
+     },
+     {
+      "criterion": "OCT for 'ostial-lm-ivus' is wrong and its aorta frames have no measurable lumen",
+      "met": true,
+      "evidence": "measure.test.ts 'the modality choice': gradeModality(ostial-lm-ivus, OCT) is not ok, expects IVUS, consequence names the aorta; every frame for x < ostial.aortaMm on IVUS and OCT has region 'aorta' and lumenMeasurable false; OCT MLA truth is null (uncleared). Passes."
+     },
+     {
+      "criterion": "'distal-lm-two-branch' is graded correct only with both pullbacks; a short circumflex ostial lesion shows only on the LCx pullback",
+      "met": true,
+      "evidence": "measure.test.ts 'distal-lm-two-branch': the full plan (pullbacks LAD and LCx) passes every item; LAD only fails 'pullbacks' and 'seg-lcx' with flag 'not-imaged'; the LCx frames fall below the 5 mm2 target over 0 to 5 mm while the LAD frames stay above 6 mm2. Passes."
+     },
+     {
+      "criterion": "browser: in exam mode no plaque-burden read-out is in the DOM before the plan is submitted",
+      "met": false,
+      "evidence": "PlanForm.test.ts covers only ImagePanel in isolation and only before a pullback is run. In the running app (localhost:5173), I launched window.__lab.bench.launch({scenario:'ostial-lm-ivus', start:'image', mode:'exam'}). The mode bar showed 'Exam'. I chose IVUS and did not submit a plan. The DOM then contained 'EEM area 20.83 mm\u00b2', 'Lumen area 14.56 mm\u00b2' and 'Plaque burden 30%'. These come from src/ui/sections/PciBench.tsx lines ~280-287, which render the slice read-out (EEM area, lumen area, plaque burden, calcium arc and thickness) whenever a modality is set, in every mode. Line ~301 also renders <ImagePanel> without lesion or mode, so the exam gates in ImagePanel are inactive: the reason is not required and 'Enter the plan first' does not block 'Plan preparation'."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in measure.launch.ts under pm-imaging-when-which, pm-imaging-planning, pm-imaging-optimisation",
+      "met": true,
+      "evidence": "src/ui/lab/benchTips.measure.test.ts 'practiceIndex lists every scenario under ...' checks practiceForLesson for each of the 5 scenarios under all three lessons, with source measure.launch.ts. The launch links validate. src/ui/content/practiceIndex.test.ts also passes."
+     },
+     {
+      "criterion": "Tips: in a scenario from measure.launch.ts at phase 'imaging', tipsFor(ctx, 20) includes pci-img-choose-by-goal and pci-img-calcium-score; every waiting.ts entry naming the package becomes satisfiable and the pci waiting count falls by at least their number",
+      "met": true,
+      "evidence": "benchTips.measure.test.ts sits beside the event source src/ui/lab/benchTips.ts. For acs-culprit-oct and aorto-ostial-rca on OCT it gives phase 'imaging', and tipsFor(ctx,20) includes both tips. The phase is 'plan' before commit. ostial-lm-ivus sets vessel LM and aorto-ostial-lesion. src/content/lab/raisable/waiting.ts has no entry with raisedBy 'pci-bench-measure-and-plan', so the count requirement is zero, and the test asserts this. reachability.test.ts passes."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/sections/PciBench.tsx lines ~280-287 (slice read-out BenchRows) and line ~301 (<ImagePanel .../>)",
+      "problem": "The live bench screen shows ground truth before the plan is entered, in exam and supervised modes: 'EEM area', 'Lumen area', 'Plaque burden' and 'Calcium here' (arc and thickness) appear as soon as a modality is chosen. I confirmed this in the browser with ostial-lm-ivus in exam mode, where 'Plaque burden 30%' was in the DOM with no plan submitted. ImagePanel is also mounted without lesion/mode, so in exam mode the reason is not required and moving on without a plan is not blocked. The package's tests do not catch this because they render ImagePanel alone and never the section, and they never run a pullback. PciBench.tsx is not in this package's file list (it belongs to pci-bench-imaging-unify and later bench packages). The fix must go through the orchestrator, as an approved edit or a repair package, and should have been reported in outOfScope.",
+      "severity": "critical",
+      "fix": "In src/ui/sections/PciBench.tsx: (1) import useBenchPlanStore from '../bench/PlanForm' and read `const planRec = useBenchPlanStore((s) => s.records[l.id])`; (2) define `const showSlice = step !== \"image\" && step !== \"prep\" && step !== \"stent\" ? true : run.mode === \"guided\" && !!planRec?.submitted;` (design: hidden in supervised and exam, shown in guided after the learner's entry). Wrap the EEM area, Lumen area, Plaque burden and Calcium here BenchRows in `{showSlice && (...)}`. Keep the IntravascularView and LongitudinalView images. (3) Change line ~301 to `<ImagePanel lesion={l} mode={run.mode} modality={modality} onModality={...} pre={pre} next={() => go(\"prep\")} />` so the exam and guided gates apply. Optionally pass `mode={run.mode}` to AssessPanel as well. (4) Add a test, for example src/ui/sections/PciBench.measure.test.ts, that exports and tests the visibility rule (or renders the section after launchBench({scenario:'ostial-lm-ivus', mode:'exam', modality:'IVUS'})) and asserts no /plaque burden/i before submit in exam and supervised, and its presence after submit in guided."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/measure.test.ts src/ui/bench/PlanForm.test.ts src/ui/lab/benchTips.measure.test.ts (3 files, 38 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/lab/benchTips.test.ts src/ui/imaging/imaging.test.ts (3 files, 18 tests passed)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/ui/lab/benchTips.scenario.test.ts (2 files, 22 tests passed)",
+     "Browser (localhost:5173): window.__lab.bench.launch({scenario:'ostial-lm-ivus', start:'image', mode:'exam'}), chose IVUS; DOM contained 'Plaque burden 30%', 'EEM area 20.83 mm\u00b2' with no plan submitted"
+    ],
+    "tsc": "clean: npx tsc -p tsconfig.app.json --noEmit exited 0 with no output; the package files (measure.ts, MeasureTools.tsx, PlanForm.tsx, measure.launch.ts and the tests) are in the program"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (critical: slice read-out visible in exam mode and ImagePanel given no lesion or mode on the bench screen). The finding is correct, and I checked it against the code. In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PciBench.tsx, lines 272-279 render the EEM area, Lumen area, Plaque burden and Calcium here rows whenever a frame and modality exist, whatever the step or mode. Line 301 renders <ImagePanel modality onModality pre next /> with no lesion or mode. ImagePanel already falls back to finding the lesion from `pre`. It has no way to learn the run's mode, so needReason, the 'Enter the plan first' block and the guided comparison are unreachable in the app. I did not apply it because every part of the fix is in PciBench.tsx. That file is outside this package's file list and is owned by pci-bench-imaging-unify, with pci-bench-bifurcation listing it next. No change inside the listed files can hide DOM rendered by the parent. The orchestrator should add PciBench.tsx to this package, or schedule a repair package with the change described below."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/measure.test.ts src/ui/bench/PlanForm.test.ts src/ui/lab/benchTips.measure.test.ts (3 files, 38 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I made no edits. The one finding is valid, but it can only be fixed in src/ui/sections/PciBench.tsx, which is out of scope for this package. Required change, for the owner or a repair package:\n(1) Line ~301: render <ImagePanel lesion={l} mode={run.mode} modality={modality} onModality={...} pre={pre} next={() => go(\"prep\")} />.\n(2) Import useBenchPlanStore from \"../bench/PlanForm\" and read const planRec = useBenchPlanStore((s) => s.records[l.id]). Compute const showSlice = step === \"image\" ? run.mode === \"guided\" && !!planRec?.submitted : run.mode === \"guided\" || !!result. The intent is that in supervised, independent and exam modes the finding rows stay hidden until the plan is entered or the stent is deployed.\n(3) Wrap the EEM area, Lumen area, Plaque burden and Calcium here BenchRows (lines ~273-276) in {showSlice && ...}. Keep the Stent area and Strut-to-wall rows after deploy.\n(4) Add src/ui/sections/PciBench.measure.test.ts. It should SSR-render PciBench after launchBench({scenario:'focal-lad',start:'image',modality:'IVUS',mode:'exam'}), or drive the launch store, and assert that /plaque burden/i is absent before submit.\nRelated gap in the same file: doDeploy, doPost and clearPost call deploy() without the new options argument. The bench screen therefore never records the OCT imaging contrast or passes the plan to deploy, so the debrief's imaging-contrast line will read zero in the app. That wiring also belongs in PciBench.tsx."
+   }
+  ]
+ }
+}

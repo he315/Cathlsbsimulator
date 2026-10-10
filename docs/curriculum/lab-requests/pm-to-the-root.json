@@ -1,0 +1,158 @@
+[
+  {
+    "lab": "diagnostic",
+    "what": "Table set-up phase with an air-in-line fault: before the first catheter is connected, the manifold may contain a bubble (contrast port, pressure line, transducer dome or syringe) or a loose connection. The learner inspects the manifold, the lines and the syringe, flushes, runs contrast through, confirms the transducer is calibrated and zeroed through the distal port, and only then connects. A missed bubble produces coronary air embolism on the first injection (chest pain, inferior ST elevation, slow flow, a visible bubble), managed with 100% oxygen, aspiration through the catheter and a coronary wire through the bubbles.",
+    "learnerDoes": "Inspects and clears the manifold before the first connection, and again after each catheter has crossed the aorta; refuses to inject with any air in the system.",
+    "success": "The fault is found and cleared before any injection in every run; if missed, the air embolism is recognised and the first three treatment actions are chosen.",
+    "tips": [
+      "diag-root-manifold-ready",
+      "diag-root-air-in-line"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-table"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "access",
+    "what": "Sheath preparation step after insertion (femoral and radial): aspirate 3–4 mL from the side arm and discard it, then flush with a separate syringe of heparinised saline; repeat before a guide catheter goes in. Flushing first (without aspirating) should be scored as an error, and a sheath left unaspirated before a guide can deliver clot to the catheter (the catheter then fails to aspirate in the root).",
+    "learnerDoes": "Aspirates, discards and flushes the sheath with a second syringe before the first catheter and before each guide.",
+    "success": "Correct order every time; no clot reaches a catheter.",
+    "tips": [
+      "access-root-sheath-aspirate-flush"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-table",
+      "pm-to-the-root-advance"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "access",
+    "what": "Wire choice at the needle: offering a polymer-jacketed hydrophilic wire through the access needle should trigger a caution (jacket can shear off on withdrawal); a standard or narrow-J wire is accepted.",
+    "learnerDoes": "Chooses an appropriate access wire and keeps hydrophilic wires for use through a sheath or catheter.",
+    "success": "No hydrophilic wire is passed through the needle.",
+    "tips": [
+      "access-root-no-hydrophilic-through-needle"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-table"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Wire-led advancement from sheath to root: the catheter can only be advanced safely when the 0.035 or 0.038 inch J-wire tip is ahead of the catheter tip; advancing the catheter beyond the wire, or pushing against resistance, raises a peripheral dissection risk. The wire tip can prolapse through the valve into the left ventricle and trigger ventricular ectopy until it is pulled back into the root. After wire removal, the learner aspirates 2–3 mL (with an optional view of the gauze showing clean blood, clot or iridescent plaque), connects while the manifold is flushing, draws back, discards air or debris and fills the catheter with contrast to its tip.",
+    "learnerDoes": "Keeps the wire leading, keeps it out of the ventricle, then aspirates, connects wet and fills to the tip before reading the trace.",
+    "success": "No catheter advancement without a leading wire; ectopy from the wire is corrected by withdrawing it; no connection without prior aspiration or back-bleeding.",
+    "tips": [
+      "diag-root-wire-leads",
+      "diag-root-wire-out-of-ventricle",
+      "diag-root-backbleed-guide",
+      "diag-aspirate-before-engaging"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-advance"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Extend the 'Tortuous radial route' case so that the radial loop actually stops a standard J-wire and then the catheter. Provide the resistance algorithm as actions: transduce the sheath side arm (waveform present, or absent with spasm or a subintimal sheath), advance a JR4 or multipurpose catheter to just below the resistance, inject to show the loop; then choose a wire (0.014 inch coronary, polymer-jacketed hydrophilic or narrow-J) with the catheter close behind. If the catheter catches at the loop, offer balloon-assisted tracking (compliant balloon 1:1 with the catheter, half out of the tip, 3–6 atm, advanced as a unit). Straightening the loop shows pseudolesions that must not be called disease. Forcing the wire or catheter produces a forearm branch perforation that a catheter advanced across it can seal.",
+    "learnerDoes": "Follows transduce, image, re-wire, balloon-assisted tracking, and recognises pseudolesions; changes access only if crossing fails.",
+    "success": "Root reached without forcing; no perforation; pseudolesions correctly identified; total contrast and time within a target.",
+    "tips": [
+      "diag-root-resistance-transduce-image",
+      "diag-root-balloon-assisted-tracking"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-radial"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Subclavian and arch variants from the right radial: (a) tortuous subclavian where the wire repeatedly enters the descending aorta until the patient takes a deep breath as the wire leaves the subclavian; rotating the catheter without a wire inside risks a kink; exchanges should be made over a 300 cm wire with its tip in the root, with an optional long sheath only when the radial artery is large enough for it (no routine upsizing in the arm); (b) arteria lusoria (right subclavian from the distal arch), where the correct move is the left radial or femoral artery, and, in a STEMI scenario with a reperfusion clock, prompt femoral conversion.",
+    "learnerDoes": "Uses the deep breath, keeps a wire inside while manipulating, exchanges over a long wire, and recognises when to change artery.",
+    "success": "Ascending aorta reached in the tortuous variant without a kink; in the lusoria STEMI variant, access changed within a set time.",
+    "tips": [
+      "diag-root-descending-aorta-breath",
+      "diag-root-lusoria-change-artery",
+      "diag-radial-exchange-long-wire"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-radial"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Femoral route variants: iliac tortuosity (catheter tip stops following the hub, kink risk), severe external iliac stenosis, an old iliac stent, an abdominal aortic aneurysm (wire loops back or deviates laterally) and a very tall patient whose 100 cm guide barely reaches the root. Actions: transduce the sheath (no waveform suggests a subintimal sheath: change access), image from just below the obstacle, change wire (polymer-jacketed, hybrid stiff-body with jacketed tip, soft-tip), choose sheath length (10, 25 or 45 cm, shown with tip position), parallel 4 Fr sheath with a stiff 0.035 inch wire, balloon-assisted tracking, 125 cm guide (with a device-length warning) or a guide extension. Placing an iliac stent before PCI should risk stent dislodgement by the guide. The long-sheath and aneurysm tips should only appear once the scenario has raised iliac resistance or tortuosity; the lab needs an event for this (for example 'iliac-tortuosity' or 'wire-resistance' in LAB_EVENTS), which does not exist yet.",
+    "learnerDoes": "Works through the femoral wire and catheter algorithms and chooses a long sheath across the problem segment.",
+    "success": "Root reached with no dissection, perforation or kink; long sheath passes any iliac stent; no new iliac stent before the PCI.",
+    "tips": [
+      "access-root-femoral-no-waveform",
+      "access-root-iliac-long-sheath",
+      "diag-root-iliac-kink-long-sheath",
+      "access-root-aneurysm-suspect"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-femoral"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Catheter choice debrief: before each case the learner states the access route and picks left and right catheters (and, for PCI, a guide) from the full set including Amplatz and multipurpose shapes; the debrief compares the choice with the route and root size (JL4 femoral or left radial, JL3.5 or universal from the right radial, JL5/JL6 for dilated roots or very tall patients, AL/AR for an anterior RCA in a dilated root, AL1/Ikari Right/3D Right rather than JR for radial RCA PCI) and records the catheters that worked for the next study.",
+    "learnerDoes": "Selects catheters before starting and documents which worked.",
+    "success": "First-choice catheter appropriate for route and root in most cases; documentation completed.",
+    "tips": [
+      "diag-root-match-curve-to-route",
+      "diag-root-previous-catheters",
+      "diag-dilated-root-sizing"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-choice"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Failure to aspirate after the catheter reaches the root: causes drawn at random from tip against the aortic wall, tip next to a significant ostial lesion, catheter too large for the artery, kinked catheter, or catheter plugged with thrombus or plaque. The pressure trace is damped or absent until the tip is freed. Pulling hard on the syringe against a wedged or blocked catheter draws air in through the Y-connector valve, which must then be cleared before any injection. Injecting or flushing with a damped or absent trace, or passing a wire into a plugged catheter, causes embolisation (stroke or coronary embolism).",
+    "learnerDoes": "Withdraws a few millimetres and aspirates again, watches for the waveform to return, screens the whole catheter for a kink, and removes a plugged catheter under constant suction without a wire or flush, then aspirates the sheath; changes or reshapes the catheter when it is too large or sits on an ostial lesion.",
+    "success": "No injection or flush with a damped or absent waveform; no air drawn in, or all air cleared before the next injection; a plugged catheter removed under suction.",
+    "tips": [
+      "diag-aspirate-before-engaging",
+      "diag-root-backbleed-guide",
+      "diag-root-air-in-line"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-advance"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Pre-puncture checklist step before access (Oxford chapter 1): venous access in place, continuous ECG of good quality, pulse oximetry showing SaO2 above 96% on room air (supplemental oxygen for high-risk or heavily sedated patients), lead protection and sterile scrub suit, aseptic preparation and draping, sterile trolley complete, manifold flushed and contrast run through without bubbles, transducer calibrated.",
+    "learnerDoes": "Confirms each item before the first puncture.",
+    "success": "Every item checked before the needle is picked up.",
+    "tips": [
+      "diag-root-manifold-ready"
+    ],
+    "lessonIds": [
+      "pm-to-the-root-table"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "procedure",
+    "what": "Embolic stroke on the table after a catheter was flushed without aspiration: a new focal deficit (speech, arm weakness). Correct actions: stop the procedure, call the stroke team, emergency non-contrast head CT with CT angiography; the heparin already given is shown as a factor in thrombolysis eligibility.",
+    "learnerDoes": "Stops the case and starts the stroke pathway at once.",
+    "success": "Stroke pathway started without completing the coronary study first.",
+    "tips": [],
+    "lessonIds": [
+      "pm-to-the-root-advance"
+    ],
+    "priority": "P3"
+  }
+]

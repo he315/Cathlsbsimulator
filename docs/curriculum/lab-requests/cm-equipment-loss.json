@@ -1,0 +1,116 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A stent-loss event in the calcified mid-RCA scenario. When the learner pushes a stent against an under-prepared lesion (balloon still waisted) or past a guide extension collar against resistance, the lab raises 'stent-uncrossable'; if the learner then pulls the stent back through a non-coaxial guide or keeps pushing, the stent deforms and is stripped off the balloon ('stent-loss'). The lost stent is drawn on fluoroscopy at its position (proximal RCA, ostium, aortic root or iliac), thin and faint, with an option to locate it with IVUS. State variables: location (coronary critical, coronary non-critical, aorta, peripheral non-critical, peripheral critical), wire through the stent (yes/no), stent deformed (yes/no).",
+    "learnerDoes": "Stops, keeps the wire, locates the stent (two views or IVUS), states whether it must be retrieved and whether the wire is through it, then chooses retrieval (small balloon, snare, wire twirling), deployment (small balloon first, then larger), crushing (second wire round the outside, balloon, covering stent) or leaving it.",
+    "success": "Wire kept through the stent; the ending matches Brilakis Fig. 27.2 for the location and wire status (retrieval for left main or major bifurcation; deploy or crush for a non-critical coronary segment; leave in a non-critical peripheral site); with the small-balloon technique, a deformed stent that will not enter the guide is removed with balloon and guide together; no crush in the left main before retrieval has been tried and failed.",
+    "tips": [
+      "pci-stentloss-prepare-first",
+      "pci-stentloss-guide-extension-collar",
+      "pci-stentloss-freeze-wire",
+      "pci-stentloss-small-balloon",
+      "pci-stentloss-crush-check-struts"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-stent"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Retrieval devices for the stent-loss and entrapment events: a coronary snare (2–4 mm loops, through the guide or a microcatheter), a large snare (27–45 or 18–30 mm, for example the 18–30 mm three-loop snare) through a JR4 or multipurpose diagnostic or guide catheter, with a second arterial access offered when the first is occupied, additional 0.014 inch wires for twirling, small low-profile balloons, and a guide extension. Each snare has a loading step (collapsing tool kept or discarded) and a closing step (advance the catheter over the held snare wire, or draw the loop into the catheter). A 'homemade snare' option (exchange-length wire looped back into a multipurpose catheter, or a wire loop trapped by a balloon at 8–12 atm in a guide extension) is available when the shelf has no snare.",
+    "learnerDoes": "Chooses a snare sized for the space the device is in, loads it, opens it beside the device, closes it by moving the catheter, and withdraws catheter, snare and device as one; builds a homemade snare when told none is available.",
+    "success": "Coronary loop in a coronary artery and large three-loop snare in the aorta; collapsing tool kept; device captured against the catheter tip and withdrawn as a unit; vessel imaged after retrieval.",
+    "tips": [
+      "pci-snare-size-for-space",
+      "pci-snare-close-and-withdraw",
+      "pci-snare-homemade"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-snares",
+      "cm-equipment-loss-stent"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A bifurcation scenario (LAD-diagonal, provisional stenting) with a jailed side-branch wire that becomes entrapped on removal ('equipment-entrapment'). Traction force is tracked: a hard pull dives the guide (risk of guide dissection) and, above a threshold, fractures the wire; the fracture is either clean or unravelled, and an unravelled coil can extend back through the left main into the aorta. IVUS reveals which. Before jailing, the lab records whether the wire tip was straight, whether the radiopaque segment lies under the stent, and the jailed length.",
+    "learnerDoes": "Jails with a straight tip, away from the radiopaque segment, over a short length; when the wire sticks, uses gentle traction only, then a microcatheter or balloon to the trap, then a balloon inflated on the wire, then a second wire and balloon; repeats POT; after a fracture, images with IVUS and follows the fracture branch (stent over, twirl, snare, leave, or surgery).",
+    "success": "No hard pull; steps taken in Brilakis's order; POT repeated after balloon release; after a fracture, IVUS before any retrieval attempt, and no attempt to pull out an unravelled coil (surgical referral if it reaches the aorta or left main).",
+    "tips": [
+      "pci-wire-trapped-no-hard-pull",
+      "pci-wire-fracture-ivus-first",
+      "pci-wire-tip-restrained"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-wire"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Balloon events in the calcified mid-RCA scenario: balloon rupture and entrapment after very high-pressure inflation; a balloon that will not deflate (recoil, strangulation in the guide or hypotube damage); a kinked shaft (small or large) after forceful advancement; and a shaft fracture with or without part of the fragment left inside the guide (the learner can compare the retrieved piece with an intact catheter).",
+    "learnerDoes": "For entrapment: rotates and rocks the balloon, traps it with a second balloon at 20 atm or more inside the guide and withdraws everything, then a guide extension over the cut shaft, then a snare. For failure to deflate: another indeflator with saline, withdrawal while inflated or bursting (only if smaller than the vessel), then puncture through an over-the-wire balloon at 2–4 atm or a guide extension. For a kink: never straightens it, and replaces the kinked balloon (a small kink may be tolerated; a large one always means a new catheter). For fracture: traps a fragment inside the guide, otherwise snares it, then wire and balloon around it.",
+    "success": "Sequence follows Brilakis Fig. 27.17; no bursting of a balloon as large as the vessel; no straightening of a kinked shaft; trapping balloon kept inflated while the assembly is withdrawn.",
+    "tips": [
+      "pci-balloon-trap-in-guide",
+      "pci-balloon-no-deflate",
+      "pci-balloon-shaft-kink"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-balloon-microcath"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Once microcatheters exist in the PCI lab: a rotation counter and wire-in-lumen state for the microcatheter. Over-rotation (more than 10 turns without unwinding, or more than 20 for the stranded-steel plaque modification type), manipulation without a wire inside, or aggressive pushing of a soft-tip microcatheter through calcium raises 'equipment-entrapment' with a trapped catheter or a broken-off tip; in the CTO scenario, antegrade equipment meeting the retrograde microcatheter tip over an externalised wire causes interlocking.",
+    "learnerDoes": "Keeps a wire inside, limits turns and lets the catheter unwind, avoids pushing soft tips through calcium; if trapped, retrieves with a snare, a guide extension and trapping inside the guide, or a second wire and balloon; for a broken tip, stents over it.",
+    "success": "No over-rotation; trapped microcatheter retrieved with the balloon-fragment tools; broken tip covered with a stent rather than chased.",
+    "tips": [
+      "pci-microcath-wire-inside-limit-turns",
+      "pci-microcath-trapped-retrieve"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-balloon-microcath"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "A guide extension bench exercise: stent delivery through the extension collar with the push rod either under a towel or free (wire wrap), the option to load the stent into the extension outside the body, and the collar position relative to the guide tip; a stent forced at the collar deforms. Includes a trapping exercise showing that with a standard extension the trapping balloon must sit proximal to the collar and the device must be pulled back to it, compared with an extension that carries its own trapping balloon.",
+    "learnerDoes": "Delivers a stent through an extension without forcing it, corrects wire wrap by removing and reinserting the extension, keeps the collar inside the guide, and sets up trapping correctly with each type of extension.",
+    "success": "No stent deformed at the collar; trapping balloon placed proximal to the collar with a standard extension.",
+    "tips": [
+      "pci-stentloss-guide-extension-collar"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-stent",
+      "cm-equipment-loss-balloon-microcath"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Finer complication events for tip triggers. Today the PCI lab has one 'equipment-entrapment' event for every trapped device and one 'stent-loss' event, so the wire-fracture, trapped-balloon and failure-to-deflate tips, and all six stent-loss tips, would appear together. Requested events: 'wire-fracture' (a wire has broken, raised after a hard pull or over-rotation), 'balloon-entrapment' (a balloon or its fragment is held in the artery), 'balloon-no-deflate' (indeflator suction does not empty the balloon), 'stent-loss-wire-out' (the wire is no longer through the lost stent) and 'snare-in-use' (a snare has been selected). When they exist, pci-wire-fracture-ivus-first moves to 'wire-fracture', pci-balloon-trap-in-guide to 'balloon-entrapment', pci-balloon-no-deflate to 'balloon-no-deflate', pci-stentloss-crush-check-struts to 'stent-loss-wire-out', and pci-snare-size-for-space, pci-snare-close-and-withdraw and pci-snare-homemade to 'snare-in-use'; pci-stentloss-freeze-wire stays as the first tip on 'stent-loss'.",
+    "learnerDoes": "Sees only the tip that matches the device and state in front of them.",
+    "success": "A trapped wire never shows the fracture or balloon tips; a lost stent with the wire still through it shows the freeze-wire and small-balloon tips, not the crushing or snare tips.",
+    "tips": [
+      "pci-wire-fracture-ivus-first",
+      "pci-balloon-trap-in-guide",
+      "pci-balloon-no-deflate",
+      "pci-stentloss-crush-check-struts",
+      "pci-snare-size-for-space",
+      "pci-snare-close-and-withdraw",
+      "pci-snare-homemade",
+      "pci-stentloss-freeze-wire"
+    ],
+    "lessonIds": [
+      "cm-equipment-loss-wire",
+      "cm-equipment-loss-balloon-microcath",
+      "cm-equipment-loss-stent",
+      "cm-equipment-loss-snares"
+    ],
+    "priority": "P2"
+  }
+]

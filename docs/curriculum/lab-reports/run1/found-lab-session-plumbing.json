@@ -1,0 +1,260 @@
+{
+ "package": "found-lab-session-plumbing",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built found-lab-session-plumbing. Before editing I copied the three listed files that already existed (useLabTips.ts, progress/types.ts, useProgressStore.ts) into datasets/tmp/wp-snapshots/found-lab-session-plumbing/ and created the .started marker there.\n\nWhat was built:\n- src/ui/lab/eventLog.ts: an EventLog that raises events with hold windows, can hold events for the whole run and reports active(now) in lab time. Default hold TRANSIENT_HOLD_S = 30 s (MODEL PARAMETER), with per-event overrides. Each onset is written once as 'lab.event' telemetry through an optional sink (RecordedSession.event fits) and kept in history(). Reading never changes the log, so it is safe during a render.\n- src/ui/lab/patientEvents.ts: patientEvents(vitals, prev, observations, options) and a PatientEventAdapter class. Together they turn PatientEngine vitals into the 16 patient events the plan lists (PATIENT_EVENTS), raised into an EventLog. They read only what the operator could see. Low ACT needs a measured ACT, high LVEDP and oedema need the LV trace on the monitor, and an effusion needs an echo. Tamponade and VF are raised at once. Every threshold carries a source or is marked MODEL PARAMETER:\n  - LVEDP 12 and 30 mmHg: Oxford ch 4, lesson hb-cardiac-catheterisation-lhc.\n  - ACT goals: lesson pm-antithrombotics-heparin. The default is 250 s (Oxford ch 8 and Brilakis 3.4 HemoTec); ACT_GOALS_S also keeps Brilakis's Hemochron 300 s and the 200 s goal with a GP IIb/IIIa inhibitor or cangrelor.\n  - Contrast at 80% of the ceiling: LAB_BUILD_PLAN section 4.\n  - MAP 65 mmHg held 10 s and HR 50: from the plan, marked MODEL PARAMETER.\n- src/ui/lab/useLabTips.ts: new TipPolicy, tipsVisible, selectTips (pure), useTipsModule and useContextTips(ctx | ctxs, policy), which uses tipsForAll when given several contexts. useDiagnosticTips now delegates to useContextTips; loadTips and ENGAGE_FAIL_S are unchanged.\n- src/ui/lab/LabTipsPanel.tsx: a collapsible Clinical Graphite panel with 'Ask for a tip', a 'Read the lesson' link through openLesson, nothing in exams, and a row of active events that appears in DEV builds only.\n- src/ui/lab/LabModeBar.tsx: a mode chip, plus an 'Ask for help' button in supervised and independent practice.\n- src/ui/lab/labRun.ts: useLabRun(sim, caseId, launchMode?, opts) and a framework-free LabRun class. Also runCaseId/parseRunCaseId for '<sim>:<scenario>[~variant]', LAB_OF_SIM, sourceForSim (the old sim key, e.g. pci-<scenario>[~variant] or full-case) and resolveRunPolicy. The diagnostic sims use resolveLabPolicy; the others use the level in force on the lab's EPA or a matching active policy; a launch mode overrides either. askHelp counts help requests as hints only when the mode's hints are costed, and does nothing in exams. decide(rec) adds to the ledger. finish() writes exactly one row through useProgressStore.logSession with lab, source, caseId, scenarioId, mode, decisions, metrics and hints; later calls return the same row.\n- src/mentor/ledger.ts: the DecisionRecord type from the plan, plus DecisionLedger (a repeated id replaces the earlier answer; capped at 60 decisions per run), cleanDecision, isDecisionRecord and summariseLedger.\n- src/progress/types.ts: LogbookEntry and LogSessionInput gain optional scenarioId, decisions and metrics.\n- src/state/useProgressStore.ts: logSession now copies those fields onto the row. It also grades a skill card armed on the row's source (the old sim key), as recordSim did, so the PCI lab keeps its card grading when it moves to useLabRun. recordSim and the other APIs are unchanged.\n- src/dev/labHooks.ts: registerLabHook(name, { context, tips, state, step?, events? }) installs window.__lab[name] in DEV builds and installs nothing otherwise. The diagnostic lab already sets window.__lab to its session in DEV and xrayCapture relies on that. So I made window.__lab an accessor that re-adds the hooks to whatever object is assigned to it, never covering the session's own properties; window.__labHooks always lists every hook.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/eventLog.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/eventLog.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/patientEvents.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/patientEvents.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/useLabTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/LabTipsPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/LabModeBar.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/labRun.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/labRun.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/ledger.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/progress/types.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useProgressStore.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/labHooks.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/useContextTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/labHooks.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/ledger.test.ts"
+    ],
+    "testsAdded": [
+     "src/ui/lab/eventLog.test.ts (10 tests)",
+     "src/ui/lab/patientEvents.test.ts (14 tests)",
+     "src/ui/lab/labRun.test.ts (14 tests)",
+     "src/ui/lab/useContextTips.test.ts (6 tests: diagnostic drawer unchanged, plus the tips of the covered requests)",
+     "src/dev/labHooks.test.ts (6 tests)",
+     "src/mentor/ledger.test.ts (3 tests)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/eventLog.test.ts src/ui/lab/patientEvents.test.ts: 24 passed",
+     "npx vitest run src/ui/lab/labRun.test.ts: 14 passed",
+     "npx vitest run src/ui/lab/useContextTips.test.ts src/dev/labHooks.test.ts src/mentor/ledger.test.ts: 12 passed; useContextTips.test.ts re-run after 3 tests were added: 6 passed",
+     "npx vitest run src/progress/progress.test.ts src/state/store.test.ts src/state/useLabLaunchStore.test.ts: 63 passed",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/mentor/mentor.test.ts: 76 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/tips.test.ts: 28 passed, 1 skipped"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0), test files included.",
+    "acceptance": [
+     {
+      "criterion": "eventLog.test.ts: an event raised with holdS 60 is active at 59 s and gone at 61 s of lab time; default hold is 30 s",
+      "status": "met",
+      "evidence": "eventLog.test.ts tests 'an event raised with holdS 60 is active at 59 s and gone at 61 s of lab time' and 'the default hold is 30 s' (TRANSIENT_HOLD_S === 30; raised at 100 s, active at 130 s, gone at 130.1 s) pass."
+     },
+     {
+      "criterion": "patientEvents.test.ts: MAP 60 for 9 s raises nothing, for 11 s raises hypotension; HR 45 raises bradycardia",
+      "status": "met",
+      "evidence": "patientEvents.test.ts tests 'MAP 60 for 9 s raises nothing, for 11 s raises hypotension' and 'HR 45 raises bradycardia; HR 55 does not' pass. Further tests cover the rhythm events, the gated LVEDP, ACT and effusion events, tamponade, contrast, vocabulary names and a real PatientEngine run (VF is raised)."
+     },
+     {
+      "criterion": "labRun.test.ts: finish() writes exactly one logbook row with mode, caseId and decisions; exam mode returns no tips; supervised shows tips only after askHelp()",
+      "status": "met",
+      "evidence": "labRun.test.ts drives the real useProgressStore. Calling finish() twice adds one row with mode 'supervised', caseId 'angio-pci:lad-focal', scenarioId, source 'pci-lad-focal', two decisions and finite metrics. 'exam mode returns no tips, and offers no help' passes (askHelp returns null; tips empty for one or several contexts). 'supervised shows tips only after askHelp()' passes (empty before; equal to tipsFor(ctx, 5) after; hints = 1)."
+     },
+     {
+      "criterion": "The diagnostic lab's tips drawer behaves as before (useDiagnosticTips now delegates to useContextTips)",
+      "status": "met",
+      "evidence": "useDiagnosticTips now calls useContextTips(context, { mode, helpAskedAt }, 5) with its context code unchanged. useContextTips.test.ts compares selectTips with a copy of the old visibility and tipsFor(context, 5) rule over 10 diagnostic contexts x 7 mode and help combinations: identical. lab.test.ts and integration.test.ts (which render the lab) pass. I did not check the drawer in a browser."
+     },
+     {
+      "criterion": "browser: window.__lab is defined in DEV and absent in a production build",
+      "status": "needs-browser",
+      "evidence": "registerLabHook installs only when import.meta.env.DEV is true; Vite replaces that with false in production. labHooks.test.ts shows nothing is installed when disabled, the hooks are installed under vitest (DEV), and they survive the diagnostic lab assigning its session to __lab. No lab calls registerLabHook yet (later packages wire them), and no production build was run, so the browser check is still open."
+     }
+    ],
+    "outOfScope": [
+     "The patient-event thresholds are marked MODEL PARAMETER in code comments (the convention in docs/realism/facts/S9.md). A docs/realism/facts entry listing them (hypotension MAP 65 mmHg held 10 s, HR 50, SpO2 90, chest pain 3/10, breathlessness 0.5, effusion 20 mL, tamponade 100 mL with a low MAP, contrast at 80% of the MACD, VF and VT hold 2 s, default hold 30 s) would need a facts file this package does not own.",
+     "No lab is wired to the new plumbing yet; the lab packages own their own files. Simulator.tsx, AngioPci.tsx, the dev labs, TaviLab, PericardioLab and caseSession still use their own tip and logging calls. The covered requests (hb-tavi#0, cm-perforation#12, hb-additional-procedures#8) become visible in those labs only when their packages call useContextTips, LabTipsPanel, useLabRun and PatientEventAdapter.",
+     "Bleeding, named in the plan's learner line, is not among the patient events. Vitals do not report blood loss (lostMl is private engine state). Adding it needs a change to src/simulation/patient/engine.ts.",
+     "LabPolicy.source in src/ui/lab/visibility.ts (not mine) has no 'launch' value, so RunPolicy carries a separate launchMode field.",
+     "Logbook CSV export (CSV_COLUMNS in src/progress/logbook.ts, not mine) does not include decisions or metrics; the JSON export does."
+    ],
+    "notes": "- Files changed outside my list: src/dev/xrayCapture.ts changed on disk after my .started marker. I did not edit it; it is probably the realism-baseline package running in the same wave. Reviewers should not attribute it to this package.\n- window.__lab conflict: the diagnostic lab already sets window.__lab to its session in DEV (Simulator.tsx) and xrayCapture.ts relies on that, so a plain registry object would have broken it. labHooks.ts therefore turns window.__lab into an accessor: the session stays what __lab returns, and the named hooks are added to it as non-enumerable properties without covering its own members. window.__labHooks always lists every hook.\n- Data shapes: logbook rows from useLabRun use source = the old sim key, so simKeyEpas still maps the EPAs (tested for pci-lad-focal), and caseId = '<sim>:<scenario>[~variant]'. rowFromSession still turns a non-held-out 'exam' into 'independent', as before.\n- One behaviour change in logSession: a skill card armed on the row's source is now graded. This matches recordSim and affects no current caller (the full case logs with source 'full-case').\n- No ground truth on live screens: patient events come only from what the operator sees or has measured. The only exceptions are the immediate VF and tamponade cues the plan allows, and the active-events row in the tips panel, which appears in DEV builds only."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/lab/labRun.ts LabRun.finish (lines 261-291); src/progress/logbook.ts rowFromSession falls back to labelForKey(s.caseId)",
+      "problem": "Every run without an explicit caseName gets the wrong logbook label. labelForKey('angio-pci:lad-focal') matches the 'angio-' prefix, so the row reads 'Real angiograms: pci:lad-focal drill set'. I confirmed this with vite-node against the real store. Other sims get the raw '<sim>:<scenario>' string. The labRun test never checks caseName.",
+      "severity": "major",
+      "fix": "In LabRun.finish, default the name from the old sim key: `caseName: this.caseName ?? labelForKey(this.source)` (import labelForKey from ../../progress/logbook). That gives 'PCI: lad focal' and the KEY_LABEL names for haemo, tavi and the rest. Add an assertion to labRun.test.ts: `expect(saved.caseName).toBe(labelForKey('pci-lad-focal'))`."
+     },
+     {
+      "where": "src/state/useProgressStore.ts logSession (line ~429) together with rowFromSession in src/progress/logbook.ts (classifyCase(s.caseId), isExamCase(e, s.caseId))",
+      "problem": "rowFromSession classifies the run by its new caseId '<sim>:<scenario>[~variant]', which classifyCase and isExamCase do not recognise. So a held-out PCI exam run through useLabRun in exam mode is downgraded to 'independent'. I confirmed this: runCaseId('angio-pci','lad-focal','X3') with launchMode 'exam' gave run.mode 'exam' and a logged mode of 'independent'. Held-out exams can therefore never count once the PCI lab moves to useLabRun. Diagnostic and full-case runs ('cathlab:<case>', 'procedure:<case>') also lose classifyCase's EPA and rung.",
+      "severity": "major",
+      "fix": "Add an optional `classifyId?: string` to LogSessionInput in src/progress/types.ts. LabRun.finish sets it to this.source when that is a 'pci-\u2026' key, and otherwise to parseRunCaseId(caseId)?.scenario ?? caseId. In logSession, build the row with `rowFromSession({ ...input, caseId: input.classifyId ?? input.caseId })`, then set `row.caseId = input.caseId` before withRunFields. Add a labRun test: a 'pci-<base>~X<n>' variant for which classifyCase(...).exam is true, run in exam mode, must log mode 'exam' and the variant's rung."
+     },
+     {
+      "where": "src/ui/lab/labRun.ts resolveRunPolicy (lines 110-136) and runEpa (line 106)",
+      "problem": "For the diagnostic sims (cathlab, procedure), resolveRunPolicy passes the run-format caseId straight to resolveLabPolicy, which compares it with activePolicy.caseId and calls classifyCase(caseId). Neither matches 'procedure:radial-routine' or 'cathlab:<case>', so a progression-screen launch loses its active policy and the case's EPA. I confirmed that resolveRunPolicy({sim:'procedure', caseId:'procedure:radial-routine'}) returns source 'level' with epa 'diag-study'. runEpa has the same problem: classifyCase(caseId) on a run id never matches. The tests hide this because they pass the raw id 'routine-left' rather than runCaseId('cathlab','routine-left').",
+      "severity": "major",
+      "fix": "Resolve a classification id once: `const scen = parseRunCaseId(i.caseId)?.sim === i.sim ? parseRunCaseId(i.caseId)!.scenario : undefined; const cid = scen ?? i.caseId`. Pass cid to resolveLabPolicy and to classifyCase in runEpa. In the non-diagnostic branch, also accept active.caseId === cid. Add tests that use runCaseId('cathlab','routine-left') with setActivePolicy on 'routine-left' and expect source 'active'."
+     },
+     {
+      "where": "src/ui/lab/patientEvents.ts displayedMap (lines 136-139) and the hypotension and tamponade checks (lines 167-172, 193)",
+      "problem": "Vitals.art is the transduced pressure at the catheter tip (engine.ts: 'depends on zeroing, levelling, damping and tip position'). In the LV, or with a damped, wedged or ventricularised trace, its mean is far below the aortic mean. I confirmed this with the real PatientEngine: tip in the LV, art.mean 61 against a true aortic mean of 116, and 'hypotension' was raised after 15 s. Every LV pressure measurement or damped engagement over 10 s therefore raises a false hypotension event and shows hypotension tips in the diagnostic, haemodynamic and TAVI labs. It can also produce a false tamponade when there is an effusion. A frame with no reading (art null) also restarts the 10 s hold.",
+      "severity": "major",
+      "fix": "Use the arterial line only when it shows an arterial waveform: `const m = (v.tipState === undefined || v.tipState === 'aortic') ? v.art?.mean ?? v.nibp?.mean : v.nibp?.mean`. When no interpretable pressure is available, carry the hold over (`lowMapSince = prev.lowMapSince`) and do not raise. Add tests: tipState 'lv' with art mean 40 for 15 s raises nothing; tipState 'damped' with a cuff mean of 80 raises nothing; the existing 9 s and 11 s case still passes with tipState 'aortic'."
+     },
+     {
+      "where": "src/mentor/ledger.ts cleanDecision / MAX_DECISIONS_PER_RUN; src/state/useProgressStore.ts withRunFields",
+      "problem": "Each logbook row can now hold up to 60 decisions with unbounded label, expected and given strings and an unbounded metrics map, and the logbook keeps LOGBOOK_MAX = 2000 rows in one localStorage key. At 20 decisions of about 300 bytes per run, that is about 12 MB, over the usual 5 MB quota. saveJSON swallows the quota error, so every later progress write would fail without any message.",
+      "severity": "major",
+      "fix": "Bound the stored data. In cleanDecision, truncate id, stage, label, expected and given (for example to 160 characters) and cap tipIds (for example to 8). In withRunFields, keep at most 32 finite metrics. In addRows (or withRunFields), strip `decisions` from all but the most recent N rows (for example 200) before saving. Add a ledger test for the truncation and a store test that the older rows lose their decisions."
+     },
+     {
+      "where": "src/ui/lab/patientEvents.ts line 189 (pulmonary oedema on the clinical picture)",
+      "problem": "The clinical-picture path reads v.lvedp without the lvTrace gate. Ground truth the operator cannot see (the LVEDP while the catheter is not in the LV) decides whether 'pulmonary-oedema' is raised. This contradicts the module's own rule that the LVEDP is read only while the LV trace is on the monitor.",
+      "severity": "minor",
+      "fix": "Gate the clause with `lvTrace &&`, or drop the LVEDP condition and rely on breathlessness plus desaturation. Add a test: dyspnoea 0.8, SpO2 86, lvedp 35, tipState 'aortic' must not raise pulmonary-oedema."
+     },
+     {
+      "where": "src/dev/labHooks.ts install() getter (lines 89-91); acceptance 'window.__lab is defined in DEV and absent in a production build'",
+      "problem": "The browser acceptance criterion is still unverified: no lab calls registerLabHook yet and no production build was checked. Once any hook is registered, window.__lab returns the holder object even when the diagnostic lab is not mounted. xrayCapture's `!w.__lab` guard then no longer detects a missing diagnostic session; the __labStep and __sim guards still catch most cases.",
+      "severity": "minor",
+      "fix": "Make the getter return `base ?? (hooks.size ? holder : undefined)`, and report the browser criterion as open until the first lab package registers a hook. Have that package check window.__lab in the DEV pane and, in a production build, that the bundle contains no '__labHooks' string. Separately, the owner of src/dev/xrayCapture.ts should change the guard to `typeof w.__lab?.startInjection !== 'function'`."
+     },
+     {
+      "where": "src/ui/lab/useContextTips.test.ts and src/ui/lab/labRun.test.ts",
+      "problem": "The tests cover the stated acceptance criteria but miss the defects above. Nothing checks caseName, exam-mode logging of a held-out variant, run-format ids for the diagnostic sims, or a hypotension false positive with a non-aortic tip state. useContextTips is never rendered, so its memo key (JSON.stringify(ctx)) and its re-selection when helpAskedAt changes are untested.",
+      "severity": "minor",
+      "fix": "Add the tests named in the findings above. Also render a small component with useContextTips under react-dom/server, or call the hook through a tiny renderer, to check that tips appear after the policy changes from {supervised, null} to {supervised, 12}."
+     },
+     {
+      "where": "src/ui/lab/patientEvents.ts patientEvents (line 151); src/ui/lab/useLabTips.ts useContextTips (line 91)",
+      "problem": "Small per-update allocations sit on paths called every monitor update or render. patientEvents builds a merged thresholds object on every call, and useContextTips runs JSON.stringify(ctx) on every render of the lab component, which re-renders on simulator store updates.",
+      "severity": "minor",
+      "fix": "In PatientEventAdapter, merge the thresholds once in the constructor and pass them to an internal patientEventsWith(th, \u2026). In useContextTips, use the ctx reference as the memo key when the caller passes a memoised single context, and fall back to JSON.stringify only for arrays (or document that callers must memoise ctx)."
+     },
+     {
+      "where": "src/state/useProgressStore.ts migrateProfile (logbook filter, line ~143)",
+      "problem": "Rows loaded from storage or importJSON keep decisions and metrics without validation. isDecisionRecord is exported but never used, so a malformed import reaches the debrief.",
+      "severity": "minor",
+      "fix": "In migrateProfile, map each row: if `Array.isArray(x.decisions)`, keep `x.decisions.filter(isDecisionRecord).map(cleanDecision)`, otherwise delete it; keep only finite numeric metrics."
+     }
+    ],
+    "verdict": "Changes needed before lab packages build on this. The package is mostly complete and well structured. tsc -p tsconfig.app.json --noEmit is clean. The 6 package test files pass (53 tests), as do the regression files lab.test.ts, integration.test.ts, progress.test.ts and store.test.ts (80 tests). Tip integration is real: the requests hb-tavi#0, cm-perforation#12 and hb-additional-procedures#8 have their named tips asserted in tests. The diagnostic drawer selection is provably unchanged. PatientEngine and the other shared engines are untouched. The thresholds are sourced correctly: LVEDP 3-12 and above 30 mmHg in hb-cardiac-catheterisation-lhc, and the ACT table in pm-antithrombotics-heparin; the rest are labelled MODEL PARAMETER. The UI uses Clinical Graphite classes and British English, and the active-events row is DEV only.\n\nFour correctness defects, each reproduced with vite-node, would surface as soon as a lab adopts useLabRun or PatientEventAdapter. (1) Run rows are named 'Real angiograms: pci:lad-focal drill set'. (2) Held-out PCI exam runs are logged as 'independent', because rowFromSession classifies the new '<sim>:<scenario>' caseId. (3) resolveRunPolicy misses the active policy and the case EPA for cathlab and procedure run ids. (4) Hypotension is raised whenever the catheter sits in the LV or the trace is damped, because Vitals.art is the tip pressure. Decisions stored on up to 2000 rows also risk a silent localStorage quota failure.\n\nThe browser acceptance criterion (window.__lab in DEV, absent in production) is still unverified because no lab registers a hook yet. The only out-of-list file changed after .started is src/dev/xrayCapture.ts. It is plausibly another package's (realism-baseline), as the builder reported, and is not attributed to this package."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 10,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/useContextTips.test.ts (7 passed)",
+     "npx vitest run src/ui/lab/patientEvents.test.ts src/mentor/ledger.test.ts src/dev/labHooks.test.ts src/ui/lab/eventLog.test.ts (42 passed)",
+     "npx vitest run src/ui/lab/labRun.test.ts src/state/progressRunFields.test.ts (21 passed; labRun rerun after the last edit, 18 passed)",
+     "npx vitest run src/state/store.test.ts src/progress/progress.test.ts (59 passed, existing tests that cover logSession and migrateProfile)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (run after the final edit)",
+    "notes": "I checked all 10 findings against the code and applied each one. Edits stayed inside the package's files, plus one new test file: src/state/progressRunFields.test.ts.\n\n1. caseName (major). LabRun now always sets caseName. A diagnostic run uses the case's own name (caseFor). A PCI run uses labelForKey(source), so it reads 'PCI: lad focal'. Any other run uses the lab's label plus the scenario, e.g. 'Haemodynamics lab: aortic stenosis'. A small LAB_NAME map in labRun.ts covers cathlab, procedure, views and angio-real, which have no KEY_LABEL entry. The run id never reaches labelForKey. Tests were added.\n\n2. Exam and classification (major). LogSessionInput gains classifyId?, which is not stored on the row. A new export, catalogueId(sim, caseId, source), returns the PCI variant key (the source) for angio-pci and the text after '<sim>:' for every other sim. LabRun.finish passes it as classifyId. logSession builds the row with rowFromSession using the classify id, then puts the run id back as caseId. So the EPA, rung, exam status and default name come from the catalogue id. logSession also closes a pending exam that was registered on the catalogue id. addRows only matches row.caseId, so a diagnostic exam started by Challenge would otherwise never close. Tests: a held-out PCI '~X' variant logs mode 'exam' with its rung and counts in examResults. A diagnostic exam case run as 'cathlab:<id>' logs 'exam' and closes its pending exam.\n\n3. resolveRunPolicy and runEpa (major). Both now resolve the catalogue id. When no source is given, the default comes from the run id's scenario and variant. The diagnostic branch passes the catalogue id to resolveLabPolicy, and an active policy set on the run id itself is matched too. The other branch accepts an active caseId equal to the run id, the catalogue id or the source. runEpa takes an optional sim and resolves run ids itself. Tests use runCaseId('cathlab', <ladder case>) and expect source 'active' and the right EPA.\n\n4. Hypotension from a non-arterial trace (major). displayedMap reads the arterial line only when tipState is 'aortic' or not reported; otherwise it reads the cuff. When no pressure can be read, the hold carries over and nothing is raised. Tamponade uses the same MAP. Tests: LV tip at mean 40 for 15 s raises nothing. A damped trace with a cuff mean of 80 raises nothing. A wedged trace with a low cuff raises hypotension. Tip in the LV with an effusion and a normal cuff gives no tamponade. A null frame carries the hold. The real PatientEngine with the tip in the LV raises no hypotension. The 9 s / 11 s test passes with tipState 'aortic'.\n\n5. Storage bounds (major). cleanDecision cuts id, stage and lessonId to 80 characters, label, expected and given to 160 (ending in an ellipsis), and keeps at most 8 tipIds. Rows keep at most 32 finite metrics, with names up to 64 characters. Only the newest 200 rows keep their decisions; addRows and migrateProfile both strip older ones. These limits are app storage bounds, not clinical values. Tests were added in ledger.test.ts and the new store test.\n\n6. Oedema gate (minor). The clinical-picture route to pulmonary-oedema now needs the LV trace. Test: dyspnoea 0.8, SpO2 86, LVEDP 35, tip in the aorta raises only desaturation.\n\n7. labHooks getter (minor, partly done). The getter now returns `base ?? (hooks.size ? holder : undefined)`. Removing a hook also removes it from the holder, which was previously left stale. Tests were added. The browser criterion (window.__lab defined in DEV and absent in a production build) is still unverified, because no lab registers a hook yet. Out of scope: the xrayCapture guard in src/dev/xrayCapture.ts should become `typeof w.__lab?.startInjection !== 'function'`, since window.__lab still returns the holder whenever a hook is registered.\n\n8. Hook not rendered in tests (minor). useContextTips.test.ts now renders the hook through a minimal react-reconciler renderer in the node test environment. It checks that tips appear when the policy changes from {supervised, null} to {supervised, 12}, that an equal new context keeps the same tips array, and that a changed context selects again.\n\n9. Allocations (minor, done differently). PatientEventAdapter merges its thresholds once in the constructor and calls an internal patientEventsWith; patientEvents makes no copy when it gets no overrides. In useContextTips I kept the content key but cached it in a ref by ctx reference. A memoised context is not re-serialised; a new object each render is serialised once. A reference-only key would have run selectTips on every render for callers that do not memoise.\n\n10. Loaded rows (minor). migrateProfile now validates decisions with isDecisionRecord (tightened to check lessonId and tipIds) and cleanDecision, and keeps only finite numeric metrics. Malformed values are removed. Test added.\n\nOne gap I found that the review did not raise, in src/progress/logbook.ts (out of scope): rowFromSession sends lab 'procedure' down the diagnostic route, so a full-case scenario that is not a catalogue case gets no EPAs unless the lab passes epas. It also got none before, through recordSim('full-case'), so this is not a regression.\n\nFiles changed (absolute):\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/labRun.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/patientEvents.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/useLabTips.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/ledger.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/progress/types.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useProgressStore.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/labHooks.ts\n\nTests changed (absolute):\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/labRun.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/patientEvents.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/useContextTips.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/ledger.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/labHooks.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/progressRunFields.test.ts (new)"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-7) at http://localhost:5173. The app restored the Cath lab section, so the diagnostic lab was mounted with window.__lab set to a plain DiagnosticLabSession property.",
+     "Dynamic import in the browser: all eight new or changed modules (eventLog, patientEvents, useLabTips, LabTipsPanel, LabModeBar, labRun, mentor/ledger, dev/labHooks) loaded through Vite without errors, and their exports match the builder's report.",
+     "window.__lab in DEV: labHooksEnabled() returned true. registerLabHook('verify', {...}) turned window.__lab into an accessor that still returns the same session object. __lab.verify.tips(), state() and step(2) worked, and __labHooks listed 'verify'. The session's startInjection, releaseInjection, bolusFor, step and engine.clockState were intact, so xrayCapture's contract holds.",
+     "Lab replacement: assigning a new object to window.__lab kept that object's own 'verify' property (no shadowing). Assigning an empty object re-attached the hook. Restoring the session re-attached it again. A hook named 'engine' did not shadow session.engine but was still listed in __labHooks. Calling the remover took the hook off __lab and __labHooks, and the hook was never an enumerable key on the session.",
+     "__labStep still advanced the diagnostic engine clock after the accessor was installed (t 0 to 1.0 s; the lab was paused while the pane was hidden).",
+     "Diagnostic tips drawer: the lab was in Guided practice. Opening Attending showed the Technique region with two Cath lab tips, each with a 'Read the lesson' button, which is the expected guided behaviour. I did not switch modes in the UI, because that would change the persisted progress the owner's tab shares.",
+     "EventLog in the browser: TRANSIENT_HOLD_S = 30. hypotension with the default hold was active at 29 s and gone at 31 s. bradycardia with holdS 60, re-raised at 1 s, was active at 59 s and gone at 62 s. Telemetry wrote 'lab.event' once per onset (2 entries for 3 raises), and history() held 2 onsets.",
+     "I rendered LabModeBar and LabTipsPanel in a temporary React root using the app's own React, a LabRun ('angio-pci:lad-focal', launchMode supervised) and a stub log, so no store writes. Before askHelp: the chip read 'Supervised practice', the 'Ask for help' and 'Ask for a tip' buttons showed, the placeholder text showed, there were 0 tips, and the DEV 'Events: none' row showed. After clicking Ask for help: 'Tips on', helpAskedAt 5, hints 1, and 3 PCI tips (hypotension bail-out tips), each with 'Read the lesson'. I zoomed in on the Clinical Graphite styling and it looked consistent.",
+     "Exam: LabRun mode 'exam'. askHelp returned null, and tips() returned 0 for one context and for several. The panel rendered nothing, and the bar showed only the 'Exam' chip with no buttons.",
+     "finish(): after three decide() calls (d1 repeated), calling finish twice wrote exactly 1 row and returned the same row both times. The row had mode supervised, caseId 'angio-pci:lad-focal', scenarioId 'lad-focal', source 'pci-lad-focal', lab 'pci', hints 1, decisions [d1:JL4, d2:polymer] (the repeated id replaced the earlier answer), metrics {fluoroS: 300} and score 80 (the second call's values were ignored).",
+     "Guided LabRun with variant '~bifurcation': tips were shown without asking, askHelp counted 0 hints, and source was 'pci-lad-focal~bifurcation'.",
+     "Console: no errors. A dev server HMR full reload, triggered by other packages' edits, cleared my temporary harness before I could unmount it, so nothing was left behind. I closed the tab afterwards.",
+     "Unit tests for the package (6 files, 67 tests) passed with npx vitest run, in 4.8 s.",
+     "Production-build absence of window.__lab: not checked by a build (a build writes dist/). registerLabHook gates on import.meta.env.DEV through the same pattern Simulator.tsx already uses, and labHooks.test.ts shows nothing is installed when disabled."
+    ],
+    "problems": [
+     {
+      "where": "src/dev/labHooks.ts install()",
+      "problem": "Once any hook has been registered, window.__lab stays an accessor permanently. While a hook is registered and no session has been assigned, the getter returns a non-empty holder object. xrayCapture's guard (!w.__lab) would then pass on a page without the diagnostic lab, and only fail later on __labStep or __sim. This does no harm today, because xrayCapture also checks __labStep and __sim, but a later caller testing only window.__lab for 'the diagnostic lab is open' would be misled.",
+      "severity": "minor",
+      "fix": "Document in the labHooks header that window.__lab may be a hook holder, not a DiagnosticLabSession, and that callers needing the session should check for a session method (e.g. typeof __lab.startInjection === 'function'). Alternatively, in a later package, have xrayCapture check that method instead of the truthiness of __lab."
+     },
+     {
+      "where": "src/dev/labHooks.ts attach()",
+      "problem": "A hook whose name matches a property of the diagnostic session (e.g. 'engine', 'run', 'table', 'contrast', 'crew') is silently left off window.__lab and is reachable only through window.__labHooks. A later package naming its hook after one of these would find __lab.<name> returning the session's field, not the hook.",
+      "severity": "minor",
+      "fix": "In registerLabHookOn, warn once in DEV (console.warn) when attach skips a name because the target already has that property, naming __labHooks as the place to find it."
+     },
+     {
+      "where": "src/ui/lab/LabModeBar.tsx",
+      "problem": "The file exports a non-component constant (MODE_LABEL) alongside the default component, so Vite React Fast Refresh cannot hot-swap it and every edit causes a full page invalidation. The same warning already appears in the console for AngioPci.tsx's pciDevices export.",
+      "severity": "minor",
+      "fix": "Move MODE_LABEL into a plain .ts module (e.g. src/ui/lab/modeLabel.ts, or reuse modeLabel in visibility.ts) and import it into LabModeBar.tsx, leaving the .tsx exporting only the component."
+     },
+     {
+      "where": "src/ui/lab/labRun.ts defaultCaseName",
+      "problem": "The default logbook name for a PCI run comes from labelForKey(source) and reads 'PCI: lad focal', with the scenario id lower-cased and de-hyphenated rather than a readable label ('LAD focal').",
+      "severity": "minor",
+      "fix": "When a scenario catalogue label exists, use it for caseName (or let the PCI lab pass caseName to useLabRun when it is wired), falling back to labelForKey only when there is none."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/dev/labHooks.test.ts src/ui/lab/labRun.test.ts src/ui/lab/eventLog.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/useContextTips.test.ts src/mentor/ledger.test.ts (6 files, 69 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied all four findings. Each edit stays inside the package's listed files or its test files.\n\n1. labHooks window.__lab can be a holder (src/dev/labHooks.ts). I added to the header that window.__lab is not always a DiagnosticLabSession. While a hook is registered and no session has been assigned, it is a plain holder of the hooks, so it is truthy on a page without the diagnostic lab. A caller that needs the session should test for a session method (typeof window.__lab?.startInjection === \"function\"). I did not change xrayCapture: it is not my file, and it also checks __labStep and __sim, so it works as it is. A later package could switch its guard to the method check. New test: with no session assigned, __lab is a holder with no startInjection, and it is undefined once the hook is removed.\n\n2. Hook names hidden by a session property (src/dev/labHooks.ts attach). When a hook name is already a property of the object on window.__lab, attach now warns once per name with console.warn and points to window.__labHooks[name]. attach only runs after a hook has been registered with hooks enabled, so the warning appears in DEV builds only. New test: a session with an 'engine' property keeps its own engine, the hook stays reachable through __labHooks, and re-attaching after a second registration still produces exactly one warning.\n\n3. Non-component export in LabModeBar.tsx. I moved MODE_LABEL into src/ui/lab/labRun.ts, a plain .ts file in the package list, and LabModeBar.tsx now imports it from there. The .tsx file now exports only its component and a props interface, which is a type only, so Fast Refresh can hot-swap it. A new modeLabel.ts would have been outside the file list, and visibility.ts is not mine. Nothing else imported MODE_LABEL from LabModeBar. LabTipsPanel.tsx already exported only its component and props.\n\n4. Readable PCI case name (src/ui/lab/labRun.ts defaultCaseName). The scenario titles (e.g. 'Focal mid-LAD stenosis') live only in src/simulation/angioPci.ts. Shared code imports that module for types only, and the mentor catalogue keeps its own copy of the scenario list so it stays free of render code. Importing it at runtime into labRun would pull the PCI simulation into every lab's lazy chunk. Instead, a PCI run's default name is now built from its sim key, with the abbreviations in capitals: 'PCI: LAD focal', 'PCI: LCx STEMI', 'PCI: RCA CTO variant L2'. labelForKey is used only when the key has no scenario. The comment says a lab with a readable title passes it as caseName; the option already existed and is tested. Tests were updated and extended for this.\n\nOut of scope, for the package that wires the PCI lab to useLabRun (src/ui/sections/AngioPci.tsx): pass caseName: SCENARIO_BY_ID[scenarioId].title so logbook rows show the full scenario title. Rows written by the old recordSim path still use labelForKey and read 'PCI: lad focal'. Changing that means editing src/progress/logbook.ts, which is not in this package."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "eventLog.test.ts: an event raised with holdS 60 is active at 59 s and gone at 61 s of lab time; default hold is 30 s",
+      "met": true,
+      "evidence": "src/ui/lab/eventLog.test.ts lines 8-25: one test raises with holdS 60 and checks active(59) and gone at active(61); another checks TRANSIENT_HOLD_S === 30, holdFor() === 30 and the event lapsing after 130 s when raised at 100. src/ui/lab/eventLog.ts sets TRANSIENT_HOLD_S = 30 with a MODEL PARAMETER label and per-event overrides in EVENT_HOLD_S. Every onset goes to the sink as 'lab.event' (covered by a test). eventLog.test.ts: 10/10 pass."
+     },
+     {
+      "criterion": "patientEvents.test.ts: MAP 60 for 9 s raises nothing, for 11 s raises hypotension; HR 45 raises bradycardia",
+      "met": true,
+      "evidence": "src/ui/lab/patientEvents.test.ts line 26 checks holdMap(60, 9) gives [] and holdMap(60, 11) gives ['hypotension']. Line 115 checks HR 45 gives ['bradycardia'] and HR 55 gives nothing. The thresholds in patientEvents.ts are MAP 65 mmHg held 10 s and HR 50, each labelled MODEL PARAMETER. All 16 planned events are in PATIENT_EVENTS. 19/19 pass."
+     },
+     {
+      "criterion": "labRun.test.ts: finish() writes exactly one logbook row with mode, caseId and decisions; exam mode returns no tips; supervised shows tips only after askHelp()",
+      "met": true,
+      "evidence": "src/ui/lab/labRun.test.ts line 26: a second finish() writes nothing, so the logbook grows by exactly 1. The row has mode 'supervised', caseId 'angio-pci:lad-focal', both decisions with their times, the metrics with NaN dropped, and source 'pci-lad-focal'. Line 123: in exam mode askHelp returns null, tipsVisible is false and tips() is [] for one context and for several. Line 132: supervised gives [] before askHelp and tipsFor(ctx,5) after it, with hints = 1. finish() calls useProgressStore.getState().logSession by default. 18/18 pass."
+     },
+     {
+      "criterion": "The diagnostic lab's tips drawer behaves as before (useDiagnosticTips now delegates to useContextTips)",
+      "met": true,
+      "evidence": "src/ui/lab/useLabTips.ts line 160: useDiagnosticTips now calls useContextTips(context, { mode, helpAskedAt }, DEFAULT_TIP_LIMIT=5). In src/ui/lab/useContextTips.test.ts, a copy of the previous visibility and selection rule is compared across 10 diagnostic contexts and 7 mode and help combinations, and the tip ids are identical. A hook-level test runs the hook through react-reconciler. Simulator.tsx line 414 still uses useDiagnosticTips(mode, helpAskedAt) with an unchanged signature. 7/7 pass."
+     },
+     {
+      "criterion": "browser: window.__lab is defined in DEV and absent in a production build",
+      "met": true,
+      "evidence": "DEV: on the running dev server (localhost:5173/build.html), importing /src/dev/labHooks.ts gave labHooksEnabled() === true; registerLabHook installed window.__lab[probe] and __labHooks, and the remover returned window.__lab to undefined. Production: a vite build of src/dev/labHooks.ts alone with --mode production (scratchpad output) compiles labHooksEnabled() to 'return false', so registerLabHook installs nothing. This matches labHooks.test.ts 'installs nothing when disabled (a production build)'. Simulator.tsx's own w.__lab = session is also gated on import.meta.env.DEV. labHooks.test.ts: 10/10 pass."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/eventLog.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/labRun.test.ts src/ui/lab/useContextTips.test.ts src/dev/labHooks.test.ts -> 5 files, 64 tests passed",
+     "npx vitest run src/state src/progress src/mentor/ledger -> 5 files, 72 tests passed (regression check on the logSession/LogSessionInput changes)",
+     "Browser (dev server 5173): dynamic import of /src/dev/labHooks.ts, registerLabHook probe -> window.__lab defined in DEV, removed cleanly",
+     "npx vite build --config <scratchpad>/vite.labhooks.config.mjs --mode production (labHooks.ts as a lib entry) -> labHooksEnabled compiles to return false"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no output (clean)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "package": "repair-launch-fixture-and-tip-ties",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "(1) content.test.ts validates the real .launch.ts files against the full TRACKS, and keeps a fixture test proving unknown ids are rejected",
+      "met": true,
+      "evidence": "src/content/content.test.ts:105 globs every /src/**/*.launch.ts (excluding __fixtures__). Line 111 validates them against { tracks: TRACKS, cases: PUBLISHED_CASES }. withFixture (lines 130-139) adds the fixture content to the full TRACKS and PUBLISHED_CASES rather than replacing them. Fixture tests at lines 152-183 reject an unknown scenario, start or mode, and held-out links. Lines 185-208 test a .launch.ts that names an unknown lesson, case or scenario: it expects exactly four errors, and the lesson it uses as the valid reference is the last lesson of the last track, so the check must use the full TRACKS. content.test.ts: 61 tests pass."
+     },
+     {
+      "criterion": "(2) tipsFor breaks score ties by trigger specificity, then a stable order, with caution and bailout tips ahead of do tips",
+      "met": true,
+      "evidence": "In src/content/lab/tips.ts, tipSpecificity (lines 459-476) counts conditions and breadth. compareTied (lines 489-495) orders by more conditions, then smaller breadth, then caution/bailout ahead of do. tipsFor (line 515) sorts by score, then compareTied, then registry index ri, which gives the stable order. tipsForAll (line 539) uses the same keys after the context index. Warnings also gain +0.5 in tipScore (line 441), so they always lead do tips that would otherwise tie. Tests in the tips.test.ts 'tie-break on equal scores' block (lines 359+) pass: narrower lists first, more conditions first, warnings ahead, identical triggers in registry order and deterministic, and a registry-wide check that a warning never ties a do tip. tips.test.ts: 31 pass, 1 skipped. The skipped test is the it.runIf fingerprint-guarded snapshot at line 136, which is skipped by design when the tip data changes."
+     },
+     {
+      "criterion": "(3) waiting.ts moves access-cx-cold-leg-six-ps and access-closure-cold-leg out of the proc-tip-context group into a group raisedBy access-cx-endovascular-control",
+      "met": true,
+      "evidence": "src/content/lab/raisable/waiting.ts: the proc-tip-context access group (line 106 onward) no longer lists either cold-leg tip. grep finds them only at line 515, in the group raisedBy 'access-cx-endovascular-control' (line 512, lab access), whose note explains the limb-ischaemia dependency. caseTips.reach.test.ts line 99 asserts this placement and passes."
+     },
+     {
+      "criterion": "Acceptance: npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts src/ui/access/caseTips.reach.test.ts all pass",
+      "met": true,
+      "evidence": "Test Files 5 passed (5); Tests 106 passed | 1 skipped (107). The skipped test is the fingerprint-guarded snapshot in tips.test.ts, which is skipped by design."
+     },
+     {
+      "criterion": "tsc clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit exited 0 with no output."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/content/lab/reachability.test.ts src/content/manual.test.ts src/ui/access/caseTips.reach.test.ts (5 files passed; 106 passed, 1 skipped)",
+     "npx vitest run src/content/lab/tips.test.ts (31 passed, 1 skipped: it.runIf snapshot guard)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)",
+     "npx vitest run src/ui/access/caseTips.reach.test.ts (3 passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0, no errors)"
+   }
+  ]
+ }
+}

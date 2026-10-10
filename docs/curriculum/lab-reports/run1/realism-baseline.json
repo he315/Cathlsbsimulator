@@ -1,0 +1,266 @@
+{
+ "package": "realism-baseline",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built realism-baseline. The baseline set (\"baseline\", captured 8 Oct 2026) uses the c1g0 specs and scores 189 of 236 rows inside the real band (matched pipeline; c1g0 scored 186 of 236). xrayCapture.ts gains two things. (1) PCI device scenes (guide, wire, balloon, stent) driven through the PCI engine and drawn by the lab's own pciDevices and pciFlowMods. (2) Live-path capture, which films the PCI lab (__pciDraw) and the diagnostic lab (__fluoroDraw with the catheter seated in the LM and a hand injection) through their own scene assembly and records the lab's scene by tapping XrayRenderer.render, restoring it afterwards. It also adds spec roles, a narrowTree harness option, baselineSpecs() and __xrayCapture.baseline()/.live(). report.py measures device and live runs with the same code, side by side with a \"twin\" run, but keeps them in a separate \"measurements\" list that never enters the rows, the headline or compare_sets.py. On a set without roles it produces the same rows as before. docs/realism/baseline.md records: the headline, the specs, the set id and date; the device and live results and leads; the narrowed-tree check; and the forensics on the seven files edited after c1g0. Those were reconstructed from a token-level diff against the 21:40 dist build, frame hashes of the sweep sets captured during the edits, and pixel difference maps. The finding: only thorax.ts changed pixels after c1g0. It split the bronchi where they run inside large pulmonary vessels, and drew the vertebral bodies as stacked slabs with a concave waist. That accounts for every row that moved (2 lost, 5 gained). sceneBuilder, xrayCapture, XrayRenderer, systemProfiles and pyramid changed no scorecard pixel: the six reference views are hash-identical to c1m-base, captured 70 s before the XrayRenderer and systemProfiles save.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/xrayCapture.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/scripts/realism/report.py",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/baseline.md"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/xrayCapture.test.ts (9 tests: c1g0 specs unchanged; device and live roles; the four engine-reached device states; scene = scorecard scene + exactly the tubes pciDevices draws; guide-only scene equals its twin; an inflated balloon stops distal contrast; determinism; live-frame annotation matches the offscreen frame; narrowed left tree narrows only the left side and leaves the cache untouched)"
+    ],
+    "testsRun": [
+     "npx vitest run src/dev/xrayCapture.test.ts src/render/xray/thorax.test.ts: 2 files, 47 passed",
+     "npx vitest run src/render/xray/realism.test.ts: 35 passed, 14 skipped",
+     "python3 scripts/realism/report.py baseline: 189/236, plus 462 measurement rows from 6 device and live runs, not counted",
+     "python3 scripts/realism/compare_sets.py baseline baseline: no LOST rows, no GAINED rows",
+     "python3 scripts/realism/compare_sets.py c1g0 baseline: 186 to 189; lost 2, gained 5",
+     "python3 scripts/realism/report.py narrow-left, then compare_sets.py baseline narrow-left: 178/236, 17 rows lost, 6 gained",
+     "Regression check: report.py c1g0 rerun with the new code gave rows identical to the stored c1g0 scorecard (248/248). The original c1g0 report files were restored afterwards"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (0 errors)",
+    "acceptance": [
+     {
+      "criterion": "docs/realism/baseline.md records the headline of the current code with the c1g0 specs, the capture set id and date, and for each of the seven files edited after c1g0 what changed and which rows moved (compare_sets.py c1g0 baseline)",
+      "status": "met",
+      "evidence": "Section 1 gives: set 'baseline', captured 8 Oct 2026 07:16-07:47 UTC, 189 of 236 plus 4 indicative, the c1g0 specs and the section table against c1g0. Section 3 has one row per file covering the change against the 21:40 build, the evidence for when it happened and the rows it moved. The table of the 7 rows that changed result is taken from compare_sets.py c1g0 baseline. Where an edit cannot be placed in time (sceneBuilder's motionAt heart argument), the doc says so."
+     },
+     {
+      "criterion": "The capture set includes guide, wire, balloon and stent scenes drawn through pciDevices and one diagnostic-lab and one PCI-lab live-path sequence; report.py lists their rows as measurements outside the pass count",
+      "status": "met",
+      "evidence": "datasets/tmp/captures/baseline contains dev_guide, dev_wire, dev_balloon, dev_stent, live_pci_raocra (1280 px, real-time clock, 15.1 frames/s) and live_diag_raocau (988 px, stepped). scorecard_matched.json keeps 6 measurement_runs and 462 measurements, all with pass=None and none in rows. The markdown has a 'Measurements outside the pass count' section with each run's twin. The headline counts only the 8 scorecard runs."
+     },
+     {
+      "criterion": "compare_sets.py baseline baseline reports no lost rows; a capture made with a deliberately narrowed left tree lists the rows it loses",
+      "status": "met",
+      "evidence": "baseline vs baseline: both LOST and GAINED lists empty. narrow-left (left lumen radii x0.6, via the narrowTree option): 178/236, and compare_sets lists 17 lost rows (opacified area, timing, block motion, LAD track). These are recorded in baseline.md section 4."
+     },
+     {
+      "criterion": "No file under src/render/ changes; npx tsc -p tsconfig.app.json --noEmit is clean",
+      "status": "met",
+      "evidence": "find src/render -newer datasets/tmp/wp-snapshots/realism-baseline/.started returns nothing. tsc is clean."
+     }
+    ],
+    "outOfScope": [
+     "scripts/realism/compare_sets.py: running with --all crashes on the fluoroscopy rule row because its band [1.0, None] has no upper end (band() formats None). The bug predates this package; it also fails for c1f1 vs c1g0. The default summary and the LOST and GAINED lists are unaffected. A one-line guard in band() would fix it, but the file is not in this package's list."
+    ],
+    "notes": "Housekeeping outside the source files:\n- An older capture set already used the name 'baseline' (wave 1, 5 Oct 00:15, 76/102). I renamed it to 's0-baseline' in datasets/tmp/captures and datasets/tmp/realism/reports so the new baseline could be stored under that name.\n- Extra temporary data from this package: datasets/tmp/captures/narrow-left (170 MB) and its report.\n- Snapshots of the original listed files, plus .started, are in datasets/tmp/wp-snapshots/realism-baseline/.\n- The browser work used tabs I opened myself (tab-1 to tab-4), each closed afterwards with the viewport reset. The existing tabs were never touched.\n\nForensic method for the seven files: a token diff of esbuild-minified current files against the dist build from 5 Oct 21:40; sweep base-set frame hashes (c1s-base = c1g0; c1r-base differs only at the bronchi; c1m-base = baseline in every frame of the six views); and difference maps. None of the variants in sweep sets c1v and c1c is the committed state.\n\nLive-path leads, measurements only:\n- In the PCI lab, the block-matching median is 0 px against 5.9 px for the offscreen twin.\n- In the diagnostic lab, the heart rate estimated from frame differences is 143/min. This needs checking against the lab's clock before anyone acts on it.\n\nLive runs read the wall clock and are not deterministic. A first PCI live capture in a background tab had a throttled clock. I then made the capture measure the lab clock rate: it steps the lab with __pciStep or __labStep when the rate is below 0.8, and it buffers frames so a real-time run keeps 15 frames/s. The final runs record clockRate and wallFps in their metadata.\n\nDevice sizes and pressures are capture-scene settings, not device claims. The size comes from the scenario geometry (reference diameter rounded to 0.25 mm; lesion length + 4 mm, rounded up to 2 mm). The pressures are the engine catalogue's own nominal values (BALLOON_SPEC, STENT_SPEC). No new numbers were added from memory.\n\nxrayCapture.ts now imports src/ui/sections/AngioPci.tsx statically, for pciDevices and pciFlowMods, and src/simulation/pci/testSetup.ts. Any later split of AngioPci, such as pci-engine-modularise, must update this import."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "docs/realism/baseline.md (whole file); datasets/tmp/realism/reports/baseline/scorecard_matched.json",
+      "problem": "The design says the result is written to docs/realism/baseline.md \"with the date, the specs, the headline ... and the row list\". The doc has the headline, the per-section totals and the 7 rows that changed, but not the row list. The full 248-row list (236 scored plus indicative) exists only in datasets/tmp/realism/reports/baseline/, which is a scratch tree, and compare_sets.py reads the baseline from there. If datasets/tmp is cleaned, the reference that 26 renderer packages are judged against is gone, and nothing durable records it.",
+      "severity": "major",
+      "fix": "Append a section \"6. Row list\" to baseline.md, generated from scorecard_matched.json rows: section | metric label | artery | view | value | band (p10..p90 or rule) | pass/indicative. It is about 248 lines. Also state in section 1 that compare_sets.py loads datasets/tmp/realism/reports/baseline/scorecard_matched.json and that this file and datasets/tmp/captures/baseline must be kept, or copy the JSON to docs/realism/baseline.scorecard.json and say so."
+     },
+     {
+      "where": "src/dev/xrayCapture.ts tapRenders() (new, around the RenderTap block)",
+      "problem": "The wrapper replaces XrayRenderer.prototype.render(scene, params, target = \"canvas\") with a two-argument function and calls orig.call(this, scene, params). This drops the third argument. Any render(scene, params, null) made while a live capture runs would go to the canvas instead of offscreen. src/render/xray/segments/demo/demo.ts already makes calls like that, and later lab code may too. The tap would also record those calls as 'the lab's frame'.",
+      "severity": "minor",
+      "fix": "proto.render = function (this: XrayRenderer, ...args: [XrayScene, ImageParams, ...unknown[]]) { if (args[2] !== null) tap.last = { scene: args[0], params: args[1], xr: this }; return (orig as (...a: unknown[]) => unknown).apply(this, args); }; and type `orig` with the optional third parameter."
+     },
+     {
+      "where": "src/dev/xrayCapture.ts captureHook(), drawFrame loop: res = (gl.canvas as HTMLCanvasElement).width; readGrey(gl, res)",
+      "problem": "The old code checked that the lab canvas was square (c.width === c.height) before reading it. The new code reads res x res from the width alone, so a non-square lab canvas would be read wrongly without any error. Also, when the PCI lab's clock is 'frozen' (clockRate < 0.8 and no __pciStep), the loop neither sleeps nor steps, so it films 55 frames of a frozen heart and records them as a valid live run.",
+      "severity": "minor",
+      "fix": "After taking gl: const cv = gl.canvas as HTMLCanvasElement; if (cv.width !== cv.height) throw new Error(`lab canvas ${cv.width}x${cv.height} is not square`); res = cv.width. In the pci-hook branch, throw when labInfo.clock === \"frozen\" (\"the PCI lab clock is not running and __pciStep is missing\")."
+     },
+     {
+      "where": "src/dev/xrayCapture.test.ts lines 169-178 (\"the projected LAD is narrower in the frame\")",
+      "problem": "The check is tautological. width() returns v.radii[i] * mag, mag is the same for both specs, and radii were already shown to be scaled by 0.6, so the ratio is 0.6 by construction. It never looks at the built scene or the image, although the comment claims it does.",
+      "severity": "minor",
+      "fix": "Measure the built scene instead. Find the LAD tube in sceneTubes(f.r.scene) (the tube whose pts match the LAD's placed samples) and assert that its r at sample i, for the narrowed spec over the plain spec, is about 0.6. Alternatively, assert that iodineAmount(f.r.scene) on a contrast frame (k >= 5) of the narrowed lad_raocau is below the plain one, while rca_lao frames stay equal."
+     },
+     {
+      "where": "scripts/realism/report.py (_role, measurement_rows, main partition); no test",
+      "problem": "The acceptance criterion that device and live rows stay outside the pass count is backed only by the builder's manual runs. No automated test checks that a run with role 'device'/'live' never reaches rows, that measurement rows always have pass None, or that a set without roles gives the same rows as before. A later edit to report.py could silently fold measurements into the headline.",
+      "severity": "minor",
+      "fix": "Add a new test file scripts/realism/test_report_roles.py (unittest, no captures needed). Assert _role({'spec': {}}) == 'scorecard', _role({'spec': {'source': 'pci-hook'}}) == 'live', _role({'spec': {'devices': 'wire'}}) == 'device', and that spec.role wins. Then run measurement_rows with report.compare monkeypatched to return [{'metric': 'm', 'artery': 'any', 'view': 'any', 'value': 1.0, 'pass': True, ...}] and assert every output has pass None, in_band True and twin set from _twin. Run it with python3 -I -m unittest from the repo root."
+     },
+     {
+      "where": "src/dev/xrayCapture.ts pciStageState(): lengthMm = ceil((lesion length + 4)/2)*2; diameter = round(refDiameter*4)/4",
+      "problem": "The device scenes use a 2.5 x 16 mm balloon and stent. The PCI lab offers only LENGTHS [8, 12, 15, 18, 20, 23, 28, 33, 38] and DIAMS 2.0-4.0 (src/ui/sections/AngioPci.tsx lines 69-70). The baseline therefore shows a device state a trainee cannot reach, and the diameter is not clamped to the lab's range for other scenarios. It is not an invented clinical number, since the doc labels it a capture setting, but it departs from 'what the trainee sees'.",
+      "severity": "minor",
+      "fix": "A later package that may edit AngioPci.tsx should export DIAMS and LENGTHS, and pciStageState should then pick the smallest LENGTHS entry >= lesion length + 4 and clamp the diameter to [DIAMS[0], DIAMS[at end]]. Until then, add one sentence to baseline.md section 2: 16 mm is not a lab length, so a later change of this rule re-baselines the device scenes."
+     },
+     {
+      "where": "src/dev/xrayCapture.ts captureHook() docstring and docs/realism/baseline.md section 2",
+      "problem": "A live capture changes the open lab and does not restore it. In the diagnostic lab it commands catheter insertion and torque, steps 4.5 s of patient time, aspirates, starts and releases an injection, and calls __fluoroDraw 55 times. Each call runs session.exposure.expose and session.onExposedFrame, so dose, contrast and recorded frames accrue in the trainee's case. In the PCI lab it switches the scenario through the select. None of this is documented, so a developer may run it on a case they are using.",
+      "severity": "minor",
+      "fix": "Add to the captureHook docstring and to baseline.md: \"The live capture drives and changes the open case (catheter position, contrast, dose and recorded frames, the PCI scenario); run it on a fresh case and reload afterwards.\" Optionally, record labInfo.heartRate from the lab's patient engine (the diagnostic session's engine vitals). That would let the 143/min frame-difference lead be checked against the lab's own clock, as the doc asks."
+     },
+     {
+      "where": "src/dev/xrayCapture.ts imports (wireToTarget from src/simulation/pci/testSetup.ts; pciDevices, pciFlowMods from src/ui/sections/AngioPci.tsx)",
+      "problem": "The baseline device states depend on a test helper's simulated operator. A change to testSetup.ts made for an engine test, such as the steering step or the guard, silently changes the dev_wire, dev_balloon and dev_stent baseline scenes. Also, main.tsx loads xrayCapture at DEV start, so AngioPci.tsx, a React.lazy route in App.tsx, and its dependency graph are now loaded eagerly in every dev session. The builder reported the AngioPci coupling but not these two effects.",
+      "severity": "minor",
+      "fix": "Add a short note to baseline.md section 5 and to the pciStageState docstring: \"device states come from wireToTarget in src/simulation/pci/testSetup.ts; a change there re-baselines the device scenes (re-capture and rescore)\". Keep the dev-only eager load as accepted, or move the AngioPci import behind a dynamic import() inside installXrayCapture if dev start-up cost becomes a problem."
+     }
+    ],
+    "verdict": "Mostly sound; acceptable after one documentation fix and some minor hardening. I diffed the two listed source files against their snapshots, read baseline.md, ran src/dev/xrayCapture.test.ts (9 passed) and npx tsc -p tsconfig.app.json --noEmit (clean), and reran compare_sets.py for baseline vs baseline (no lost, no gained) and baseline vs narrow-left (178/236, rows lost as reported). The stored scorecard_matched.json has 248 rows, 189/236 passing, and 6 measurement runs with 462 rows, all pass None and none in rows. dev_guide's frame hashes equal lad_raocra's. The live metadata confirms that the PCI lab ran in real time (1280 px) and the diagnostic lab was stepped (988 px, JL4 seated in the LM, injection made).\n\nEvery acceptance criterion is met. The device scenes are driven through the real PCI engine and drawn by the lab's own pciDevices and pciFlowMods. The live path films both labs through their own render paths. report.py keeps device and live rows out of the headline, and compare_sets.py reads only rows. No file under src/render/ changed, and the scorecard specs and default paths are unchanged (prepareScenario with no options gives the same scene). The file under scripts/ changed after .started (scripts/README.md) belongs to found-launch-links, and every other src/ file changed since .started belongs to the lab-tips and content packages.\n\nThere are no unsourced clinical numbers. Device sizes come from the scenario geometry and the pressures from the engine catalogue's own BALLOON_SPEC and STENT_SPEC, and the 2-row tolerance is in the plan, section 2. Tip integration, lesson and case links, design system and ground truth do not apply. There is no per-frame allocation in any lab render path; the render tap exists only during a capture.\n\nThe main gap: the design requires the row list in docs/realism/baseline.md, but it lives only in datasets/tmp. The minor items:\n- the render tap drops the target argument of XrayRenderer.render;\n- the live path no longer checks that the lab canvas is square, and films a frozen PCI clock without complaint;\n- one narrowed-tree assertion is tautological;\n- report.py's role split has no automated test;\n- the 16 mm device length is not one the lab offers;\n- live capture changes the open case without saying so;\n- the baseline device states depend on a test helper."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/dev/xrayCapture.test.ts (9 of 9 passed)",
+     "python3 -I -m unittest discover -s scripts/realism -p 'test_report_roles.py' (3 of 3 passed)",
+     "python3 -I ast parse of scripts/realism/report.py (ok)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all eight findings against the code and applied every one. I did not re-run report.py on the baseline set, because that would overwrite datasets/tmp/realism/reports/baseline/scorecard_matched.json, the reference file itself. The partition change is a straight extraction of the two list comprehensions, and the new unit test covers it.\n\n1. Row list (major). I added \"6. Row list\" to /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/baseline.md. It has all 248 rows, generated from scorecard_matched.json, with these columns: number, section, label and metric key, artery/view, simulator value, real band or rule (plus the target's source when it is not the row's own), n real, and result. The counts match the headline: 189 pass and 47 fail of 236 scored, 4 indicative, 8 with no target. Section 1 has a new \"Files that must be kept\" part. It says compare_sets.py loads the baseline from datasets/tmp/realism/reports/baseline/scorecard_matched.json, gives that file's SHA-256 (abe0a05f...1daa) and its generated time (08:49), and says that file and datasets/tmp/captures/baseline/ must not be cleaned. I did not copy the JSON to docs/realism/baseline.scorecard.json because that file is not in the package's list. The row list in the doc is the durable record.\n\n2. tapRenders. The wrapper now passes every argument through with apply. The type of `orig` includes the optional target. Only renders that are not offscreen (target !== null) are recorded as the lab's frame.\n\n3. captureHook. It now throws if the lab canvas is not square. It also throws if the PCI lab clock is frozen and __pciStep is missing. The diagnostic branch already requires __labStep, so it can never be frozen.\n\n4. The tautological test is replaced. The new check finds the scene tubes whose first point is the LAD's placed origin (two tubes in this scene). It asserts that the narrowed scene has the same tubes with identical points and 0.6 of the radius at every point. I checked this with a probe first. I rejected the suggested iodine alternative because it does not work here: with the narrowed tree, iodineAmount on frame 6 goes up slightly (30.39 to 30.86), not down. The scene also has no RCA tube on lad_raocau, so the RCA check stays at tree level. I removed the unused projectPx import.\n\n5. New test file /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/scripts/realism/test_report_roles.py, using unittest. It checks _role on old and new metadata, including that spec.role wins. It checks partition_runs, including that a set without roles is unchanged. It runs measurement_rows with compare monkeypatched and asserts that every row has pass None, in_band taken from the compared row, the twin and twin_value from _twin, and that rows with no value are dropped. To make the partition testable I extracted it in report.py as partition_runs(), with the same behaviour.\n\n6. 2.5 x 16 mm device size. As the fix allows, I documented this rather than changing the code: I added a sentence to baseline.md section 2 and to the pciStageState docstring saying that 16 mm is not one of the lab's LENGTHS and the diameter is not clamped to the lab's range. Out of scope: exporting DIAMS and LENGTHS from src/ui/sections/AngioPci.tsx so pciStageState can snap to them belongs to a package that may edit AngioPci.tsx.\n\n7. The live capture's side effects are documented in the captureHook docstring and in baseline.md section 2: it changes the open case and you should run it on a fresh case and reload afterwards. I skipped the optional step of recording labInfo.heartRate.\n\n8. The dependency on wireToTarget in testSetup.ts, and the eager loading of AngioPci in dev sessions, are now noted in the pciStageState docstring and in baseline.md section 5. I kept the eager load as accepted, with the dynamic import() option noted.\n\nFiles edited: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/xrayCapture.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/xrayCapture.test.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/scripts/realism/report.py and /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/baseline.md. The only new file is /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/scripts/realism/test_report_roles.py. A temporary probe test was created and then deleted."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-6) at http://localhost:5173. window.__xrayCapture is installed, version 3, and offers capture, standard, baseline, live, drill, simulate, resolve, registerPass and sweep.",
+     "baselineSpecs() resolves to the 8 c1g0 scorecard specs (6 reference views plus the fluoro and flush companions), all with role 'scorecard', followed by dev_guide, dev_wire, dev_balloon and dev_stent with role 'device'. resolve() rejects narrowTree.scale 0 and rejects devices combined with a hook source, each with an informative error.",
+     "Device scenes, offscreen with upload:false (RAO cranial, lad-focal). Over 30 frames dev_wire, dev_balloon and dev_stent differ from the device-free twin in every frame. Two runs of dev_wire gave identical hashes, so the scenes are deterministic. dev_guide matches the twin hash for hash in all 30 frames. baseline.md section 2 says the same and explains it.",
+     "narrowTree {side:'left', scale:0.6} changes frames 5 to 29 of a 30-frame RAO cranial run and leaves frames 0 to 4 unchanged, because contrast has not arrived yet in those frames. The harness option works in the browser.",
+     "Live PCI path: opened 'PCI in the cath lab'. __pciDraw, __pciStep and __pciLab are present. Ran __xrayCapture.live('pci', 'verify-rb') with uploads intercepted in memory, so nothing was written to disk. 12 distinct frames were captured at 656 px (the lab's canvas). Metadata: role 'live', source 'pci-hook', lab {scenario 'lad-focal', viewButton true, clock 'stepped' (hidden pane, clockRate 0)}, cArm RAO 20 / CRA 24, bolusT rising by 1/15 s, annotations with catheter, ribs and meter.",
+     "Live diagnostic path: opened 'Cath lab' (case easy-left-0, JL4). Ran live('diagnostic', 'verify-rb') with uploads intercepted, 20 frames. Metadata: role 'live', source 'fluoro-hook', seatTarget 'selective-lm', startControls true, engaged true, injected true, clock 'stepped', cArm RAO 22 / CAU 22, all frames cine. Iodine was 0 for frames 0 to 10 and then rose to 347 by frame 19, so the hand injection opacifies the vessel.",
+     "After both live runs XrayRenderer.prototype.render is the original function again (identity check against the function taken before the run), so tapRenders restores the renderer.",
+     "On the command line, compare_sets.py baseline baseline gives empty LOST and GAINED lists. compare_sets.py baseline narrow-left lists lost rows (time above 50% of rise, block-matching motion, opacified area on the LCA views), which matches baseline.md section 4.",
+     "Console: no errors and no warnings. The dev server did several Vite full reloads while I was testing; one of them wiped my in-page state in the middle of a step. AngioPci.tsx edits log 'Could not Fast Refresh (\"pciDevices\" export is incompatible)'.",
+     "Closed tab-6. No existing tab was touched, and no capture files were written: every live run had its uploads intercepted and every offscreen run used upload:false."
+    ],
+    "problems": [
+     {
+      "where": "src/dev/xrayCapture.ts captureHook (res = cv.width, around line 1470)",
+      "problem": "A live-path capture films whatever size the lab canvas happens to be and never warns. In a 650 px wide pane the Cath lab's fluoro canvas collapses to 19 CSS px. The diagnostic live run then recorded 160 x 160 frames and reported success. The builder's own runs were 1280 px (PCI) and 988 px (diagnostic). A re-capture of the baseline live runs in a narrow pane would therefore produce runs that cannot be compared with the baseline, and nothing would flag it.",
+      "severity": "minor",
+      "fix": "Add a guard in captureHook after reading res, for example `if (res < 512) throw new Error(`frame ${k}: the lab canvas is ${res} px; widen the pane (live captures need at least 512 px)`)`. Also record `labInfo.cssPx = cv.clientWidth` in the metadata so report.py can show the resolution next to each live run. The tiny fluoro canvas at narrow widths is a separate, pre-existing Cath lab layout issue and belongs to another package."
+     },
+     {
+      "where": "src/dev/xrayCapture.ts DEVICE_SCENES / pciStageState stage 'guide'",
+      "problem": "dev_guide is identical to its twin lad_raocra in every frame. The guide catheter is already present in every scorecard scene and the wire stays inside its lumen, so the guide stage adds a duplicate run rather than a device measurement. baseline.md discloses this. Even so, the 'guide in the left main' scene in the plan measures nothing new, and the duplicate inflates the measurement list (84 rows that repeat the twin).",
+      "severity": "minor",
+      "fix": "Either drop dev_guide from DEVICE_SCENES and say in baseline.md that the guide is covered by the scorecard runs, or make the stage distinct: put the wire tip out of the guide into the proximal LM (a small positive tipMm in pciStageState for 'guide') so that pciDevices draws something. Then re-capture and rescore the device runs."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/dev/xrayCapture.test.ts (9 of 9 passed, run twice)",
+     "python3 -I -m unittest discover -s scripts/realism -p 'test_report_roles.py' (3 of 3 OK)",
+     "python3 scripts/realism/report.py baseline (rescore after the dev_guide re-capture: 189/236, the 248 rows identical to the 08:49 report)",
+     "python3 scripts/realism/compare_sets.py baseline baseline (no lost rows)",
+     "in-browser re-capture of dev_guide via import('/src/dev/xrayCapture.ts').capture(baselineSpecs('baseline') dev_guide spec): 51 frames uploaded, frames now differ from lad_raocra"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0)",
+    "notes": "Both findings were confirmed against the code and applied. I edited only src/dev/xrayCapture.ts, scripts/realism/report.py, docs/realism/baseline.md and the package's test file src/dev/xrayCapture.test.ts.\n\nFinding 1 (live capture at whatever size the lab canvas happens to be): confirmed. captureHook took res = cv.width with no lower bound.\n- Added `export const LIVE_MIN_PX = 512` in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/dev/xrayCapture.ts. It is a capture-harness setting, documented as such.\n- captureHook now throws `frame k: the lab canvas is N px (M CSS px); widen the pane ...` when res < LIVE_MIN_PX. The throw sits inside the try, so the finally still restores the render tap.\n- captureHook records `labInfo.cssPx = cv.clientWidth` in the metadata.\n- report.py adds `res` (from the metadata) to each measurement run's context. The measurement-runs table gains a \"frame px\" column and a sentence explaining it. It reads 768 for the device runs, 988 for live_diag_raocau and 1280 for live_pci_raocra.\n- baseline.md now records the narrow-pane problem (19 CSS px, 160 px frames), the guard and the new column.\n- Not done, as the finding says: the tiny fluoro canvas at narrow widths is a Cath lab layout issue that belongs to another package.\n- The guard was not exercised in a narrow pane; it is a one-line check, and the typecheck is clean.\n\nFinding 2 (dev_guide duplicates its twin): confirmed. The guide stage returned initialPci with the tip at -25 mm, so pciDevices drew nothing. I did not drop the run, because the plan's design and acceptance criteria list a \"guide in the left main\" scene. Instead I made the stage distinct:\n- Added `export const GUIDE_STAGE_WIRE_MM = 5` (a capture-scene setting, not a device claim).\n- pciStageState('guide') now advances the wire with the engine's moveWire in 1 mm steps until the tip is 5 mm out of the guide. It throws unless the tip stops inside the first vessel; that vessel is the LM, 14.6 mm long in lad-focal. The step is logged in the metadata.\n- The wire, balloon and stent stages are unchanged; they still start from the guide with the wire in its lumen.\n- Updated tests: the guide state now expects route [\"LM\"], tip between 5 and 6 mm, guide engaged and no device. The tube-count test expects the guide stage to add 2 tubes (wire shaft and coil). The old \"guide-only scene equals its twin\" test is replaced: the iodine and catheter still match the twin, and the scene adds only two wire tubes of about 5 to 10 mm.\n- Re-captured dev_guide into set \"baseline\" from the open 5173 tab (build.html) by importing the module, without navigating the tab, then rescored the set.\n- Results: the 248 scorecard rows are identical to the 08:49 report and the headline is still 189/236. dev_guide is now 62 of 84 inside the band (the twin has 61). 51 of 84 values differ from the twin, 32 of them by 2 % or less. The largest shifts are large-vessel depth (77.1 against 69.1), the LAD track range (11.7 against 37.0 px) and rib-margin FWHM (2.67 against 2.81).\n- baseline.md updates: the Captured line notes the dev_guide re-capture at 08:14 UTC. The new report SHA-256 is 07e6d82ce53d8e7773fdab5e7c23c702e8e45b8f3b4d02fd763dbad099bc4b55, generated 09:15 local. The dev_guide table row and its paragraph are rewritten; the paragraph says the earlier run was a duplicate and gives the new differences. The test description is updated. Section 6 (the row list) needed no change because the rows are identical.\n\nBackups of the previous report files and the old dev_guide frames are in /private/tmp/claude-502/-Users-qc25212-Downloads-Misc-Games-and-apps-Cath-Simulator/44008407-56ca-4c73-9f50-2b40e2ca2b8c/scratchpad/old and old_dev_guide. Nothing under src/render/ was touched."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "docs/realism/baseline.md records the headline of the current code with the c1g0 specs, the capture set id and date, and for each of the seven files edited after c1g0 what changed and which rows moved (compare_sets.py c1g0 baseline)",
+      "met": true,
+      "evidence": "baseline.md section 1 gives the set 'baseline', the capture date and times (8 October 2026), the c1g0 specs, and the headline 189 of 236 with the per-section table. Section 3 has a row for each of the seven files (sceneBuilder.ts, thorax.ts, thorax.test.ts, xrayCapture.ts, XrayRenderer.ts, systemProfiles.ts, pyramid.ts) saying what changed, when, and which rows moved. Where an edit cannot be placed in time, the notes say so (for example sceneBuilder change (c)). I re-ran compare_sets.py c1g0 baseline: 186 to 189 of 236, LOST 2 and GAINED 5. These match the doc's row table exactly. The SHA-256 of reports/baseline/scorecard_matched.json matches the value recorded in the doc (07e6d82c...)."
+     },
+     {
+      "criterion": "The capture set includes guide, wire, balloon and stent scenes drawn through pciDevices and one diagnostic-lab and one PCI-lab live-path sequence; report.py lists their rows as measurements outside the pass count",
+      "met": true,
+      "evidence": "datasets/tmp/captures/baseline holds 14 sequences: the 8 c1g0 runs, dev_guide, dev_wire, dev_balloon, dev_stent, live_pci_raocra and live_diag_raocau. xrayCapture.ts imports pciDevices and pciFlowMods from AngioPci (line 44) and draws them at line 389. It defines DEVICE_SCENES, LIVE_SEQUENCES and the __pciDraw/__fluoroDraw hook capture. In scorecard_matched.json, 'rows' holds 248 entries; 'measurements' holds 462 entries across the 6 device and live runs, every one with pass=None and measurement=True; the .md has a 'Measurements outside the pass count' section. test_report_roles.py: 3 tests OK. src/dev/xrayCapture.test.ts: 9 tests pass, covering roles, the four device states, the pciDevices tubes, balloon occlusion, determinism and live-frame annotation."
+     },
+     {
+      "criterion": "compare_sets.py baseline baseline reports no lost rows; a capture made with a deliberately narrowed left tree lists the rows it loses",
+      "met": true,
+      "evidence": "compare_sets.py baseline baseline gives 189 of 236 on both sides, with empty LOST and GAINED lists. compare_sets.py baseline narrow-left gives 178 of 236 and lists 17 LOST rows and 6 GAINED rows; this matches baseline.md section 4. narrowTree is covered by a test in xrayCapture.test.ts."
+     },
+     {
+      "criterion": "No file under src/render/ changes; npx tsc -p tsconfig.app.json --noEmit is clean",
+      "met": false,
+      "evidence": "src/render: no file was modified after 6 October (find -newermt returned nothing), and the newest files are the 5 October 22:26-22:34 saves that the doc analyses. That part is met. The typecheck is NOT clean: 4 errors (TS2740/TS2739) in src/simulation/team/intents.ts lines 528 and 545 and src/simulation/team/params.ts lines 86 and 107. The cause is Record<DrugId,...> and Record<Route,...> maps that lack the new drugs (flumazenil, naloxone, diazepam, propofol and 24 more) and routes (neb, oral, crushed). Those were added to src/simulation/patient/pharmacology.ts, saved at 09:17:56 today, after this package's last file (09:16), by another package working concurrently. A re-run about 60 s later still gave 4 errors. There are no errors in src/dev, src/render or any file of this package."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/team/intents.ts:528, :545; src/simulation/team/params.ts:86, :107 (caused by src/simulation/patient/pharmacology.ts, edited 09:17:56 by another package)",
+      "problem": "The typecheck is not clean. DrugId gained 28 drugs and Route gained neb, oral and crushed in pharmacology.ts. The exhaustive Record<DrugId, string>, Record<Route, string>, Record<DrugId, number> and Record<DrugId, 'scrub'|'sedation'> maps in the team files were not extended. The cause is outside realism-baseline's files; this package needs no change.",
+      "severity": "major",
+      "fix": "Fix in the package that owns the pharmacology.ts change, not here. Either add entries for every new DrugId and Route to the four maps (intents.ts DRUG label map line 528 and route map line 545; params.ts maps lines 86 and 107), or retype those maps as Partial<Record<DrugId, ...>> with a fallback at their use sites. Then re-run npx tsc -p tsconfig.app.json --noEmit; once it is clean, realism-baseline passes with no edits of its own."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/dev/xrayCapture.test.ts (9 passed)",
+     "python3 -I -m unittest discover -s scripts/realism -p 'test_report_roles.py' (3 passed)",
+     "python3 scripts/realism/compare_sets.py baseline baseline (no LOST, no GAINED)",
+     "python3 scripts/realism/compare_sets.py c1g0 baseline (186 -> 189, LOST 2, GAINED 5, matches baseline.md)",
+     "python3 scripts/realism/compare_sets.py baseline narrow-left (178/236, 17 LOST listed)",
+     "shasum -a 256 datasets/tmp/realism/reports/baseline/scorecard_matched.json (matches the doc)",
+     "inspection of scorecard_matched.json measurements (462 rows, 6 runs, all pass=None)",
+     "find src/render -newermt 2026-10-06 (no files)",
+     "npx tsc -p tsconfig.app.json --noEmit (run twice, 4 errors each time)"
+    ],
+    "tsc": "Not clean: 4 errors, all in src/simulation/team/intents.ts (528, 545) and src/simulation/team/params.ts (86, 107). They come from another package's concurrent pharmacology.ts edit (DrugId/Route extended, saved 09:17:56). There are no errors in src/dev, src/render or any realism-baseline file."
+   },
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "docs/realism/baseline.md records the headline of the current code with the c1g0 specs, the capture set id and date, and for each of the seven files edited after c1g0 what changed and which rows moved (compare_sets.py c1g0 baseline)",
+      "met": true,
+      "evidence": "Section 1 of baseline.md gives set 'baseline', the capture date 8 October 2026 with times, the c1g0 specs in full and the headline 189 of 236, which matches scorecard_matched.md line 5. The scorecard JSON SHA-256 07e6d82c... matches the value the note gives. Section 3 has a row for each of the seven files (sceneBuilder.ts, thorax.ts, thorax.test.ts, xrayCapture.ts, XrayRenderer.ts, systemProfiles.ts, pyramid.ts) saying what changed, the evidence on when, and the rows moved. Where an edit cannot be placed, the note says so (sceneBuilder change c). I re-ran compare_sets.py c1g0 baseline: 186 to 189, LOST 2 (area10 LAO-CRA, frames>=90 AP-CRA), GAINED 5. This is exactly the table in the note."
+     },
+     {
+      "criterion": "The capture set includes guide, wire, balloon and stent scenes drawn through pciDevices and one diagnostic-lab and one PCI-lab live-path sequence; report.py lists their rows as measurements outside the pass count",
+      "met": true,
+      "evidence": "datasets/tmp/captures/baseline/ holds dev_guide, dev_wire, dev_balloon, dev_stent, live_pci_raocra and live_diag_raocau, each with 51 frames plus metadata. xrayCapture.ts:44 imports pciDevices and pciFlowMods from AngioPci. The lab hooks __pciDraw (AngioPci.tsx:906) and __fluoroDraw (FluoroView.tsx:258) exist. In scorecard_matched.json, 'measurements' has 462 rows (84 for each device run, 62 live PCI, 64 live diagnostic), all with pass None, and no dev_/live_ run appears in 'rows'. The md has the section 'Measurements outside the pass count'. The xrayCapture.test.ts tests for roles, device states, pciDevices tubes, guide stage and balloon occlusion pass, and test_report_roles.py passes (3 tests)."
+     },
+     {
+      "criterion": "compare_sets.py baseline baseline reports no lost rows; a capture made with a deliberately narrowed left tree lists the rows it loses",
+      "met": true,
+      "evidence": "I ran python3 scripts/realism/compare_sets.py baseline baseline: LOST and GAINED are both empty. I ran compare_sets.py baseline narrow-left: 178 of 236, 17 LOST rows listed (opacified area >20 in AP-CRA, LAO-CRA and RAO-CRA; timing rows; LAD track range and step_max) and 6 GAINED. This matches section 4 of baseline.md. The narrowed-tree harness option is covered by the xrayCapture.test.ts test 'a deliberately narrowed left tree narrows the left coronaries only', which passes."
+     },
+     {
+      "criterion": "No file under src/render/ changes; npx tsc -p tsconfig.app.json --noEmit is clean",
+      "met": true,
+      "evidence": "find src/render -newermt '2026-10-05 22:35' returns nothing. The newest file under src/render is pyramid.ts, last saved 5 October 22:34:43, which is one of the seven pre-package edits. npx tsc -p tsconfig.app.json --noEmit exited 0 with no output (include: src)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/dev/xrayCapture.test.ts (9 passed)",
+     "python3 scripts/realism/test_report_roles.py -v (3 passed)",
+     "python3 scripts/realism/compare_sets.py baseline baseline (no LOST, no GAINED)",
+     "python3 scripts/realism/compare_sets.py baseline narrow-left (178/236, 17 LOST listed)",
+     "python3 scripts/realism/compare_sets.py c1g0 baseline (186 -> 189, 2 LOST, 5 GAINED; matches baseline.md)",
+     "shasum -a 256 datasets/tmp/realism/reports/baseline/scorecard_matched.json (matches note)",
+     "find src/render -newermt '2026-10-05 22:35' (no files)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no diagnostics)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (typecheck not clean because of the DrugId/Route maps in src/simulation/team): this is not a defect in realism-baseline, and the finding itself says the package needs no change. The cause is outside the package's files (src/dev/xrayCapture.ts, scripts/realism/report.py, docs/realism/baseline.md), so I made no edit. It needs to be fixed by the package that owns the pharmacology.ts change."
+    ],
+    "testsRun": [
+     "npx vitest run src/dev/xrayCapture.test.ts: 9 of 9 passed",
+     "python3 -I -m py_compile scripts/realism/report.py: compiles"
+    ],
+    "tsc": "Not clean: 2 errors, neither in a realism-baseline file. src/simulation/team/intents.ts(528,14) TS2740: the Record<DrugId, string> label map is missing flumazenil, naloxone, diazepam, propofol and 24 more. src/simulation/team/intents.ts(545,14) TS2739: the Record<Route, string> map is missing neb, oral and crushed. The params.ts errors at lines 86 and 107 named in the finding are gone; another package has already fixed them.",
+    "notes": "I checked the one finding against the code. It is accurate, but it sits outside this package's scope, so I made no edits. Only the two intents.ts errors are left, and once their owner extends the DRUG label map and the route map in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/intents.ts (lines 528 and 545), the typecheck should pass. realism-baseline's own files have no type errors and its tests pass."
+   }
+  ]
+ }
+}

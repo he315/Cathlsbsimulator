@@ -1,0 +1,211 @@
+{
+ "package": "repair-engagement-followups",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I made all three follow-ups. The over-rotation card now starts in 'coaxial-rca' instead of 'near-rca'. Its preset ('torque') and catheter (JR4) are unchanged, and so is the teaching moment: the JR4 sits close to the RCA ostium, lined up but not seated, and the learner must seat it with fine torque without swinging past. With the fixed thresholds, a JR4 reached 'near-rca' in only 9 of 40 freshly generated torque cases and in none of the library RCA cases. It reached 'coaxial-rca' in 40 of 40. The engagement thresholds were not loosened. The Settings difficulty text now says that difficulty changes the help given (hints and attending prompts) and that engagement uses the same tolerance at every difficulty. The physics registry tests no longer assume src/ui/physics/impl/ is empty. All four acceptance test files pass and the typecheck is clean. One gap remains: in the current code, difficulty does not change hints or attending prompts (see notes).",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/skillCards.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/mentor.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physics/types.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.test.ts (new test file)"
+    ],
+    "testsAdded": [
+     "src/mentor/mentor.test.ts: 'the over-rotation card starts a JR4 coaxial with the RCA ostium on fresh torque cases, at every difficulty' (12 generated torque seeds; each resolves with JR4; at beginner, intermediate and advanced the start is 'coaxial-rca', target right, not selective, not conus, nearer the RCA than the left)",
+     "src/mentor/mentor.test.ts: 'swinging past the RCA from the over-rotation card's start class is detected as over-rotation' (synthetic log in 'coaxial-rca' that crosses targetAz.right fires the over-rotation code)",
+     "src/ui/physics/types.test.ts: 'returns the first implementation registered in impl/, or null when it holds none' (holds for an empty or a filled impl/)",
+     "src/ui/physics/types.test.ts: 'collects the fixture beside whatever impl/ holds, without duplicate ids'; the fixture tests now glob only __fixtures__/impl, so they do not depend on what impl/ holds",
+     "src/ui/sections/Settings.test.ts (new): renders Settings server-side and checks the new difficulty text, that the old tolerance claims are gone, and that every difficulty uses FIXED_ENGAGEMENT_THRESHOLDS and gives the same engagement class"
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/mentor.test.ts -t 'each diagnostic card' (before the change): failed, 'over-rotation: expected null not to be null', which reproduces the reported failure",
+     "npx vitest run src/mentor/mentor.test.ts src/ui/physics/types.test.ts src/simulation/engagement.test.ts: 3 files, 80 tests passed",
+     "npx vitest run src/progress/progress.test.ts: 66 tests passed",
+     "npx vitest run src/ui/sections/Settings.test.ts src/ui/physics/types.test.ts: 9 tests passed",
+     "Temporary check of the registry fix: copied types.ts, types.test.ts and __fixtures__ into a scratch folder src/ui/__physcheck__ with a stub impl/rod.ts (once with order -1, once with no order). All 7 registry tests passed both times. The scratch folder was deleted and the real src/ui/physics/impl/ was never created.",
+     "Temporary probe tests (deleted): JR4 reached 'near-rca' in 9 of 40 generated torque cases and 'coaxial-rca' in 40 of 40; each diagnostic card was resolved across 15 fresh seeds"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no output. Its include is 'src', so the test files are checked too.",
+    "acceptance": [
+     {
+      "criterion": "npx vitest run src/mentor/mentor.test.ts passes, including 'each diagnostic card resolves to a start state at the moment of the error'",
+      "status": "met",
+      "evidence": "58 of 58 passed. The over-rotation card resolves to JR4 'coaxial-rca' on its test seed and on 12 more torque seeds in the new test."
+     },
+     {
+      "criterion": "Over-rotation card keeps its teaching moment (over-rotating a JR4 near the RCA ostium) without loosening the engagement thresholds",
+      "status": "met",
+      "evidence": "Preset 'torque' and catheter JR4 are unchanged. The start class is 'coaxial-rca': within the fixed near-ostium distance and aligned, but not seated. The brief now reads 'The JR4 sits just short of the RCA ostium. Fine torque only: seat it without swinging past.' The over-rotation check in analysis.ts runs in every '-rca' class, and a new test shows that swinging past the RCA from this class is detected. engagement.ts is untouched."
+     },
+     {
+      "criterion": "npx vitest run src/ui/physics/types.test.ts passes and holds once diag-rod-physics adds impl/rod.ts",
+      "status": "met",
+      "evidence": "7 of 7 passed. The fixture tests use a glob of __fixtures__/impl only, and the real-folder test asserts getPhysicsDevices() === collectPhysicsDevices(REAL)[0], or null when impl/ is empty. Also verified on a scratch copy with a stub impl/rod.ts, with and without order -1."
+     },
+     {
+      "criterion": "npx vitest run src/simulation/engagement.test.ts passes",
+      "status": "met",
+      "evidence": "All tests passed in the 80-test run."
+     },
+     {
+      "criterion": "npx vitest run src/progress/progress.test.ts passes",
+      "status": "met",
+      "evidence": "66 of 66 passed, including the server-side render smoke test of Settings."
+     },
+     {
+      "criterion": "tsc clean",
+      "status": "met",
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit gave no output."
+     },
+     {
+      "criterion": "Settings difficulty description says difficulty changes the help given (hints, attending prompts), not how forgiving engagement is",
+      "status": "met",
+      "evidence": "New note under 'Simulation difficulty': 'Difficulty changes the help you are given (hints and attending prompts). Catheter engagement is judged against the same tolerance at every difficulty.' Per-level lines: beginner 'The most help: hints and attending prompts while you learn the motions.'; intermediate 'Less help; mistakes are logged normally.'; advanced 'The least help; the daily challenge and exam mode always use it.' The old tolerance and pressure claims are removed. Checked by Settings.test.ts. The browser view was not checked, by instruction; see notes for the gap between this text and the current code."
+     }
+    ],
+    "outOfScope": [
+     "The difficulty setting does not yet change hints or attending prompts anywhere in the code. Hints and the attending drawer follow the level policy (policyFor in src/state/useSimulatorStore.ts and src/ui/lab/visibility.ts), not profile.difficulty. Its only consumers are computeEngagement, which ignores it unless difficultyScaled is set, and Challenge.tsx, which loads 'advanced'. The new Settings text states the behaviour the plan intends (diag-engagement-fallback: 'difficulty changes assistance (hints and attending prompts) only'). Making it true needs a change in useSimulatorStore.ts and/or src/ui/lab/visibility.ts or src/mentor/visibility.ts, which this package does not own.",
+     "Two other diagnostic skill cards sometimes fail to find a start state on freshly generated cases, which is what Review.tsx launchCard uses. 'dissection' (preset left-main, near-lm) resolved on 12 of 15 seeds and 'air-embolism' (preset damping, selective-rca) on 13 of 15. Review then loads the case with default controls. The mentor test passes because it checks one seed per card. The fix would be in skillCards.ts (a caseId, or another start class), but it is outside this package's brief, so I left both unchanged."
+    ],
+    "notes": "The snapshots are in datasets/tmp/wp-snapshots/repair-engagement-followups/ with a .started marker. Only the four listed files changed, plus one new test file, src/ui/sections/Settings.test.ts. All temporary probe folders were deleted: src/mentor/__scratch__ and src/ui/__physcheck__. src/ui/physics/impl/ still does not exist, and I did not create it at any point. In Settings.tsx, DIFF_HINT and DIFFICULTY_NOTE stay private to the module, so fast refresh is unaffected; the test reads the text by rendering the page. The comment on the over-rotation template in skillCards.ts gives the reason for the 'coaxial-rca' start. Its numbers come from the probes run in this session, not from any source."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Accept. The package does what its brief asks. All three follow-ups are in place, and the four acceptance test files plus the new Settings.test.ts pass (82 + 66 tests). npx tsc -p tsconfig.app.json --noEmit exits 0. The only changed files are the four listed ones and one new test file, src/ui/sections/Settings.test.ts. The other files under src/ that are newer than .started (content.test.ts, lab/tips.ts, lab/tips.test.ts, lab/raisable/waiting.ts, simulation/access/route.ts) are all in the snapshot sets of repair-launch-fixture-and-tip-ties or access-multi-site, which started at the same time. engagement.ts and analysis.ts are untouched, the thresholds were not loosened, and shared engine defaults are unchanged. src/ui/physics/impl/ still does not exist. The over-rotation card now starts at 'coaxial-rca' with preset 'torque' and catheter JR4. This class sits inside the fixed near-ostium distance, aligned but not seated. The over-rotation check in analysis.ts runs for any '-rca' class, so the teaching moment survives. The physics registry tests no longer depend on impl/ being empty. They glob __fixtures__/impl on its own, and the real-folder test checks against collectPhysicsDevices(REAL)[0], which uses the same sort as getPhysicsDevices. The Settings markup follows the design system (stat-label, text-[12px] text-ink-faint) and is in British English. No clinical numbers were added, no ground truth appears on live screens, and nothing new runs per frame. One real problem remains, confirmed independently and outside this package's files: the new Settings text says difficulty changes hints and attending prompts, and no code does that yet.",
+    "findings": [
+     {
+      "where": "src/ui/sections/Settings.tsx (DIFFICULTY_NOTE and DIFF_HINT); the cause is in src/state/useSimulatorStore.ts, src/ui/lab/visibility.ts and src/mentor/visibility.ts",
+      "problem": "The Settings page now says difficulty changes the help given ('The most help: hints and attending prompts...', 'Less help', 'The least help'), but no code does this. A grep across src shows profile.difficulty reaches only FreeLab.tsx, which passes it to loadCase, and Challenge.tsx, which forces 'advanced'. Inside the simulator store, mentor host and start search it goes only to computeEngagement and findStartControls, and both ignore it unless difficultyScaled is set. Hints and the attending drawer follow policyFor, the level policy, not difficulty. After this package, the setting changes nothing a learner can see, and the page tells them it does. The text matches the brief and the plan's intent, so this is not the builder's fault, but the UI now makes a false claim.",
+      "severity": "major",
+      "fix": "Raise a follow-up repair package that owns src/state/useSimulatorStore.ts and src/ui/lab/visibility.ts (or src/mentor/visibility.ts). In it, make difficulty set the hint and attending-prompt policy, for example beginner = policy defaults, intermediate = no proactive hints, advanced = no hints or attending prompts except safety-critical ones. Add a test that each of the three difficulties produces a different hint and attending visibility. If that package cannot land soon, change the three DIFF_HINT strings to describe current behaviour only, for example keep 'the daily challenge and exam mode always use it' and drop the 'most/less/least help' claims, so the page stays true in the meantime."
+     },
+     {
+      "where": "src/mentor/skillCards.ts, 'over-rotation' template brief",
+      "problem": "The new brief reads 'The JR4 sits just short of the RCA ostium. Fine torque only: seat it without swinging past.' From 'coaxial-rca', computeEngagement often tells the learner to change height ('The tip is a touch high; come down gently.' or 'a touch low; withdraw slightly'), so seating may need insertion rather than torque. 'Fine torque only' can then contradict the live engagement message. The error being drilled is still over-rotation, so this is wording only.",
+      "severity": "minor",
+      "fix": "Reword the brief to keep the torque caution without forbidding insertion, for example: 'The JR4 sits just short of the RCA ostium, lined up. Seat it with small movements and do not torque past the ostium.'"
+     },
+     {
+      "where": "src/mentor/skillCards.ts, 'dissection' (preset left-main, near-lm) and 'air-embolism' (preset damping, selective-rca) templates; already raised in the builder's outOfScope",
+      "problem": "The builder probed 15 fresh seeds: 'dissection' resolved a start state on 12 and 'air-embolism' on 13. Review.tsx launchCard generates a fresh case, so in those cases the card loads with default controls and the moment of the error is lost. mentor.test.ts checks only one seed per card, so this goes unseen. It is the same problem this package fixed for over-rotation, and it predates this package.",
+      "severity": "minor",
+      "fix": "Raise a follow-up in skillCards.ts that pins a library caseId for these two cards, or picks a start class the fixed thresholds reach on every seed tried. Extend the multi-seed check in mentor.test.ts to every diagnostic card, for example 12 generated seeds each, asserting resolveDiagnosticStart is not null."
+     },
+     {
+      "where": "src/ui/sections/Settings.test.ts, 'is true of the engine' test",
+      "problem": "The test name claims the Settings description is true of the engine, but it checks only the engagement half (FIXED_ENGAGEMENT_THRESHOLDS and the same class at every difficulty). Nothing tests the 'changes the help given' half, which is how the major finding above went unnoticed.",
+      "severity": "minor",
+      "fix": "Rename the test to 'engagement is judged the same at every difficulty'. When the follow-up package lands, add the hint and attending-visibility assertion there, or here, so both halves of the Settings sentence are tested."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 4,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/mentor/mentor.test.ts src/ui/physics/types.test.ts src/simulation/engagement.test.ts src/progress/progress.test.ts src/ui/sections/Settings.test.ts (5 files, 149 tests, all passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0)",
+    "notes": "I checked all four findings against the code and applied all four.\n\n1 (major, Settings text). Confirmed. profile.difficulty only reaches loadCase (FreeLab.tsx) and the forced 'advanced' in Challenge.tsx. Inside the engine it only goes to computeEngagement and findStartControls, and both ignore it unless difficultyScaled is set. Hints and the attending drawer follow resolveLabPolicy in src/ui/lab/visibility.ts, which uses the entrustment level, the launched activity or exam mode. Difficulty plays no part in it. I applied the reviewer's interim option so the page now describes what the code does. DIFFICULTY_NOTE now reads: \"Catheter engagement is judged against the same tolerance at every difficulty. Hints and attending prompts follow your entrustment level and the activity you open, not this setting.\" The DIFF_HINT lines are now \"The default for new profiles.\" (beginner), \"Engagement is judged as at every other difficulty.\" (intermediate) and \"The daily challenge and exam mode always use it.\" (advanced). This departs from the brief's wording, which asked the page to say difficulty changes the help given, because that claim is false in the current code. The code comment in Settings.tsx explains why.\n\noutOfScope follow-up: a repair package that owns src/state/useSimulatorStore.ts and src/ui/lab/visibility.ts (or src/mentor/visibility.ts) should make difficulty set the hint and attending-prompt policy. It should add a test that the three difficulties produce different visibility, then restore the 'changes the help given' wording in Settings.tsx and Settings.test.ts.\n\n2 (minor, over-rotation brief). Applied. The brief now reads: \"The JR4 sits just short of the RCA ostium, lined up. Seat it with small movements and do not torque past the ostium.\"\n\n3 (minor, dissection and air-embolism start states). Confirmed with a probe: on fresh seeds, dissection resolved 11 of 15 and air-embolism 13 of 15. I fixed it in skillCards.ts, which is a listed file, by pinning library cases that resolve, fit each card's preset and are not exam held-out cases (I checked this with classifyCase). Dissection now uses caseId 'left-main-lesion-0' (preset left-main, near-lm, resolves with JL4.5). Air-embolism now uses 'rca-damping-0' (preset damping, selective-rca, resolves with JR4). Review.launchCard already prefers caseId, so no other file changes. I added a test to mentor.test.ts: 'every diagnostic card with a start class resolves on the case Review launches it on, for any seed'. A pinned card must resolve on its case; an unpinned card must resolve on 12 generated seeds. All cards pass.\n\n4 (minor, test name). Applied. The Settings.test.ts test is renamed 'engagement is judged the same at every difficulty', and the describe and first test now match the new text. The first test also asserts that no 'most/less/least help' or 'difficulty changes the help' claim appears.\n\nI created a temporary probe folder, src/__probe_tmp, and deleted it afterwards.\n\nFiles changed: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.tsx, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.test.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/skillCards.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/mentor.test.ts."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-1) at http://localhost:5173 and went to Settings. The 'Simulation difficulty' panel renders in the Clinical Graphite style with this note: 'Catheter engagement is judged against the same tolerance at every difficulty. Hints and attending prompts follow your entrustment level and the activity you open, not this setting.' Per-level lines: beginner 'The default for new profiles.', intermediate 'Engagement is judged as at every other difficulty.', advanced 'The daily challenge and exam mode always use it.' The source files were modified at 18:56-18:57, after the builder's report, so this text and the over-rotation brief differ from what the report quotes.",
+     "Read the code to see whether the note is true. profile.difficulty is used only in FreeLab loadCase, and from there in computeEngagement, which now uses fixed thresholds. engagement.ts says the difficulty-scaled rows are reachable only with difficultyScaled: true, which no lab passes. Nothing ties hints or the attending drawer to difficulty, so the rendered text matches current behaviour.",
+     "In the running app, imported /src/mentor/skillCards.ts and resolved the 'over-rotation' card (id rca-engage:over-rotation, start {preset torque, catheterId JR4, engagement coaxial-rca}) the way Review.launchCard does. It resolved to JR4 'coaxial-rca' on 8 of 8 verify seeds and on 40 of 40 Review-style seeds, and gave the same class at beginner, intermediate and advanced.",
+     "Swept torque from the resolved start. Turning past the ostium drops the tip to 'non-selective' within about 0.05 to 0.45 torque units, so the swing-past moment can occur. On some seeds the start sits at the very edge of the coaxial window: seed card:verify:2 has a coaxial window only 0.1 wide.",
+     "Ran findStartControls(case, 'JR4', 'selective-rca') over the full insertion and torque grid for the same 40 Review-style torque cases. The JR4 can be seated selectively in 30 of 40. It cannot be seated at all in 10, for example gen|torque|card:rca-engage:over-rotation:1700000015838:0. Library cases easy-rca-0, -1 and -2 resolve 'coaxial-rca' at [0,0], [0,-0.2] and [0,0] and are all seatable with a JR4.",
+     "Ran npx vitest run on src/mentor/mentor.test.ts, src/ui/physics/types.test.ts and src/ui/sections/Settings.test.ts: 68 of 68 passed, including 'every diagnostic card with a start class resolves on the case Review launches it on, for any seed'. Ran src/simulation/engagement.test.ts and src/progress/progress.test.ts: 81 of 81 passed. src/ui/physics/impl/ does not exist at present, and the registry tests pass in that state.",
+     "Console: no errors in the tab. Closed tab-1 afterwards. Did not click the difficulty buttons, because that would change the owner's saved profile."
+    ],
+    "problems": [
+     {
+      "where": "src/mentor/skillCards.ts, 'over-rotation' template (line 104), launched from src/ui/sections/Review.tsx launchCard",
+      "problem": "The card always resolves to JR4 'coaxial-rca', but Review generates a fresh 'torque' case for every launch. In 10 of 40 such cases the JR4 cannot reach 'selective-rca' anywhere on the insertion -12..30 by torque -3..3 grid. The brief tells the learner to 'Seat it with small movements', and the pass rule is failedAttempts.right <= 1. On about a quarter of launches the task cannot be done, and failed approaches pile up, so the card fails and is rescheduled for a reason the learner cannot fix.",
+      "severity": "major",
+      "fix": "In skillCards.ts only, pin the card to a library case that a JR4 both approaches coaxially and can seat: add caseId: 'easy-rca-0' to the start. Review uses caseId ahead of the preset, and easy-rca-0 gives coaxial [ins 0, tq 0] and seated [ins -0.5, tq 0.1]. Keep preset 'torque' and catheterId 'JR4'. Then add a mentor.test.ts assertion that findStartControls(case, 'JR4', 'selective-rca') is non-null for this card's case. The alternative is to keep generated cases and have resolveDiagnosticStart reject cases where the card's catheter cannot seat, but that needs a change to Review.tsx (out of scope) or an extra filter inside skillCards.ts."
+     },
+     {
+      "where": "src/ui/sections/Settings.tsx DIFFICULTY_NOTE / DIFF_HINT",
+      "problem": "The package acceptance asks the text to say that difficulty changes the help given (hints, attending prompts). The rendered text says the opposite: help follows entrustment level and the activity, not this setting. This is true to the current code, where difficulty no longer changes engagement, hints or prompts, but it does not meet the acceptance as worded. The setting now has no visible effect, and the intermediate line 'Engagement is judged as at every other difficulty.' tells the learner nothing.",
+      "severity": "minor",
+      "fix": "The plan owner decides. Either accept the truthful wording and record the acceptance change, or wire difficulty into resolveLabPolicy (src/ui/lab/visibility.ts, outside this package) and then restore the wording the acceptance asks for. If the truthful wording stays, change the intermediate line to something informative, for example 'Kept for older profiles; it does not change engagement or help.', or remove the selector until difficulty does something."
+     },
+     {
+      "where": "src/mentor/skillCards.ts findStartControls (cost = |ins|*0.1 + |tq|)",
+      "problem": "The resolver picks the smallest hub excursion, which can sit at the edge of the coaxial window. On seed card:verify:2 a +0.05 torque nudge already leaves 'coaxial-rca' for 'non-selective'. On those seeds the card starts one jitter away from losing the start class.",
+      "severity": "minor",
+      "fix": "For this card, prefer the middle of the target class: among grid points in the target class with the same insertion, pick the torque at the centre of the contiguous torque run, or add a margin penalty such as rejecting points whose \u00b10.05 torque neighbours are outside the class."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [
+     "Finding 2, the part asking the Settings text to say that difficulty changes the help given. I checked the code and it does not: in src/ui/sections/FreeLab.tsx and Challenge.tsx difficulty only reaches loadCase, and from there computeEngagement, which now uses FIXED_ENGAGEMENT_THRESHOLDS. Hints and the attending drawer follow resolveLabPolicy (src/ui/lab/visibility.ts), which never reads difficulty. The wording the acceptance asks for would tell learners something false, so I kept the accurate DIFFICULTY_NOTE. I did apply the rest of that finding: the intermediate line now reads 'Changes neither engagement nor the help given.' The plan owner still needs to choose: either record the acceptance change, or wire difficulty into resolveLabPolicy, which is outside this package, and then bring back the help-per-difficulty wording."
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/mentor.test.ts src/ui/physics/types.test.ts src/simulation/engagement.test.ts src/progress/progress.test.ts src/ui/sections/Settings.test.ts (5 files, 149 tests, all passed)",
+     "temporary probe test src/mentor/zz_probe.test.ts, run once to check the findings and then deleted"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output)",
+    "notes": "I checked each finding with a one-off probe over 40 generated 'torque' cases (seeds card:verify:0-39). Finding 1 holds: in 9 of the 40 cases the JR4 cannot reach 'selective-rca' anywhere on the search grid. Finding 3 also holds: in 36 of the 40 cases the smallest-excursion 'coaxial-rca' start leaves the class with a single torque step of 0.05.\n\nFix (findings 1 and 3), in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/skillCards.ts: the over-rotation card is now pinned to caseId 'easy-rca-0'. Preset 'torque', catheter JR4 and start class 'coaxial-rca' are unchanged, and so are the engagement thresholds and the shared findStartControls resolver. On easy-rca-0 the JR4 starts at insertion 0, torque 0. That is in the middle of the coaxial run, which spans torque -0.20 to 0.10. The catheter seats at torque 0.15 to 0.50 and drops back to coaxial at 0.55 and beyond, so over-rotating past the ostium can still happen and still be seen. I updated the comment on the template to match.\n\nIn /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/mentor.test.ts I rewrote the over-rotation start test. It now asserts:\n- the card is pinned to easy-rca-0;\n- findStartControls(case, 'JR4', 'selective-rca') is not null;\n- the start is right-sided, not selective, not in the conus, and nearer the RCA than the left main, at all three difficulties;\n- a torque step of 0.05 either way stays 'coaxial-rca';\n- the result is 'coaxial-rca' at every difficulty;\n- a clockwise sweep reaches 'selective-rca' and then leaves it again.\n\nFinding 2: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.tsx now has only the new intermediate line; the rejected part is explained above. I left src/ui/physics/types.test.ts alone because no finding concerned it."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "(1) The 'over-rotation' skill card resolves a start state under the fixed engagement thresholds and keeps its teaching moment (a JR4 over-rotated near the RCA ostium), without loosening the thresholds",
+      "met": true,
+      "evidence": "In src/mentor/skillCards.ts line 107 the card now uses preset 'torque', caseId 'easy-rca-0', catheterId 'JR4', engagement 'coaxial-rca' (it was 'near-rca'), and a comment explains the choice. The thresholds are unchanged: in src/simulation/engagement.ts, FIXED_ENGAGEMENT_THRESHOLDS is still THRESH.advanced (selDist 3.6, alignSel 0.94, nearDist 8, alignCoax 0.9, deep 2.2). These tests in src/mentor/mentor.test.ts pass: 'each diagnostic card resolves to a start state at the moment of the error' (line 931), 'the over-rotation card starts a JR4 coaxial with the RCA ostium on a case it can seat, at every difficulty' (line 947) and 'swinging past the RCA from the over-rotation card's start class is detected as over-rotation' (line 1010). Together they show the teaching moment survives."
+     },
+     {
+      "criterion": "(2) The Settings difficulty description matches the new behaviour: difficulty does not change how forgiving catheter engagement is",
+      "met": true,
+      "evidence": "In src/ui/sections/Settings.tsx, DIFFICULTY_NOTE reads 'Catheter engagement is judged against the same tolerance at every difficulty. Hints and attending prompts follow your entrustment level and the activity you open, not this setting.' The per-level DIFF_HINT lines are accurate: 'advanced' says the daily challenge and exam always use it, and Challenge.tsx:61 passes 'advanced'. The design asked for text saying difficulty changes hints and attending prompts. The code does not do that: resolveLabPolicy in src/ui/lab/visibility.ts decides hints and the attending drawer, and grep finds no read of difficulty in the lab, mentor or state hint paths. So the implementer wrote the accurate statement. That meets the acceptance wording 'the Settings text matches the new behaviour'. Only the design's premise was wrong."
+     },
+     {
+      "criterion": "(3) The two assertions in src/ui/physics/types.test.ts hold once diag-rod-physics adds impl/rod.ts",
+      "met": true,
+      "evidence": "The test no longer assumes impl/ is empty. It globs the real impl/ folder with the same pattern as types.ts:134 (REAL) and the fixture folder separately (FIXTURE). getPhysicsDevices() is checked against collectPhysicsDevices(REAL)[0], or null when nothing is registered. The fixture tests use FIXTURE only, and the combined test checks the length real+1 and the order, then id, rule. impl/ does not exist yet. The 7 tests pass."
+     },
+     {
+      "criterion": "Acceptance tests: mentor.test.ts, ui/physics/types.test.ts, simulation/engagement.test.ts and progress/progress.test.ts all pass",
+      "met": true,
+      "evidence": "npx vitest run on those four files: 4 files passed, 147 tests passed (mentor 59, physics types 7, progress 66, engagement 15), duration 4.75 s."
+     },
+     {
+      "criterion": "Typecheck clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit printed nothing and exited 0."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/simulation/engagement.ts lines 224-228 (THRESH doc comment); not in this package's files",
+      "problem": "The comment says difficulty 'changes assistance (hints and attending prompts) only'. This contradicts the code, where hints and the attending drawer follow resolveLabPolicy and not difficulty, and it contradicts the new Settings text. It is a stale comment only and does not change behaviour.",
+      "severity": "minor",
+      "fix": "Out of scope for this package. A follow-up that owns engagement.ts should reword it to: 'capture radius and tolerance do not change with difficulty; hints and attending prompts follow the lab policy (resolveLabPolicy), not difficulty.'"
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/mentor.test.ts src/ui/physics/types.test.ts src/simulation/engagement.test.ts src/progress/progress.test.ts (4 files, 147 tests, all passed)",
+     "npx tsc -p tsconfig.app.json --noEmit (clean, exit 0)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output, exit 0)"
+   }
+  ]
+ }
+}

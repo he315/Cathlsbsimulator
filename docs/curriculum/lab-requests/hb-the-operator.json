@@ -1,0 +1,88 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Held-out exam cases for the PCI lab so that PCI entrustment can rise above level II. Use the PCI ladder variants already prepared (length, position, severity, calcium, occlusion) to generate unseen cases per scenario, with exam mode as in the diagnostic lab: no hints, no coaching, one counted first attempt, leaving counts as a failure, and critical errors (perforation, unrecognised dissection, wire exit with a device advanced over it, contrast above 3.7 times creatinine clearance) resetting the count. The Assessment section currently states that PCI sessions are logged as practice and can reach level II only.",
+    "learnerDoes": "Completes held-out PCI cases as first operator in exam mode across scenarios (focal LAD, calcified RCA, LCx STEMI, RCA CTO), including at least one complication handled without help.",
+    "success": "Level III awarded after the agreed number of exam passes on distinct held-out PCI cases on at least two days without a critical error; level IV after further passes at higher rungs; the level shown per PCI activity in Competencies and logbook, labelled as simulator entrustment.",
+    "tips": [
+      "pci-operator-know-your-level",
+      "pci-operator-help-early"
+    ],
+    "lessonIds": [
+      "hb-the-operator-entrustment"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "mcs",
+    "what": "Held-out exam cases for the haemodynamics, MCS, structural and bedside labs, on the same exam rules, so that each device activity can be entrusted beyond level II and lapse if not practised.",
+    "learnerDoes": "Takes unseen exam cases for each device activity (IABP, Impella, ECMO, TAVI, TEER, LAAO, pacing, pericardiocentesis, right and left heart study).",
+    "success": "Each activity shows a simulator level above II only after exam passes on held-out cases, and drops by one after its expiry period without a pass.",
+    "tips": [],
+    "lessonIds": [
+      "hb-the-operator-entrustment"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "A supervisor (level V) mode: the learner watches a recorded or scripted trainee run of a diagnostic study and must stop it at each unsafe or poor step, name the problem and give the correction, using the manual's frame (goal, how, challenges, what can go wrong). Scripted faults: injecting on a damped trace, conus over-selection, missing a projection that separates an eccentric lesion, failing to review stored runs before reporting.",
+    "learnerDoes": "Acts as trainer: pauses the run at each fault, selects the problem and the instruction to give, and at the end gives a debrief with one target for the trainee.",
+    "success": "All scripted faults stopped before the next injection or step; debrief names a single target step; no false stops on correct steps beyond a set allowance.",
+    "tips": [
+      "pci-operator-one-target",
+      "diag-operator-review-the-runs",
+      "diag-operator-moderate-lesion-measure"
+    ],
+    "lessonIds": [
+      "hb-the-operator-teaching",
+      "hb-the-operator-entrustment"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A CTO programme pre-case planning screen in the mid-RCA CTO scenario: the learner fills in selection (planned, indication, consent covering CTO PCI, collaterals filmed), the equipment in the room (dual access for dual injection, 7-8 Fr AL and EBU or XB guides, IVUS with 8 Fr guides if IVUS-guided re-entry may be needed, re-entry system, guide extension), the heparin plan with Hemochron ACT targets (> 300 s antegrade, > 350 s retrograde, rechecked every 20-30 min once therapeutic), the drugs to avoid (bivalirudin best avoided because it cannot be reversed; no IIb/IIIa inhibitor or cangrelor, even after success, because wire perforations can reopen), the operators (two, proctor scrubbed), monitoring (ECG, haemodynamics, air kerma and contrast shown throughout) and the reasons to stop (usually 5 Gy air kerma without progress; contrast 3.7 times creatinine clearance, counting contrast already given that day). Missing items reduce the equipment available in the case (for example no contralateral injection, or a 6 Fr guide that backs out).",
+    "learnerDoes": "Completes the plan before wiring, then runs the case; at 5 Gy without crossing the lab raises 'high-radiation-dose' and the learner must decide whether to stop; after a dose above 5 Gy the learner arranges skin follow-up within a month and tells the patient about skin effects; after a high contrast dose the learner arranges a renal function recheck.",
+    "success": "Plan complete and correct before the first wire; case stopped (or crossed) without passing the written stopping triggers without a stated reason; debrief lists contrast, air kerma and the stop decision, with skin follow-up arranged above 5 Gy and a physicist peak skin dose request above 10 Gy.",
+    "tips": [
+      "pci-operator-cto-kit-before-start",
+      "pci-operator-cto-second-operator",
+      "pci-operator-know-your-level"
+    ],
+    "lessonIds": [
+      "hb-the-operator-programme"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "End-of-case duties in the PCI lab: a device check prompt when a balloon or stent is selected (type, diameter, length read back), a sign-out step that writes the logbook entry with Oxford's fields (role, access, presentation, complexity, techniques, complications), and, after any complication, a debrief and a duty-of-candour explanation step.",
+    "learnerDoes": "Confirms each device before insertion, completes the logbook fields honestly at the end, and after a complication chooses the debrief and patient-explanation actions.",
+    "success": "No device inserted without read-back; logbook entry complete with role recorded as performed; debrief and explanation chosen whenever a complication occurred.",
+    "tips": [
+      "pci-operator-check-the-device",
+      "pci-operator-log-the-case",
+      "pci-operator-debrief-after-complication"
+    ],
+    "lessonIds": [
+      "hb-the-operator-entrustment",
+      "hb-the-operator-pathway",
+      "hb-the-operator-teaching"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "logbook",
+    "what": "Logbook export and quarterly gap view in Competencies and logbook, using Oxford's logbook fields (date, diagnostic or interventional, first or second operator, access, presentation elective/urgent/emergent, complexity: bifurcation, left main, multivessel, calcified, CTO, vein graft; techniques: physiology, imaging, rotational atherectomy, laser, thrombus aspiration, distal protection; complications: perforation, dissection, lost equipment), with a table that highlights empty columns.",
+    "learnerDoes": "Opens the gap view, identifies activities with no logged sessions, and starts practice for one of them from the view.",
+    "success": "Every logged session carries the fields; the gap view lists zero-count fields and links to the lab that practises each.",
+    "tips": [
+      "pci-operator-log-the-case"
+    ],
+    "lessonIds": [
+      "hb-the-operator-pathway"
+    ],
+    "priority": "P3"
+  }
+]

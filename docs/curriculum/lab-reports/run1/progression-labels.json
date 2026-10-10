@@ -1,0 +1,132 @@
+{
+ "package": "progression-labels",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built progression-labels. Every entrustment level label (short and detail) in src/progress/competency.ts now names the simulator. None says 'without direct supervision'. Level IV reads 'Simulator entrustment: Entrustment in the simulator only: held-out simulator exams passed without the attending's help. Real procedures stay under direct expert supervision.' Level V also carries the phrase 'under direct expert supervision', which is taken from DISCLAIMER in src/data/teachingText.ts, and a test checks it against that text. In src/progress/logbook.ts, rows from the diagnostic lab and the full case are now judged on the mentor's sourced standards: standardsForRow, standardsVerdict and meetsSourcedStandards call evaluateStandards from src/mentor/standards.ts on the row's stored metrics. examEvents in competency.ts uses meetsSourcedStandards, so such a row counts toward level III, level IV and the final assessment only when it meets those standards. A formative pass (PASS_SCORE, scoring.ts) still counts toward levels I and II. Rows without mentor metrics count toward I and II only. On every recompute, including load through migrateProfile, a stored diagnostic award of level III or above is re-judged under this rule while the logbook still holds that EPA's history, so an award earned on the composite score alone is withdrawn. Awards whose evidence was trimmed from a full logbook are kept. A stored final assessment that rested on withdrawn level IV awards is derived again. roleFor moved into logbook.ts and competency.ts re-exports it, which avoids a circular import; existing imports are unchanged.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/progress/competency.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/progress/logbook.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/progress/progress.test.ts"
+    ],
+    "testsAdded": [
+     "progress.test.ts > honest entrustment labels > no level label or detail says 'without direct supervision'; every label names the simulator",
+     "progress.test.ts > honest entrustment labels > level IV states it is simulator entrustment and repeats the disclaimer's supervision rule",
+     "progress.test.ts > diagnostic levels III and IV rest on the mentor's sourced standards > practice rows without mentor metrics still count toward levels I and II on the formative score",
+     "progress.test.ts > ... > a full-study exam with finalScore 90 and a failed DIAGNOSTIC_FULL_STUDY standard does not count toward level III; one that passes does",
+     "progress.test.ts > ... > an exam row without mentor metrics, or without the literature metrics, does not count toward level III",
+     "progress.test.ts > ... > a passing standards verdict does not lift a row the lab marked failed, or one with a critical error",
+     "progress.test.ts > ... > single-coronary rows are judged on the engagement task, as the mentor's debrief judges them",
+     "progress.test.ts > stored profiles recomputed on load > a legacy level III earned on the composite score alone is withdrawn on load, and no EPA rises",
+     "progress.test.ts > stored profiles recomputed on load > a level III earned on the standards survives the reload unchanged",
+     "progress.test.ts > stored profiles recomputed on load > rows that meet the standards but failed the lab's own pass never lift a stored level",
+     "progress.test.ts > stored profiles recomputed on load > an award whose evidence was trimmed from a full logbook is kept, as every award is",
+     "progress.test.ts > stored profiles recomputed on load > a stored final assessment resting on withdrawn level IV awards is derived again"
+    ],
+    "testsRun": [
+     "npx vitest run src/progress/progress.test.ts: 65 passed (53 existing + 12 new). Before the fixture change, 9 existing cases failed as expected because they reached III/IV on the composite alone; see notes",
+     "npx vitest run src/ui/lab/labRun.test.ts src/state/progressRunFields.test.ts src/mentor/registries.test.ts src/ui/lab/lab.test.ts: 4 files, 47 passed",
+     "npx vitest run src/ui/lab/integration.test.ts src/ui/lab/controls/controls.test.ts src/mentor/mentor.test.ts: 3 files, 76 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)",
+    "acceptance": [
+     {
+      "criterion": "progress.test.ts: no level label or detail contains 'without direct supervision'; every label names the simulator",
+      "status": "met",
+      "evidence": "The new test 'no level label or detail says without direct supervision; every label names the simulator' checks that the short and detail text of every level 0-5 does not contain the phrase and matches /simulator/i. A second test checks that DISCLAIMER and the level IV detail both contain 'under direct expert supervision', that level IV says 'simulator only', and that level V also carries the phrase. Both pass."
+     },
+     {
+      "criterion": "A diagnostic attempt with finalScore 90 and a failed DIAGNOSTIC_FULL_STUDY standard does not count toward level III; one that passes the standards does",
+      "status": "met",
+      "evidence": "Test on diag-study. Two held-out exam rows with finalScore 90 (row.score 90, passed true) and contrastMl 50: standardsForRow gives DIAGNOSTIC_FULL_STUDY, the verdict is measured but not passed, the only failed standard is diag-contrast, and the result is awarded 2 with exams.passes 0. Two more exams with finalScore 90 that meet every standard give awarded 3 on the second day. Extra tests: rows without metrics, or missing standardisedLoops, do not count; rows the lab marked failed, or with a critical error, do not count; single-coronary rows use ENGAGEMENT_TASK."
+     },
+     {
+      "criterion": "A stored profile recomputed on load never shows a higher level than before; existing progress.test.ts cases pass",
+      "status": "met",
+      "evidence": "A stored legacy level III (built from the composite only) goes through migrateProfile, is re-judged to II, no EPA's awarded or effective level rises above the stored one, and a second load leaves it unchanged. A level III earned on the standards survives a JSON round trip unchanged. Rows that meet the standards but failed the lab's own pass never lift a level. Trimmed evidence keeps its award. A stale final assessment is derived again. All 53 existing cases pass. Their diagnostic exam rows now carry metrics that meet the standards, through a documented rowFromAttempt wrapper in the test file; no expected value was changed."
+     }
+    ],
+    "outOfScope": [
+     "src/progress/types.ts: LogRole still includes 'first operator, independent', which roleFor gives for mode 'independent'. This is a role string, not a level label, so it is outside this package's acceptance. The owner may want the role wording to name the simulator as well.",
+     "src/ui/sections/Challenge.tsx: the exam panel text ('Toward level III: 2 passes on held-out cases at rungs 3-4 ...') does not say that diagnostic exams must also meet the mentor's passing standards. The per-EPA 'next' line produced by competency.ts now says so ('..., each meeting the mentor's passing standards').",
+     "src/state/useProgressStore.ts recompute(): if a stored final assessment is withdrawn (its level IV awards are re-judged away), examResults['master-assessment'] keeps passed true, because the store only ever sets it. It should be cleared or recomputed when master.passed becomes false.",
+     "The diagnostic lab (useSimulatorStore.finishCase -> recordAttempt -> rowFromAttempt) does not yet log mentor metrics on its rows. Until it moves to useLabRun with metrics (a later package, presumably progression-exams or the diagnostic session work), no diagnostic exam can reach level III or IV. That is the intended honest state, but it means stored diagnostic levels III and above for current users are withdrawn on the next load."
+    ],
+    "notes": "I snapshotted all three listed files to datasets/tmp/wp-snapshots/progression-labels/src/progress/ before editing and created .started.\n\nDecisions a reviewer should check:\n(1) A row counts toward III/IV only if it is passed (the lab's pass), has no critical error, AND meets the standards. I chose this conjunction rather than letting the standards replace the composite. With the same logbook it is stricter than the old rule, so a recompute can never award more than before, which is the acceptance property. It also means the composite is still a necessary condition at III/IV, not the deciding one.\n(2) Standards selection copies src/mentor/index.ts defaultStandards: DIAGNOSTIC_FULL_STUDY for rows whose EPAs include diag-study, and ENGAGEMENT_TASK for single-coronary rows. The design names only DIAGNOSTIC_FULL_STUDY, but applied to a right-only or left-only engagement exam its 8-loop criterion would make level III unreachable for lca-engage, rca-engage and the access EPAs.\n(3) A row is 'measured' only when it has metrics and every literature-sourced or critical standard is measurable. criticalErrors is read as the larger of the metric and the row's own count. Non-critical simulator defaults that cannot be measured (for example viewCoverage.missing) pass, which matches evaluateStandards in the debrief. Flat dotted metric keys, as useLabRun stores them, are made reachable as nested paths.\n(4) The gated labs are 'diagnostic' and 'procedure', the same two as DIAGNOSTIC_SIMS in labRun.ts.\n(5) Withdrawal: stored awards of III and above for diagnostic-ladder EPAs are re-judged whenever the logbook holds the EPA's history: it is shorter than LOGBOOK_MAX, or it still holds the session that earned level I. Otherwise they are kept as before. Recomputation is idempotent because the logbook is append-only.\n(6) Existing tests: 9 existing cases reached III/IV/V with exam rows from rowFromAttempt, which carry no metrics. In progress.test.ts I now import the real function as rowFromAttemptRaw and define a local rowFromAttempt that attaches MEETS_STANDARDS metrics to exam-mode rows only. The metric values are fixtures chosen against the thresholds in standards.ts. Failed, critical and abandoned exams keep failing because of passed=false or the critical count. No assertion value was changed.\n(7) No new dose, threshold, device dimension or citation was added. Every threshold comes from src/mentor/standards.ts.\n\nI did not use the browser or run the full suite."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "The package is mostly complete and correct, but one fix is needed before sign-off. I ran the checks myself. src/progress/progress.test.ts passes (65 tests). progressRunFields.test.ts and labRun.test.ts pass (21 tests). npx tsc -p tsconfig.app.json --noEmit is clean. The diffs touch only the three listed files. The other files under src/ changed after .started (src/mentor/mentor.test.ts, src/mentor/registries.test.ts, src/simulation/pci/state.ts, src/simulation/pci/actions/scenario.ts, src/simulation/pci/actions/wire.ts) belong to other packages. Moving roleFor into logbook.ts leaves no import cycle: logbook -> mentor/standards -> mentor/metrics never imports src/progress. The labels meet the acceptance. No level reads 'without direct supervision', every level names the simulator, and level IV quotes 'under direct expert supervision', which a test checks against DISCLAIMER. The standards gate is real. Rows from the diagnostic lab and the full case count toward III, IV and the final assessment only when evaluateStandards passes on stored metrics. Rows without metrics count toward I and II only. Every other lab's pass rule is unchanged. Every threshold comes from src/mentor/standards.ts, no new clinical numbers were added, and nothing runs in a render path. The 'never higher on reload' property holds and is tested. The defect: when the change withdraws a stored final assessment, a component that is not a diagnostic-lab EPA keeps its level V. I confirmed this with a scratch probe outside src: deriveAll returns master.passed false while diag-report has awarded 5 and awardedOn[5] set.",
+    "findings": [
+     {
+      "where": "src/progress/competency.ts deriveEntrustment (loop over prev?.awardedOn) and deriveAll (final entrustment pass)",
+      "problem": "After a stored final assessment is withdrawn (masterHeld false, master.passed false), deriveAll returns first[e]. Its pass ran with master undefined and kept every prev award. diag-report is a MASTER_ASSESSMENT component but a reading-ladder EPA, so standardsRejudged returns false and it keeps awardedOn[5]: the profile shows level V although the final assessment is no longer passed. Scratch probe result: master false, diag-report awarded 5, awardedOn {1..5}. The new test 'a stored final assessment resting on withdrawn level IV awards is derived again' checks diag-report's level IV only, so it misses this. Before this package the stored master was never re-derived, so this package introduces the inconsistency.",
+      "severity": "major",
+      "fix": "In deriveEntrustment's prev-award loop add `if (L === 5 && o.master && !o.master.passed) continue;`. In deriveAll replace the final loop with `const withdrawn = !!o.master?.passed && !master.passed; for (const e of EPA_IDS) entrustment[e] = master.passed || withdrawn ? deriveEntrustment(e, logbook, { ...o, master }) : first[e]!;`. In progress.test.ts, add to that test: `expect(all.entrustment[\"diag-report\"].awardedOn[5]).toBeUndefined(); expect(all.entrustment[\"diag-report\"].awarded).toBe(4);`, plus a check that no component has awarded 5 while all.master.passed is false."
+     },
+     {
+      "where": "src/state/useProgressStore.ts recompute() (out of scope; owner's file)",
+      "problem": "As the builder reported, when deriveAll now withdraws a stored master, examResults['master-assessment'] keeps passed: true, because recompute only ever sets it. The confirmed 'master withdrawn' path makes this reachable for real profiles.",
+      "severity": "minor",
+      "fix": "Pass this to the owner of useProgressStore.ts. In recompute add `else if (!master.passed && p.master?.passed && p.examResults[\"master-assessment\"]?.passed) next.examResults = { ...p.examResults, \"master-assessment\": { ...p.examResults[\"master-assessment\"], passed: false } };`."
+     },
+     {
+      "where": "src/progress/logbook.ts meetsSourcedStandards",
+      "problem": "Gated rows count only when r.passed (the lab's composite pass, scoring.ts) AND the standards pass, so the composite stays a necessary condition at III and IV. The design says these levels should rest on the sourced standards 'instead of' the composite. A run that meets every Jensen 2016 criterion but scores below PASS_SCORE still fails. This conjunction is what guarantees the acceptance property (a recompute is never higher), so it is defensible, but it is a deviation from the design wording and the design does not record it.",
+      "severity": "minor",
+      "fix": "No code change needed now. Record the decision in the doc comment of meetsSourcedStandards and in the plan or handover note: the composite remains a gate until the diagnostic lab logs mentor metrics, and its row.passed comes from the standards verdict. Then the package that moves the diagnostic lab onto useLabRun should drop r.passed from the gate for measured rows, or set passed from the verdict."
+     },
+     {
+      "where": "Whole package (behaviour note for the owner)",
+      "problem": "The diagnostic lab (useSimulatorStore.finishCase -> rowFromAttempt) and migrated schema-1 rows carry no mentor metrics. After this package no live path can earn diagnostic level III or IV, and every current user's stored diagnostic awards of III and above are withdrawn on the next load (the logbook is under LOGBOOK_MAX). This is the honest state the design intends, and the builder disclosed it, but users will see levels drop.",
+      "severity": "minor",
+      "fix": "No change in this package. Make sure a later package (diagnostic lab on useLabRun, or progression-exams) logs standardisedLoops, procTimeS, fluoroS, contrastMl, criticalErrors, viewCoverage.missing and injectWhileDamped on diagnostic rows. Consider a one-line note on the progression screen saying diagnostic levels III and IV need the mentor's measured standards."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 2 (useProgressStore.ts recompute leaves examResults['master-assessment'].passed true after a withdrawn final assessment): confirmed as a real follow-on, but src/state/useProgressStore.ts is outside this package's file list, so it is not applied here. It goes to the owner of that file with the reviewer's fix: in recompute add `else if (!master.passed && p.master?.passed && p.examResults[\"master-assessment\"]?.passed) next.examResults = { ...p.examResults, \"master-assessment\": { ...p.examResults[\"master-assessment\"], passed: false } };`.",
+     "Finding 4 (the diagnostic lab and migrated schema-1 rows carry no mentor metrics, so diagnostic levels III and IV can't be earned and stored ones are withdrawn on load): the reviewer asked for no code change in this package. It goes to a later package (moving the diagnostic lab onto useLabRun, or progression-exams), which should log standardisedLoops, procTimeS, fluoroS, contrastMl, criticalErrors, viewCoverage.missing and injectWhileDamped on diagnostic rows. A one-line note on the progression screen would also help."
+    ],
+    "testsRun": [
+     "npx vitest run src/progress/progress.test.ts (66 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "I checked finding 1 (major) against the code and it is correct. When deriveAll withdrew a stored final assessment, it returned first[e], which was derived with master undefined, so the loop over prev awards kept every stored level V. diag-report is not judged on the standards, so it kept awardedOn[5] while master.passed was false.\n\nFixes, all in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/progress/:\n\n- competency.ts, deriveEntrustment: the loop over prev awards now skips level 5 when o.master is given and not passed (`if (L === 5 && o.master && !o.master.passed) continue;`).\n- competency.ts, deriveAll: computes `withdrawn = !!o.master?.passed && !master.passed`. Every EPA is derived again with `{ ...o, master }` when `master.passed || withdrawn`. Otherwise it still uses first[e]. deriveAll is the only caller that passes master (useProgressStore.ts line 113), so nothing else changes.\n- progress.test.ts: the test \"a stored final assessment resting on withdrawn level IV awards is derived again\" now also checks that diag-report has no awardedOn[5] and that awarded is 4. It also checks that no EPA holds level V.\n- progress.test.ts, new test \"a stored final assessment that still holds keeps every component's level V\": with a full logbook (LOGBOOK_MAX filler rows) that no longer holds the EPAs' history, master stays passed and every component keeps its level V.\n- logbook.ts (finding 3): no code change, as the reviewer advised. The doc comment of meetsSourcedStandards now records the decision. The lab's composite pass (row.passed) stays a necessary condition alongside the standards rather than being replaced by them. This keeps the rule that a recompute never lifts a stored level. The package that moves the diagnostic lab onto useLabRun should set row.passed from the standards verdict, or drop row.passed from the gate for measured rows. I edited only the code comment. Recording the decision in LAB_BUILD_PLAN.md or a handover note is outside this package and is left to the orchestrator.\n\nOne behaviour to know about, which I left alone because it is the builder's design: standardsRejudged treats a logbook below LOGBOOK_MAX, including an empty one, as holding the full history. With an empty logbook, a stored diagnostic award of III or above is withdrawn. That is why the new test uses a full filler logbook.\n\nI did not revert the fix to watch the new assertions fail. They cover the case the reviewer's scratch probe reproduced."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "progress.test.ts: no level label or detail contains 'without direct supervision'; every label names the simulator",
+      "met": true,
+      "evidence": "src/progress/competency.ts LEVEL_LABEL (lines 85-102): every short and detail string for levels 0-V contains 'simulator'. None contains 'without direct supervision'. Level IV detail reads 'Entrustment in the simulator only ... Real procedures stay under direct expert supervision.' Level V detail repeats the same rule. src/progress/progress.test.ts 'honest entrustment labels (progression-labels)' (lines 930-949) checks every label against both rules and checks the IV/V wording against DISCLAIMER in src/data/teachingText.ts, which contains 'under direct expert supervision'. Both tests pass. Outside the criterion: logbook.ts roleFor still maps mode 'independent' to the role 'first operator, independent', and the practice-mode names say 'independent'. Those are role and mode labels, not level labels, and no acceptance criterion covers them."
+     },
+     {
+      "criterion": "A diagnostic attempt with finalScore 90 and a failed DIAGNOSTIC_FULL_STUDY standard does not count toward level III; one that passes the standards does",
+      "met": true,
+      "evidence": "logbook.ts standardsForRow/standardsVerdict/meetsSourcedStandards (lines 49-138) apply evaluateStandards(metrics, DIAGNOSTIC_FULL_STUDY) to diagnostic and procedure rows. competency.ts examEvents (line 555) uses meetsSourcedStandards as the exam pass. Test at progress.test.ts line 983: two finalScore-90 exams with contrastMl 50 fail only diag-contrast and leave diag-study at level II (examProgress.have 0). Two more exams that meet the standards award level III. Further tests cover rows with no metrics (I/II only), rows missing literature metrics, failed or critical rows, and the engagement set. All pass."
+     },
+     {
+      "criterion": "A stored profile recomputed on load never shows a higher level than before; existing progress.test.ts cases pass",
+      "met": true,
+      "evidence": "competency.ts deriveEntrustment re-judges stored diagnostic awards of III and above through standardsRejudged, but only while the logbook still holds the EPA's history. deriveAll derives the master assessment again when its level IV awards are withdrawn. The store's recompute (src/state/useProgressStore.ts line 113) passes prev: p.entrustment. Six tests under 'stored profiles recomputed on load (progression-labels)' (lines 1055-1168) cover four cases. A legacy composite-only level III is withdrawn and no EPA's awarded or effective level rises, including on a second reload. A standards-earned level III survives. Rows that meet the standards but fail the lab's own pass do not lift a level. Awards whose evidence was trimmed are kept, and a withdrawn final assessment is derived again. npx vitest run src/progress/progress.test.ts: 66/66 passed. The ladder tests now log exam rows through a wrapper that adds the mentor metrics (MEETS_STANDARDS); this follows from the new rule."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/progress/progress.test.ts (66 passed, 0 failed, 10.5 s)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output, exit 0)"
+   }
+  ]
+ }
+}

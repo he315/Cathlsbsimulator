@@ -1,0 +1,864 @@
+{
+ "provenance": "Built by scripts/anatomy_validation/build_reference.mjs from data/ (outputs of library/*.mjs run on datasets/library CoronaryDominance cines during the anatomy-motion audit). mm assume a 6 F catheter (2.0 mm); scale by 0.83 if 5 F.",
+ "extents": {
+  "LCA_RAOcau": {
+   "runs": [
+    "cdm-00884-LCA-4",
+    "cdm-00899-LCA-2",
+    "cdm-00912-LCA-4",
+    "cdm-00915-LCA-5",
+    "cdm-00931-LCA-1",
+    "cdm-00953-LCA-1",
+    "cdm-00961-LCA-3",
+    "cdm-00992-LCA-4",
+    "cd-01031-LCA-6",
+    "cd-01045-LCA-3",
+    "cd-01050-LCA-2",
+    "cd-01157-LCA-5"
+   ],
+   "angle": {
+    "laoRao": -31,
+    "cranialCaudal": -22.5
+   },
+   "widthMm": {
+    "n": 12,
+    "p10": 78.65,
+    "p25": 89.04,
+    "median": 97.67,
+    "p75": 113.41,
+    "p90": 119.15
+   },
+   "heightMm": {
+    "n": 12,
+    "p10": 65.21,
+    "p25": 75.27,
+    "median": 104.52,
+    "p75": 111.6,
+    "p90": 118.2
+   }
+  },
+  "LCA_RAOcra": {
+   "runs": [
+    "cdm-00884-LCA-3",
+    "cdm-00912-LCA-1",
+    "cdm-00925-LCA-5",
+    "cdm-00942-LCA-2",
+    "cdm-01005-LCA-3",
+    "cdm-01027-LCA-3",
+    "cd-01037-LCA-5",
+    "cd-01048-LCA-4",
+    "cd-01057-LCA-4"
+   ],
+   "angle": {
+    "laoRao": -29,
+    "cranialCaudal": 25
+   },
+   "widthMm": {
+    "n": 9,
+    "p10": 91.79,
+    "p25": 95.08,
+    "median": 100.16,
+    "p75": 103.71,
+    "p90": 119.46
+   },
+   "heightMm": {
+    "n": 9,
+    "p10": 59.86,
+    "p25": 76.44,
+    "median": 94.46,
+    "p75": 109.71,
+    "p90": 123.12
+   }
+  },
+  "LCA_APcra": {
+   "runs": [
+    "cdm-00884-LCA-5",
+    "cdm-00915-LCA-2",
+    "cdm-00939-LCA-2",
+    "cdm-00956-LCA-2",
+    "cdm-00981-LCA-3",
+    "cdm-00996-LCA-5",
+    "cdm-01023-LCA-1",
+    "cd-01043-LCA-3",
+    "cd-01054-LCA-3",
+    "cd-01143-LCA-3",
+    "cd-01155-LCA-3"
+   ],
+   "angle": {
+    "laoRao": 0,
+    "cranialCaudal": 32
+   },
+   "widthMm": {
+    "n": 11,
+    "p10": 63.71,
+    "p25": 82.78,
+    "median": 106.09,
+    "p75": 118.87,
+    "p90": 128.7
+   },
+   "heightMm": {
+    "n": 11,
+    "p10": 55.7,
+    "p25": 71.76,
+    "median": 87.3,
+    "p75": 106.33,
+    "p90": 130.78
+   }
+  },
+  "LCA_LAOcau": {
+   "runs": [
+    "cdm-00893-LCA-2",
+    "cdm-00923-LCA-4",
+    "cdm-00949-LCA-2",
+    "cdm-00961-LCA-1",
+    "cdm-00981-LCA-6",
+    "cdm-00992-LCA-1"
+   ],
+   "angle": {
+    "laoRao": 37,
+    "cranialCaudal": -28
+   },
+   "widthMm": {
+    "n": 6,
+    "p10": 28.64,
+    "p25": 37.75,
+    "median": 53.59,
+    "p75": 60.73,
+    "p90": 82.45
+   },
+   "heightMm": {
+    "n": 6,
+    "p10": 12.25,
+    "p25": 15.69,
+    "median": 43.56,
+    "p75": 94.78,
+    "p90": 105.88
+   }
+  },
+  "LCA_LAOcra": {
+   "runs": [
+    "cdm-00893-LCA-4",
+    "cdm-00903-LCA-2",
+    "cdm-00913-LCA-1",
+    "cdm-00931-LCA-2",
+    "cdm-00942-LCA-3",
+    "cdm-00949-LCA-1",
+    "cdm-00961-LCA-2",
+    "cdm-00992-LCA-2"
+   ],
+   "angle": {
+    "laoRao": 30.5,
+    "cranialCaudal": 27
+   },
+   "widthMm": {
+    "n": 8,
+    "p10": 53.5,
+    "p25": 82.35,
+    "median": 91.65,
+    "p75": 101.54,
+    "p90": 106.71
+   },
+   "heightMm": {
+    "n": 8,
+    "p10": 43.51,
+    "p25": 51.04,
+    "median": 68.75,
+    "p75": 87.08,
+    "p90": 110.02
+   }
+  },
+  "RCA_LAO": {
+   "runs": [
+    "cdm-01027-RCA-7"
+   ],
+   "angle": {
+    "laoRao": 27,
+    "cranialCaudal": -2
+   },
+   "widthMm": {
+    "n": 1,
+    "p10": 40.86,
+    "p25": 40.86,
+    "median": 40.86,
+    "p75": 40.86,
+    "p90": 40.86
+   },
+   "heightMm": {
+    "n": 1,
+    "p10": 46.86,
+    "p25": 46.86,
+    "median": 46.86,
+    "p75": 46.86,
+    "p90": 46.86
+   }
+  },
+  "RCA_APcra": {
+   "runs": [
+    "cdm-01027-RCA-6",
+    "cd-01042-RCA-7"
+   ],
+   "angle": {
+    "laoRao": 4,
+    "cranialCaudal": 26
+   },
+   "widthMm": {
+    "n": 2,
+    "p10": 72.17,
+    "p25": 77.96,
+    "median": 87.61,
+    "p75": 97.26,
+    "p90": 103.05
+   },
+   "heightMm": {
+    "n": 2,
+    "p10": 78.8,
+    "p25": 83,
+    "median": 90,
+    "p75": 97,
+    "p90": 101.2
+   }
+  }
+ },
+ "extentsVesselOnly": {
+  "LCA_RAOcau": {
+   "angle": {
+    "laoRao": -31,
+    "cranialCaudal": -22.5
+   },
+   "peak": {
+    "widthMm": {
+     "n": 12,
+     "p10": 75.34,
+     "p25": 82.35,
+     "median": 91.05,
+     "p75": 96.72,
+     "p90": 114.56
+    },
+    "heightMm": {
+     "n": 12,
+     "p10": 65.21,
+     "p25": 75.27,
+     "median": 82.5,
+     "p75": 94.35,
+     "p90": 109.77
+    }
+   },
+   "fill": {
+    "widthMm": {
+     "n": 12,
+     "p10": 88.84,
+     "p25": 94.64,
+     "median": 104.39,
+     "p75": 119.83,
+     "p90": 128.96
+    },
+    "heightMm": {
+     "n": 12,
+     "p10": 89.88,
+     "p25": 96.19,
+     "median": 106.69,
+     "p75": 117.67,
+     "p90": 123.64
+    }
+   }
+  },
+  "LCA_RAOcra": {
+   "angle": {
+    "laoRao": -29,
+    "cranialCaudal": 25
+   },
+   "peak": {
+    "widthMm": {
+     "n": 9,
+     "p10": 91.84,
+     "p25": 95.08,
+     "median": 100.48,
+     "p75": 105.14,
+     "p90": 117
+    },
+    "heightMm": {
+     "n": 9,
+     "p10": 59.74,
+     "p25": 76.15,
+     "median": 87.71,
+     "p75": 94.46,
+     "p90": 109.12
+    }
+   },
+   "fill": {
+    "widthMm": {
+     "n": 9,
+     "p10": 89.97,
+     "p25": 99.84,
+     "median": 108.29,
+     "p75": 109.23,
+     "p90": 120.47
+    },
+    "heightMm": {
+     "n": 9,
+     "p10": 63.54,
+     "p25": 69.52,
+     "median": 96.86,
+     "p75": 108.86,
+     "p90": 115.02
+    }
+   }
+  },
+  "LCA_APcra": {
+   "angle": {
+    "laoRao": 0,
+    "cranialCaudal": 32
+   },
+   "peak": {
+    "widthMm": {
+     "n": 11,
+     "p10": 63.71,
+     "p25": 82.78,
+     "median": 106.09,
+     "p75": 118.87,
+     "p90": 127.67
+    },
+    "heightMm": {
+     "n": 11,
+     "p10": 55.7,
+     "p25": 71.76,
+     "median": 84.87,
+     "p75": 106.33,
+     "p90": 126.61
+    }
+   },
+   "fill": {
+    "widthMm": {
+     "n": 11,
+     "p10": 84.87,
+     "p25": 86.83,
+     "median": 108.62,
+     "p75": 117.36,
+     "p90": 121.33
+    },
+    "heightMm": {
+     "n": 11,
+     "p10": 79.24,
+     "p25": 82.91,
+     "median": 98.07,
+     "p75": 109.1,
+     "p90": 116
+    }
+   }
+  },
+  "LCA_LAOcau": {
+   "angle": {
+    "laoRao": 37,
+    "cranialCaudal": -28
+   },
+   "peak": {
+    "widthMm": {
+     "n": 6,
+     "p10": 28.64,
+     "p25": 37.75,
+     "median": 53.59,
+     "p75": 60.73,
+     "p90": 82.45
+    },
+    "heightMm": {
+     "n": 6,
+     "p10": 12.25,
+     "p25": 15.69,
+     "median": 43.56,
+     "p75": 94.78,
+     "p90": 105.88
+    }
+   },
+   "fill": {
+    "widthMm": {
+     "n": 6,
+     "p10": 92.73,
+     "p25": 96.21,
+     "median": 98.49,
+     "p75": 108.84,
+     "p90": 120.48
+    },
+    "heightMm": {
+     "n": 6,
+     "p10": 60.43,
+     "p25": 72.45,
+     "median": 82.37,
+     "p75": 97.68,
+     "p90": 103.6
+    }
+   }
+  },
+  "LCA_LAOcra": {
+   "angle": {
+    "laoRao": 30.5,
+    "cranialCaudal": 27
+   },
+   "peak": {
+    "widthMm": {
+     "n": 8,
+     "p10": 52.92,
+     "p25": 55.25,
+     "median": 62.22,
+     "p75": 83.81,
+     "p90": 91.88
+    },
+    "heightMm": {
+     "n": 8,
+     "p10": 43.51,
+     "p25": 51.5,
+     "median": 68.89,
+     "p75": 86.58,
+     "p90": 108.18
+    }
+   },
+   "fill": {
+    "widthMm": {
+     "n": 8,
+     "p10": 78.35,
+     "p25": 86.74,
+     "median": 87.33,
+     "p75": 97.42,
+     "p90": 108.71
+    },
+    "heightMm": {
+     "n": 8,
+     "p10": 52.35,
+     "p25": 67.06,
+     "median": 84.07,
+     "p75": 97.91,
+     "p90": 106.06
+    }
+   }
+  }
+ },
+ "tortuosity": {
+  "LAD_RAOcra": {
+   "b3_8": {
+    "n": 5,
+    "p10": 9.18,
+    "p25": 9.32,
+    "median": 12.95,
+    "p75": 16.92,
+    "p90": 17.92
+   },
+   "b8_20": {
+    "n": 5,
+    "p10": 7.77,
+    "p25": 7.89,
+    "median": 11.24,
+    "p75": 15.51,
+    "p90": 19.64
+   },
+   "b20_60": {
+    "n": 5,
+    "p10": 8.13,
+    "p25": 8.69,
+    "median": 13.85,
+    "p75": 16.42,
+    "p90": 28.1
+   },
+   "traces": [
+    {
+     "label": "LAD_RAOcra_00884",
+     "n": 149,
+     "b3_8": 12.95,
+     "b8_20": 15.51,
+     "b20_60": 8.69
+    },
+    {
+     "label": "LAD_RAOcra_00909",
+     "n": 146,
+     "b3_8": 9.32,
+     "b8_20": 7.69,
+     "b20_60": 16.42
+    },
+    {
+     "label": "LAD_RAOcra_00956",
+     "n": 141,
+     "b3_8": 18.59,
+     "b8_20": 11.24,
+     "b20_60": 13.85
+    },
+    {
+     "label": "LAD_RAOcra_01033",
+     "n": 106,
+     "b3_8": 9.09,
+     "b8_20": 7.89,
+     "b20_60": 7.75
+    },
+    {
+     "label": "LAD_RAOcra_01051",
+     "n": 148,
+     "b3_8": 16.92,
+     "b8_20": 22.39,
+     "b20_60": 35.88
+    }
+   ]
+  },
+  "RCA_LAO": {
+   "b3_8": {
+    "n": 4,
+    "p10": 10.46,
+    "p25": 12.67,
+    "median": 14.4,
+    "p75": 15.35,
+    "p90": 16.15
+   },
+   "b8_20": {
+    "n": 4,
+    "p10": 7.75,
+    "p25": 9.66,
+    "median": 11,
+    "p75": 11.55,
+    "p90": 12.05
+   },
+   "b20_60": {
+    "n": 4,
+    "p10": 10.05,
+    "p25": 10.09,
+    "median": 11.62,
+    "p75": 14.03,
+    "p90": 15.66
+   },
+   "traces": [
+    {
+     "label": "RCA_LAO_01030",
+     "n": 155,
+     "b3_8": 8.98,
+     "b8_20": 12.39,
+     "b20_60": 10.03
+    },
+    {
+     "label": "RCA_LAO_01032",
+     "n": 169,
+     "b3_8": 16.69,
+     "b8_20": 6.48,
+     "b20_60": 10.11
+    },
+    {
+     "label": "RCA_LAO_01046",
+     "n": 123,
+     "b3_8": 13.9,
+     "b8_20": 11.27,
+     "b20_60": 13.13
+    },
+    {
+     "label": "RCA_LAO_01053",
+     "n": 263,
+     "b3_8": 14.9,
+     "b8_20": 10.72,
+     "b20_60": 16.74
+    }
+   ]
+  },
+  "catheterNoiseFloor": {
+   "b3_8": {
+    "n": 3,
+    "p10": 6.68,
+    "p25": 6.81,
+    "median": 7.03,
+    "p75": 7.25,
+    "p90": 7.38
+   },
+   "b8_20": {
+    "n": 3,
+    "p10": 1.89,
+    "p25": 2.21,
+    "median": 2.76,
+    "p75": 3.31,
+    "p90": 3.63
+   },
+   "b20_60": {
+    "n": 3,
+    "p10": 3.64,
+    "p25": 4.66,
+    "median": 6.37,
+    "p75": 8.07,
+    "p90": 9.09
+   },
+   "traces": [
+    {
+     "label": "CATH_00909",
+     "n": 43,
+     "b3_8": null,
+     "b8_20": null,
+     "b20_60": null
+    },
+    {
+     "label": "CATH_01046",
+     "n": 99,
+     "b3_8": 7.47,
+     "b8_20": 3.85,
+     "b20_60": 2.96
+    },
+    {
+     "label": "CATH_01053",
+     "n": 63,
+     "b3_8": 6.59,
+     "b8_20": 1.67,
+     "b20_60": 9.77
+    }
+   ]
+  }
+ },
+ "lmLadLengthRAOcraMm": {
+  "n": 5,
+  "p10": 109.12,
+  "p25": 128.2,
+  "median": 134.9,
+  "p75": 135.6,
+  "p90": 135.66
+ },
+ "motionP1090Mm": {
+  "RCA_LAO": {
+   "n": 19,
+   "p10": 9.5,
+   "p25": 12.43,
+   "median": 17.95,
+   "p75": 24.13,
+   "p90": 29.57
+  },
+  "LAD_RAOcra": {
+   "n": 25,
+   "p10": 3.98,
+   "p25": 5.89,
+   "median": 8.25,
+   "p75": 11.81,
+   "p90": 15.6
+  },
+  "ratio": 2.18
+ },
+ "xtrackLines": [
+  {
+   "run": "cd-01031-LCA-4",
+   "line": "LAD_mid_y200",
+   "angle": {
+    "laoRao": 0.8,
+    "cranialCaudal": 27.7
+   },
+   "orient": "h",
+   "rangePx": 64.5,
+   "stepMedianPx": 3.1,
+   "stepP90Px": 7.63,
+   "frames": 22,
+   "lost": 5
+  },
+  {
+   "run": "cd-01031-LCA-4",
+   "line": "LAD_mid_y240",
+   "angle": {
+    "laoRao": 0.8,
+    "cranialCaudal": 27.7
+   },
+   "orient": "h",
+   "rangePx": 31.2,
+   "stepMedianPx": 2.23,
+   "stepP90Px": 8.8,
+   "frames": 26,
+   "lost": 1
+  },
+  {
+   "run": "cd-01031-LCA-6",
+   "line": "LAD_prox_x250",
+   "angle": {
+    "laoRao": -21.7,
+    "cranialCaudal": -19.5
+   },
+   "orient": "v",
+   "rangePx": 31.2,
+   "stepMedianPx": 3.15,
+   "stepP90Px": 6.62,
+   "frames": 27,
+   "lost": 0
+  },
+  {
+   "run": "cd-01031-LCA-6",
+   "line": "LAD_distal_y300",
+   "angle": {
+    "laoRao": -21.7,
+    "cranialCaudal": -19.5
+   },
+   "orient": "h",
+   "rangePx": 14.8,
+   "stepMedianPx": 1.51,
+   "stepP90Px": 6.83,
+   "frames": 18,
+   "lost": 9
+  },
+  {
+   "run": "cd-01031-LCA-6",
+   "line": "OM_y210",
+   "angle": {
+    "laoRao": -21.7,
+    "cranialCaudal": -19.5
+   },
+   "orient": "h",
+   "rangePx": 31.1,
+   "stepMedianPx": 2.34,
+   "stepP90Px": 6.27,
+   "frames": 20,
+   "lost": 7
+  },
+  {
+   "run": "cd-01031-LCA-6",
+   "line": "LCx_y325",
+   "angle": {
+    "laoRao": -21.7,
+    "cranialCaudal": -19.5
+   },
+   "orient": "h",
+   "rangePx": 33.6,
+   "stepMedianPx": 1.97,
+   "stepP90Px": 9.2,
+   "frames": 20,
+   "lost": 7
+  },
+  {
+   "run": "cd-01031-RCA-10",
+   "line": "cath_shaft_y212",
+   "angle": {
+    "laoRao": 25,
+    "cranialCaudal": -3.6
+   },
+   "orient": "h",
+   "rangePx": 15,
+   "stepMedianPx": 2.1,
+   "stepP90Px": 4.13,
+   "frames": 23,
+   "lost": 0
+  },
+  {
+   "run": "cd-01032-RCA-5",
+   "line": "RCA_mid_y285",
+   "angle": {
+    "laoRao": 27.4,
+    "cranialCaudal": -6.6
+   },
+   "orient": "h",
+   "rangePx": 45.5,
+   "stepMedianPx": 8.99,
+   "stepP90Px": 12.16,
+   "frames": 13,
+   "lost": 20
+  },
+  {
+   "run": "cd-01032-RCA-5",
+   "line": "RCA_dist_x155",
+   "angle": {
+    "laoRao": 27.4,
+    "cranialCaudal": -6.6
+   },
+   "orient": "v",
+   "rangePx": 27.8,
+   "stepMedianPx": 2.71,
+   "stepP90Px": 8.34,
+   "frames": 20,
+   "lost": 13
+  },
+  {
+   "run": "cd-01032-RCA-5",
+   "line": "RCA_dist_x230",
+   "angle": {
+    "laoRao": 27.4,
+    "cranialCaudal": -6.6
+   },
+   "orient": "v",
+   "rangePx": 14.6,
+   "stepMedianPx": 1.2,
+   "stepP90Px": 3.17,
+   "frames": 31,
+   "lost": 2
+  },
+  {
+   "run": "cd-01048-LCA-5",
+   "line": "LAD_prox_x300",
+   "angle": {
+    "laoRao": -18.6,
+    "cranialCaudal": -20.8
+   },
+   "orient": "v",
+   "rangePx": 15.9,
+   "stepMedianPx": 1.97,
+   "stepP90Px": 4.34,
+   "frames": 27,
+   "lost": 10
+  },
+  {
+   "run": "cd-01048-LCA-5",
+   "line": "LAD_mid_x380",
+   "angle": {
+    "laoRao": -18.6,
+    "cranialCaudal": -20.8
+   },
+   "orient": "v",
+   "rangePx": 27.8,
+   "stepMedianPx": 2.79,
+   "stepP90Px": 6.36,
+   "frames": 25,
+   "lost": 12
+  }
+ ],
+ "quoted": {
+  "transectCrossingsMedian": {
+   "LCA_RAOcra": 8,
+   "LCA_APcra": 7,
+   "LCA_LAOcra": 4,
+   "source": "library/transect2.mjs, 15/14/10 runs"
+  },
+  "xtrackPx512": {
+   "LAD": {
+    "range": [
+     16,
+     31
+    ],
+    "stepMedian": [
+     2,
+     3.2
+    ],
+    "stepP90": [
+     4.3,
+     8.8
+    ],
+    "stepMax": 11
+   },
+   "RCA": {
+    "range": [
+     28,
+     46
+    ],
+    "stepMedian": [
+     2.7,
+     9
+    ],
+    "stepP90": [
+     8.3,
+     12.2
+    ],
+    "stepMax": 14.2
+   },
+   "catheterShaft": {
+    "range": 15,
+    "stepMax": 5.3
+   },
+   "source": "docs/realism/research/xtrack.py on Azurion npz runs, 512 px, 15 frames/s"
+  },
+  "medianSpeedMmS": {
+   "RCA": 48,
+   "LAD": 17,
+   "noiseFloor": 4.6,
+   "source": "library/track.mjs NCC tracks, 0.31 mm/px, 15 frames/s"
+  },
+  "proximalLandmarkMm": [
+   6,
+   25
+  ],
+  "lmRegionPerBeatMm": 8,
+  "heartRateBpm": {
+   "median": 65.4,
+   "iqr": [
+    60.1,
+    71.5
+   ]
+  }
+ }
+}

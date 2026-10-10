@@ -1,0 +1,300 @@
+{
+ "package": "access-femoral-upsizing-angiogram",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built access-femoral-upsizing-angiogram. The new tests pass, the typecheck is clean, and every test file the change touches passes except one (scenarios.test.ts), whose failure exists without this package too.\n\nWhat it adds:\n- **Upsizing** (`src/simulation/access/upsizing.ts`, new). The femoral sequence after the micro-wire, Brilakis 4.2 steps 9-15 as quoted in the module text:\n  - The access wire is chosen at the needle. A hydrophilic wire is cautioned and scored, and pulling it back through the needle shears its jacket.\n  - The skin is nicked over the needle or a dilator. A nick over the bare wire at the groin is refused, and a nick with the sheath in is stopped and scored.\n  - The order is micropuncture dilator, inner dilator and 0.018 wire out, 0.035 wire (standard or stiff), dilator off, then the sheath at 10, 25 or 45 cm with the wire left in. A sheath straight over the 0.018 wire still goes in but is scored.\n  - Scripted resistances (scar, kinked micro-wire, poor track, 0.035 wire kink, subintimal sheath) raise dilator-resistance until a fix from the module's troubleshooting table is applied. Pushing a second time without a fix is scored as forcing.\n- **Session** (`caseSession.ts`):\n  - Sheath preparation is now two steps: aspirate 3-4 mL and discard, then flush from a second syringe or, wrongly, the same one. Flushing first is scored wrong and leaves clot in the sheath.\n  - A catheter loaded through a sheath not aspirated since it went in, or since the last catheter came out, picks up clot; `aspirate()` later finds it. The PCI hand-over now reports the sheath's clot.\n  - Transducing the side arm shows an arterial, venous or damped trace; a damped one raises pressure-damped. Any injection through a subintimal sheath is a critical error.\n  - `femoralAngiogram` takes a volume, view and magnification, and is scored on view, magnification, volume, wire in the aorta and waveform checked. The line it returns no longer gives the puncture height.\n  - `submitFemoralAngioReport` grades four items (bifurcation, inferior epigastric artery, size over 5 mm, disease) and stores the result on the site as `femoralAngioReport` for the closure package.\n  - dilator-resistance was added to `CASE_SESSION_EVENTS`.\n- **Groin drawing** (`route.ts`, `ultrasound.ts`):\n  - The angiogram fills the inferior epigastric artery.\n  - The profunda is drawn behind the superficial femoral artery (a labelled MODEL PARAMETER). The two overlap in AP and separate in RAO 20-30 for the right groin, but not in the opposite oblique. `femoralBifurcationSpread` measures this.\n  - Calcium shows as a faint line. The dilator, the 0.035 wire and sheath length are drawn, and the dilator also shows on ultrasound.\n- **Autopilot**: now upsizes at femoral artery sites, applies the listed fix for any scripted resistance, and transduces the side arm, re-puncturing if the sheath is subintimal.\n- **Nine scenarios** with a launch file: fem-upsizing, fem-obese-scar, fem-kinked-micro-wire, fem-poor-track, fem-wire-kinks, fem-subintimal-sheath, fem-angio-high, fem-angio-below-bif, radial-sheath-prep.\n- **UI**:\n  - The ultrasound view has the wire choice, nick and spread, upsizing steps, an \"If it will not go\" fixes list (shown whatever the problem, so it never names it), sheath size and length, side-arm preparation and taking the sheath out.\n  - The table panel has a shared side-arm block with a trace strip.\n  - The fluoroscopy view has RAO and LAO at 20 and 30 degrees, a magnified field, the femoral angiogram with a volume slider, and the report form over the image. The grade appears after submission in guided mode only.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/upsizing.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/upsizing.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/ultrasound.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/route.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/autopilot.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/UltrasoundView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/TablePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/upsizing.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/upsizing.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/upsizing.tips.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/access/upsizing.test.ts (19 tests: the pure sequence; scenarios open clean and play to recovery in guided mode, and three reach their start state in supervised mode; nick and upsizing; a dilator over a misplaced wire is a critical stop; hydrophilic wire through the needle; sheath preparation and clot; resistances and forcing; subintimal sheath; angiogram projection, technique and report; practice links)",
+     "src/simulation/session/upsizing.tips.test.ts (5 tests: pressure-damped tip in fem-upsizing, sheath-phase tips, each request tip at its step, declared raises, no waiting.ts entries for this package)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/access/upsizing.test.ts src/simulation/session/upsizing.tips.test.ts src/simulation/access/access.test.ts: 3 files, 59 tests passed",
+     "npx vitest run femoralPuncture.test.ts femoralPuncture.tips.test.ts caseSession.test.ts multiSite.test.ts multiSite.tips.test.ts ledgerTips.test.ts (src/simulation/session): 6 files, 68 tests passed",
+     "npx vitest run scenarios.test.ts planning.test.ts handover.test.ts emergencies.test.ts modules/planning.tips.test.ts modules/emergencies.tips.test.ts: 97 passed, 1 failed. The failure is scenarios.test.ts 'decision ledger ... clean case' (pre-puncture-checklist decision from modules/planning.ts). It fails the same way in a scratch copy with my four edited files reverted to the snapshots, so it does not come from this package.",
+     "emergencies.test.ts failed 3 vagal tests once while another agent was editing modules/emergencies.ts at the same moment. A rerun passed 26/26, and it also passes in the reverted scratch copy.",
+     "npx vitest run src/ui/access/caseTips.test.ts caseTips.reach.test.ts siteSelector.test.ts src/state/useProcedureStore.test.ts: 4 files, 37 tests passed",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts: 15 passed; src/content/content.test.ts: 61 passed",
+     "Final rerun after the last edits: upsizing.test, upsizing.tips.test, femoralPuncture.test, multiSite.test, caseTips.test: 86 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors. I checked that the build-info cache does not hide errors by adding a deliberately broken file, which it reported, then removing it.",
+    "acceptance": [
+     {
+      "criterion": "Skin nick with the sheath in is refused; needle-dilator-0.035-sheath succeeds",
+      "status": "met",
+      "evidence": "upsizing.test.ts 'Skin nick with the sheath in is refused; needle-dilator-0.035-sheath succeeds': fem-upsizing goes nick, needle out, dilator, inner out, 0.035 wire, dilator out, sheath; upsized-to-035 is correct. With the sheath in, skinNick() returns false, the attending stops it and skin-nick-safe becomes wrong. The pure sequence is checked step by step in 'needle, nick, dilator ...'."
+     },
+     {
+      "criterion": "Flush before aspirate is wrong; skipping aspiration sets catheter lumen clot and aspirate() later finds clot",
+      "status": "met",
+      "evidence": "upsizing.test.ts test of the same name (radial-sheath-prep): sheath-aspirate-then-flush is wrong ('Flushed before aspirating'), sheath.clot is true, loadCatheter sets catheter.lumenClot, and after navigating and pulling the wire aspirate() logs clot and clears it. Another test covers re-aspiration before a later catheter, and handover('pci').sheathState.clot being true."
+     },
+     {
+      "criterion": "'fem-subintimal-sheath' shows a damped side-arm trace and a puff through it is a critical error; 'fem-poor-track' blocks the sheath until nick-and-spread",
+      "status": "met",
+      "evidence": "upsizing.test.ts test of the same name: transduceSheath().trace is 'damped' and pressure-damped is active; sheathPuff() takes criticalErrors from 0 to 1 (subintimal-injection); taking the sheath out instead scores correct. In fem-poor-track the sheath is refused with dilator-resistance after a nick alone and goes in after spreadTrack(). Forcing and the scar, kinked-wire and wire-kink fixes are in 'forcing a stopped dilator ...'."
+     },
+     {
+      "criterion": "In AP the projected SFA and PFA overlap; in RAO 25 they separate",
+      "status": "met",
+      "evidence": "upsizing.test.ts test of the same name using femoralBifurcationSpread (cameraBasis projection of the drawn branches over the first 60 mm): AP maxGap below 0, RAO 25 maxGap above 2 mm, LAO 25 still below 0. Probe values: AP -0.78 mm, RAO 20/25/30 +6.2/+7.7/+9.1 mm. The profunda's course behind the SFA is a labelled MODEL PARAMETER."
+     },
+     {
+      "criterion": "browser: __accessFluoroDraw({ station:'groin', view:'rao', puff:true }) shows the bifurcation and the entry, and the report form grades the answer",
+      "status": "needs-browser",
+      "evidence": "Not run (no browser in this stage). The dev hook's puff:true at the groin with a femoral sheath now takes the scored angiogram, as the button does, then draws the frame. The report form appears over the image once an angiogram exists; the grade shows after submission in guided mode. The views are ap, rao20, rao (30), lao20, lao (30); there is no 'rao25' view id. The hook also takes mag."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios fem-upsizing, fem-obese-scar, fem-kinked-micro-wire under lessons pm-access-femoral-sheath, pm-access-troubleshoot, pm-to-the-root-table (from src/simulation/session/scenarios/upsizing.launch.ts)",
+      "status": "met",
+      "evidence": "upsizing.test.ts 'practice links' test of the same name checks each lesson and scenario pair and that the source matches upsizing.launch.ts. Another test checks every scenario's title and lessons, and that fem-angio-high opens on the fluoroscopy workspace. content.test.ts (61) and practiceIndex.test.ts pass."
+     },
+     {
+      "criterion": "Tips: in scenario fem-upsizing, after the action that raises 'pressure-damped', tipsFor(ctx, 20) includes access-no-waveform-sheath, and at phase 'sheath' it includes access-sheath-two-syringes; every waiting.ts entry naming access-femoral-upsizing-angiogram becomes satisfiable",
+      "status": "met",
+      "evidence": "src/simulation/session/upsizing.tips.test.ts. In fem-upsizing the action that raises pressure-damped is connecting the catheter to an unflushed line (the only way a normal fem-upsizing sheath raises it); it is also tested with fem-subintimal-sheath's damped side arm. At phase 'sheath', tipsFor includes access-sheath-two-syringes and access-root-sheath-aspirate-flush. waiting.ts has no entry naming this package (WAITING_TIPS plus DEFERRED_RETARGETS = 0), so the criterion holds trivially. All 8 tips from the plan's tip list are satisfiable by the case's raises."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: the new MODEL PARAMETERS have no entries there. They are labelled in code: MP_UPSIZING (step times, 0.035 wire length 300 mm, default angiogram 8 mL), MP_FEMORAL_ANGIO (profunda lateral share 0.25, drawn branch length, calcium line, 60 mm spread window), FIELD_MAG_MM 170, and the drawing sizes of the dilator (4 Fr, 35 mm in the B-mode lumen, 10 cm on fluoroscopy). The sourced values cite src/content/manual/pci-manual/05-access.ts (Brilakis 4.2 steps 9-15, the troubleshooting table) and 13-closure.ts (the 5 mm criterion) in comments.",
+     "src/ui/access/panels/ClosurePanel.tsx still calls femoralAngiogram() with no arguments and shows the returned line. That line now only says what was done, so the closure screen no longer gives the puncture height. The closure package may want to read session.femoralAngioReport instead.",
+     "src/simulation/session/scenarios.test.ts 'decision ledger' fails because modules/planning.ts scores pre-puncture-checklist and the autopilot never confirms it. planning.test.ts depends on that same behaviour (it expects the checklist decision to be wrong after fastForward), so fixing it needs a decision between those two packages. Not caused by this package.",
+     "Scenario start states that puncture for the team are blocked by the planning module's checklist in supervised or exam mode. My scenarios confirm the checklist through that module's public actions in their start states. The existing fem-entry-below-head in scenarios/femoral.ts has the same problem and is not fixed."
+    ],
+    "notes": "Design choices worth reviewing:\n- **Sheath straight over the 0.018 wire is allowed.** Existing tests in femoralPuncture, multiSite and caseTips call removeNeedle() then insertSheath() directly. So a femoral sheath straight over the micro-wire still goes in, scored by a new decision 'upsized-to-035', and the autopilot does the full upsizing.\n- **flushSheath() is kept** as the one-touch correct aspirate-and-flush for the autopilot and older tests.\n- **Re-aspiration flag.** `SiteSheath.aspiratedForNext` resets when a catheter comes out, so a later catheter or guide needs the sheath aspirated again. A diagnostic catheter swapped for a guide inside the PCI lab is not modelled here; the hand-over reports sheathState.clot and aspirated.\n- **'Take the sheath out and press'.** The ultrasound view now offers this for any sheath while no catheter is in, which is how the learner changes site after a subintimal sheath.\n- **Tip test wording.** The criterion's \"action that raises pressure-damped\" in fem-upsizing is met by connecting the catheter to an unflushed line, because a normal fem-upsizing sheath has an arterial side arm. The subintimal case is tested as well.\n- **Angiogram scenario anatomy.** fem-angio-high enters about 4 mm above the inferior epigastric origin, set at site x 48, below the ligament model's high-stick line, so the attending does not announce it. fem-angio-below-bif enters the common femoral artery within the site model's 3 mm 'at the bifurcation' (class low), and the report option is worded 'At or below it'.\n- **Disease in the report** means anterior-wall calcium of the common femoral artery, which the fluoroscopy view now draws.\n\nTest cost: upsizing.test.ts takes about 50 s, mostly one test that plays all nine scenarios to recovery.\n\nThe pre-package copies of the files are in datasets/tmp/wp-snapshots/access-femoral-upsizing-angiogram/ (.started is touched). A scratch copy used to compare against the pre-package code is in the session scratchpad, not the repo."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/simulation/access/upsizing.ts meet() (about line 205) with applyFix() (about line 222)",
+      "problem": "A second push after a fix that did not work is still scored as forcing. applyFix() sets blocked.pushes = 0 after a non-matching fix, but meet() never reads pushes: any push while blocked.kind === kind is recorded as forced. I checked this with a probe on fem-kinked-micro-wire: dilator stopped, then useStiffDilator() (a reasonable but wrong fix), then a retry. That gives upsizing-not-forced = wrong with the text 'pushed again ... without a fix', even though a fix was tried. On fem-poor-track, exchangeToStiffWire() followed by a retry is scored the same way. This contradicts the design: 'a second push ... without a fix in between'.",
+      "severity": "major",
+      "fix": "In meet(), when st.blocked?.kind === kind, first check `if (st.blocked.pushes === 0) { st.blocked.pushes = 1; return { ok: false, event: \"dilator-resistance\", log: STOPPED[kind] }; }`. Only when pushes >= 1 should it increment, push onto forced and return `forced`. Add a test: fem-kinked-micro-wire, dilator stopped, useStiffDilator(), retry gives decision 'upsizing-not-forced' undefined (or correct); a third push with no fix in between is wrong."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts loadCatheter() (about line 2685) and the subintimal sheath path",
+      "problem": "A subintimal sheath only matters if the learner puffs contrast or takes the sheath out. I checked fem-subintimal-sheath with a probe: upsize, sheath in, aspirate and flush, no transduce, loadCatheter('JR4') returns true, and navigate() reaches the ascending aorta. The result is criticalErrors 0, no events and no 'subintimal-sheath-not-injected' decision. So the scenario 'check it before you use it' can be finished through the subintimal sheath with nothing scored. The module text describes the cue: the wire will not advance once the sheath is in, so transduce the side arm (05-access.ts line 1538, 'If a wire will not advance once the sheath is in ...').",
+      "severity": "major",
+      "fix": "In loadCatheter(), when `this.sheath.subintimal`: call raiseTip(\"wire-resistance\"), log 'The wire will not advance beyond the sheath tip.', have the attending give a technique line that does not say 'subintimal', and return false. Optionally, if the learner tries again without transducing, call decideSubintimalHandled(st, false). This also makes the package raise wire-resistance itself (tip access-wire-never-push). Add a test: in fem-subintimal-sheath a catheter cannot be loaded, wire-resistance becomes active, and the case cannot reach the aorta through that sheath."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts femoralAngiogram() (about line 3270), called with no arguments from src/ui/access/panels/ClosurePanel.tsx line 140",
+      "problem": "This breaks the closure screen, which belongs to another package. ClosurePanel still calls femoralAngiogram() with no options. That now (a) scores 'femoral-angio-technique' using whatever laoDeg and magnification the fluoroscopy view last left, usually AP, so a closure-stage angiogram is marked wrong, and (b) returns only 'Read the groin on the image and report it'. But the closure panel has no image, and the report form exists only in AccessFluoroView. The closure flow therefore lost its puncture-height read-out and gained a scored error it cannot avoid.",
+      "severity": "major",
+      "fix": "Within this package, score technique only when a view is given: in femoralAngiogram() call fireAngioDecision(st) only if `o.laoDeg !== undefined`, which AccessFluoroView always passes. Report to the closure package (outOfScope) that ClosurePanel should send the learner to the fluoroscopy workspace for the angiogram and read session.femoralAngioReport, instead of showing the returned line."
+     },
+     {
+      "where": "src/simulation/access/upsizing.ts skinNick() and FIXES_FOR.scar",
+      "problem": "The module's first two fixes for scar ('Nick the skin, or enlarge the nick', 05-access.ts line 1497) cannot be reached at the groin. Scar only stops the dilator at stage micro-wire, where the needle is already out, and skinNick() refuses femoral nicks 'over' the bare wire. I checked this with a probe on fem-obese-scar: skinNick() after the stop returns false. Yet the UI's 'Enlarge the nick' button stays enabled, and FIXES_FOR lists nick and enlarge-nick. The only working fix is the stiffer dilator.",
+      "severity": "minor",
+      "fix": "Allow enlarging an existing nick over the wire: in skinNick(), when `st.nick.done` (an enlargement), skip the femoral over-wire refusal, or skip it only when `st.blocked?.kind === \"scar\"`. Alternatively, remove nick and enlarge-nick from FIXES_FOR.scar and grey the button out at stage micro-wire. Add a test that enlarging the nick resolves scar."
+     },
+     {
+      "where": "src/simulation/access/upsizing.ts FIXES_FOR['poor-track']",
+      "problem": "The module's table (05-access.ts line 1507) lists 'Exchange (through a dilator) to a stiff 0.035 inch wire' among the fixes for a sheath that will not advance. FIXES_FOR['poor-track'] has only 'spread', so exchanging does not resolve it, and together with the forcing bug above the retry is scored as forcing.",
+      "severity": "minor",
+      "fix": "Use FIXES_FOR['poor-track'] = ['spread', 'exchange-stiff-wire'], and have preempts('poor-track') also return true when st.wire035 === 'stiff'."
+     },
+     {
+      "where": "src/simulation/access/upsizing.ts meet() / UpsizeResult.event",
+      "problem": "The tip integration names access-wire-never-push (wire-resistance), but the package never raises wire-resistance. Every resistance, including the 0.035 inch wire kinking at the skin, raises dilator-resistance. The 'wire-resistance' member of UpsizeResult.event is never used. The tip is satisfiable only through events the case already raised before this package.",
+      "severity": "minor",
+      "fix": "For 'wire-kink-035', and for 'kinked-micro-wire' on the forced push, return event 'wire-resistance' as well as dilator-resistance. For example, make event an array, or have upsizeOutcome() also call raiseTip('wire-resistance') for those kinds. Assert it in upsizing.tips.test.ts."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts submitFemoralAngioReport() plus the AngioReport 'Report again' button in src/ui/access/AccessFluoroView.tsx",
+      "problem": "In guided mode the expected answer for each wrong item is shown after submission. 'Report again' then calls decide() again, which overwrites the ledger entry, so the learner can copy the revealed answers and turn 'femoral-angio-report' correct.",
+      "severity": "minor",
+      "fix": "Score the report once per angiogram: use decideOnce for 'femoral-angio-report', or re-score only when a new femoralAngio record exists since the last report (compare femoralAngio.t with femoralAngioReport.t). Keep the latest report on the site for the closure."
+     },
+     {
+      "where": "src/ui/access/UltrasoundView.tsx 'Take the sheath out and press' button className",
+      "problem": "The button is styled btn-danger unless the site is a femoral vein and the sheath is venous. At a femoral-vein site, the red or neutral colour tells the learner whether the sheath went into the vein or the artery. That is ground truth on a live screen.",
+      "severity": "minor",
+      "fix": "Style the button by site kind only: className={`btn ${session.activeSite.siteKind === \"femoral-vein\" ? \"\" : \"btn-danger\"}`}."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx render loop, femoralAngioTubes(...) at about line 310; src/simulation/access/route.ts femoralAngioTubes/femoralAngioBranches",
+      "problem": "While a puff fades, femoralAngioTubes runs every frame. It now rebuilds the SFA, PFA and accessory profunda point loops (siteToAortic per point) and the IEA tubePath every frame, so per-frame allocations in a render path have grown. sheathMm is also fixed at 100 whatever the sheath length (10, 25 or 45 cm).",
+      "severity": "minor",
+      "fix": "Cache the world-frame polylines from femoralAngioBranches and the IEA path, keyed on (geom, site, arteriotomyX) like groinCache, and change only mu with strength each frame. Pass sheathMm from session.sheath.lengthCm * 10 when it is set."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts sheathPuff()/femoralAngiogram() clamp Math.max(1, Math.min(20, ml)); AccessFluoroView.tsx slider min={2} max={15}",
+      "problem": "The contrast volume limits (1-20 mL clamp, 2-15 mL slider) are not sourced and not labelled as MODEL PARAMETERS. The new MODEL PARAMETERS (MP_UPSIZING, MP_FEMORAL_ANGIO, FIELD_MAG_MM, dilator drawing sizes) are labelled in code but have no entries in docs/realism/facts, which the rules require.",
+      "severity": "minor",
+      "fix": "Add these to MP_UPSIZING (for example puffClampMl: [1, 20], angioSliderMl: [2, 15]) and use them in both places. Report in outOfScope that docs/realism/facts needs entries for MP_UPSIZING, MP_FEMORAL_ANGIO and FIELD_MAG_MM."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx __accessFluoroDraw dev hook",
+      "problem": "The hook sets st.current.view and st.current.mag but not session.laoDeg or session.magnified, because those are updated only by React effects. puff() then scores the angiogram with the stale React view while the frame is drawn in the hook's view. For example, the acceptance call {view:'rao', puff:true} from an AP state is scored as AP. The dev hook also writes ledger decisions.",
+      "severity": "minor",
+      "fix": "In the hook, before calling puff(), set `session.laoDeg = VIEWS.find(v => v.id === st.current.view)!.arm.laoRao; session.magnified = st.current.mag;`. Better still, pass laoDeg from st.current.view inside puff() itself."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts removeCatheter() line about 3184",
+      "problem": "`this.sheath.aspiratedForNext = false` resets the active site's sheath, not the sheath at catheterSiteId. In a multi-site case where the active site differs from the catheter's site, the wrong sheath is marked as needing aspiration.",
+      "severity": "minor",
+      "fix": "Use the catheter's site: `const cs = this.sites.find((x) => x.id === this.catheterSiteId)?.sheath ?? this.sheath; if (cs) cs.aspiratedForNext = false;`. Use the matching accessor name in this class."
+     }
+    ],
+    "verdict": "Changes required: three major issues, otherwise sound. I ran the package tests myself (upsizing.test.ts and upsizing.tips.test.ts, 29/29 pass, about 52 s) and the typecheck (npx tsc -p tsconfig.app.json --noEmit, clean). Nearby tests also pass: access.test, femoralPuncture.test, multiSite.test and caseTips.test, 87/87. scenarios.test.ts fails one test ('decision ledger ... clean case'). A probe showed the only wrong decision there is pre-puncture-checklist from modules/planning.ts, so the failure does not come from this package.\n\nThe diffs against the snapshots match the plan entry. Of the files under src/ changed since .started, the 12 listed here are this package's own; the others (useSimulatorStore, mentor/report, emergencies, hypotension, patient/engine, Simulator.tsx, StudyReport, ReportSection, modules/emergencies, scenarios/emergencies) all appear in other packages' file lists. src/simulation/patient/__tmp/explore.test.ts is in no package's list and should be checked.\n\nWhat is done well:\n- The pure upsizing sequence, with stage gating, the skin nick, sheath lengths, scripted resistances and the subintimal sheath.\n- Aspirate then flush with a second syringe, and clot in the catheter when the sheath was not aspirated.\n- Transducing the side arm, with pressure-damped raised for a damped trace.\n- The scored femoral angiogram, the graded report stored for the closure, and the IEA drawn on the angiogram.\n- The profunda drawn behind the superficial femoral artery: they overlap in AP and separate in RAO 25, and this is checked by projection.\n- The nine scenarios and their launch file, and the autopilot upsizing with fixes and re-puncture.\n- Shared engines keep their defaults: sheathPuff keeps MP_SESSION.puffMl, and the new PunctureModel fields are optional.\n- The live screens name no problem: the fixes list is always shown and the log lines are neutral. The UI uses Clinical Graphite classes that exist, and the British English is consistent. Sourced numbers cite 05-access.ts and 13-closure.ts, and I found the quoted phrases there.\n- The tests are meaningful and cover every non-browser acceptance criterion. The browser criterion is untested.\n\nThe three major issues:\n1. Retrying after a fix that did not work is scored as forcing.\n2. A subintimal sheath can be used for a full catheter case with no consequence and no decision recorded.\n3. The closure panel's no-argument femoralAngiogram() call now scores technique and no longer reports anything. The closure panel itself belongs to another package and needs an outOfScope note.\n\nMinor issues: the scar nick fixes cannot be reached at the groin; poor-track is missing the stiff-wire fix; the package never raises wire-resistance; the report can be resubmitted after the answers are shown in guided mode; the sheath-removal button's colour shows vein or artery at a femoral-vein site; femoralAngioTubes rebuilds its geometry every frame; the contrast volume limits are not labelled; the dev hook scores with a stale view; and removeCatheter resets the active site's sheath rather than the catheter's."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 12,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/access/upsizing.test.ts src/simulation/session/upsizing.tips.test.ts: 36 passed (30 + 6, including 7 new tests)",
+     "npx vitest run src/simulation/session/ledgerTips.test.ts src/simulation/session/caseSession.test.ts: 19 passed",
+     "npx vitest run src/simulation/session/scenarios.test.ts: 23 passed, 1 failed. The failure is the same one the builder reported. A probe shows that in a radial-right case the only wrong decision is 'pre-puncture-checklist' (Not confirmed: 8 of 8 items). That decision belongs to another package and is not touched here."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: none of this package's files has an error. Three errors remain, all in src/ui/sim/pressureSession.test.ts (lines 38, 311, 312), which belongs to another package and was not edited.",
+    "notes": "I checked all 12 findings against the code and the module text (05-access.ts) and applied all of them. Finding 2 went in without its optional extra decision, because the existing decision's wording assumes contrast was injected.\n\n**Fixes in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/upsizing.ts**\n- **Forcing (F1):** a push after a fix that did not work now counts as meeting the resistance again (`pushes` 0 becomes 1, `met` set) and is not scored as forcing. Only a further push with no fix in between is forcing. `applyFix` now sets pushes to 0 before the pre-empt loop, so an early return can no longer skip it.\n- **Scar (F4):** the stopped micropuncture dilator is still on the wire at the skin. At stage micro-wire with scar or a kinked wire blocking, the nick now counts as over the dilator. A femoral nick or enlarged nick is therefore allowed and resolves scar, as the module's 'Nick the skin, or enlarge the nick' requires.\n- **Poor track (F5):** `FIXES_FOR['poor-track']` is now `['spread', 'exchange-stiff-wire']`, following the module table at line 1507. `preempts('poor-track')` is also true when the stiff 0.035 inch wire was chosen first.\n- **Wire resistance (F6):** `UpsizeResult` has a new `wireFelt` flag. It is set for wire-kink-035 (met and forced) and for a forced push against kinked-micro-wire. `upsizeOutcome()` raises wire-resistance whenever it is set.\n- **Volume limits (F10):** `MP_UPSIZING` has `puffClampMl: [1, 20]` and `angioSliderMl: [2, 15]`.\n\n**Fixes in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts**\n- **Subintimal sheath (F2):** `loadCatheter()` now refuses a catheter through a subintimal sheath. It raises wire-resistance, logs 'The wire will not advance beyond the sheath tip.', and gives a technique line that does not say 'subintimal'.\n- **Technique scoring (F3):** `femoralAngiogram()` calls `fireAngioDecision` only when `o.laoDeg` is given.\n- **Report scoring (F7):** `FemoralAngioReport` has a new `angioT` field. The report is scored once per angiogram, and a later report on the same angiogram is stored on the site without changing the ledger.\n- **Catheter site (F12):** `removeCatheter()` now resets `aspiratedForNext` on the sheath at the catheter's site.\n- **Volume clamp (F10):** both clamps now read `MP_UPSIZING.puffClampMl`.\n\n**Fixes in the drawing and UI files**\n- **Angiogram drawing (F9), /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/route.ts:** the angiogram's world-frame lines (main femoral vessel, branches, inferior epigastric) are built once and cached per (route, model, site, arteriotomy). Each frame now only changes the attenuation.\n- **/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx:**\n  - F9: `sheathMm` comes from `session.sheath.lengthCm * 10`.\n  - F11: `puff()` takes the view angle and magnification from `st.current` and writes them to the session first, which fixes the dev hook.\n  - F10: the slider uses `MP_UPSIZING.angioSliderMl`.\n- **Sheath-out button (F8), /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/UltrasoundView.tsx:** the button is now styled by site kind only.\n\n**Tests** (in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/upsizing.test.ts and /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/upsizing.tips.test.ts)\n- Two existing assertions were updated: `FIXES_FOR['poor-track']`, and the report test, which now checks that a second report on the same angiogram leaves the ledger unchanged and a new angiogram is scored again.\n- Six new tests in upsizing.test.ts:\n  - met again after a non-matching fix, and forcing after that (pure, and in fem-kinked-micro-wire)\n  - an enlarged nick resolves scar in fem-obese-scar\n  - exchanging to a stiff wire resolves poor-track, and a stiff wire chosen first pre-empts it\n  - wire-resistance in fem-wire-kinks\n  - a subintimal sheath refuses a catheter without naming it\n  - an angiogram with no view is not scored\n- One new test in upsizing.tips.test.ts checks that the package itself raises wire-resistance.\n- There is no new test for F12. It needs a multi-site case with the catheter at one site and a different active site.\n\n**OUT OF SCOPE (please route to the owners)**\n1. **Closure package**, src/ui/access/panels/ClosurePanel.tsx line 140: it calls `femoralAngiogram()` with no options and shows the returned line. That line no longer gives the puncture height, and the closure panel has no image or report form. It should send the learner to the fluoroscopy workspace for the angiogram and read `session.femoralAngioReport`. Its angiograms are no longer scored on technique.\n2. **docs/realism/facts** needs MODEL PARAMETER entries for:\n   - MP_UPSIZING, including puffClampMl, angioSliderMl and angioDefaultMl\n   - MP_FEMORAL_ANGIO in route.ts\n   - FIELD_MAG_MM\n   - the dilator drawing sizes (4 Fr; 10 cm drawing length)\n\nThe pre-existing failures (scenarios.test.ts pre-puncture-checklist, and the three type errors in pressureSession.test.ts) belong to other packages."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab at http://localhost:5173 and went to Full procedure. All nine scenarios appear in the Scenario list. The page reloaded itself several times during the run (another package's edits through HMR), so each check was rerun in a single script.",
+     "fem-upsizing through the ultrasound view buttons, advancing the session with __caseSession.tick because the pane was hidden. 'Nick the skin' over the bare wire after the needle came out was refused ('Nick over the needle or over the dilator...'). Needle out, micropuncture dilator, nick over the dilator, inner dilator and 0.018 wire out (pulsatile backflow), standard 0.035 wire, dilator off, then a 6 Fr 10 cm sheath all worked. Ledger: skin-nick-safe correct ('Nicked over the dilator'), upsized-to-035, femoral-entry.",
+     "With the sheath in, the nick button (now labelled 'Enlarge the nick') was refused with 'Not with a sheath in...' and skin-nick-safe became incorrect ('A nick was attempted with the sheath in'). The upsizing step buttons and the wire-choice buttons are disabled once the sheath is in.",
+     "Sheath side arm. Flushing first scored sheath-aspirate-then-flush wrong ('Flushed before aspirating'), set sheath.clot to true, and the attending explained why. Aspirating afterwards cleared the clot. Transducing showed 128/76 mmHg and set waveform to arterial.",
+     "Fluoroscopy view has AP, RAO 20, RAO 30, LAO 20 and LAO 30, the 25/17 cm field, the 8 mL volume slider and the 'Femoral angiogram' button. __accessFluoroDraw({station:'groin', view:'rao', puff:true}) returned true and logged 'Femoral angiogram: 8 mL through the sheath in RAO 30...'. femoral-angio-technique was correct ('RAO 30, low magnification, 8 mL, wire in, waveform checked'). The criteria match 05-access.ts (ipsilateral 20-30 degrees, low magnification, 5-10 mL).",
+     "Image check: saved the WebGL canvas with toDataURL straight after a puff and viewed it full size. In fem-upsizing and fem-angio-high the contrast-filled CFA, the sheath and wire, the femoral head, a thin branch running up and medially (the IEA) and the SFA and PFA separating low in the RAO 30 field are all visible. In fem-angio-below-bif (66-year-old woman) opacification is very faint and the bifurcation is hard to make out.",
+     "Report form, guided mode. In fem-upsizing, answering above / below the IEA / over 5 mm / no disease gave '4 of 4 as the angiogram shows.' and stored activeSite.femoralAngioReport with given, truth and grade. In fem-angio-below-bif, answering 'Above it' gave 3 of 4 and named the expected answer ('at or below it'). The truth matches the scenario design: entry 1.9 mm above a bifurcation at x 22, inside the 3 mm counted as at the bifurcation.",
+     "Report form, exam mode (newCase with mode 'exam', fem-angio-high). After submission it showed only 'Report recorded.'. The grade is stored and not displayed, and the 'tip in line' guided aid is not shown.",
+     "fem-subintimal-sheath through the UI. Aspirating returned 'Only a little blood comes back...'. Transducing showed a flat damped trace in the Table panel's SVG strip. __caseSession.tips() showed pressure-damped active and access-no-waveform-sheath among the visible tips. A puff through the sheath via the hook took criticalErrors from 0 to 1 (subintimal-injection), showed a red 'Stop. Nothing goes through a sheath without an arterial waveform...' and scored subintimal-sheath-not-injected wrong.",
+     "fem-poor-track. Insert after a nick alone was stopped ('Stop. Do not push the sheath...', blocked poor-track). A second Insert was scored as forcing (upsizing-not-forced wrong, forced ['poor-track']). After 'Spread the track' the sheath went in. The 'If it will not go' list shows every fix and does not name the problem.",
+     "radial-sheath-prep. The catheter was flushed and loaded through a sheath that had not been aspirated. catheter.lumenClot was true, the sheath's clot was true, and the view moved to fluoroscopy.",
+     "Console: no errors. The only warnings were WebGL 'READ-usage buffer' performance warnings. Closed my tab (tab-47) and reset the viewport emulation."
+    ],
+    "problems": [
+     {
+      "where": "src/simulation/session/caseSession.ts sideArmBlood() (about line 2231), called from aspirateSheath() (about line 2532)",
+      "problem": "Aspirating alone logs 'Bright red pulsatile blood aspirated; sheath flushed.' (or '...venous sheath flushed.'), although the sheath has not been flushed yet. In the radial-sheath-prep start the log shows this line and then 'Side arm flushed ... from a second syringe', which contradicts the new two-step preparation.",
+      "severity": "minor",
+      "fix": "Give sideArmBlood a flag, e.g. sideArmBlood(flushed: boolean). aspirateSheath() calls sideArmBlood(false), and the arterial and venous messages drop '; sheath flushed' / '; venous sheath flushed' when flushed is false. The legacy one-step flushSheath() keeps sideArmBlood(true)."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts fireAngioDecision() (about line 2626)",
+      "problem": "When the side arm was transduced and showed a damped trace (fem-subintimal-sheath), femoral-angio-technique still records 'Not as expected: waveform not checked', which is wrong in the ledger and debrief because the waveform was checked and was damped.",
+      "severity": "minor",
+      "fix": "Replace `!wave && \"waveform not checked\"` with `!wave && (a.waveform ? `waveform ${a.waveform}, not arterial` : \"waveform not checked\")`."
+     },
+     {
+      "where": "src/ui/access/panels/TablePanel.tsx SheathPrep (about lines 103-137)",
+      "problem": "The side-arm trace strip lives in the component's local state, so it only shows in the view where Transduce was pressed. The session already records sheath.waveform as damped, but after transducing in the ultrasound view the Table panel's block shows no strip, and the reverse also happens.",
+      "severity": "minor",
+      "fix": "Draw the strip from session state. Keep the last displayed text on the sheath, e.g. sheath.waveformText set in transduceSheath(), and render <SideArmTrace kind={sh.waveform} text={sh.waveformText}/> whenever sh.waveform is set, instead of using the local useState."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts transduceSheath() (displayed text) and SideArmTrace in TablePanel.tsx",
+      "problem": "A damped side arm is reported as the words 'flat and damped, no arterial waveform' in every mode, including exam. A transducer shows numbers, not a diagnosis, and the arterial case shows numbers ('128/76 mmHg'). This hands the learner the reading outside guided aids.",
+      "severity": "minor",
+      "fix": "Show a low numeric reading for a damped trace, e.g. `${Math.round(v.aortaTrue.dia*0.4)}/${Math.round(v.aortaTrue.dia*0.35)} mmHg` (label the factors MODEL PARAMETER in docs/realism/facts), and add the 'damped, no arterial waveform' wording only when session.mode === 'guided'. The log line can stay as it is for the debrief."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx __accessFluoroDraw dev hook (about line 357)",
+      "problem": "The hook sets st.current.view and st.current.mag but not the React view and mag state. After __accessFluoroDraw({view:'rao'}) the header still reads 'AP \u00b7 field 25 cm', the C-arm buttons still highlight AP, and the effect that copies the view into session.laoDeg never runs. The scored angiogram was right (RAO 30) because puff() reads st.current, but other code reading session.laoDeg sees AP.",
+      "severity": "minor",
+      "fix": "In the hook, also call setView(o.view) and setMag(o.mag) when they are given (hold the setters in refs if the effect closure needs them), or set session.laoDeg = VIEWS.find(v=>v.id===o.view)!.arm.laoRao and session.magnified = o.mag directly."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx AngioReport (w-72 overlay at top-left)",
+      "problem": "In the default pane width (about 650 CSS px, fluoroscopy canvas about 465 px) the report form covers almost all of the angiogram, so the learner cannot read the image while answering without pressing Hide and reopening.",
+      "severity": "minor",
+      "fix": "Below the lg breakpoint, render the report under the canvas instead of over it (e.g. wrap it in `lg:absolute lg:top-2 lg:left-2` and leave it static otherwise). At the very least, make it narrower and semi-collapsible (w-56, with the option groups in a two-column grid)."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx femoral angiogram contrast (mgPerMl = IODINE_MG_PER_ML * 0.5, about line 306) / fem-angio-below-bif",
+      "problem": "In fem-angio-below-bif, viewed in RAO 30 at peak puff strength, the CFA, SFA and PFA are barely more opaque than the soft tissue, so the bifurcation and the entry, which are the point of the case, are hard to read. fem-upsizing and fem-angio-high show clearly.",
+      "severity": "minor",
+      "fix": "Check the opacification against the calibrated grey-level targets for this patient's habitus. If it is the larger body attenuation, raise the limb-artery contrast dilution share (0.5, a model value) or give the femoral angiogram its own labelled MODEL PARAMETER so the bifurcation stays readable across the scenarios' body sizes. Confirm with __accessFluoroDraw({station:'groin', view:'rao', puff:true}) in fem-angio-below-bif."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 7,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/access/upsizing.test.ts (33 passed, including 3 new tests in 'in-app verification fixes')",
+     "npx vitest run src/simulation/session/upsizing.tips.test.ts src/ui/access/siteSelector.test.ts (11 passed)",
+     "In-app check on the running dev server (port 5173): the dev hook now updates the header to 'RAO 30'; after transducing in radial-sheath-prep the side-arm strip shows '114/69 mmHg' in both the ultrasound and Table views; the angiogram report sits in the controls column and leaves the image clear; the fem-angio-below-bif RAO 30 peak frame was captured and inspected"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I checked all seven findings against the code. All were right and all are fixed. Two are fixed differently from what the finding proposed (6 and 7).\n\n1. **Aspiration log** (`src/simulation/session/caseSession.ts`). `sideArmBlood` now takes a `flushed` flag. `aspirateSheath()` passes false, so the log reads \"Bright red pulsatile blood aspirated.\" with no flush claimed. The one-step `flushSheath()` passes true and still says the sheath was flushed. A new test covers both.\n\n2. **Angiogram scoring after a damped trace** (`caseSession.ts`). The `femoral-angio-technique` miss now records \"waveform damped, not arterial\" when the side arm was transduced, and \"waveform not checked\" only when it was not. A new test covers this.\n\n3. **Trace strip from session state** (`caseSession.ts`, `src/ui/access/panels/TablePanel.tsx`). `SiteSheath` has a new `waveformText` field, set in `transduceSheath()`. `SheathPrep` draws the strip from `sh.waveform` and `sh.waveformText` instead of local state, so the ultrasound and Table views show the same strip. Confirmed in the app.\n\n4. **Damped reading** (`caseSession.ts`, `src/simulation/access/upsizing.ts`). A damped side arm now shows a low numeric pressure, worked out from `MP_UPSIZING.dampedReadingOfDia = [0.4, 0.35]` times the patient's aortic diastolic pressure. That parameter is labelled as a model parameter in the code. The words \"(damped, no arterial waveform)\" are added only in guided mode. I went one step beyond the finding: the live log line now uses the same displayed text, because the log can be seen during exam mode and would otherwise give the reading away. The debrief still names the waveform through the ledger item from fix 2. A new test checks the guided and supervised wording.\n\n5. **Dev hook** (`src/ui/access/AccessFluoroView.tsx`). `__accessFluoroDraw` now calls `setView`, `setMag` and `setStation`, as the buttons do. For the same frame it also sets `st.current`, `session.laoDeg` and `session.magnified`. An unknown view id is ignored. Confirmed in the app: the header reads \"RAO 30\".\n\n6. **Report layout: fixed differently** (`AccessFluoroView.tsx`). I first tried the proposed fix (the report under the image below the lg breakpoint). At the default pane width the fluoroscopy panel is only about 280 px tall, so the report squeezed the image area to 0 px. I moved the report into the right-hand controls column instead, under the angiogram buttons. It never covers the image at any width and can still be hidden. Confirmed in the app.\n\n7. **Angiogram contrast: fixed with a separate parameter** (`AccessFluoroView.tsx`, `upsizing.ts`). The femoral angiogram now has its own `MP_UPSIZING.angioIodineShare = 0.85`, labelled as a model parameter. The test puff keeps the shared 0.5. The weak contrast comes mainly from where the bifurcation lies, over the dense femoral head region, with the larger habitus (1.08) adding a little. Measured mean contrast in the opacified pixels:\n\n| Scenario | Before (share 0.5) | After (share 0.85) |\n|---|---|---|\n| fem-angio-below-bif | 10.7 | 12.3 |\n| fem-angio-high | 14.0 | 17.7 |\n| fem-upsizing | 20.8 at share 0.7 (not measured at 0.5) | 22.9 |\n\nNo pixels saturated. On the captured fem-angio-below-bif RAO 30 peak frame the common femoral artery now reads through the dense region and the split is visible. fem-angio-below-bif still shows less contrast than the others, because a larger share helps only a little after the image processing. If it needs to match the others, the fix is in the shared X-ray processing or the groin's bone model, which is outside this package.\n\n**Formatting side effect** (`AccessFluoroView.tsx`). `npx prettier --check` changed the file on disk; the editor reported it as modified. There is no prettier config, so it was reformatted at width 80, and there was no backup to restore from. I reformatted it at `--print-width 200`, the closest match to the house style. The code behaves the same, but the file has more line-level formatting changes than the edits alone.\n\n**Out of scope.** The two new model parameters, `MP_UPSIZING.dampedReadingOfDia` and `MP_UPSIZING.angioIodineShare`, should also be listed in `docs/realism/facts`. That folder is not in this package's file list, so I did not edit it.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/upsizing.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/upsizing.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/TablePanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/AccessFluoroView.tsx"
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "Skin nick with the sheath in is refused; needle-dilator-0.035-sheath succeeds",
+      "met": true,
+      "evidence": "src/simulation/access/upsizing.test.ts has a test with this exact name, and it passes. In fem-upsizing the sequence nick, needle out, micro-dilator, inner out, 0.035 wire, dilator out and a 10 cm sheath succeeds, and upsized-to-035 and skin-nick-safe are correct. A nick with the sheath in returns false, the attending stops it and skin-nick-safe is scored wrong. The pure skinNick() in upsizing.ts refuses when sheathIn or stage==='sheath'."
+     },
+     {
+      "criterion": "Flush before aspirate is wrong; skipping aspiration sets catheter lumen clot and aspirate() later finds clot",
+      "met": true,
+      "evidence": "The sheath preparation test with this exact name passes in radial-sheath-prep. Flushing first scores sheath-aspirate-then-flush wrong ('before aspirating', tipIds include access-sheath-two-syringes) and leaves sheath.clot=true. loadCatheter then sets catheter.lumenClot=true and sheath-aspirated is scored wrong. aspirate() logs clot and clears lumenClot. Other passing tests cover the PCI hand-over clot through toPci/handover sheathState.clot and the wrong same-syringe flush."
+     },
+     {
+      "criterion": "'fem-subintimal-sheath' shows a damped side-arm trace and a puff through it is a critical error; 'fem-poor-track' blocks the sheath until nick-and-spread",
+      "met": true,
+      "evidence": "The test with this exact name passes. transduceSheath().trace is 'damped' and raises pressure-damped. sheathPuff() makes criticalErrors 1 with the critical complication subintimal-injection, and the attending never says 'subintimal'. In fem-poor-track insertSheath is refused with dilator-resistance until spreadTrack(), and then it succeeds. Further tests cover the numeric-only damped readout outside guided mode and the wire stopping at the sheath tip."
+     },
+     {
+      "criterion": "In AP the projected SFA and PFA overlap; in RAO 25 they separate",
+      "met": true,
+      "evidence": "The test 'In AP the projected SFA and PFA overlap; in RAO 25 they separate' passes. femoralBifurcationSpread gives maxGapMm < 0 at AP, > 2 at RAO 25, and < 0 at the contralateral LAO 25."
+     },
+     {
+      "criterion": "browser: __accessFluoroDraw({ station:'groin', view:'rao', puff:true }) shows the bifurcation and the entry, and the report form grades the answer",
+      "met": true,
+      "evidence": "Checked in the app on the running dev server at localhost:5173, in my own tab. __caseSession.scenario('fem-angio-high') opened the case, then the Fluoroscopy workspace. __accessFluoroDraw({station:'groin',view:'rao',puff:true}) returned true, and the RAO 30 frame showed the opacified common femoral artery dividing into two separated branches. Filling the Angiogram report form and pressing Report returned '3 of 4 as the angiogram shows. Entry and the inferior epigastric artery: above it.' (guided mode), so the form grades the answer. No console errors. A passing test also shows femoralAngioTubes returns 4 tubes (CFA, SFA, PFA, IEA). Other passing tests cover submitFemoralAngioReport grading against femoralAngioTruth."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios fem-upsizing, fem-obese-scar, fem-kinked-micro-wire under lessons pm-access-femoral-sheath, pm-access-troubleshoot, pm-to-the-root-table (from src/simulation/session/scenarios/upsizing.launch.ts)",
+      "met": true,
+      "evidence": "The practice-links test with this exact name passes. practiceForLesson returns procedure entries for each scenario under each lesson, and their source matches upsizing.launch.ts. The launch file declares all 9 scenarios, with titles matching SCENARIO_BY_ID, plus the fluoro-workspace links for the two angiogram cases."
+     },
+     {
+      "criterion": "Tips: in fem-upsizing, after the action that raises 'pressure-damped', tipsFor(ctx, 20) includes access-no-waveform-sheath, and at phase 'sheath' it includes access-sheath-two-syringes; every waiting.ts entry naming the package becomes satisfiable",
+      "met": true,
+      "evidence": "The new test file src/simulation/session/upsizing.tips.test.ts sits beside the event source (caseSession.ts), and its 6 tests pass. In fem-upsizing the phase 'sheath' context includes access-sheath-two-syringes, and after an unflushed line raises pressure-damped it includes access-no-waveform-sheath. All 8 package tips are satisfiable by the case's raises, which declare dilator-resistance, pressure-damped and wire-resistance with the wire, sheath and femoral phases. WAITING_TIPS and DEFERRED_RETARGETS have no entries naming the package (also checked by grep), so this holds trivially at zero. src/content/lab/reachability.test.ts passes."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/access/upsizing.test.ts src/simulation/session/upsizing.tips.test.ts (2 files, 39 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 tests passed)",
+     "In-app check on localhost:5173 in a separate tab: __caseSession.scenario('fem-angio-high'), Fluoroscopy workspace, __accessFluoroDraw({station:'groin',view:'rao',puff:true}), then the Angiogram report form submitted and graded '3 of 4' with the miss named; no console errors; viewport reset and tab closed afterwards"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ]
+ }
+}

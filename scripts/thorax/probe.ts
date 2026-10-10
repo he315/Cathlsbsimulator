@@ -1,0 +1,18 @@
+import { buildAnatomy } from "../../src/simulation/anatomy";
+import { CASE_LIBRARY } from "../../src/simulation/caseGenerator";
+import { buildCoronaryTree } from "../../src/render/xray/coronaryTree";
+import { buildThorax, thoraxSegmentCount } from "../../src/render/xray/thorax";
+const c = CASE_LIBRARY[0];
+const tree = buildCoronaryTree(buildAnatomy(c), c);
+let t0 = performance.now();
+const th = buildThorax({ resp: 0.3, heart: tree.heart, seed: 1, segments: true });
+console.log("first build ms", (performance.now() - t0).toFixed(1), "segs", thoraxSegmentCount(th), "anat", th.anat.length, "carve", th.anat.filter(a=>a.carve).length, "bones", th.bones.length);
+t0 = performance.now();
+for (let i = 0; i < 20; i++) buildThorax({ resp: i / 20, heart: tree.heart, seed: 1, segments: true });
+console.log("cached build ms", ((performance.now() - t0) / 20).toFixed(3));
+t0 = performance.now();
+const L = buildThorax({ resp: 0.3, heart: tree.heart });
+console.log("legacy first ms", (performance.now() - t0).toFixed(1), "tubes", L.tubes.length, "pts", L.tubes.reduce((s, t) => s + t.pts.length, 0));
+t0 = performance.now();
+for (let i = 0; i < 20; i++) buildThorax({ resp: i / 20, heart: tree.heart });
+console.log("legacy cached ms", ((performance.now() - t0) / 20).toFixed(3));

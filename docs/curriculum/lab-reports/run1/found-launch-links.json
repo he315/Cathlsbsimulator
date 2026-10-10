@@ -1,0 +1,199 @@
+{
+ "package": "found-launch-links",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built found-launch-links. Lessons, cases and the case library now use one parameter shape to open a lab. useUiStore.openSim(sim, params) puts the request in a new in-memory store that the lab takes once. engine-free .launch.ts files declare each lab's scenarios, starts, variants and drills, and a validator checks every link against them. A runtime practice index lists 'Practise this in the lab' under each lesson and case those files name.\n\nTwo changes in my listed files go beyond the literal design. First, LaunchLinkEntry gained an `adds` field. The design says a link may declare the start it adds, yet an unknown start must fail, and `adds` makes that declaration explicit. Second, variants and drills can be marked heldOut, because the pacing plan holds variants out for exams.\n\nopenSim with no params clears any request still pending for that lab, so a stale one cannot fire later. angio-real drills still go through requestDrill. Pending requests are never written to NavMemory.\n\nBlockRenderer passes params from sim blocks and from angio-pci drill blocks, and shows what a link opens. Under each lesson it renders 'Practise this in the lab'. Pathway passes only the blocks, so the lesson id is worked out from the blocks array itself. Entries that repeat a link already shown in the lesson are left out.\n\nCaseStudies shows the case's own practice entries plus the index entries for that case. They appear below the player only after the case has been completed once, so no complication is named before the learner meets it. The case card also gets a 'lab practice' chip.\n\nNo .launch.ts files exist yet, so the live index is empty and no lesson shows the list until a later package adds one.",
+    "filesChanged": [
+     "src/content/schema.ts",
+     "src/content/validateLaunch.ts",
+     "src/content/content.test.ts",
+     "src/state/useUiStore.ts",
+     "src/state/useLabLaunchStore.ts",
+     "src/ui/content/BlockRenderer.tsx",
+     "src/ui/sections/CaseStudies.tsx",
+     "src/ui/content/practiceIndex.ts",
+     "src/ui/content/practiceIndex.test.ts",
+     "scripts/README.md"
+    ],
+    "testsAdded": [
+     "src/content/content.test.ts: describe 'lab launch links' (7 tests: existing content and all .launch.ts validate; known scenario/start/variant/mode passes; unknown scenario fails; unknown start (and start without scenario) fails; unknown mode fails; held-out scenario and held-out variant fail; module sims, case practice and angio-pci drill blocks are checked)",
+     "src/state/useLabLaunchStore.test.ts (new, 3 tests: openSim('haemo',{scenario:'pe-massive'}) then take returns once then null and nav storage never contains it; requests are kept per lab, a plain open clears a pending one, take returns a copy, seq increments; angio-real drill still uses requestDrill and leaves no launch behind)",
+     "src/ui/content/practiceIndex.test.ts (new, 7 tests: fixture lessonIds ['x'] gives one entry with its params; held-out scenario/variant absent and refused; a cross-file links entry with adds lists under its lesson and case; unknown start fails validateLaunchLinks and is dropped from the index; unknown lessons and cases and duplicate scenario ids refused; runtime index excludes fixtures; SSR smoke test of PracticeList and a sim block with params)",
+     "src/ui/content/__fixtures__/demo.launch.ts and src/ui/content/__fixtures__/addon.launch.ts (new fixture files for practiceIndex.test.ts, excluded from both globs)"
+    ],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts: 59 passed",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/state/useLabLaunchStore.test.ts: 10 passed",
+     "npx vitest run src/progress/progress.test.ts src/content/manual: 58 passed (2 files)",
+     "npx vite-node scripts/content/status.ts, before and after: output byte-identical (cmp), 48 modules, 303 lessons",
+     "npx vite-node on a scratch script importing PRACTICE_INDEX: loads, 0 lessons, 0 problems (root-absolute glob resolves under vite-node)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)",
+    "acceptance": [
+     {
+      "criterion": "vitest content.test.ts: an unknown scenario id, an unknown start id, an unknown mode and a link to a heldOut scenario each fail validation; existing content passes (no params yet)",
+      "status": "met",
+      "evidence": "The new 'lab launch links' describe in src/content/content.test.ts has one test per failure case. Each asserts exactly the expected single error, using a test-only haemo launch file. The test 'existing content and every .launch.ts validate' gives [] for TRACKS plus PUBLISHED_CASES. 59/59 pass."
+     },
+     {
+      "criterion": "vitest: openSim('haemo',{scenario:'pe-massive'}) then take('haemo') returns the params once, then null; NavMemory never contains them",
+      "status": "met",
+      "evidence": "src/state/useLabLaunchStore.test.ts stubs localStorage. After openSim, take returns {scenario:'pe-massive'} and then null. The saved 'nav' entry exists and contains neither 'pe-massive' nor 'scenario'. Passes."
+     },
+     {
+      "criterion": "practiceIndex.test.ts: a fixture .launch.ts with lessonIds ['x'] gives lesson x one entry with its params; a heldOut scenario is absent; a links entry that names an unknown start fails validateLaunchLinks",
+      "status": "met",
+      "evidence": "src/ui/content/practiceIndex.test.ts, using __fixtures__/demo.launch.ts and addon.launch.ts. Lesson x gets one entry with params {scenario:'fixture-practice', mode:'guided'}. The fixture-exam scenario and the vx variant are absent. A link with start 'nope' gives exactly one 'unknown start \"nope\"' error. 7/7 pass."
+     },
+     {
+      "criterion": "npx vite-node scripts/content/status.ts still runs and prints the same module counts",
+      "status": "met",
+      "evidence": "Output captured before any edit and after all edits is byte-identical (cmp SAME): 48 modules, 303 lessons."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean",
+      "status": "met",
+      "evidence": "Exit 0 with no output after the final edits."
+     }
+    ],
+    "outOfScope": [
+     "src/content/validate.ts (owned by found-tips-vocabulary): it still refuses params on a drill block that has no drill ('drill \"(none)\" takes no parameters'), so a drill block with target 'angio-pci' cannot carry LaunchParams yet. validateLaunch.ts already checks those params; validate.ts should skip the DRILL_PARAM_RULES check when target is 'angio-pci'. It also does not check the new CaseStudy.practice entries, which validateLaunchLinks covers instead.",
+     "src/ui/sections/Pathway.tsx: module sims are opened with openSim(s.sim) and no params, so Module.sims[].params are validated but not passed to the lab. The fix is one line: openSim(s.sim, s.params). Optionally it could also pass lessonId={lesson.id} to BlockRenderer; today BlockRenderer looks the lesson up from its blocks array.",
+     "Each lab component (haemo, MCS, structural, bedside, cathlab, procedure, PCI lab, bench, physiology, views) still has to call takeLaunch(sim) or useLabLaunch(sim, apply) on mount. That belongs to the labs' own packages; until then, launch params are stored but no lab applies them.",
+     "src/progress/ui.tsx and src/ui/sections/Dashboard.tsx call openSim without params. Progress-screen launches with a scenario need edits there."
+    ],
+    "notes": "I took the snapshots before editing, in datasets/tmp/wp-snapshots/found-launch-links/ (with .started). validateLaunch.ts, useLabLaunchStore.ts, practiceIndex.ts, practiceIndex.test.ts and scripts/README.md did not exist and were created.\n\nBesides the listed files, the only new files are tests: src/state/useLabLaunchStore.test.ts and two fixtures in src/ui/content/__fixtures__/. The fixtures are excluded from the runtime index and the content test by the '!/src/**/__fixtures__/**' pattern. I edited nothing else.\n\nDesign choices:\n- A launch file exports `launch: LaunchFile` with sim, scenarios, drills and links.\n- The glob is root-absolute ('/src/**/*.launch.ts'). The same literal pattern appears in practiceIndex.ts and content.test.ts, because import.meta.glob takes literals only.\n- `preset` is checked against the same id list as `scenario`, so dev-lab presets must be declared as scenarios in their .launch.ts.\n- `step` requires `technique`, and `events` must be kebab-case.\n- Keys outside the standard set pass through unchecked, because labs such as the view trainer use their own (for example 'exercise').\n- A scenario's mode defaults to guided in the index.\n- The validator also refuses lessonIds or caseIds that do not exist, duplicate scenario ids across files, and a heldOut scenario that lists lessons.\n- I added CaseStudy.practice but not CaseStudy.sims. The design text says 'CaseStudy.sims gain params', but CaseStudy has no sims field, so I took that to be a slip.\n\nNo doses, thresholds or device values were added. I did no browser check, as instructed."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Accept once the one major fix below is made. The design is implemented almost completely: the LaunchParams schema, the in-memory useLabLaunchStore (never written to NavMemory), openSim routing (angio-real drills still go through requestDrill), validateLaunchLinks with the glob-built known ids, the runtime practice index, 'Practise this in the lab' under lessons and after cases, and scripts/README.md. Tests ran: content.test.ts, practiceIndex.test.ts and useLabLaunchStore.test.ts all pass (69 tests). tsc -p tsconfig.app.json --noEmit is clean. vite-node scripts/content/status.ts still exits 0 and lists 48 modules. The tests that cover the acceptance criteria are meaningful, not tautological: each failure case asserts its specific error. Diff scope is clean. Outside the listed files, the only changes under src/ are the builder's new tests and fixtures, plus files owned by other wave-1 packages: tips.ts, tips.test.ts and validate.ts belong to found-tips-vocabulary, and types/index.ts and caseModel.test.ts belong to found-case-model-types. Behaviour for untouched labs is unchanged. No existing angio-pci drill block carries a drill or params. RealAngiograms treats params {} the same as undefined, so the DrillLink switch from setSection to openSim does not change any current link. I found no unsourced clinical numbers, no ground truth on live screens, no per-frame allocations, and nothing off the design system or British English. The builder's out-of-scope items are correctly identified and left alone: validate.ts refusing params on an angio-pci drill block, Pathway's openSim(s.sim) with no params, labs not yet calling useLabLaunch, and progress/Dashboard links.",
+    "findings": [
+     {
+      "where": "src/ui/content/practiceIndex.ts:51 (buildPracticeIndex calls buildKnownLaunch(files) with no options)",
+      "problem": "The practice index does not know the built-in Real angiograms drills, but the content test does: launchKnown passes { drills: { 'angio-real': ANGIO_DRILL_IDS } }. As a result, a .launch.ts link such as { sim: 'angio-real', links: [{ drill: 'locate', lessonIds: [...] }] } passes validateLaunchLinks in content.test.ts. The index then fails it in checkLaunchParams ('unknown drill') and drops it silently, so the lesson never shows the entry. I reproduced this with a vite-node scratch script: the validator returned [] and the index entries for the lesson were []. A package linking a reading drill from its own practice file would see green tests and no link in the app.",
+      "severity": "major",
+      "fix": "In practiceIndex.ts, import ANGIO_DRILL_IDS from '../../content/validate' and build with buildKnownLaunch(files, { drills: { 'angio-real': ANGIO_DRILL_IDS } }). Better: put the default inside buildPracticeIndex, or export one shared BUILTIN_LAUNCH_DRILLS constant from validateLaunch.ts that both content.test.ts and practiceIndex.ts use, so the two cannot drift. Add a practiceIndex.test.ts case: an angio-real link with drill 'locate' and lessonIds ['x'] gives lesson x one entry with params { drill: 'locate' }."
+     },
+     {
+      "where": "src/ui/sections/CaseStudies.tsx:14-21 (casePractice)",
+      "problem": "casePractice removes repeats with launchKey, which includes mode. The index always adds a mode to scenario links (default guided). So a case's own practice entry { scenario: 'a' } and an index entry for the same scenario ({ scenario: 'a', mode: 'guided' }) both appear in the list. BlockRenderer avoids this for lessons with the mode-blind placeKey. Lessons and cases therefore handle repeats differently, and a case can list the same lab place twice.",
+      "severity": "minor",
+      "fix": "Move placeKey (sim plus params without mode) from BlockRenderer.tsx into practiceIndex.ts, export it, and use it for the seen set in casePractice and in inlineLaunchKeys in BlockRenderer."
+     },
+     {
+      "where": "src/ui/content/practiceIndex.test.ts / src/state/useLabLaunchStore.test.ts",
+      "problem": "Three behaviours the design depends on have no test. (1) BlockRenderer finds the lesson id from the blocks array identity (the WeakMap in lessonIdFor) and renders the lesson's practice list without repeating inline sim or drill links. (2) casePractice merges own and index entries, and the list appears only after a case record exists. (3) The useLabLaunch hook takes a request on mount and again when a new request arrives while the lab is mounted. Every lab package will rely on the hook, and the subscription logic is the least obvious part of the store.",
+      "severity": "minor",
+      "fix": "Add an SSR test that renders BlockRenderer with a lesson's own blocks array from a fixture-built index. For that, let practiceForLesson's index be injectable, or test lessonIdFor and inlineLaunchKeys as exported helpers. Assert that one PracticeList row appears and that an inline sim block with the same scenario removes it. Add a store test for useLabLaunch (react-dom/server cannot run effects, so call the subscribe path directly, or use a minimal react-test-renderer if available). It should check that a request made while the hook is subscribed calls onLaunch once and leaves nothing pending."
+     },
+     {
+      "where": "src/ui/sections/CaseStudies.tsx:14 and src/ui/content/BlockRenderer.tsx:366",
+      "problem": "Component files now export non-component values (the casePractice function and the practiceItem constant). With Vite's React refresh, a module that mixes component and non-component exports loses fast refresh, so edits trigger full reloads. It is also an odd home for data helpers that the case card and the lesson list share.",
+      "severity": "minor",
+      "fix": "Move casePractice, practiceItem and the PracticeItem type into src/ui/content/practiceIndex.ts, or a new practiceItems.ts if you prefer to keep the index pure. Leave only components exported from CaseStudies.tsx and BlockRenderer.tsx."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 4,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/state/useLabLaunchStore.test.ts (2 files, 14 tests passed)",
+     "npx vitest run src/content/content.test.ts (59 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "I checked all four findings against the code. Each one was right, and all four are fixed.\n\n1. **Major: drill links passed the test but vanished from the index.**\n   - `src/content/validateLaunch.ts` now exports `BUILTIN_LAUNCH_DRILLS = { \"angio-real\": ANGIO_DRILL_IDS }`, imported from `./validate`. Nothing creates an import loop, since validate.ts does not import validateLaunch.ts.\n   - `buildKnownLaunch` uses `BUILTIN_LAUNCH_DRILLS` whenever no `opts.drills` is passed. `content.test.ts` (`launchKnown`) and `buildPracticeIndex` both rely on that default now, so they accept the same drills and cannot drift apart.\n   - New test in `practiceIndex.test.ts`: a .launch.ts link to the `locate` drill for lesson x passes the validator, and the index then lists one entry under lesson x with params `{ drill: 'locate' }`.\n\n2. **Minor: a case could list the same lab place twice.**\n   - `placeKey` (sim plus params, ignoring mode) moved from `BlockRenderer.tsx` into `src/ui/content/practiceIndex.ts` and is exported.\n   - `casePractice` and `inlineLaunchKeys` both remove repeats with it now, so lessons and cases handle repeats the same way.\n\n3. **Minor: three behaviours had no test.**\n   - The lesson and case logic now lives in exported helpers in `practiceIndex.ts`, each taking an index so tests can pass a fixture one: `lessonIdFor` (takes `{ TRACKS }` and a blocks array), `inlineLaunchKeys`, `lessonPractice(lessonId, blocks, index)`, `casePractice(c, index)` and `practiceAfterCase(c, caseRecords, index)`.\n   - `BlockRenderer` and `CaseStudies` call these helpers.\n   - New tests check the following:\n     - `lessonIdFor` finds the lesson from its own blocks array, and returns undefined for a copy of that array.\n     - `lessonPractice` gives one row, and an inline sim block for the same scenario in a different mode removes it.\n     - `casePractice` merges the case's own entries with index entries without repeating a place, and `practiceAfterCase` returns nothing until the case has a record.\n   - No react-test-renderer or jsdom is installed. So I moved the hook's subscription logic into an exported `subscribeLabLaunch(sim, onLaunch)` in `src/state/useLabLaunchStore.ts`, and `useLabLaunch` wraps it in its effect.\n   - A new store test checks the following:\n     - A request already pending is taken at once.\n     - A new request for the same lab calls `onLaunch` exactly once and leaves nothing pending.\n     - A request for another lab is ignored.\n     - After unsubscribing, nothing more is delivered.\n\n4. **Minor: component files exported non-component helpers.**\n   - `PracticeItem`, `practiceItem` and `casePractice` moved to `practiceIndex.ts`, together with the lesson helpers above.\n   - `BlockRenderer.tsx` and `CaseStudies.tsx` now export only components.\n\nI also added a sentence to `scripts/README.md` about the shared drill default. Every edit stayed within the package's listed files and its test files, so nothing goes in outOfScope."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-5) at http://localhost:5173; the dev server was already running. I saved the owner's NavMemory ('cathmaster:v1:nav'), restored it and cleared the launch store before closing the tab.",
+     "openSim('haemo', {scenario:'pe-massive'}) through the app's own useUiStore instance (imported with the page's ?t= HMR URL) switched to section 'haemo' and showed the 'Haemodynamics lab' heading. peekLaunch('haemo') returned {scenario:'pe-massive'} and the store held a single pending entry with seq 1. The NavMemory written straight afterwards held only section and simTab, with no 'pe-massive' and no 'scenario'.",
+     "takeLaunch('haemo') returned {scenario:'pe-massive'} once and then null.",
+     "openSim('haemo', {scenario:'x'}) followed by openSim('haemo') with no params left nothing pending, so the stale request was cleared. In the real UI I put a stale 'views' request in place and then clicked the lesson's sim-block Open button (fnd-heart-position, 'Practise \u00b7 View trainer'). It opened 'Fluoroscopy view trainer' (section view-trainer, simTab views) and nothing was left pending for 'views'.",
+     "subscribeLabLaunch('haemo', cb) delivered each of two new requests exactly once.",
+     "openSim('angio-real', {drill}) left nothing pending for angio-real, so drills still go through requestDrill. In the UI, the drill block in lesson dx-views-identify ('Practise \u00b7 Real angiograms \u00b7 Name the projection') opened Real angiograms with the Name the projection drill running at question 1 / 18.",
+     "The angio-pci drill block in lesson pm-planning-steps ('Practise \u00b7 PCI in the cath lab', no params) opened the 'PCI in the cath lab' section with nothing pending. The sim block in the same lesson ('Practise \u00b7 Full procedure (access \u2192 wire)') opened the Full case section.",
+     "The runtime PRACTICE_INDEX in the browser is empty (0 lessons, 0 cases, no known scenarios), as expected because no .launch.ts exists outside __fixtures__. The lessons I opened had no 'Practise this in the lab' heading, and since none of the sim blocks carry params there was no 'Opens at' line either.",
+     "Case Studies: the library listed 142 cases with 0 'lab practice' chips and no case has a practice field. Opening the first case (Inferior STEMI with RV involvement) showed the player and no practice list. Everything rendered without errors.",
+     "No code anywhere in src still uses the old launch APIs (requestPciLaunch, PCI_LAUNCH_KEYS, takeLabPreset, requestScenario), so nothing that depended on them was left half-migrated.",
+     "Console over the whole session: only Vite connect messages and the React DevTools info line. No errors or warnings."
+    ],
+    "problems": [
+     {
+      "where": "src/state/useLabLaunchStore.ts (request/take) with src/state/useUiStore.ts openSim",
+      "problem": "No lab calls useLabLaunch yet, which is expected in this package. As a result, a request made by openSim stays pending in memory for the rest of the session. A request is cleared only by take, by openSim(sim) with no params, or by clear(). Opening the same lab later from the sidebar or a tab does not clear it. Once a later package wires useLabLaunch into that lab, an old lesson link would fire the first time the lab mounts, perhaps much later in the session. In the app I saw the haemo request stay pending after the Haemodynamics lab was shown.",
+      "severity": "minor",
+      "fix": "Optional hardening: drop pending requests for other sims when a new one is made (in request, keep only pending[sim]). Alternatively, have useUiStore clear pending[sim] when simTab or section changes by any route other than openSim, for example in setSection or with a subscribe that compares section changes against the last openSim. Either way, record the rule in the useLabLaunchStore header so the lab packages that adopt useLabLaunch rely on it."
+     },
+     {
+      "where": "Browser verification scope (src/ui/content/BlockRenderer.tsx PracticeList, src/ui/sections/CaseStudies.tsx practice list and chip)",
+      "problem": "No .launch.ts exists and no content declares params or practice, so the 'Practise this in the lab' list, the 'Opens at ...' line and the case 'lab practice' chip could not be exercised in the running app. Only their absence was confirmed. Their rendering is covered only by the unit tests on the practiceIndex helpers.",
+      "severity": "minor",
+      "fix": "No code change needed. The first package that adds a real src/content/practice/<id>.launch.ts should check in the app that the list appears under the named lesson, appears under a case only after that case has a record, and that each row's Open button hands the params to the lab."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 2 (browser verification scope): no change was made because the finding itself asks for none. It is correct that the PracticeList, the 'Opens at ...' line and the case 'lab practice' chip can only be checked in the app once a real src/content/practice/<id>.launch.ts or a scenario pack .launch.ts exists. That in-app check passes to the first package that adds one."
+    ],
+    "testsRun": [
+     "npx vitest run src/state/useLabLaunchStore.test.ts src/ui/content/practiceIndex.test.ts (15 passed: 5 store, 10 index)",
+     "npx vitest run src/content/content.test.ts -t \"lab launch links\" (7 passed, 52 skipped by filter)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "Finding 1 is correct and is now fixed. I applied both suggested hardenings, because the first one alone does not cover the case that was reported: a single request still pending after the learner leaves its lab through the sidebar.\n\nChanges:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useLabLaunchStore.ts\n  - The latest link now wins. `request(sim, params)` with params replaces the whole pending map, so at most one request is ever pending.\n  - New `dropWhere(pred)` action.\n  - The file header lists four lifetime rules for the lab packages that adopt `useLabLaunch`: latest link wins; a plain open clears; leaving the section drops the request; take consumes it.\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useUiStore.ts\n  - New subscribe: when `section` changes by any route (setSection, launch, openCase, openPathway, openProgress, or openSim to another lab), any pending request whose `SIM_SECTION[sim].section` differs from the new section is dropped.\n  - openSim sets the request and the section in that order, so its own request survives.\n  - The openSim doc comment now states these rules.\n  - NavMemory is unchanged.\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useLabLaunchStore.test.ts (the package's own test file)\n  - Two existing tests change to match latest-link-wins. They had expected iabp/impella and tavi/teer requests to be kept side by side.\n  - New test 'leaving the lab's section by any route drops its pending request'. The haemo request survives setSection('haemo'), is dropped by setSection('dashboard'), and a later visit through the sidebar delivers nothing. openCase and openPathway also drop requests. openSim to a lab in another section replaces the old request and keeps its own.\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/scripts/README.md: one bullet describing the runtime rule.\n\nOne effect for the lab packages: inside a tabbed section (mcs, structural-lab, bedside), a request for a tab the learner has switched away from locally stays pending until they leave the section or follow another link. This is what `useLabLaunch(..., enabled)` expects. No files outside the package were touched."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "vitest content.test.ts: an unknown scenario id, an unknown start id, an unknown mode and a link to a heldOut scenario each fail validation; existing content passes (no params yet)",
+      "met": true,
+      "evidence": "src/content/content.test.ts lines 109-159, describe 'lab launch links': 'existing content and every .launch.ts validate' (validateLaunchLinks over TRACKS and PUBLISHED_CASES returns []), plus 'an unknown scenario id fails', 'an unknown start id fails', 'an unknown mode fails', 'a link to a held-out scenario or variant fails', and a test showing module sims, case practice entries and angio-pci drill blocks are checked the same way. Run: content.test.ts passed 59/59."
+     },
+     {
+      "criterion": "vitest: openSim('haemo',{scenario:'pe-massive'}) then take('haemo') returns the params once, then null; NavMemory never contains them",
+      "met": true,
+      "evidence": "src/state/useLabLaunchStore.test.ts first test does exactly this: take returns {scenario:'pe-massive'}, then null, takeLaunch returns null, and every saved 'nav' localStorage value is checked to contain neither 'pe-massive' nor 'scenario'. NavMemory in src/state/useUiStore.ts holds only section, pathway, simTab, caseId, progressTab and focusEpa. 5/5 tests passed, including lifetime rules (latest link wins, a plain open clears, leaving the section drops the request, angio-real keeps requestDrill)."
+     },
+     {
+      "criterion": "practiceIndex.test.ts: a fixture .launch.ts with lessonIds ['x'] gives lesson x one entry with its params; a heldOut scenario is absent; a links entry that names an unknown start fails validateLaunchLinks",
+      "met": true,
+      "evidence": "src/ui/content/practiceIndex.test.ts uses src/ui/content/__fixtures__/demo.launch.ts and addon.launch.ts. Tests: 'lists a fixture scenario under lesson x with its params' (one entry, params {scenario:'fixture-practice', mode:'guided'}), 'never lists a held-out scenario or variant', 'a links entry that names an unknown start fails validateLaunchLinks' (one error matching unknown start \"nope\"). It also checks that the runtime index excludes __fixtures__ (both globs use '!/src/**/__fixtures__/**') and does an SSR smoke test of PracticeList and the sim block with params. 10/10 tests passed."
+     },
+     {
+      "criterion": "npx vite-node scripts/content/status.ts still runs and prints the same module counts",
+      "met": true,
+      "evidence": "Exit 0, prints 48 modules. Per-module lessons, quiz, cases, tips, refs, checks and videos match docs/curriculum/dashboard/snapshot.json (updatedAt 2026-10-08T08:52) with 0 differences. Totals: 303 lessons, 557 quiz, 91 cases, 969 tips, 397 refs, 646 checks, 750 videos. scripts/README.md records the vite-node rule and the registries-by-glob rule."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean",
+      "met": true,
+      "evidence": "tsc produced no output (no errors)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/content/content.test.ts src/state/useLabLaunchStore.test.ts src/ui/content/practiceIndex.test.ts (3 files, 74 tests passed)",
+     "npx tsc -p tsconfig.app.json --noEmit (clean)",
+     "npx vite-node scripts/content/status.ts (exit 0, 48 modules, counts identical to docs/curriculum/dashboard/snapshot.json)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no errors)"
+   }
+  ]
+ }
+}

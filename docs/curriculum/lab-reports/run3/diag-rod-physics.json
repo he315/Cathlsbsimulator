@@ -1,0 +1,137 @@
+{
+ "package": "diag-rod-physics",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "verify": [
+   {
+    "checked": [
+     "Plan entry for diag-rod-physics read from docs/curriculum/lab-build-plan.json (8 acceptance items).",
+     "Opened new tab tab-29 at http://localhost:5173 (did not touch the seed tab), checked the console, then reset the viewport and closed the tab. Left the cathmaster.catheterMechanics localStorage key as found (null).",
+     "Settings > Catheter mechanics: the toggle shows 'Rod mechanics' / 'Simple model'. By default the simple model is in use and the banner explains why: the step cost was measured at 988 px, below the rule's 1024 px, so the rod default stays off. This matches ROD_DEFAULT_ON = false. Choosing Rod gave 'In use: rod mechanics.' and a 'Use the default' button.",
+     "Launched scenario diag-lm-fold-over-j-wire through useUiStore.openSim('cathlab', {scenario}). The case 'Exertional angina, femoral study' loaded. __lab.physics.active was true, mechanics 'rod', worker mode, no banner, overBudget false.",
+     "Acceptance check, browser: __labStep(2) then __fluoroDraw('fluoro') worked. __lab.physics.latest().costMs = 0.80 ms. The physics frame's catheter runs from the groin (y = -750 mm) up the descending aorta (z = -89) into the arch, with the J wire inside. With the field at 42 and 48 cm the image shows the catheter entering from the bottom edge and turning over the arch.",
+     "seatPhysics('left') in the browser reached selective-lm (LM, depth 3.1 mm) on the first attempt (0.9 s wall). The tip context read phase engage-left, vessel LM, catheter JL, engagement selective-lm.",
+     "Exchange JL4 to JR4 in the browser through store.setCatheter: the phases ran pullback > wire > withdraw > out > in. The context stayed in phase 'exchange' and engagement stayed not-in-root throughout. JR4 was loaded over the wire and the rod stayed active. The reverse exchange JR4 to JL4 was also traced frame by frame (see problems).",
+     "practiceIndex in the browser: pm-engaging-left lists 'Left main over a looped J wire'; pm-engaging-rca lists 'Dominant right coronary: the dive and the conus'; pm-engaging-fail lists both.",
+     "Ran __labPhysicsBench(5) on the page: it ran 11 s of lab time with the rod still active and no fallback, but returned frames 0 and median/p95 null (see problems).",
+     "Ran npx vitest run src/ui/physics/physicsDevices.tips.test.ts src/ui/physics/physicsDevices.test.ts: 2 files, 20 tests passed (28 s). This covers JL4 reaching selective-lm in at least 3 of 5 starts at beginner and advanced, the JR4 conus giving a damped trace with conus true, the in-thread exchange test, the fallback banner, and the conus-selective, engage-fail and prolapse tips.",
+     "Console: no errors. The only warnings were WebGL 'READ-usage buffer' performance warnings."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/physics/physicsDevices.ts stepExchange, 'withdraw' -> 'out' transition (line ~901: this.devices.loadWire(\"J\", x.sRemoved + lead - (this.devices.skinS() - SHEATH_HUB_MM)))",
+      "problem": "The acceptance item 'exchange keeps the wire tip above the valve plane throughout' fails in the browser (worker mode, default start, catheter seated by seatPhysics). When the wire is reloaded on its own, its first worker frames put the J tip at or below the valve plane, and it then springs back up about 40 mm. Measured per phase (height above model.valvePlaneY): JL4 to JR4 gave pullback 62, wire 53, withdraw 30, out -2.0, in >40, and lastExchangeMinWireTipHeight = -2.05. JR4 to JL4 traced 'out t=337.37 h=40.0 | out t=337.41 h=-2.3 | out t=337.42 h=2.6 | in t=340.41 h=42.3', with lastExchangeMinWireTipHeight = -2.34. The J wire appears to be laid straight along the route, so its distal curve briefly reaches about 40 mm deeper than where the curled tip was. The unit test passes only because it starts with start.tipBackMm 60 and the plain engageScript.",
+      "severity": "major",
+      "fix": "Place the reloaded wire by where its tip actually was, not by the catheter tip plus the lead. Before removeWire(), take sWire = f.wire ? this.devices.arclength(f.wire.tip) : x.sRemoved + lead. Subtract the J curve's straightened length (a named MODEL PARAMETER), then clamp so the straight tip lies at least EXCHANGE.clearMm above the valve: loadWire('J', min(sWire - J_STRAIGHT_MM, this.devices.arclength at valve + clearMm) - (skinS - SHEATH_HUB_MM)). Alternatively, load the wire with its curve preformed. Then extend physicsDevices.test.ts so the exchange test also runs from the default start (no tipBackMm override) after engageScript plus settleThenEaseBack, the browser seat, and asserts minWire > 0 on every frame of the 'out' phase."
+     },
+     {
+      "where": "src/ui/sim/labSession.ts benchPhysics (const from = p.costs.length; ... const xs = p.costs.slice(from)) with DiagnosticPhysics.COST_KEEP = 7200 in src/ui/physics/physicsDevices.ts",
+      "problem": "The cost bench (window.__labPhysicsBench) returns frames 0 and median/p95 null on any session that has already run more than 7200 physics frames, about 2 minutes. costs is capped at COST_KEEP by splicing, so its length stays at 7200 and slice(from) is empty. Seen in the app: __labPhysicsBench(5) after about 5 minutes of lab time returned {frames:0, medianMs:null, p95Ms:null, labS:11.2}. The COST_RULE measurement that decides the default can therefore only be taken on a fresh session, and it fails silently otherwise.",
+      "severity": "major",
+      "fix": "Keep a monotonic counter in DiagnosticPhysics: costsTotal, incremented next to this.costs.push(f.stepMs). In benchPhysics, record fromTotal = p.costsTotal and take xs = p.costs.slice(-(p.costsTotal - fromTotal)), refusing with an error if more than COST_KEEP frames were taken. Alternatively, collect the bench's own costs from each new frame inside the loop. Also throw, or return a clear note, when frames === 0 instead of returning null statistics."
+     },
+     {
+      "where": "src/ui/physics/physicsDevices.ts ROD_SCENARIOS diag-lm-fold-over-j-wire (brief) vs the start placement START_TIP_BACK_MM = 70",
+      "problem": "The scenario brief says 'The left catheter is in the ascending aorta over the J wire', but at the default start the classifier puts the tip in region 'arch' (kind not-in-root, 99 mm from the LM, tip y 110 mm above the valve plane). The learner is told something the lab does not show.",
+      "severity": "minor",
+      "fix": "Either give the scenario a start the session passes to DiagnosticPhysics (for example start.tipBackMm 60, which the exchange test already uses and which lands in the ascending aorta), or change the brief to 'The left catheter is in the aortic arch over the J wire'."
+     },
+     {
+      "where": "src/physics/legacyBridge.ts legacyEngagement isDangerous (e.dampingRisk > 0.7), as used by src/ui/sim/helpers.ts:165",
+      "problem": "After the scripted left seat (seatPhysics), the classifier gives openFraction 0.47 and wallForce about 0.4, so dampingRisk is 0.99 and isDangerous is true; the engagement colour turns to danger. Meanwhile tipFromPhysics feeds gap 0.47 and the pressure trace stays 'aortic'. The guided aid flags danger while the trace the learner reads is normal.",
+      "severity": "minor",
+      "fix": "Base isDangerous on the same quantity that drives the trace. Either use the transducer's damped/wedged result for the current tip, or raise the dampingRisk threshold so it only fires when tipFromPhysics would damp. Alternatively, drop wallForce from dampingRisk and keep it for the haptics only."
+     },
+     {
+      "where": "Out of scope for this package: src/content/manual/complex-pci/08-complex-patients.ts tip 'pci-tavr-wire-then-rail' (alsoIn diagnostic engage-left/engage-right on event non-coaxial)",
+      "problem": "In the native-valve case diag-lm-fold-over-j-wire, the rod seat's bridged quality (open fraction 0.47, below NON_COAXIAL_QUALITY 0.5) raises 'non-coaxial'. The diagnostic drawer then lists 'pci-tavr-wire-then-rail' (\"Only if a transcatheter valve is in place...\") first, a tip that does not apply to this patient.",
+      "severity": "minor",
+      "fix": "In the tip registry, either remove the diagnostic alsoIn from pci-tavr-wire-then-rail or make it conditional on a TAVR variant or event the diagnostic context can raise. Report to the package that owns src/content/manual/complex-pci and the tips registry; no change is needed in diag-rod-physics files."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 5 (pci-tavr-wire-then-rail listed for non-coaxial in a native-valve diagnostic case): no change made, because it is out of scope. It needs an edit to src/content/manual/complex-pci/08-complex-patients.ts and the tips registry, which belong to the complex-pci package. Pass it to that package's owner: remove the diagnostic alsoIn, or make it depend on a TAVR variant or event."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/physics/physicsDevices.test.ts: 18 of 18 passed (24 s)",
+     "npx vitest run src/ui/physics/physicsDevices.test.ts -t \"scripted seat\" with the old wire-reload formula put back for a moment: failed as expected (out-phase wire tip at -60.8 mm), then the fix was restored",
+     "In the app (worker mode, my own background tab, closed afterwards): diag-lm-fold-over-j-wire at the default start reads region 'arch' (tip 109 mm above the valve), which matches the new brief. seatPhysics('left') gave selective-lm. Engagement isDangerous was false (dampingRisk 0.90, open fraction 0.54) with an 'aortic' trace. JL4 to JR4 exchange: lowest wire tip height per phase was pullback 34, wire 29, withdraw 26, out 28.6, in 80; once reloaded the wire sat at 79 to 80 mm with no dip; lastExchangeMinWireTipHeight 26.1. JR4 to JL4: pullback 74, wire 52, withdraw 23, out 25, in 78; lastExchangeMinWireTipHeight 23.1. With costs filled to COST_KEEP (7200), __labPhysicsBench(3) returned 793 frames, median 0.6 ms, p95 1.1 ms, none of them filler entries."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (run after the last edit)",
+    "notes": "Applied 4 of the 5 findings; finding 5 is out of scope. All 18 package tests pass, the typecheck is clean, and I checked both exchange directions and the bench in the app.\n\n1. Major, exchange wire reload (src/ui/physics/physicsDevices.ts, stepExchange, withdraw to out). Confirmed: the old reload put the J tip at the catheter tip plus wireLeadMm. That lead is measured along a wire that does not follow the route's centre line, so the wire went in too deep. The reload now works from where the wire tip actually was: sWire = devices.arclength(f.wire.tip), less J_STRAIGHT_MM. J_STRAIGHT_MM is the length of the J wire's curve as already defined in the solver (catheterShapes WIRE_DEFS J, 3\u03c0 mm), so it is not a new MODEL PARAMETER. The tip is also capped at the deepest route arclength still EXCHANGE.clearMm above the valve, found by a new RodPhysicsDevices.deepestArclengthAbove(y) that searches along the route via LumenSet.routePoint. The finding wrote the cap as \"+ clearMm\"; that would put the tip deeper, so I used the cap the finding describes (the deepest point still clearMm above the valve). ROUTE_SEARCH_BEYOND_MM = 80 is only a search limit. New test in physicsDevices.test.ts: default start (no tipBackMm), the browser seat via seatPhysics, then every 'out' frame after the reload must be above the valve, with more than 30 such frames.\n\n2. Major, cost bench (physicsDevices.ts and src/ui/sim/labSession.ts benchPhysics). Confirmed. Added a running counter, DiagnosticPhysics.costsTotal. benchPhysics now takes the last (costsTotal - fromTotal) entries, and throws a clear error when a run saw no frames or more than COST_KEEP frames. New test: \"the cost record\".\n\n3. Minor, scenario brief. Confirmed in the app: the default start is in the arch. I changed the brief to \"The left catheter is in the aortic arch over the J wire.\" I did not add a per-scenario start, because DiagScenario has no start field and adding one would mean editing types outside this package.\n\n4. Minor, danger flag (src/physics/legacyBridge.ts legacyEngagement). Confirmed. I took the finding's third option in a slightly stronger form: isDangerous is now inLV, deep or in the conus, the same as the analytic engagement in src/simulation/engagement.ts, and dampingRisk no longer counts. Damping is still shown, through the tip trace that tipFromPhysics drives, so the colour and the trace now come from the same quantity. New test: \"the danger flag\".\n\nProblem found while testing, not fixed: in Node (in-thread, config {}), the seat from the default start does not seat (it ends deep-lm or near-lm). The 90 mm pullback then barely lifts the catheter tip, because the grip slips against the deep seat and EXCHANGE.clearMaxMm ends the phase. The pinned wire then drops to about -3.4 mm during the withdraw phase. In the browser (worker, \"auto\" configuration) the pullback cleared and withdraw stayed at 23 to 26 mm, so this happens only from a failed deep seat. For that reason the new test checks only the 'out' phase, as the finding asked, not every frame. A real fix would make the pullback check that the tip has actually cleared (count the hand's movement that took effect, or keep pulling while the tip is still low), or have the operator pull the wire back during the withdrawal; that needs a decision from the build lead.\n\nBrowser check: I did it in a separate tab and closed it afterwards. The rod setting was switched on only in that page's settings store, not saved to localStorage, and I did not touch the build.html tab. The temporary test file src/ui/physics/zzScratch.test.ts was deleted.\n\nFiles changed: src/ui/physics/physicsDevices.ts, src/ui/physics/physicsDevices.test.ts, src/ui/sim/labSession.ts, src/physics/legacyBridge.ts."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "physicsDevices.test.ts (in-thread client): the JL4 procedure reaches 'selective-lm' in at least 3 of 5 starts at both beginner and advanced difficulty",
+      "met": true,
+      "evidence": "src/ui/physics/physicsDevices.test.ts 'rod mechanics: Judkins left from the femoral route' passes at beginner (3.6 s) and advanced (3.4 s); 18/18 tests pass in this run."
+     },
+     {
+      "criterion": "JR4 driven into the conus gives tipState damped or ventricularised and engagement.conus true",
+      "met": true,
+      "evidence": "physicsDevices.test.ts 'JR4 driven into the conus gives a damped or ventricularised tip trace and engagement.conus (still heart)' and the moving-heart conus-latch test both pass."
+     },
+     {
+      "criterion": "An exchange JL4 to JR4 over the J wire keeps the wire tip above the valve plane throughout",
+      "met": true,
+      "evidence": "physicsDevices.test.ts 'an exchange JL4 to JR4 over the J wire keeps the wire tip above the valve plane throughout and loads the JR4 over it' passes, as does the default-start exchange test."
+     },
+     {
+      "criterion": "Physics defaults on only if median step < 4 ms and p95 < 8 ms during a 60 s scripted JL4/JR4 session with the renderer at 1024 px; otherwise the flag stays off and the banner says so; measured costs recorded",
+      "met": true,
+      "evidence": "physicsDevices.ts COST_RULE {4 ms, 8 ms, 60 s, 1024 px}; costMeetsRule needs both thresholds and rendererPx >= 1024; ROD_DEFAULT_ON = costMeetsRule(MEASURED_COST). MEASURED_COST records the run (median 1.6 ms, p95 3.8 ms, 3601 frames, canvas 988 px, worker, auto config, 8 Oct 2026; first run 1.2/2.6 ms). Because 988 < 1024 px the default stays off and defaultOffReason/physicsStatusText give the reason, which Settings.tsx shows. Test 'defaults on only when the measured median step is under 4 ms and the 95th centile under 8 ms' passes, and so do the no-worker and solver-failure fallback banner tests. I found no separate package-notes file in the repo; the costs are recorded in MEASURED_COST.note."
+     },
+     {
+      "criterion": "browser (hidden pane): window.__labStep(2) then window.__fluoroDraw('fluoro') shows the catheter from the groin through the arch; window.__lab.physics.latest().costMs is reported",
+      "met": true,
+      "evidence": "Checked live in this session on the existing :5173 server, in a background (hidden, visibilityState 'hidden') tab at 1600x1000 with Settings set to rod. The setting was removed afterwards and the tab closed. After preparation the reading reported __labStep(2) then __fluoroDraw('fluoro'): latest().costMs = 1.70 ms (later 1.60 ms; costStats median 0.9, p95 1.5 over 21 frames). view().catheterInBody ran from y = -534 mm (groin) up the descending aorta (z about -88) and over the arch (max y 111.6, crossing to z about -10) to a tip turning down at y 109 above the valve plane (valvePlaneY 0). The AP fluoro image showed the shaft rising through the field. FluoroView passes catheterNodes with legacyCatheter: !rod."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows (compare_sets.py baseline <set>); the re-scored rows are listed",
+      "met": true,
+      "evidence": "python3 scripts/realism/compare_sets.py baseline rodphys gives baseline 189 of 236 and rodphys 189 of 236, the same in every section, with 0 rows lost and 0 gained. The set was captured at 21:52 on 8 Oct, after the last xrayCapture.ts edit (21:20). The later FluoroView.tsx and labSession.ts edits do not reach the offscreen scored specs, and live-path runs are not counted by compare_sets. rodphys-live holds measurement-only live rows, so its 0 of 0 is expected."
+     },
+     {
+      "criterion": "practiceIndex lists diag-lm-fold-over-j-wire and diag-rca-dive-and-conus under pm-engaging-left, pm-engaging-rca and pm-engaging-fail (from src/content/practice/diag-rod-physics.launch.ts)",
+      "met": true,
+      "evidence": "The launch file lists both scenarios with lessonIds [pm-engaging-left, pm-engaging-fail] and [pm-engaging-rca, pm-engaging-fail]. The physicsDevices.test.ts practice-links tests pass: practiceForLesson has every pair with the source being the .launch.ts, and the launch file matches ROD_SCENARIOS and opens each scenario. content.test.ts, reachability.test.ts and practiceIndex.test.ts pass (76 tests)."
+     },
+     {
+      "criterion": "Tips: in diag-lm-fold-over-j-wire, after 'conus-selective' tipsFor(ctx,20) includes diag-conus-withdraw; after 'engage-fail' it includes diag-shepherds-crook-shapes; every waiting.ts entry naming diag-rod-physics becomes satisfiable",
+      "met": true,
+      "evidence": "New test file src/ui/physics/physicsDevices.tips.test.ts (5 tests) passes: conus gives diag-conus-withdraw; engage-fail by time and by repeated prolapse gives diag-shepherds-crook-shapes; the rod reading feeds the context. src/content/lab/raisable/waiting.ts has no entry naming diag-rod-physics (grep), so the condition holds vacuously, and reachability.test.ts passes."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/physics/physicsDevices.ts MEASURED_COST (rendererPx 988)",
+      "problem": "Not a failure of the criterion, which allows the off-by-default outcome. The only recorded cost run had the fluoroscopy canvas at 988 px, under the rule's 1024 px, so the rod mechanics stays off by default even though median 1.6 ms and p95 3.8 ms are well under the thresholds. The package notes file the plan refers to was not found in the repo; the costs live in MEASURED_COST.note.",
+      "severity": "minor",
+      "fix": "Optional follow-up for the owner. In a viewport that gives the diagnostic canvas 1024 px or more, run window.__labPhysicsBench(60) in the cath lab with Settings set to rod. Record median, p95, frames and rendererPx in MEASURED_COST, and copy the run and the compare_sets result (rodphys: 189/236, 0 lost) into the package notes."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/physics/physicsDevices.test.ts (18 passed)",
+     "npx vitest run src/ui/physics/physicsDevices.tips.test.ts src/ui/physics/types.test.ts (12 passed)",
+     "npx vitest run src/content/content.test.ts src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts (76 passed)",
+     "npx vitest run src/simulation/patient/patient.test.ts src/state/store.test.ts src/input/input.test.ts src/ui/sim/sessionModules.test.ts src/physics/client.test.ts (170 passed)",
+     "npx vitest run src/dev/xrayCapture.test.ts src/dev/labHooks.test.ts (19 passed)",
+     "python3 scripts/realism/compare_sets.py baseline rodphys (189/236 vs 189/236, 0 lost)",
+     "python3 scripts/realism/compare_sets.py baseline rodphys-live (measurement-only set, no scored rows)",
+     "Browser, hidden background tab on localhost:5173 at 1600x1000, rod chosen: __labStep(2), __fluoroDraw('fluoro'), __lab.physics.latest().costMs = 1.7 ms, catheterInBody from y -534 mm over the arch to the root; setting and viewport restored, tab closed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output, exit 0)"
+   }
+  ]
+ }
+}

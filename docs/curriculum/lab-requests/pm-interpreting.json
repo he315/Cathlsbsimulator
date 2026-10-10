@@ -1,0 +1,192 @@
+[
+  {
+    "lab": "diagnostic",
+    "what": "QCA in the diagnostic cath lab (today it exists only in the PCI lab): calibration on the catheter's known diameter, selection of a frame and segment, edge detection of the opacified lumen, proximal and distal reference diameters with their average, minimal lumen diameter, percentage diameter stenosis, lesion length and a derived area stenosis. Include eccentric lesions that grade differently in orthogonal views, a tapering vessel where one-ended references mislead, a lesion at a large side branch, and a foreshortened view that makes the lesion look shorter and tighter.",
+    "learnerDoes": "Images the lesion in two orthogonal views, calibrates, measures both references and the MLD, and reports the worse, least foreshortened view with length measured from normal to normal segment.",
+    "success": "Reported %DS within 5 percentage points of the model's true value from the correct view; the averaged reference is used; foreshortened frames are rejected.",
+    "tips": [
+      "diag-interp-orthogonal-worst-view",
+      "pci-interp-qca-calibrate"
+    ],
+    "lessonIds": [
+      "pm-interpreting-stenosis"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A TIMI flow grading drill on library runs once an expert reader has labelled flow, with the comparison bed (proximal segment or opposite artery) shown alongside, plus a corrected TIMI frame-count exercise that reports the run's frame rate (10 or 15 fps in the current library) and asks the learner to count frames to a distal landmark. Because the published normal counts apply only at the original study's frame rate, the drill must state that rate (once verified from the full paper) and scale counts from 10 or 15 fps runs before comparing them with the normals.",
+    "learnerDoes": "Grades TIMI 0–3 for each run, names the comparison bed, and counts frames for flow, correcting LAD counts by dividing by 1.7.",
+    "success": "Agreement with the expert grade on at least 8 of 10 runs; frame counts within the reader's stated tolerance.",
+    "tips": [
+      "pci-interp-grade-flow"
+    ],
+    "lessonIds": [
+      "pm-interpreting-flow"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Flow states in the PCI lab that the learner must grade and act on: underfilling from a small or side-hole catheter in a high-flow patient (looks slow, is not); slow flow after balloon angioplasty caused by an NHLBI type C edge dissection (needs a stent); slow flow without a mechanical cause after stenting a thrombus-laden lesion (no-reflow: TIMI 0–1, absent blush, ST elevation); and loss of the distal vessel while a stent crosses a tight lesion, resolved by pulling back, injecting and re-advancing to trap contrast. Each final run should render a myocardial blush that appears and clears (normal) or is absent.",
+    "learnerDoes": "Grades TIMI flow and blush on a long final run, searches for dissection before choosing vasodilators, stents a flow-limiting dissection, and uses the contrast-trapping manoeuvre when the distal vessel disappears.",
+    "success": "No vasodilator is chosen as sole treatment of a flow-limiting dissection; underfilling is corrected or the run called non-diagnostic; blush is graded only on runs long enough to show washout.",
+    "tips": [
+      "pci-interp-grade-flow",
+      "pci-interp-lost-distal-vessel",
+      "pci-no-reflow-distal-vasodilator",
+      "pci-interp-dissection-nhlbi"
+    ],
+    "lessonIds": [
+      "pm-interpreting-flow",
+      "pm-interpreting-morphology"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Interpretation pitfalls built into the diagnostic lab: streaming when the injected volume or speed is too low (Oxford: 5–10 mL left, 3–5 mL right, fill for about 3 beats with reflux); an ostial RCA lesion hidden when the JR4 tip is deep and revealed by a sinus injection; a short left main in which the JL fills only the LAD until a JL one size larger is used; selective conus entry; an empty lateral wall at the end of the study.",
+    "learnerDoes": "Recognises streaming and reinjects or calls the run non-diagnostic, withdraws to image the ostium, sizes up the JL to find the circumflex, and accounts for every territory before finishing.",
+    "success": "No report of an ostial lesion missed behind the tip or of a circumflex occlusion that is really super-selective engagement; every territory is assigned a supplying vessel.",
+    "tips": [
+      "diag-interp-fill-or-call-nondiagnostic",
+      "diag-interp-ostium-from-outside",
+      "diag-short-lm-size-up",
+      "diag-conus-withdraw",
+      "diag-interp-every-territory"
+    ],
+    "lessonIds": [
+      "pm-interpreting-pitfalls",
+      "pm-interpreting-anomalies"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Wire-induced pseudolesions and spasm: after a stiff wire is passed through a tortuous RCA (or a LIMA graft), new mid-vessel narrowings appear that improve with intracoronary nitrate and resolve when the equipment is withdrawn, provided imaging has excluded dissection first.",
+    "learnerDoes": "Gives nitrate, images (IVUS) to exclude dissection, withdraws the equipment and re-images instead of stenting the narrowings.",
+    "success": "The pseudolesions are not stented.",
+    "tips": [
+      "pci-interp-pseudolesion",
+      "pci-wire-spasm-nitrate"
+    ],
+    "lessonIds": [
+      "pm-interpreting-pitfalls",
+      "pm-interpreting-spasm"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A morphology-labelling drill on library runs once expert labels exist (thrombus with TIMI thrombus grade, calcium seen before contrast with severe or moderate grade, NHLBI dissection type, aneurysm or ectasia, ostial and bifurcation location, tortuosity), with matching virtual lesions in the PCI lab, including a pre-contrast fluoroscopy phase so calcium can be graded before the first injection.",
+    "learnerDoes": "Describes each lesion in the fixed order (flow, severity, length, thrombus, calcium, dissection, branches, tortuosity, dilatation) and grades thrombus, calcium and dissection.",
+    "success": "Correct thrombus grade, calcium grade and NHLBI type on at least 8 of 10 lesions.",
+    "tips": [
+      "pci-interp-thrombus-grade",
+      "pci-interp-calcium-look-first",
+      "pci-interp-dissection-nhlbi"
+    ],
+    "lessonIds": [
+      "pm-interpreting-morphology"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-real",
+    "what": "Extend the existing 'Collaterals?' drill so that, for runs with collateral filling, the learner names donor and recipient, grades filling on the Rentrop scale (0–3) and the channel on the Werner scale (CC0–CC2), and says whether the channel is septal or epicardial.",
+    "learnerDoes": "Watches the run to the end, then answers donor, recipient, Rentrop grade, Werner grade and channel type.",
+    "success": "Agreement with the expert Rentrop grade on at least 8 of 10 runs.",
+    "tips": [
+      "diag-interp-collateral-long-run"
+    ],
+    "lessonIds": [
+      "pm-interpreting-collaterals"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "In the mid-RCA CTO scenario, a dual-injection mode (second catheter in the left coronary) so that the occlusion length shortens from the antegrade-only estimate, the distal cap becomes visible, and collateral channels can be assessed for size, tortuosity, branching, entry and exit angles and distance to the distal cap. Add a physiology step in which a donor LAD lesion's FFR rises after recanalisation.",
+    "learnerDoes": "Films at low magnification without panning, compares antegrade-only and dual-injection lengths, describes the four CTO features, and defers donor FFR until after the CTO is opened.",
+    "success": "Four features described correctly before equipment is chosen; donor physiology is not used to decide before recanalisation.",
+    "tips": [
+      "diag-interp-collateral-long-run",
+      "pci-interp-donor-ffr"
+    ],
+    "lessonIds": [
+      "pm-interpreting-collaterals"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "A catheter-induced RCA spasm state: in a small non-dominant RCA in a short, light patient, the trace ventricularises and then keeps falling a few seconds after JR4 engagement, and a test run shows a smooth ostial narrowing. It resolves after withdrawal, gentle coaxial re-engagement with a free trace, intracoronary nitroglycerin (dose chosen by systolic pressure, with PDE-5 inhibitor, hypotension, hypovolaemia, RV infarction and HOCM contraindications; a reduced dose in severe aortic stenosis) and a 1–2 minute wait. Nitrate hypotension should respond to stopping further doses, saline, waiting and, if extreme or persistent, a vasopressor. Add an optional patient on an intravenous nitrate infusion whose response is blunted. The two shared tips listed here are being corrected in their own modules first (diag-ostial-spasm-withdraw-nitrate to re-engage before the nitrate; diag-nitrate-dose-by-pressure to name every contraindication); use them only in their corrected form.",
+    "learnerDoes": "Withdraws, checks pressure and contraindications, re-engages gently, gives the dose by systolic pressure, waits, and records an image showing resolution; treats nitrate hypotension without giving more nitrate.",
+    "success": "No injection through the ventricularised catheter; correct dose band; resolution documented; no ostial stenosis reported.",
+    "tips": [
+      "diag-ostial-spasm-withdraw-nitrate",
+      "diag-nitrate-dose-by-pressure",
+      "diag-interp-nitrate-before-fixed"
+    ],
+    "lessonIds": [
+      "pm-interpreting-spasm"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Anomalous-origin variants in the diagnostic case generator: circumflex from the proximal RCA or right sinus with a retro-aortic course (empty lateral wall on the left injection, faint filling on the RCA run, dot sign on the left ventriculogram (the vessel seen end-on), sometimes a proximal stenosis); RCA from the left sinus; left main from the right sinus; separate LAD and circumflex ostia; ostia high in the ascending aorta. Require a cusp injection or aortogram (60 mL over 3 seconds through a pigtail) before catheter choice, with Amplatz shapes engaging where Judkins fail and a multipurpose catheter carrying a dissection risk if pushed. Add a myocardial bridge (mid LAD narrowing in systole only) and a coronary fistula draining to the pulmonary artery. Include the end of Brilakis's failure-to-engage algorithm: in a stable patient after a large contrast load, stopping and requesting coronary CT is scored as correct.",
+    "learnerDoes": "Notices the unsupplied territory, finds the ostium with a sinus injection or aortogram, chooses a suitable catheter, images the anomalous vessel in two views, and reports bridge and fistula correctly.",
+    "success": "Anomalous vessel found and imaged without dissection; no report of circumflex occlusion; bridge not graded from a systolic frame.",
+    "tips": [
+      "diag-anomalous-origin-image-first",
+      "diag-interp-anomalous-cx-search",
+      "diag-interp-every-territory"
+    ],
+    "lessonIds": [
+      "pm-interpreting-anomalies"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "lab tips vocabulary",
+    "what": "Two new LAB_EVENTS in src/content/lab/tips.ts so that tips fire only when relevant: 'total-occlusion' (raised by the diagnostic and PCI labs when the imaged or target vessel is occluded, acute or chronic) and 'new-narrowing' (raised by the PCI lab when a new narrowing appears after a wire or device has been advanced). Then narrow diag-interp-collateral-long-run to { phase: ['views'], event: ['total-occlusion'] }, pci-interp-donor-ffr to { phase: ['physiology'], event: ['total-occlusion'] }, and pci-interp-pseudolesion to { phase: ['wire'], event: ['new-narrowing'] }.",
+    "learnerDoes": "Sees the collateral-filming, donor-FFR and pseudolesion tips only in occlusion and new-narrowing situations.",
+    "success": "None of the three tips appears on routine runs of open vessels or on routine wiring.",
+    "tips": [
+      "diag-interp-collateral-long-run",
+      "pci-interp-donor-ffr",
+      "pci-interp-pseudolesion"
+    ],
+    "lessonIds": [
+      "pm-interpreting-collaterals",
+      "pm-interpreting-pitfalls"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-real",
+    "what": "An ACS culprit-finding drill: studies with two candidate lesions (for example an acute occlusion and a chronic one), each presented with the ECG territory, echo or ventriculogram wall motion, slow flow, haziness or thrombus, contrast staining, collateral filling, distal branch occlusion and, where available, an old angiogram. Old films should be the decisive clue in some studies, so that collaterals alone are not rewarded as a way of dating an occlusion.",
+    "learnerDoes": "Names the culprit and the clues that support it, weighing them together.",
+    "success": "Correct culprit in at least 8 of 10 studies, with at least two supporting clues named each time.",
+    "tips": [],
+    "lessonIds": [
+      "pm-interpreting-flow",
+      "pm-interpreting-collaterals"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci",
+    "what": "A heavily calcified lesion in which direct stenting is possible but penalised: the stent underexpands unless the lesion has been prepared and balloon expansion confirmed. OCT before preparation shows the calcium arc, maximum thickness and length, with the learner asked whether the 180°, 0.5 mm and 5 mm thresholds are exceeded.",
+    "learnerDoes": "Grades calcium on plain fluoroscopy, images with OCT, prepares the lesion and confirms full balloon expansion before stenting.",
+    "success": "No primary stent in the heavily calcified lesion; thresholds read correctly; final stent expansion adequate.",
+    "tips": [
+      "pci-interp-calcium-look-first"
+    ],
+    "lessonIds": [
+      "pm-interpreting-morphology"
+    ],
+    "priority": "P2"
+  }
+]

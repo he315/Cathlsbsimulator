@@ -1,0 +1,364 @@
+{
+ "package": "physiology-hyperaemia-and-adenosine",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built physiology-hyperaemia-and-adenosine in the eight listed files plus three new test files. All new tests pass and the typecheck is clean. There is one honest gap: the lab's rig in src/ui/sections/PhysiologyLab.tsx is not in this package's file list. Until it calls the new engine adapter, the chosen dose, line site, caffeine, the adenosine hazards and the bedside orders do not reach the patient engine in the running lab. In the meantime the rig still gives its standard adenosine doses. Two assertions in physiologyTips.test.ts, a test owned by another package, now fail by design; the fix is described under outOfScope.\n\nWhat changed:\n- Patient engine (engine.ts). An adenosine hazard model, off by default and set with setAdenosineHazards. A high-risk intracoronary dose is either above 100 \u00b5g into the RCA or a dominant circumflex, or a fast push. Such a dose can bring AV block with no escape rhythm (ventricular standstill), atrial fibrillation (which may revert by itself) or VF after a pause. A preset can force one of these. The model draws from its own random generator, so other labs' results do not change. giveDrug now takes the vessel and the injection speed. New orders: cough(), setPacing(rate), cardiovert() (a synchronised shock), and setRecentCaffeine(). Snapshot and restore carry the new state.\n- Drug model (pharmacology.ts). No new drugs. An infusion can carry a delivered fraction (for a tissued line), and caffeine scales down every adenosine effect. Pure closed-form versions of the engine's adenosine model are exported so the session can use them.\n- Pressure-wire session (pwSession.ts). Hyperaemia now comes from the engine's adenosine model, so the dose, rate, vein and caffeine all change it. Intracoronary adenosine takes a dose and a speed, and a guide flush delivers the rest of the bolus. IV adenosine takes a rate and a site (hand cannula, large antecubital vein, central vein). Contrast FFR uses 8 mL and the 0.83 cut-off. Failure states: tissued hand line, saline swap, caffeine, low dose, guide disengaged at the bolus, and readings taken before the flush or before the trace recovers from the injection. Readings below hyperaemia 0.9 are flagged submaximal, for the debrief and guided aids only. The session also has the operator's checks (cannula, drug labels, caffeine), bedside orders, a record of arrhythmias from the monitor, and new debrief items. Six presets were added: ic-rca-dose, iv-tissued-line, iv-caffeine, saline-swap, contrast-ffr and adenosine-vf. The engine adapter added here (setUpPwEngine, applyPwActionToEngine, pwPatientInput) is what the rig needs to call. The old dose-free actions keep their curves, so other callers are unchanged.\n- Screens. MeasurePanel now offers the dose field (empty), injection speed, guide flush, IV rate and vein, contrast, the three checks, and the monitor's heart rate and mean pressure. It shows OrdersPanel underneath: cough, wait, CPR, pacing, charge, clear, shock, synchronised shock, and a hand-off to the pacing lab's adenosine-block scenario.\n- Tips (physiologyTips.ts). Atrial fibrillation and VF are added to raises as PHYSIOLOGY_ADENOSINE_EVENTS, and the adenosine drugs lesson is added to the measure step.\n- hyperaemia.launch.ts lists the six presets under pm-physiology-indices and pm-lab-drugs-microvascular.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/engine.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/pharmacology.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/MeasurePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/OrdersPanel.tsx (new)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/physiology/hyperaemia.launch.ts (new)"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.test.ts: new describe block 'adenosine: dose by vessel, line site, caffeine, hazards and bedside orders' with 10 tests (500 seeded runs of IC 200 vs 60 \u00b5g into the RCA, peripheral vs central time to 90%, closed form vs stepped model, tissued line and caffeine, hazard model off by default with exact replay, adenosine-vf shock, AF cardioversion, high-risk rule incl. dominant LCx, block without escape plus pacing and cough, snapshot replay)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.hyperaemia.test.ts (17 tests: submaximal and early-reading flags, flush, dose range, disengaged guide, dose item, sites, tissued line, saline swap, caffeine, contrast FFR, legacy curves, engine adapter, orders and arrhythmia scoring)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.hyperaemia.test.ts (8 tests: ic-rca-dose tips after bradycardia, natural seeded block, adenosine-vf VF tip and shock, AF context and cardioversion, raises, waiting.ts and request-tip reachability, launch and preset agreement, practice index)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/MeasurePanel.hyperaemia.test.ts (3 tests: controls render, no ground truth and empty IC dose, OrdersPanel state and pacing hand-off target)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts src/simulation/patient/hypotensionCauses.test.ts src/simulation/patient/lvWall.test.ts src/simulation/patient/pressureTransducer.test.ts src/simulation/team/formulary.test.ts src/simulation/team/team.test.ts -> 7 files, 157 passed",
+     "npx vitest run src/simulation/pci/pwSession.test.ts src/simulation/pci/pwSession.hyperaemia.test.ts src/ui/sections/PhysiologyLab.test.ts src/ui/lab/physiologyTips.test.ts src/ui/lab/physiologyTips.leftMain.test.ts src/ui/lab/physiologyTips.hyperaemia.test.ts src/ui/physiology/MeasurePanel.hyperaemia.test.ts src/simulation/physiology.test.ts src/simulation/physiology.leftMain.test.ts src/ui/lab/patientEvents.test.ts src/ui/content/practiceIndex.test.ts -> 145 passed, 1 skipped, 2 failed. Both failures are in physiologyTips.test.ts, which another package owns, and are expected: (a) it asserts raises never contains vf or atrial-fibrillation; (b) it asserts core.launch.ts lists exactly PHYSIOLOGY_PRESETS, which now also holds the six hyperaemia presets. See outOfScope.",
+     "npx vitest run src/content/lab/reachability.test.ts src/content/content.test.ts src/content/lab/retarget.test.ts src/content/lab/tips.test.ts -> 121 passed, 1 skipped",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/ui/lab/labRun.test.ts src/ui/lab/eventLog.test.ts src/ui/lab/useContextTips.test.ts src/ui/lab/pacingTips.scenario.test.ts src/mentor/mentor.test.ts src/mentor/registries.test.ts src/mentor/ledger.test.ts src/mentor/report.test.ts src/mentor/bridgePedal.test.ts -> 169 passed",
+     "npx vitest run src/simulation/session/handover.test.ts src/simulation/session/emergencies.test.ts src/ui/sim/pressureSession.test.ts src/ui/pci/PciLabSession.test.ts (these use engine snapshots) -> 79 passed",
+     "Final rerun: npx vitest run src/simulation/pci/pwSession.hyperaemia.test.ts src/ui/lab/physiologyTips.hyperaemia.test.ts src/ui/physiology/MeasurePanel.hyperaemia.test.ts src/simulation/pci/pwSession.test.ts src/ui/sections/PhysiologyLab.test.ts -> 57 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean. An earlier run showed an error in src/ui/angio/simFlowDrill.ts (missing './labels'), which belongs to another package; it had gone by the final run.",
+    "acceptance": [
+     {
+      "criterion": "An IC RCA dose of 200 ug arms AV block more often than 60 ug over 500 seeded runs; a peripheral IV infusion reaches 90% effect later than central",
+      "status": "met",
+      "evidence": "patient.test.ts: 'an IC RCA dose of 200 \u00b5g arms AV block more often than 60 \u00b5g over 500 seeded runs' (200 \u00b5g arms more than 1.5 times as often as 60 \u00b5g) and 'a peripheral IV infusion reaches 90% of its effect later than a central one' (stepped Pharmacology, matching the closed form; t90 is about tau x ln 10 at each site). The session-level version is in pwSession.hyperaemia.test.ts."
+     },
+     {
+      "criterion": "FFR at h < 0.9 is flagged submaximal; FFR before the guide flush after an IC bolus is flagged early",
+      "status": "met",
+      "evidence": "pwSession.hyperaemia.test.ts 'FFR flags (acceptance)': a low IV rate and the moment just before h reaches 0.9 are flagged 'submaximal hyperaemia', and just after it is not. An IC bolus read before the flush is flagged 'read early: the guide was not flushed\u2026'. A reading within 3 s of the flush is flagged as the trace not having recovered, and it reads lower than the settled value. The flags show only in the debrief and guided aids."
+     },
+     {
+      "criterion": "In 'adenosine-vf' engine.shock() restores an organised rhythm by the engine's model",
+      "status": "met",
+      "evidence": "patient.test.ts: setUpPwEngine(engine, initialPwSession('adenosine-vf')) gives the colleague's fast RCA push with the VF hazard forced, and VF follows the pause. Then charge, clear and shock() return 'converted' under the engine's shockSuccessProbability (above 0.8 here) and the rhythm is organised. physiologyTips.hyperaemia.test.ts repeats this through session orders, and the debrief item 'defibrillated at once' passes."
+     },
+     {
+      "criterion": "During adenosine AV block the context has av-block and the tips include pci-adenosine-block-cough-wait",
+      "status": "met",
+      "evidence": "physiologyTips.hyperaemia.test.ts runs the lab as the rig would with the adapter. After 150 \u00b5g into the RCA (forced block without escape) the context events include bradycardia and av-block and tipsFor(ctx, 20) includes pci-adenosine-block-cough-wait. A second test without a forced hazard finds a seeded natural block after 200 \u00b5g that brings the same tip. This holds in the running lab only once the rig is patched (see outOfScope)."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/physiology/hyperaemia.launch.ts under lessons pm-physiology-indices, pm-lab-drugs-microvascular",
+      "status": "met",
+      "evidence": "physiologyTips.hyperaemia.test.ts 'practiceIndex lists every scenario\u2026': each of the six ids is known, and each appears under both lessons with params {scenario, mode: 'guided'}. Launch ids and titles match PRESET_BY_ID both ways."
+     },
+     {
+      "criterion": "Tips: in a hyperaemia.launch.ts scenario, after the action that raises 'bradycardia', tipsFor(ctx,20) includes pci-adenosine-block-cough-wait, and at phase 'physiology' it includes pci-adenosine-rca-dose; every waiting.ts entry naming this package becomes satisfiable, so the pci waiting count falls by at least their number",
+      "status": "met",
+      "evidence": "physiologyTips.hyperaemia.test.ts: in ic-rca-dose at phase physiology with vessel RCA the rca-dose tip shows from the start, and after the bolus that raises bradycardia the cough-wait tip shows. No waiting.ts entry names this package (0 entries), so that check holds trivially. The pci waiting count with the lab's raises went from 483 to 449. All six request tips are satisfiable from raises: pci-phys-ic-adenosine-flush, pci-phys-iv-hyperaemia-signs, pci-phys-no-hyperaemia, pci-adenosine-rca-dose, pci-adenosine-block-cough-wait and pci-arrest-adenosine-cough (the last needs the new vf event)."
+     },
+     {
+      "criterion": "Design: the dose, line site, failure states and orders work in the live physiology lab",
+      "status": "partly",
+      "evidence": "Everything is built and tested at the reducer and engine level with an adapter harness. In the browser lab, the unpatched PhysiologyRig (PhysiologyLab.tsx, not mine to edit) still gives its own standard doses and does not call setUpPwEngine or applyPwActionToEngine. Until it does, the engine's blood pressure and heart-rate response ignores the chosen dose, site or saline swap, and the orders and adenosine-vf VF do not reach the engine. The session's hyperaemia, flags, checks and debrief do work in the lab now."
+     },
+     {
+      "criterion": "Lab check in the browser",
+      "status": "needs-browser",
+      "evidence": "The browser was not used, as instructed. The new panels are checked by server-side render tests only."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/sections/PhysiologyLab.tsx (PhysiologyRig): (1) in the constructor after applyLine(), call setUpPwEngine(this.engine, this.session); (2) in dispatch(), replace `if (this.session !== before) this.applyDrug(a, before);` with `applyPwActionToEngine(this.engine, before, this.session, a);` and delete applyDrug. The adapter's legacy branch gives exactly what applyDrug gave (IC 200/100 \u00b5g by side, GTN 200 \u00b5g, IV 140 \u00b5g/kg/min central, stop), so PhysiologyLab.test.ts spies still hold. (3) In step(), pass `patient: pwPatientInput(v)` in place of `{ map, hr }`, so the session records the monitor's rhythm for the arrhythmia debrief items. All three are imported from src/simulation/pci/pwSession.ts. OrdersPanel already shows inside MeasurePanel, so no mount change is needed.",
+     "src/ui/lab/physiologyTips.test.ts (owned by physiology-engine-unify-and-setup) has two assertions that now fail by design. (a) Line 32 asserts raises never contains vf or atrial-fibrillation; it should exclude PHYSIOLOGY_ADENOSINE_EVENTS from that list, because the tip integration of this package requires those events. (b) Line 216 asserts core.launch.ts lists exactly PHYSIOLOGY_PRESETS; it should compare against PHYSIOLOGY_PRESETS minus the hyperaemia.launch.ts ids, or check core plus hyperaemia launch files together.",
+     "docs/realism/facts/S9.md should list the new MODEL PARAMETERS: MP_CAFFEINE_ADENOSINE (pharmacology.ts); MP_ADENOSINE_HAZARDS afP, vfP, noEscapeP, vfDelayS, noEscapeHoldS, afSelfRevertP, afRevertS, cardioversionAfSuccess, coughS, coughRatePerMin and coughAmpMmHg (engine.ts; highDoseUg 100 is sourced); and in pwSession.ts MP_SUBMAXIMAL_H, MP_GUIDE_HOLDUP, MP_DISENGAGED_DELIVERY, MP_TISSUED_DELIVERED, MP_INJECTION_ARTEFACT_MMHG, MP_INJECTION_TAU_S, MP_INJECTION_RECOVERY_S, MP_CONTRAST_H, MP_CONTRAST_RISE_S, MP_CONTRAST_PLATEAU_S, MP_CONTRAST_DECAY_S, MP_PACING_RATE_BPM and MP_ORDER_WINDOW_S. Each is labelled MODEL PARAMETER in code, with sources cited for the sourced values (14-physiology.ts:410, 421-422, 438, 443, 478-488; 04-lab-drugs.ts:436, 505, 586)."
+    ],
+    "notes": "Snapshots of the five listed files that already existed are in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/datasets/tmp/wp-snapshots/physiology-hyperaemia-and-adenosine/, along with the .started marker. OrdersPanel.tsx and hyperaemia.launch.ts were new. I edited only the listed files and added three new test files.\n\nDesign decisions to know about:\n1. Hyperaemia is the engine's adenosine model, evaluated in closed form from new pure functions in pharmacology.ts, rather than a value sent each tick from the engine. This keeps the reducer engine-free and lets the rig ask for hyperaemia at past times, which its pdAt trace drawing does. Tests check the closed form matches the stepped Pharmacology.\n2. Maximal hyperaemia is scaled to the standard doses: IV 140 \u00b5g/kg/min at steady state, and IC at the low end of the module's ranges (RCA 50 \u00b5g, 14-physiology.ts:410; left 100 \u00b5g, 04-lab-drugs.ts:436).\n3. The console never refuses a reading because hyperaemia failed. It shows the value, and the cause appears only in debrief problems or guided aids. For detailed IV, the pullback and thermodilution waits are based on time (Brilakis reads at 1\u20133 minutes), not on hyperaemia.\n4. Preset titles do not name the failure. The contrast-ffr case is a 59% mid-LAD lesion: contrast FFR is about 0.824, true FFR 0.766, and the decision is treat.\n5. AF and VF are kept in a separate PHYSIOLOGY_ADENOSINE_EVENTS list so that PhysiologyLab.test.ts (which expects every event in PHYSIOLOGY_PATIENT_EVENTS from an IV run) stays green.\n6. The six hyperaemia presets are in PHYSIOLOGY_PRESETS so they appear in the lab's case dropdown.\n7. pwSession.ts also exports IC_GTN_UG, the same 200 \u00b5g the rig uses. The legacy actions keep their compressed curves for other callers."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Changes needed. The engine, pharmacology, session, panels, tips and launch file are mostly implemented to the design. The package's own tests pass: 17 + 8 + 3 new, and patient.test.ts 88/88. The typecheck (npx tsc -p tsconfig.app.json --noEmit) is clean. Shared engines keep their defaults: the hazard model is off unless set, the caffeine factor is exactly 1 by default, the giveDrug option is optional, pacing defaults to null, and the replay test strips only the `adn` field. No unlisted src file was changed by this package; every other file newer than .started belongs to left-main, haemo-transducer or the angio-label packages. Cited module lines check out (14-physiology.ts 98, 410, 421-422, 438, 443, 460, 478-488; 04-lab-drugs.ts 436, 505, 556, 586). The UI uses Clinical Graphite classes and British English, and shows no ground truth (the IC dose field is empty and failure causes appear only in aids or the debrief).\n\nFour problems block acceptance:\n1. The live lab rig is not wired to the new engine adapter. Until it is, the saline-swap, tissued-line, caffeine and adenosine-vf presets behave wrongly in the browser.\n2. The engine judges whether an intracoronary dose is high risk from the part that reached the artery, not the dose the operator gave. A slow RCA dose between 101 and 166 \u00b5g never draws a hazard. I confirmed this with vite-node: a forced 'no-escape' stays unused after 150 \u00b5g slow, so the acceptance test that claims a forced block actually passes through the ordinary AV block draw.\n3. A contrast FFR read after the contrast effect has passed is accepted as valid. At 40 s it read 0.914 with h = 0, and the debrief credited it.\n4. Two assertions in physiologyTips.test.ts, a test owned by another package, now fail.\n\nI ran: the six physiology test files (70 passed, 2 failed, both in physiologyTips.test.ts), patient.test.ts (88 passed), the typecheck, and two scratch vite-node checks saved in the scratchpad (rv/check1.ts and rv/check2.ts).",
+    "findings": [
+     {
+      "where": "src/ui/sections/PhysiologyLab.tsx (PhysiologyRig constructor, dispatch() line 144 and applyDrug lines 152-162, step() line 183). This file is not in the package's list; physiology-engine-unify-and-setup owns it.",
+      "problem": "The design does not work in the running lab. MeasurePanel now always sends detailed actions, but the rig still gives the engine its fixed doses: 200 or 100 \u00b5g IC whatever dose was entered, and a central adenosine infusion even when the session holds saline or a tissued hand line. The browser therefore shows the systemic signs of adenosine (pressure falls, heart rate rises) in saline-swap and iv-tissued-line, while the session reports no hyperaemia. This contradicts the teaching at 14-physiology.ts:460. Caffeine never reaches the engine. adenosine-vf never produces VF, because setUpPwEngine is not called. CPR, pacing, shock and cardioversion orders only write to the log. The monitor rhythm is not passed to the session, so the arrhythmia debrief items never appear. All six new presets are already in the lab's case dropdown and the practice index.",
+      "severity": "critical",
+      "fix": "Land the rig patch in the same wave, either through the owning package or as an approved file-list extension. (1) In the PhysiologyRig constructor, after applyLine(), call setUpPwEngine(this.engine, this.session). (2) In dispatch(), replace `if (this.session !== before) this.applyDrug(a, before);` with `applyPwActionToEngine(this.engine, before, this.session, a);`, then delete applyDrug and the IC_ADENOSINE_UG and IC_GTN_UG duplicates, importing IC_GTN_UG from pwSession. (3) In step(), send `patient: pwPatientInput(v)` instead of `{ map, hr }`. The legacy branch of applyPwActionToEngine gives the same doses and the same side as applyDrug, so PhysiologyLab.test.ts should stay green. Then add a test to PhysiologyLab.test.ts: drive the rig on 'adenosine-vf' and expect rhythmKind 'vf' within 30 s; on 'saline-swap', run an IV infusion for 120 s and expect the mean pressure to fall by less than 3 mmHg. If the rig cannot be patched in this wave, remove the six presets from PHYSIOLOGY_PRESETS and from hyperaemia.launch.ts until it is."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts give() (adenosine block, about line 945) and adenosineHighRisk(); src/simulation/pci/pwSession.ts applyPwActionToEngine (the 'hyperaemia' ic and 'flush-guide' cases) and setUpPwEngine",
+      "problem": "The engine judges high risk on the dose it receives in each call. The session sends the bolus as two calls: 60% at the injection (1 - MP_GUIDE_HOLDUP) and 40% at the flush. A slow 150 \u00b5g RCA dose, which is above the module's 100 \u00b5g limit (14-physiology.ts:483, 04-lab-drugs.ts:556), arrives as 90 + 60 \u00b5g and is never high risk, so the real threshold becomes about 167 \u00b5g. With 'x' seeds, a forced vf fired at 170 \u00b5g slow but not at 150 \u00b5g slow. With seed 'tips', a forced no-escape was still unused after 150 \u00b5g slow. For large doses both parts can exceed 100 \u00b5g, giving two hazard draws per bolus, and the ordinary AV block draw (ADENOSINE.completeAvBlock.ic x dose/std) also runs once per part. In physiologyTips.hyperaemia.test.ts, the first test's comment says 'this run's hazard is block without an escape rhythm'. It actually passes on the ordinary block with an escape rhythm, so the forced path is never tested at session level.",
+      "severity": "major",
+      "fix": "Add `bolusUg?: number` (the whole intracoronary dose as given) and `continuation?: boolean` to InjectionDetail. In give(), for adenosine IC: if `inj?.continuation`, skip both the completeAvBlock draw and the hazard draw. Otherwise use `const whole = inj?.bolusUg ?? o.dose` in both the completeAvBlock scaling and `adenosineHighRisk(whole, ...)`. In applyPwActionToEngine and setUpPwEngine, pass `bolusUg: inj.doseUg * (inj.engaged ? 1 : MP_DISENGAGED_DELIVERY)` with the first part, and `{ continuation: true }` with the flush part. In physiologyTips.hyperaemia.test.ts, after the 150 \u00b5g slow dose and flush, assert `lab.engine.adenosineHazards()?.force === null` and that rhythmKind 'asystole' was seen (standstill). Add a pwSession.hyperaemia test checking that a slow 120 \u00b5g RCA dose plus flush calls giveDrug with bolusUg 120 and that the flush call carries continuation."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts readingProblems (kind 'ffr', the contrastFfr branch) and hyperaemiaItems (the 'contrast-ffr' item)",
+      "problem": "A contrast FFR is never checked for missing hyperaemia, and contrast mode has no end. A reading taken after the contrast effect has gone is the resting Pd/Pa, judged against 0.83, and counts as clean. Verified: in 'contrast-ffr' with the wire ready, a reading at 5 s gave 0.828 (h 0.77), and at 40 s gave 0.914 (h 0.00), valid=true with no problems. The debrief item 'Contrast FFR read with a clean trace and judged at 0.83' was ok. A student who reads late gets 'defer' for a lesion whose case decision is 'treat', and is credited for it.",
+      "severity": "major",
+      "fix": "Add a MODEL PARAMETER, `MP_CONTRAST_READ_FRAC = 0.9`. In readingProblems, when contrastFfr and `h < MP_CONTRAST_H * MP_CONTRAST_READ_FRAC`, push 'read after the contrast effect had passed'. The existing 'read early' check covers the start, so this covers the end. In pwSession.hyperaemia.test.ts, add: contrast, wait 40 s, measure-ffr; expect record.valid false, that problem present, and the 'contrast-ffr' item not ok. Add MP_CONTRAST_READ_FRAC to the outOfScope facts list."
+     },
+     {
+      "where": "src/ui/lab/physiologyTips.test.ts lines 32 and 216 (owned by physiology-engine-unify-and-setup)",
+      "problem": "This package's changes turn the suite red. physiologyTips.ts raises now include 'vf' and 'atrial-fibrillation', which the tip integration requires, but line 32 asserts that raises never contain them. PHYSIOLOGY_PRESETS now has 21 presets, but line 216 asserts that core.launch.ts lists exactly PHYSIOLOGY_PRESETS (15). I reproduced both failures.",
+      "severity": "major",
+      "fix": "Have the owning package, or an approved edit, change the line 32 exclusion list so it filters out PHYSIOLOGY_ADENOSINE_EVENTS: `.filter(e => !PHYSIOLOGY_ADENOSINE_EVENTS.includes(e))` before the not.toContain check. Change line 216 so the expected list is the presets minus the hyperaemia launch ids: `PHYSIOLOGY_PRESETS.map(p=>p.id).filter(id => !hyperaemiaLaunch.scenarios!.some(s=>s.id===id))`. Alternatively, compare the union of the core.launch.ts and hyperaemia.launch.ts ids with all PHYSIOLOGY_PRESETS ids."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts drawAdenosineHazard / adenosineHazardTick (adnPending)",
+      "problem": "Any fast push counts as high risk. A low-dose fast push into a non-AV-nodal artery (for example 20 \u00b5g into the LAD) draws an arrhythmia, but the AV nodal drive never passes 0.2, so adnPending is never fired or cleared. It then fires on the next unrelated adenosine dose, possibly minutes later.",
+      "severity": "minor",
+      "fix": "Store `adnPendingUntil = t + ADENOSINE.timeToMaxIcS + ADENOSINE.plateauIcS.left` when drawing. In the slow tick, set `adnPending = null` once t passes it without the drive having exceeded 0.2. Snapshot and restore the new field. Add a test: fast 20 \u00b5g into the LAD with force 'af', advance 60 s, expect pending to have gone, then give 150 \u00b5g slow into the RCA with the hazard off and expect no AF."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts hyperaemiaItems ('ic-dose', avNodal = v === 'RCA')",
+      "problem": "The debrief's dose rule counts only the RCA as the AV nodal artery. The engine and the module (14-physiology.ts:483) also count a dominant circumflex. In an LCx case with a left-dominant generated profile, 150 \u00b5g into the LCx draws hazards in the engine but passes the debrief.",
+      "severity": "minor",
+      "fix": "Record the patient's dominance in the session, for example as an optional `dominance` field set by setUpPwEngine or passed in by the rig. Then use `avNodal = v === 'RCA' || (v === 'LCx' && dominance === 'left')`. At minimum, mention the dominant circumflex in the item label, as the module does."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts hyperaemiaItems (the 'block-' item)",
+      "problem": "Every AV-block episode on the monitor becomes a scored item that needs an explicit 'cough' or 'wait' order. This includes the engine's routine dose-scaled block during standard IV adenosine in non-hyperaemia presets, which passes in seconds (14-physiology.ts:478). A student who correctly watches without clicking 'Wait and watch' fails the item.",
+      "severity": "minor",
+      "fix": "Mark the item ok when no shock or cardiovert was ordered during the episode and either a cough or wait order was given or the episode ended within a MODEL PARAMETER window, for example MP_BLOCK_SELF_RESOLVE_S = 20. Add a test with a short block and no orders."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts injectionArtefact, ivTargetHyperaemia and injectionHyperaemia (called per trace sample by PhysiologyRig.pdAt and per frame by consoleReading)",
+      "problem": "There is avoidable work in the render paths. injectionArtefact allocates a two-element array on every call (`for (const ti of [inj.t, inj.flushedAt])`). ivReference() and icReference(side) recompute hill, log and exp constants on every sample.",
+      "severity": "minor",
+      "fix": "Make the references module constants: `const IV_REF = ivAdenosineSteadyLevel(ADENOSINE.ivStandardUgKgMin)` and `const IC_REF = { left: icAdenosinePeakHyperaemia(100,'left'), right: icAdenosinePeakHyperaemia(50,'right') }`. Write injectionArtefact as two explicit terms with no array literal."
+     },
+     {
+      "where": "docs/realism/facts/S9.md (not in the package's list)",
+      "problem": "The new MODEL PARAMETERS are labelled in code but not listed in the realism facts: MP_ADENOSINE_HAZARDS fields, MP_CAFFEINE_ADENOSINE, MP_SUBMAXIMAL_H, MP_GUIDE_HOLDUP, MP_DISENGAGED_DELIVERY, MP_TISSUED_DELIVERED, MP_INJECTION_*, MP_CONTRAST_*, MP_PACING_RATE_BPM, MP_ORDER_WINDOW_S, plus any added by the fixes above.",
+      "severity": "minor",
+      "fix": "Schedule a facts update listing each parameter, its value and its file, and marking it MODEL PARAMETER. Record the sourced anchors with their lines: highDoseUg 100 (14-physiology.ts:483), contrast 8 mL and 0.83 (14-physiology.ts:421-422), IV 140-180 \u00b5g/kg/min (14-physiology.ts:410)."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 7,
+    "rejected": [
+     "Finding 4 (physiologyTips.test.ts lines 32 and 216): no edit made, because the file belongs to physiology-engine-unify-and-setup. The test now passes again (15/15) without changes, because the hyperaemia presets and the AF/VF raises are held back (see finding 1). When HYPERAEMIA_PRESETS_LISTED is turned on, the owning package must make the edits the reviewer described. Line 32: filter PHYSIOLOGY_ADENOSINE_EVENTS out before the not.toContain check. Line 216: compare core.launch.ts with PHYSIOLOGY_PRESETS less the hyperaemia ids, or compare the union of core.launch.ts and hyperaemia.launch.ts with all of PHYSIOLOGY_PRESETS. Line 221 then holds as it is.",
+     "Finding 9 (docs/realism/facts/S9.md): not in this package's file list, so not edited. It needs a facts update listing each item below as a MODEL PARAMETER with its value and file. engine.ts MP_ADENOSINE_HAZARDS: afP 0.15, vfP 0.05, noEscapeP 0.2, vfDelayS 2, noEscapeHoldS 15, afSelfRevertP 0.5, afRevertS 30, cardioversionAfSuccess 0.9, coughS 4, coughRatePerMin 40, coughAmpMmHg 40. Also in engine.ts: a pending arrhythmia now expires at timeToMaxIcS plus that side's plateauIcS, which uses existing sourced constants. pharmacology.ts: MP_CAFFEINE_ADENOSINE 0.55. pwSession.ts: MP_SUBMAXIMAL_H 0.9, MP_GUIDE_HOLDUP 0.4, MP_DISENGAGED_DELIVERY 0.2, MP_TISSUED_DELIVERED 0.1, MP_INJECTION_ARTEFACT_MMHG 8, MP_INJECTION_TAU_S 1.2, MP_INJECTION_RECOVERY_S 3, MP_CONTRAST_H 0.8, MP_CONTRAST_RISE_S 1.5, MP_CONTRAST_PLATEAU_S 8, MP_CONTRAST_DECAY_S 4, MP_CONTRAST_READ_FRAC 0.9 (new), MP_PACING_RATE_BPM 70, MP_ORDER_WINDOW_S 120, MP_BLOCK_SELF_RESOLVE_S 20 (new). Sourced anchors: highDoseUg / IC_ADENOSINE_RCA_MAX_UG 100 (14-physiology.ts:483); contrast 8 mL and cut-off 0.83 (14-physiology.ts:421-422); IV 140-180 \u00b5g/kg/min (14-physiology.ts:410)."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts (90/90 pass, includes 2 new tests: a bolus is judged whole across its parts, and an unused pending arrhythmia expires)",
+     "npx vitest run src/simulation/pci/pwSession.hyperaemia.test.ts (22/22 pass; new tests: bolusUg and continuation passed to the engine, dominant circumflex dose rule, a short block passes with no order, contrast FFR read late, presets held back)",
+     "npx vitest run src/ui/lab/physiologyTips.hyperaemia.test.ts (8/8 pass; the forced no-escape case now consumes the force and reaches standstill at session level)",
+     "npx vitest run src/ui/physiology/MeasurePanel.hyperaemia.test.ts (4/4 pass; new test: the orders panel is hidden when there is no monitor rhythm)",
+     "npx vitest run src/simulation/pci/pwSession.test.ts src/ui/lab/physiologyTips.test.ts (20/20 and 15/15 pass; physiologyTips.test.ts is green again)",
+     "npx vitest run src/ui/sections/PhysiologyLab.test.ts src/ui/lab/physiologyTips.leftMain.test.ts (9/9; 11 pass, 1 skipped)",
+     "npx vitest run src/content/content.test.ts src/content/lab/reachability.test.ts (61/61, 5/5)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit exited 0. The first run reported one error in src/ui/angio/labels.test.ts, a file outside this package that another package was editing at the time. It was gone on the rerun.",
+    "notes": "I applied seven of the nine findings. The critical one could only be handled by its fallback, so the six hyperaemia presets are now held back from the running lab until its rig is patched. All the listed test files pass, including physiologyTips.test.ts, and the typecheck is clean.\n\nFinding 1 (critical): verified. src/ui/sections/PhysiologyLab.tsx still gives the engine fixed doses, never calls setUpPwEngine and never passes the monitor rhythm. That file is not in this package's list, so I used the reviewer's fallback and kept the presets reversible:\n- pwSession.ts now has a switch, HYPERAEMIA_PRESETS_LISTED = false, documented. The six presets are exported as HYPERAEMIA_PRESETS but are left out of PHYSIOLOGY_PRESETS and PRESET_BY_ID, so they are not in the case menu or the practice index and a launch cannot reach them.\n- initialPwSession and sessionPreset still know every preset, through a private lookup and a new physiologyPreset(id), so all the engine and session tests still run.\n- hyperaemia.launch.ts exports HYPERAEMIA_SCENARIOS, and its launch has `scenarios: []`.\n- physiologyTips.ts adds the AF and VF raises only when the switch is on.\n- MeasurePanel shows OrdersPanel only when the session has a monitor rhythm (`s.rhythm !== null`). Only a rig that sends pwPatientInput sets it, so the orders panel turns itself on once the rig is patched. Until then no CPR, shock or pacing button just writes to the log.\n- Tests check both states, and that the launch file and the switch agree.\n- Remaining gap: in the existing presets MeasurePanel always sends detailed actions, while the current rig still gives the engine its fixed IC and IV doses. Hyperaemia follows the entered dose, but blood pressure and heart rate follow the fixed dose until the rig patch.\n\nRig patch for the owning package (physiology-engine-unify-and-setup), in PhysiologyLab.tsx:\n1. In the constructor, after applyLine(): `this.session = setUpPwEngine(this.engine, this.session);`. It now returns the session with the patient's dominance.\n2. In dispatch(), replace `if (this.session !== before) this.applyDrug(a, before);` with `applyPwActionToEngine(this.engine, before, this.session, a);`. Then delete applyDrug and the local IC_ADENOSINE_UG and IC_GTN_UG, importing IC_GTN_UG from pwSession.\n3. In step(), send `patient: pwPatientInput(v)`.\n4. Add the PhysiologyLab.test.ts cases the reviewer gave: 'adenosine-vf' reaches VF within 30 s, and 'saline-swap' with an IV infusion lowers the mean pressure by less than 3 mmHg over 120 s.\n\nTo re-enable afterwards, set HYPERAEMIA_PRESETS_LISTED = true and set hyperaemia.launch.ts to `scenarios: HYPERAEMIA_SCENARIOS`. physiologyTips.test.ts also needs the line 32 and 216 edits listed under finding 4.\n\nFinding 2 (major): applied.\n- engine.ts InjectionDetail has `bolusUg` and `continuation`. give() judges both the AV block chance and the high-risk rule on the whole bolus, and a continuation draws nothing.\n- applyPwActionToEngine and setUpPwEngine pass `bolusUg` (dose times MP_DISENGAGED_DELIVERY when the guide is disengaged). The flush part carries `continuation: true`.\n- In the tips test, a slow 150 \u00b5g RCA bolus now uses the forced no-escape and brings standstill. The engine shows standstill as AV 3 with the rate falling below 20; rhythmKind stays 'sinus', not 'asystole', so the test asserts the rate.\n\nFinding 3 (major): applied. MP_CONTRAST_READ_FRAC = 0.9 is added. A contrast FFR read after the plateau with h below 0.72 is flagged 'read after the contrast effect had passed'. Read just after the trace recovers but before the effect has built, it is flagged 'read early: the contrast effect had not built up'. In both cases the 'contrast-ffr' item fails.\n\nFinding 5 (minor): applied. adnPendingUntil is set to the time to maximum plus that side's plateau. The slow tick drops the pending arrhythmia after that time, and the field is in the snapshot (optional, for older snapshots). setAdenosineHazards(null) clears it. The test uses a later dose with all chances set to 0, because turning the model off would hide the bug.\n\nFinding 6 (minor): applied. The session has an optional `dominance`, set from `e.profile?.dominance` by setUpPwEngine. The 'ic-dose' item counts the circumflex of a left-dominant patient, and its label names the dominant circumflex.\n\nFinding 7 (minor): applied. MP_BLOCK_SELF_RESOLVE_S = 20 is added. A block that ends within 20 s with no shock or cardioversion passes the item.\n\nFinding 8 (minor): applied. IV_REF and IC_REF are module constants, and injectionArtefact no longer builds an array on each call.\n\nFiles changed: src/simulation/patient/engine.ts, src/simulation/pci/pwSession.ts, src/ui/lab/physiologyTips.ts, src/ui/physiology/MeasurePanel.tsx, src/content/lab/presets/physiology/hyperaemia.launch.ts, src/simulation/patient/patient.test.ts, src/simulation/pci/pwSession.hyperaemia.test.ts, src/ui/lab/physiologyTips.hyperaemia.test.ts, src/ui/physiology/MeasurePanel.hyperaemia.test.ts. All are under /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-70) at http://localhost:5173, went to the Pressure wire lab and drove it through window.__lab.physiology (dispatch, step, state, events, context, tips). I closed the tab at the end and reset its viewport.",
+     "Preset list: the Case dropdown offers only the 15 core presets. None of the six hyperaemia presets (ic-rca-dose, iv-tissued-line, iv-caffeine, saline-swap, contrast-ffr, adenosine-vf) can be reached. In the current code pwSession.HYPERAEMIA_PRESETS_LISTED = false and hyperaemia.launch.ts exports `scenarios: []`. That contradicts the builder report, which says the practice index lists all six. launchPreset() also checks PRESET_BY_ID, so a practice launch cannot open them either.",
+     "MeasurePanel at 1440 px: it shows the empty dose field, Inject slowly, Fast push, Flush the guide, the IV rate (default 140), the vein select (hand, antecubital, central), Start the infusion, Contrast 8 mL, Stop adenosine, the three checks, and the HR and mean Pa line. The HR and mean Pa followed the engine's vitals (HR 61, Pa 93 against the engine's 62 and 92.7). The layout is Clinical Graphite and nothing overflows the panel. In the default narrow pane (445 px viewport) `main` scrolls horizontally, but that comes from the app shell and also affects the Set up panel.",
+     "Inject slowly with the dose field empty: the session refused it ('no dose', 'enter the intracoronary dose in \u00b5g') and hyper.mode stayed 'none'.",
+     "IC 200 \u00b5g slowly into the LAD, then FFR at once: flagged 'submaximal hyperaemia \u00b7 read early: the guide was not flushed after the intracoronary bolus'. FFR 1 s after the flush: flagged 'the guide trace had not recovered from the injection' and read 0.71. FFR 6 s after the flush: no hyperaemia or early flag, 0.74. This matches acceptance criterion 2. The flags appear as aids, and this run was in Guided practice.",
+     "IV 140 \u00b5g/kg/min through the hand vein (LAD case): the teaching-aid hyperaemia rose 40, 55, 66, 74, 80, 85, 89, 91 ... 97% over about 115 s. The engine MAP fell about 4 mmHg and the HR did not change, because the rig always gives the engine central 140.",
+     "Contrast 8 mL on the RCA case: logged as 'Contrast FFR, threshold \u2264 0.83', value 0.95. The hyperaemia went back to 0% once the effect had passed.",
+     "Checks: the IV line check logged 'flushes freely' with the note 'a small hand vein: a poor site for adenosine'. The drug check logged 'adenosine, as labelled' and the caffeine question logged 'no caffeine today'. IV with a non-numeric rate was refused ('no rate').",
+     "Tips on the RCA case at phase physiology: pci-adenosine-rca-dose came first (context phase 'physiology', vessel 'RCA'), with pci-phys-ic-adenosine-flush and pci-phys-iv-hyperaemia-signs also in the list.",
+     "IC 200 \u00b5g fast push into the RCA (core preset rca-negative): the engine only gave first-degree AV block. There was no bradycardia or av-block event, pci-adenosine-block-cough-wait never appeared in L.tips() over 10 s, session.rhythm stayed null, session.arrhythmias stayed empty and the OrdersPanel (Cough, Charge, Synchronised shock) never rendered. So criterion 4 and the orders and adenosine-vf part of the design cannot be reached in the running lab.",
+     "Console: no JavaScript errors. The only errors were 404s for angio-library/{dominance,dominance-main,angiocad}/labels.json, which this package does not touch."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/PhysiologyLab.tsx PhysiologyRig.dispatch/applyDrug (lines ~140-160; not in this package's file list), triggered by the new MeasurePanel buttons",
+      "problem": "An IC or IV adenosine action that the session refuses still reaches the patient engine. I clicked 'Inject slowly' with the dose field empty (the panel sends doseUg NaN). The session logged 'no dose' and hyper.mode stayed 'none', but the session object changed because a log line was added. applyDrug therefore ran e.giveDrug('adenosine', IC_ADENOSINE_UG[side], 'ic'), and about 3.5 s later the monitor showed 'Sinus rhythm, first-degree AV block'. A 'no rate' IV action, sent from a non-numeric rate field, starts the engine's central 140 \u00b5g/kg/min infusion in the same way, and MAP drifted from 88 to 82 mmHg with the session in contrast mode. The learner sees AV block and hypotension from a drug the console says was never given.",
+      "severity": "major",
+      "fix": "Give the engine the drug only when the session accepted it. In applyDrug, for IC, call giveDrug only if this.session.hyper.mode === 'ic' && this.session.hyper.t0 !== (before.hyper as any).t0. For IV, call startInfusion only if this.session.hyper.mode === 'iv' && before.hyper.mode !== 'iv'. Better still, replace the body with the package's applyPwActionToEngine(engine, before, this.session, a), which should make the same accepted check. Inside the package, MeasurePanel can also disable Inject slowly and Fast push while icDose is empty or not a positive number, and disable Start the infusion while ivRate is not, so these actions are never sent."
+     },
+     {
+      "where": "src/ui/sections/PhysiologyLab.tsx (rig not patched: no setUpPwEngine, applyPwActionToEngine or pwPatientInput)",
+      "problem": "The adenosine arrhythmia part of the package cannot be reached in the running lab. A 200 \u00b5g fast push into the RCA gave only first-degree AV block. No bradycardia or av-block event was raised, pci-adenosine-block-cough-wait never showed, session.rhythm stayed null, so MeasurePanel never renders OrdersPanel (cough, pacing, charge, shock, synchronised shock), and session.arrhythmias stayed empty. The chosen dose, injection speed, vein and caffeine do not change the engine's response either. Acceptance criterion 4 and the design item ('dose, line site, failure states and orders work in the live physiology lab') are not met in the app. The builder reported this gap.",
+      "severity": "major",
+      "fix": "Patch PhysiologyRig, through a follow-up package that owns PhysiologyLab.tsx. In the constructor call setUpPwEngine(this.engine, this.session). In dispatch call applyPwActionToEngine(this.engine, before, this.session, a) in place of applyDrug. In step, pass pwPatientInput(this.engine.vitals()) as the tick's patient (it includes rhythm), not just { map, hr }. Then set HYPERAEMIA_PRESETS_LISTED = true and launch.scenarios = HYPERAEMIA_SCENARIOS."
+     },
+     {
+      "where": "src/content/lab/presets/physiology/hyperaemia.launch.ts and src/simulation/pci/pwSession.ts:366 (HYPERAEMIA_PRESETS_LISTED = false)",
+      "problem": "None of the six hyperaemia presets is in the Case dropdown, and they cannot be launched. launchPreset() checks PRESET_BY_ID, which leaves them out, and launch.scenarios is []. Acceptance criterion 5 (practiceIndex lists every scenario under pm-physiology-indices and pm-lab-drugs-microvascular) is therefore not met in the current tree, although the builder report says 'met'. The failure states (tissued hand line, saline swap, caffeine, contrast-ffr in asthma) and the adenosine-vf shock cannot be practised in the app.",
+      "severity": "major",
+      "fix": "After the rig patch above, set HYPERAEMIA_PRESETS_LISTED = true in pwSession.ts and `scenarios: HYPERAEMIA_SCENARIOS` in hyperaemia.launch.ts. Then rerun src/ui/lab/physiologyTips.hyperaemia.test.ts, whose expectations follow the flag. Until then, correct the acceptance status to 'held back' rather than 'met'."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts reducer for {type:'check-line'}",
+      "problem": "'Look at the IV cannula' logs 'flushes freely \u2014 a small hand vein: a poor site for adenosine' even when no IV infusion has been started. The note is a judgement that should belong to the debrief or guided aids, and it shows on the live log in every mode.",
+      "severity": "minor",
+      "fix": "Put the 'a poor site for adenosine' judgement in the entry's aid field, so it shows only under showAids and in the debrief. Keep the plain observation (for example 'cannula in a hand vein; flushes freely') in note."
+     },
+     {
+      "where": "Physiology lab layout in the narrow default pane (app shell, not this package)",
+      "problem": "With a 445 px viewport the main column is 197 px wide and scrolls horizontally (scrollWidth 372). The Fast push button and the vein select are cut off. The same happens to the existing Set up panel, so the cause is the shell or grid and not the new panels.",
+      "severity": "minor",
+      "fix": "No change in this package. If needed, have the shell collapse the sidebar below about 768 px, so the lab's xl:grid-cols-12 layout has room."
+     }
+    ],
+    "consoleErrors": [
+     "Failed to load resource: 404 for /angio-library/dominance/labels.json, /angio-library/dominance-main/labels.json and /angio-library/angiocad/labels.json (several times; unrelated to this package)"
+    ]
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 1 (rig gives the drug for a refused action), rig part: the cause is PhysiologyRig.applyDrug in src/ui/sections/PhysiologyLab.tsx, which is not in this package's file list. The package's own adapter, applyPwActionToEngine, already makes the accepted check. A refused bolus or infusion returns a session whose hyper is unchanged, so the adapter returns before giving anything, and a new test now pins this. The fix is for the rig to call applyPwActionToEngine in place of applyDrug (finding 2). The in-package guard was applied: see the notes.",
+     "Finding 2 (rig not patched): out of scope. PhysiologyLab.tsx belongs to another package. That follow-up package should, in the PhysiologyRig constructor, call setUpPwEngine(this.engine, this.session); in dispatch, replace applyDrug with applyPwActionToEngine(this.engine, before, this.session, a); and in step, pass pwPatientInput(this.engine.vitals()) as the tick's patient.",
+     "Finding 3 (presets not listed): the finding is correct, but the fix waits on the rig patch. Setting HYPERAEMIA_PRESETS_LISTED = true or launch.scenarios = HYPERAEMIA_SCENARIOS now would list cases whose dose, line site, caffeine, hazards and orders never reach the engine in the running lab. Acceptance criterion 5 should read 'held back', not 'met'. Once the rig patch lands, flip both and rerun src/ui/lab/physiologyTips.hyperaemia.test.ts.",
+     "Finding 5 (narrow-pane layout): no change in this package, as the finding itself says. The cause is the app shell and grid, which also clip the existing Set up panel."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/pwSession.hyperaemia.test.ts src/ui/physiology/MeasurePanel.hyperaemia.test.ts (28 passed)",
+     "npx vitest run src/ui/lab/physiologyTips.hyperaemia.test.ts src/simulation/pci/pwSession.test.ts (28 passed)",
+     "npx vitest run src/simulation/patient/patient.test.ts src/ui/lab/physiologyTips.test.ts src/ui/lab/physiologyTips.leftMain.test.ts (116 passed, 1 skipped)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no errors)",
+    "notes": "Two findings applied, both in package files only.\n\nFinding 1, in-package part. In src/ui/physiology/MeasurePanel.tsx, 'Inject slowly' and 'Fast push' stay disabled until the IC dose field holds a positive number. 'Start/Change the infusion' stays disabled until the IV rate field holds a positive number. So the panel can no longer send a no-dose or no-rate action, and the rig's legacy applyDrug never sees one. The rig's own bug, giving the drug for any changed session, is still there until PhysiologyLab.tsx calls applyPwActionToEngine.\n\nFinding 4. In src/simulation/pci/pwSession.ts, the check-line reducer now logs only what is seen in note:\n- For a tissued line: 'the back of the hand is swollen around the cannula'.\n- For an untissued hand line: 'a cannula in a small hand vein'.\nThe judgement and advice moved to aid, which shows only with showAids and in the debrief:\n- 'the infusion is running into the tissues: give adenosine through a large or central vein'.\n- 'a small hand vein is a poor site for adenosine: a large or central vein is better'.\nThe poor-site judgement follows the module text in src/content/manual/pci-manual/14-physiology.ts (Brilakis: a central or large peripheral vein; a hand-vein cannula is a poor choice).\n\nNew tests:\n- src/simulation/pci/pwSession.hyperaemia.test.ts: refused IC (NaN and 0 \u00b5g) and IV (NaN rate) actions reach the engine as nothing; a refused change during a running infusion neither restarts nor stops it; the tissued check-line note gives no advice and the aid does.\n- src/ui/physiology/MeasurePanel.hyperaemia.test.ts: the bolus buttons are disabled with an empty dose; the infusion button is enabled at the default rate; an unused hand cannula's check gives no judgement in the note.\n\nsrc/ui/lab/physiologyTips.test.ts now passes in full (15/15). The two by-design failures from the builder report no longer appear.\n\nOut of scope, still open: the PhysiologyLab.tsx rig patch (setUpPwEngine, applyPwActionToEngine, pwPatientInput). After it lands, set HYPERAEMIA_PRESETS_LISTED = true in pwSession.ts and launch.scenarios = HYPERAEMIA_SCENARIOS in src/content/lab/presets/physiology/hyperaemia.launch.ts."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "An IC RCA dose of 200 ug arms AV block more often than 60 ug over 500 seeded runs; a peripheral IV infusion reaches 90% effect later than central",
+      "met": true,
+      "evidence": "src/simulation/patient/patient.test.ts lines 1501-1531: 'an IC RCA dose of 200 \u00b5g arms AV block more often than 60 \u00b5g over 500 seeded runs (acceptance)' and 'a peripheral IV infusion reaches 90% of its effect later than a central one (acceptance)'. patient.test.ts: 90/90 pass. The session-level check also passes in pwSession.hyperaemia.test.ts ('a central vein reaches 90% sooner than a large peripheral one')."
+     },
+     {
+      "criterion": "FFR at h < 0.9 is flagged submaximal; FFR before the guide flush after an IC bolus is flagged early",
+      "met": true,
+      "evidence": "pwSession.ts MP_SUBMAXIMAL_H = 0.9 (labelled MODEL PARAMETER), flag at line ~1002. pwSession.hyperaemia.test.ts 'FFR flags (acceptance)': both tests pass (23/23 in the file)."
+     },
+     {
+      "criterion": "In 'adenosine-vf' engine.shock() restores an organised rhythm by the engine's model",
+      "met": true,
+      "evidence": "physiologyTips.hyperaemia.test.ts \"'adenosine-vf': VF from the colleague's fast push reaches the context ... the shock restores an organised rhythm\": charge, clear and the shock order go through applyPwActionToEngine (case 'shock' calls engine.shock) and the rhythm leaves VF within three attempts. Passes."
+     },
+     {
+      "criterion": "During adenosine AV block the context has av-block and the tips include pci-adenosine-block-cough-wait",
+      "met": true,
+      "evidence": "physiologyTips.hyperaemia.test.ts, first acceptance test: after 150 \u00b5g IC into the RCA, ctx.events contains bradycardia and av-block, and tipsFor(ctx, 20) contains pci-adenosine-block-cough-wait. A second test reaches the same tip from the engine's own dose-scaled block without a forced hazard. Both pass."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in hyperaemia.launch.ts under lessons pm-physiology-indices and pm-lab-drugs-microvascular",
+      "met": false,
+      "evidence": "hyperaemia.launch.ts exports launch = { sim: 'physiology', scenarios: [] }. The six scenarios sit in HYPERAEMIA_SCENARIOS but are held back because pwSession.HYPERAEMIA_PRESETS_LISTED = false (pwSession.ts:366). PHYSIOLOGY_PRESETS therefore leaves out the hyperaemia presets, so they are not in the lab's case menu, its launches or PRACTICE_INDEX. The test passes only because it was written to expect 'none while they are held back'. The cause is the lab rig, src/ui/sections/PhysiologyLab.tsx (owned by physiology-engine-unify-and-setup, not in this package's files). It still gives the engine fixed doses in applyDrug (lines ~150-160) and never calls setUpPwEngine, applyPwActionToEngine or pwPatientInput."
+     },
+     {
+      "criterion": "Tips test beside physiologyTips.ts: in a hyperaemia scenario, after the action that raises 'bradycardia', tipsFor(ctx,20) includes pci-adenosine-block-cough-wait, and at phase 'physiology' it includes pci-adenosine-rca-dose; every waiting.ts entry naming this package becomes satisfiable and the pci waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/lab/physiologyTips.hyperaemia.test.ts drives 'ic-rca-dose' through the session's engine adapter: pci-adenosine-rca-dose appears at the start and pci-adenosine-block-cough-wait after bradycardia. waiting.ts has 0 entries naming this package (logged as '0 waiting.ts tips name this package; pci tips still waiting 483 -> 449'), so this part is trivially met. Caveat: raises leaves out atrial-fibrillation and vf while the presets are held back, so pci-arrest-adenosine-cough is not reachable from the lab yet. The test confirms this."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/content/lab/presets/physiology/hyperaemia.launch.ts (scenarios: []), src/simulation/pci/pwSession.ts:366 (HYPERAEMIA_PRESETS_LISTED = false), src/ui/sections/PhysiologyLab.tsx (not in this package's files)",
+      "problem": "The six hyperaemia presets are held back, so practiceIndex lists none of them under pm-physiology-indices or pm-lab-drugs-microvascular (criterion 5). They also cannot be chosen in the lab at all. The real rig still gives the engine fixed doses (IC_ADENOSINE_UG[side], 140 \u00b5g/kg/min central) and never calls setUpPwEngine, applyPwActionToEngine or pwPatientInput. As a result, in the app: dose by vessel, line site, saline, caffeine, the hazard model, AF/VF, the orders panel (MeasurePanel shows OrdersPanel only when s.rhythm !== null) and engine.shock from the orders are all unreachable. The tests pass only against a test harness that wires the adapter itself.",
+      "severity": "critical",
+      "fix": "Schedule a repair package, or amend this one, to list src/ui/sections/PhysiologyLab.tsx, src/ui/sections/PhysiologyLab.test.ts and src/ui/lab/physiologyTips.test.ts. In PhysiologyLab.tsx's rig: (1) after building the engine, set this.session = setUpPwEngine(this.engine, this.session); (2) replace applyDrug(a, before) with applyPwActionToEngine(this.engine, before, this.session, a); (3) in each step tick, dispatch { type: 'tick', dt, patient: pwPatientInput(this.engine.vitals()) } so s.rhythm is set and OrdersPanel appears. Then set HYPERAEMIA_PRESETS_LISTED = true in pwSession.ts and scenarios: HYPERAEMIA_SCENARIOS in hyperaemia.launch.ts. Let physiologyTips.test.ts accept PHYSIOLOGY_ADENOSINE_EVENTS in raises and the hyperaemia launch file. Re-run physiologyTips.hyperaemia.test.ts, pwSession.hyperaemia.test.ts, PhysiologyLab.test.ts, practiceIndex.test.ts and reachability.test.ts by file. The practice-index test should then find each of the six scenarios under both lessons with params { scenario, mode: 'guided' }."
+     },
+     {
+      "where": "src/ui/physiology/MeasurePanel.tsx with src/ui/sections/PhysiologyLab.tsx applyDrug",
+      "problem": "In the live lab's core presets, the new panel takes an IC dose, speed, IV rate and vein, and the session's hyperaemia follows the entered values. The engine, however, still receives the rig's fixed dose and central site. The systemic signs and AV block the monitor shows therefore do not match what the learner gave.",
+      "severity": "major",
+      "fix": "The same rig change as above (applyPwActionToEngine in place of applyDrug) fixes this. No change is needed in MeasurePanel.tsx."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts MP_ADENOSINE_HAZARDS; src/simulation/pci/pwSession.ts MP_SUBMAXIMAL_H, MP_DISENGAGED_DELIVERY and the contrast hyperaemia constants",
+      "problem": "The new model parameters are labelled MODEL PARAMETER in code comments. No entry for them could be found in docs/realism/facts (only S9.md and C4.md mention adenosine, with nothing for the hazard chances, delays or the 0.9 submaximal threshold). The rule in section 2 asks for them to be labelled in docs/realism/facts. The facts files are not in this package's list, so this is recorded rather than charged to the package.",
+      "severity": "minor",
+      "fix": "Have the owner, or the repair package, add an entry to docs/realism/facts (for example S9.md) listing MP_ADENOSINE_HAZARDS (afP 0.15, vfP 0.05, noEscapeP 0.2, vfDelayS 2, noEscapeHoldS 15, afSelfRevertP 0.5, afRevertS 30, cardioversionAfSuccess 0.9, cough parameters), MP_SUBMAXIMAL_H 0.9 and the contrast and disengaged-delivery constants as MODEL PARAMETERS, with the sourced 100 \u00b5g limit cited to 14-physiology.ts:478-488 and 04-lab-drugs.ts:505/556."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/physiologyTips.hyperaemia.test.ts src/ui/physiology/MeasurePanel.hyperaemia.test.ts (13/13 pass)",
+     "npx vitest run src/simulation/pci/pwSession.hyperaemia.test.ts (23/23 pass)",
+     "npx vitest run src/simulation/patient/patient.test.ts (90/90 pass)",
+     "npx vitest run src/ui/lab/physiologyTips.test.ts src/simulation/pci/pwSession.test.ts src/ui/lab/physiologyTips.leftMain.test.ts (46 pass, 1 skipped)",
+     "npx vitest run src/ui/sections/PhysiologyLab.test.ts src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts (24/24 pass)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no errors)"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "An IC RCA dose of 200 ug arms AV block more often than 60 ug over 500 seeded runs; a peripheral IV infusion reaches 90% effect later than central",
+      "met": true,
+      "evidence": "src/simulation/patient/patient.test.ts 'an IC RCA dose of 200 \u00b5g arms AV block more often than 60 \u00b5g over 500 seeded runs (acceptance)' (hi > lo, hi > 1.5x lo) and 'a peripheral IV infusion reaches 90% of its effect later than a central one (acceptance)' (t90 checked against ADENOSINE.timeToMaxIvS). Both pass (90/90 in the file)."
+     },
+     {
+      "criterion": "FFR at h < 0.9 is flagged submaximal; FFR before the guide flush after an IC bolus is flagged early",
+      "met": true,
+      "evidence": "src/simulation/pci/pwSession.hyperaemia.test.ts 'FFR at h < 0.9 is flagged submaximal; at maximal hyperaemia it is not' (including the crossing either side of 0.9) and 'FFR before the guide flush after an IC bolus is flagged early...' (problem text 'read early: the guide was not flushed after the intracoronary bolus', valid false, ic-flush item fails). 23/23 pass."
+     },
+     {
+      "criterion": "In 'adenosine-vf' engine.shock() restores an organised rhythm by the engine's model",
+      "met": true,
+      "evidence": "patient.test.ts ''adenosine-vf': ... engine.shock() restores an organised rhythm by the engine's model (acceptance)': setUpPwEngine on initialPwSession('adenosine-vf') gives VF with cause adenosine, charge, clearForShock, shock() returns 'converted', rhythm then neither vf nor asystole. physiologyTips.hyperaemia.test.ts covers the same through the bedside orders and the vf- debrief item. Pass."
+     },
+     {
+      "criterion": "During adenosine AV block the context has av-block and the tips include pci-adenosine-block-cough-wait",
+      "met": true,
+      "evidence": "physiologyTips.hyperaemia.test.ts first test: after a 150 \u00b5g RCA bolus (hazard forced to no-escape), ctx.events contains bradycardia and av-block and tipsFor(ctx,20) contains pci-adenosine-block-cough-wait. A second test gets the same from the engine's own dose-scaled block without forcing. Pass. This runs through the pwSession engine adapter, not through the live rig (see the practiceIndex failure)."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/physiology/hyperaemia.launch.ts under lessons pm-physiology-indices, pm-lab-drugs-microvascular",
+      "met": false,
+      "evidence": "hyperaemia.launch.ts exports launch = { sim: 'physiology', scenarios: [] }. The six scenarios (HYPERAEMIA_SCENARIOS: ic-rca-dose, iv-tissued-line, iv-caffeine, saline-swap, contrast-ffr, adenosine-vf) are held back because pwSession.ts sets HYPERAEMIA_PRESETS_LISTED = false. The practice index therefore lists none of them, and PHYSIOLOGY_PRESETS and PRESET_BY_ID leave them out as well. The test 'practiceIndex lists every scenario ... (none while they are held back)' passes only because the list is empty: it asserts known.has(id) === false for all six. The reason for holding them back is real. src/ui/sections/PhysiologyLab.tsx (owned by physiology-engine-unify-and-setup, wave 9, and not in this package's files) still uses its own applyDrug with a fixed IV 140 central and a fixed IC dose. It never calls setUpPwEngine, applyPwActionToEngine or pwPatientInput, so in the app the hazard model, the dose entry, the failure states and the orders would not work. No later package in lab-build-plan.json takes this wiring on, so the criterion has not moved to another package."
+     },
+     {
+      "criterion": "Tips test beside physiologyTips.ts: in a scenario from hyperaemia.launch.ts, after the action that raises 'bradycardia', tipsFor(ctx, 20) includes pci-adenosine-block-cough-wait, and at phase 'physiology' it includes pci-adenosine-rca-dose; every waiting.ts entry naming this package becomes satisfiable, so the pci waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/lab/physiologyTips.hyperaemia.test.ts (8/8 pass): in 'ic-rca-dose', pci-adenosine-rca-dose shows at the start with vessel RCA, and pci-adenosine-block-cough-wait shows once bradycardia is raised. Reachability: '0 waiting.ts tips name this package; pci tips still waiting 483 -> 449'. The condition holds trivially. The test reaches that count with raises extended by PHYSIOLOGY_ADENOSINE_EVENTS; the live raises leave out AF and VF while the presets are held back, so pci-arrest-adenosine-cough is not yet reachable."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/content/lab/presets/physiology/hyperaemia.launch.ts (launch.scenarios = []) and src/simulation/pci/pwSession.ts:366 (HYPERAEMIA_PRESETS_LISTED = false)",
+      "problem": "None of the six hyperaemia scenarios is in the practice index under pm-physiology-indices or pm-lab-drugs-microvascular, and none is in the lab's case menu or launches. The practiceIndex acceptance test passes only because the launch list is empty. The blocker is the rig in src/ui/sections/PhysiologyLab.tsx, which belongs to another package. Its PhysiologyRig never calls setUpPwEngine, and applyDrug gives the engine fixed doses: IV adenosine at ADENOSINE.ivStandardUgKgMin through a central vein, IC_ADENOSINE_UG by side. Its tick passes { map, hr } and not pwPatientInput(v). In the app, therefore, the hazard model, the operator's dose, rate and site, the tissued line and saline failures, and the bedside orders would not reach the engine.",
+      "severity": "major",
+      "fix": "This needs a repair package or a scope grant that includes src/ui/sections/PhysiologyLab.tsx and src/ui/lab/physiologyTips.test.ts. This package cannot make the change without touching another package's file. (1) In PhysiologyLab.tsx, in PhysiologyRig's constructor after the engine is built (around line 129) and the tip is set, add `this.session = setUpPwEngine(this.engine, this.session);`. (2) In PhysiologyRig.dispatch, replace `this.applyDrug(a, before)` with `applyPwActionToEngine(this.engine, before, this.session, a)` and remove applyDrug. (3) In step()'s tick (line 183), pass `patient: pwPatientInput(v)` in place of `{ map: v.aortaTrue.mean, hr: v.hr ?? this.session.hr }`. (4) Set `HYPERAEMIA_PRESETS_LISTED = true` in pwSession.ts and `scenarios: HYPERAEMIA_SCENARIOS` in hyperaemia.launch.ts. (5) In physiologyTips.test.ts, allow PHYSIOLOGY_ADENOSINE_EVENTS in raises and the hyperaemia launch file. (6) Re-run by file: src/ui/lab/physiologyTips.hyperaemia.test.ts, src/simulation/pci/pwSession.hyperaemia.test.ts, src/ui/sections/PhysiologyLab.test.ts, src/ui/lab/physiologyTips.test.ts, src/ui/content/practiceIndex.test.ts, src/content/lab/reachability.test.ts and src/simulation/patient/patient.test.ts. Then check that the practiceIndex test asserts known.has(id) === true for all six scenarios under both lessons, and that pci-arrest-adenosine-cough is satisfiable from the live raises."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/pci/pwSession.hyperaemia.test.ts (113 passed)",
+     "npx vitest run src/ui/lab/physiologyTips.hyperaemia.test.ts src/ui/physiology/MeasurePanel.hyperaemia.test.ts src/ui/lab/physiologyTips.test.ts src/simulation/pci/pwSession.test.ts (48 passed)",
+     "npx vitest run src/ui/sections/PhysiologyLab.test.ts src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts (24 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (critical, presets held back and the engine adapter unreachable in the live lab): confirmed against the code. PhysiologyLab.tsx:152-162 applyDrug still gives the engine IC_ADENOSINE_UG[side] and ADENOSINE.ivStandardUgKgMin at site 'central'. It never calls setUpPwEngine, applyPwActionToEngine or pwPatientInput, so s.rhythm stays null and MeasurePanel.tsx:132 never shows OrdersPanel. Not applied, because the fix needs src/ui/sections/PhysiologyLab.tsx, PhysiologyLab.test.ts and src/ui/lab/physiologyTips.test.ts, none of which are in this package's list. Setting HYPERAEMIA_PRESETS_LISTED = true and scenarios: HYPERAEMIA_SCENARIOS without the rig change would make things worse. The six presets would appear in the practice index and the lab, but the rig ignores their dose, line site, saline swap, caffeine and forced hazards, so adenosine-vf would never fibrillate. physiologyTips.test.ts, owned by another package, would also fail on the added raises. Those two switches stay off until a repair package that lists PhysiologyLab.tsx and physiologyTips.test.ts makes the three rig changes (setUpPwEngine after building the engine, applyPwActionToEngine in place of applyDrug, a tick with pwPatientInput(this.engine.vitals())) and turns them on in the same change.",
+     "Finding 2 (major, the engine receives a fixed dose and site while the panel takes the learner's values): confirmed (PhysiologyLab.tsx:156-158). Not applied, because the only fix is the same change to PhysiologyLab.tsx's rig, outside this package's files, as the finding itself says. No change is needed in MeasurePanel.tsx.",
+     "Finding 3 (minor, model parameters not recorded in docs/realism/facts): confirmed. grep finds no MP_ADENOSINE_HAZARDS or MP_SUBMAXIMAL_H anywhere under docs/, and docs/realism/facts/S9.md exists. Not applied, because docs/realism/facts is not in this package's file list. The parameters are already labelled MODEL PARAMETER in code comments in engine.ts and pwSession.ts. The owner or a repair package should add the S9.md entry: MP_ADENOSINE_HAZARDS, MP_SUBMAXIMAL_H 0.9, the contrast hyperaemia constants and MP_DISENGAGED_DELIVERY as MODEL PARAMETERS, with the 100 \u00b5g limit cited to 14-physiology.ts:478-488 and 04-lab-drugs.ts:505/556."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/pci/pwSession.hyperaemia.test.ts src/ui/lab/physiologyTips.hyperaemia.test.ts src/ui/physiology/MeasurePanel.hyperaemia.test.ts (4 files, 126 tests, all passed)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0, no errors)",
+    "notes": "I checked all three findings against the code and all three are correct. Each one needs files outside this package's list, so nothing was changed. The package's tests (126 in 4 files) pass and the typecheck is clean.\n\nThe flag stays off on purpose. Setting HYPERAEMIA_PRESETS_LISTED = true in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.ts:366, or scenarios: HYPERAEMIA_SCENARIOS in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/physiology/hyperaemia.launch.ts, would list six presets that the current rig cannot run. It would also break physiologyTips.test.ts, which another package owns.\n\noutOfScope, needed for a repair package:\n(a) /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.tsx needs three changes:\n- set this.session = setUpPwEngine(this.engine, this.session) after building the engine;\n- replace this.applyDrug(a, before) at line 144 with applyPwActionToEngine(this.engine, before, this.session, a);\n- dispatch { type: 'tick', dt, patient: pwPatientInput(this.engine.vitals()) } on each step.\nIn the same change, turn on HYPERAEMIA_PRESETS_LISTED and the launch scenarios. Update PhysiologyLab.test.ts, and let src/ui/lab/physiologyTips.test.ts accept PHYSIOLOGY_ADENOSINE_EVENTS in raises and the hyperaemia launch file. Then rerun by file: physiologyTips.hyperaemia.test.ts, pwSession.hyperaemia.test.ts, PhysiologyLab.test.ts, practiceIndex.test.ts and reachability.test.ts. Several assertions in the package's own tests are written as toBe(HYPERAEMIA_PRESETS_LISTED), so they will check the listed state automatically once the flag is on.\n(b) Add an entry to /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/facts/S9.md recording the adenosine hazard, submaximal, contrast and disengaged-delivery constants as MODEL PARAMETERS, with the sourced 100 \u00b5g limit cited."
+   }
+  ]
+ }
+}

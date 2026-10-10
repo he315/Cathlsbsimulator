@@ -1,0 +1,248 @@
+{
+ "package": "diag-tip-context",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built diag-tip-context. The new pure function diagnosticContext(input) in src/ui/lab/diagnosticContext.ts replaces the inline rule in useDiagnosticTips. It picks the phase in the plan's precedence order: finish > (setup before the time-out) > exchange > (setup until a catheter reaches the root, or advance if the tip is in the route) > lv-aorta > inject > views > engage-graft > engage-left/right > advance. It also reports the vessel (LM/RCA, the tree segment from a physics reading, the graft being sought, or the operation-note grafts at setup) and the route (femoral or radial).\n\nEvents come from two places. Some are read live from the store and case: damped or ventricularised pressure, catheter too deep, conus, non-coaxial, root size once the root has been reached, and arm or subclavian anatomy only while advancing or exchanging on a radial route. The rest come from the session's new EventLog.\n\nDiagnosticLabSession now owns that EventLog, which runs on lab time and is exposed as session.events. It holds case events from the whole case (caseData.events, plus prior-cabg when the case has grafts). It raises vf, air and dissection from store transitions, and engage-fail on lab time instead of performance.now(). It feeds the patient-event adapter with vitals stamped in lab time. It holds high-radiation-dose once a DOSE_TRIGGERS level in dose.ts is crossed. It also tracks the time-out, the first catheter at the root, the exchange window, the last filmed side and the finish step (setFinishStep), and exposes sessionView(), activeEvents() and tipContext().\n\nSession modules: src/ui/sim/modules/index.ts finds every module file by glob (each exports createSessionModule and, optionally, raises), checks the ids, and the session creates, attaches, steps, notifies on injection, merges events() from and disposes each one. useDiagnosticTips(session, mode, helpAskedAt) subscribes to the session and its event log. Simulator.tsx passes the session, syncs the time-out from the attending, and registers the DEV hook window.__lab.diagnostic (context, tips, state, step, events). diagnosticContext.ts exports raises, which reachability.test.ts now reads: diagnostic tips satisfiable went from 0 to 133 of 154, and all 131 waiting.ts entries naming diag-tip-context are reported ready.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/diagnosticContext.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/diagnosticContext.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/useLabTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/modules/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/Simulator.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/diagnosticTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/sessionModules.test.ts"
+    ],
+    "testsAdded": [
+     "src/ui/lab/diagnosticContext.test.ts (23 tests: vocabulary, phase precedence, events/vessel/route, graft cases, lab-time holds for the pure EventLog and the stepped session, session trackers, borrowed and gated tips)",
+     "src/ui/lab/diagnosticTips.test.ts (6 tests: post-arrest scenario with st-elevation -> diag-ohca-ecg-sorts; prior-CABG setup -> diag-graft-op-note-first and engage-graft SVG tips; VF in the guided drawer cleared after 61 s; air embolism -> air; every diag-tip-context waiting entry satisfiable; satisfiable count 1 -> 133)",
+     "src/ui/sim/sessionModules.test.ts (4 tests: registry checks and the session's attach/step/onInject/events/dispose calls)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/sim/sessionModules.test.ts: 33 passed",
+     "npx vitest run src/content/lab/reachability.test.ts: 5 passed; diagnostic 154 tips, satisfiable 133, ready 133 (131 of them '(waiting, diag-tip-context)')",
+     "npx vitest run src/ui/lab/useContextTips.test.ts src/ui/lab/eventLog.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/labRun.test.ts: 54 passed",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts: 21 passed",
+     "npx vitest run src/ui/lab/controls/controls.test.ts src/dev: 30 passed (labHooks, xrayCapture, controls)",
+     "npx vitest run src/mentor/registries.test.ts: 17 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean on the final run, exit 0. One intermediate run reported a TS2322 in src/simulation/engagement.test.ts(148), a file outside this package; it had cleared by the final run, presumably fixed by another package that was editing it.",
+    "acceptance": [
+     {
+      "criterion": "diagnosticContext.test.ts: setup before the time-out; advance with the tip above the sinus; inject while the injector is active; views after a filmed selective run on the engaged side; exchange while a catheter is withdrawn over the wire; finish when the finish step is open; lv-aorta with PIG",
+      "status": "met",
+      "evidence": "The 'phase precedence' describe has one test per phase, plus session-level tests: exchange after withdrawing with wireInsertion above EXCHANGE_WIRE_LEAD and after a catheter change; views after a filmed diagnostic bolus on the left; finish via setFinishStep and via finished. All pass."
+     },
+     {
+      "criterion": "An event raised with holdS 60 is active at 59 s and gone at 61 s of lab time",
+      "status": "met",
+      "evidence": "Two tests in diagnosticContext.test.ts: a pure EventLog with a clock, and a DiagnosticLabSession stepped 590 x 0.1 s (event present in tipContext at 59 s) then to 61 s (gone). Both pass."
+     },
+     {
+      "criterion": "tipsFor({lab:'diagnostic', phase:'views'}) can return pci-interp-qca-calibrate through alsoIn; a tip requiring prior-cabg is excluded without it",
+      "status": "met",
+      "evidence": "'borrowed and gated tips' tests pass. No registry tip has requires ['prior-cabg'] yet, so the gated case uses a fixture copy of diag-graft-op-note-first with requires ['prior-cabg'], passed through tipsFor's tips argument. It is excluded without prior-cabg and shown in a session whose case has grafts, where prior-cabg is derived."
+     },
+     {
+      "criterion": "Reachability: from the raises exports of diagnosticContext.ts and the session modules, satisfiable diagnostic tips rise from about 40 of 154 to every tip whose events are raisable",
+      "status": "met",
+      "evidence": "reachability.test.ts prints 'diagnostic 154 tips satisfiable 133 waiting 154 ready 133'. diagnosticTips.test.ts measures 1 (unconditional) -> 133 of 154, plus 21 borrowed tips. Each of the 21 unsatisfied tips waits on an event that later packages raise (catheter-kink, contrast-streaming, graft-not-found, radial-spasm, scenario events)."
+     },
+     {
+      "criterion": "browser: window.__lab.events.raise('vf') shows diag-vf-shock-then-amiodarone in the guided drawer; window.__labStep(61) clears it",
+      "status": "needs-browser",
+      "evidence": "The wiring is in place: window.__lab is the session, session.events is the EventLog, and the drawer subscribes to the log's and the session's versions. The equivalent headless test passes (raise 'vf' shows the tip in the guided limit-5 selection, nothing in exam, and it is gone after 61 s of steps). Not checked in the browser, as instructed. Note the tips are in the attending drawer, which only exists in guided mode and must be opened."
+     },
+     {
+      "criterion": "Tips (new test file beside diagnosticContext.ts): after the action that raises 'st-elevation', tipsFor(ctx, 20) includes diag-ohca-ecg-sorts, and at phase 'setup' it includes diag-graft-op-note-first; every waiting.ts entry naming diag-tip-context becomes satisfiable, so the diagnostic waiting count falls by at least their number",
+      "status": "partly",
+      "evidence": "Tips part: met. diagnosticTips.test.ts uses a post-arrest case with an LAD culprit occlusion (engine.setOcclusion) that raises st-elevation at setup, and a CABG case whose setup context has vessel SVG and the prior-cabg event. All 131 diag-tip-context entries are satisfiable, and reachability lists them as ready. Waiting-count part: not met yet. The count only falls when tip-retarget-catchup removes these entries; only that package may edit waiting.ts. Also, no diagnostic scenario registry exists yet, so the 'scenario' is a test fixture case."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: list the new MODEL PARAMETERs in src/ui/lab/diagnosticContext.ts (EXCHANGE_WIRE_LEAD 10, EXCHANGE_HOLD_S 5, EXCHANGE_LOAD_S 15, NON_COAXIAL_QUALITY 0.5, ENGAGE_FAIL_S 45 moved from useLabTips). They are labelled in code only, because docs/ is not in this package's file list.",
+     "src/content/lab/raisable/waiting.ts: the 131 diag-tip-context entries are now ready. Only tip-retarget-catchup may remove them, which is what lowers the waiting count.",
+     "No registry tip uses requires ['prior-cabg'] yet. The gated-tip check uses a fixture copy; a content package would need to add a real one."
+    ],
+    "notes": "Snapshots of the three files that existed (useLabTips.ts, labSession.ts, Simulator.tsx) are in datasets/tmp/wp-snapshots/diag-tip-context/ with .started. I edited only the listed files plus three new test files. Scratch probes were deleted, and the trigger dump script ran from the scratchpad.\n\nDesign choices to review:\n1. The legacy engine starts with the catheter already at the root, so \"first catheter reaching the root\" means the first beam, injection, bolus, catheter change or hand command. Before that, and before the time-out, the phase is setup. Without this, guided mode (which needs no time-out) would never show the setup tips. A physics tipZone reading replaces this rule when one exists.\n2. The engage-graft phase needs grafts in the case. Without a graft geometry model it applies when an IM catheter is outside a native engagement (a mammary graft is sought), or when another non-pigtail catheter's tip is above the sinuses (an aortic graft is sought). Graft status is never read; a physics reading's graft takes over when present.\n3. The anatomy events are narrower than before, to avoid giving the answer away on screen. subclavian-tortuosity and radial-loop are now raised only on a radial route while advancing or exchanging (and the subclavian also while a mammary graft is sought). dilated-root and small-root are raised only after the time-out once the root is reached. They now also read caseData.rootSize. anomalous-origin is not raised from variants.\n4. dissection and air are raised at once from the store, as the design says. This conflicts with the rule that complications are named only after the learner's assessment, except VF and tamponade. The tips only show in the guided drawer or after a help request, but the owner may want these held back until the assessment.\n5. There is no 'finishing' field in the store. The finish step is session.setFinishStep(open), for diag-study-report to call; until then, finish shows once the case is finished (visible after the debrief closes).\n6. The catheter-family rule is copied into diagnosticContext.ts so the lab bundle does not load the tip registry; a test checks it gives the same answer as tips.catheterFamily for every catheter.\n7. Patient-adapter vitals are stamped with lab time, so a full-case hand-over (whose engine clock is far ahead) does not break the hold windows.\n8. Telemetry for each event onset goes through crew.push."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve, with minor follow-ups. diag-tip-context is fully implemented. diagnosticContext() follows the stated precedence, with two deliberate setup deviations from the plan that the builder documented. It reports vessel and route. labSession owns an EventLog on lab time that holds the case's events and raises vf, air, dissection, engage-fail, high-radiation-dose and patient events. Session modules are found by glob, and the session attaches, steps, notifies on injection, merges events from and disposes each one. useDiagnosticTips now takes the session, and Simulator wires it through, syncs the time-out and adds the DEV hook. Only the six listed files plus three new test files were edited. The other files under src/ newer than .started belong to diag-engagement-fallback (engagement, pressure and physics types and their fixture), proc-foundation-scenarios-ledger (caseSession, autopilot, the scenarios, session/modules, useProcedureStore), pci-engine-modularise (facade.test, inflation) and found-mentor-registries (registries.test, LedgerSection). The transient zz_probe.test.ts has since been deleted. I reran the checks myself. The package tests pass (33). So do reachability.test.ts (diagnostic 154 tips, 133 satisfiable and ready), useContextTips and eventLog, and lab, integration, controls and src/dev (51), which shows the untouched lab behaviour is unchanged. tsc -p tsconfig.app.json --noEmit is clean. I also ran the browser acceptance on the running dev server, in a background tab with guided practice and the drawer open. window.__lab.events.raise('vf') put diag-vf-shock-then-amiodarone in the drawer and in __lab.diagnostic.tips(), and __labStep(61) removed it. The tests are meaningful: they drive the real session through store transitions, the engine's culprit occlusion (st-elevation), a catheter change, wire withdrawal and a store air-embolism event, and they name the required tips. Engines keep their defaults, the step path adds no per-frame allocations (the slow trackers run at 4 Hz on the cached vitals), and there is no UI chrome change. Tips naming dissection or air appear only in the guided-only attending drawer; in other modes the help button is spoken. One acceptance clause is still open, as the builder reported: the diagnostic waiting count only falls once tip-retarget-catchup removes the 131 entries that are now ready from waiting.ts.",
+    "findings": [
+     {
+      "where": "src/ui/sim/Simulator.tsx, frame-loop useEffect (lines ~152-163: loadTips() and registerLabHook)",
+      "problem": "`void loadTips().then(...)` runs on every session mount in every build and mode, including production and exam, which never show tips. Before this package the tip registry chunk (all the src/content/manual content behind it) was loaded only when the guided drawer opened. registerLabHook is a no-op in production, but the dynamic import is not.",
+      "severity": "minor",
+      "fix": "Move the tipsMod/loadTips lines and registerLabHook inside the existing `if (dev) { ... }` block. Alternatively, keep the registration but load lazily inside the hook: `tips: () => { if (!tipsMod) void loadTips().then((m) => (tipsMod = m)); return selectTips(tipsMod, ...) }`, so nothing loads until the hook is first called."
+     },
+     {
+      "where": "src/ui/lab/diagnosticContext.ts (EXCHANGE_WIRE_LEAD, EXCHANGE_HOLD_S, EXCHANGE_LOAD_S, NON_COAXIAL_QUALITY, ENGAGE_FAIL_S)",
+      "problem": "These MODEL PARAMETERs are labelled in code but not entered in docs/realism/facts, which section 2 requires. docs/ is outside this package's file list, so the builder reported it as out of scope.",
+      "severity": "minor",
+      "fix": "Raise a docs follow-up for whichever package owns docs/realism/facts. Add a row for each constant: value, unit (the wire lead is in table-strip mm, the store's controls.wireInsertion), 'MODEL PARAMETER, not from a source', and the code location src/ui/lab/diagnosticContext.ts."
+     },
+     {
+      "where": "src/ui/lab/diagnosticContext.ts DiagnosticPhysicsReading; src/ui/sim/labSession.ts `physics` field",
+      "problem": "The local physics interface (tipZone, vessel: VesselId, graft, exchange) does not match the PhysicsReading that diag-engagement-fallback is defining in src/ui/physics/types.ts (vessel: string | null, side, kind, depthMm, prolapsed, with no tipZone, graft or exchange). Nothing assigns session.physics yet. The 'tree segment at the tip' part of the vessel design (LAD/LCx) therefore cannot be reached until a later package writes a mapping, and without one the precedence branches that use tipZone stay dead.",
+      "severity": "minor",
+      "fix": "Leave the code as it is, but record the contract in outOfScope or the plan's review notes for diag-rod-physics: a session module, or the rod package, sets session.physics from each PhysicsReading. Mapping: vessel \u2192 `r.vessel as VesselId`; tipZone \u2192 'lv' when r.kind is 'in-lv' or 'below-valve' or r.prolapsed, 'route' when r.kind is 'not-in-root', else 'root'; graft only once the graft geometry exists. Alternatively, widen DiagnosticPhysicsReading.vessel to `string | null` so that a PhysicsReading can be passed structurally."
+     },
+     {
+      "where": "src/ui/lab/diagnosticContext.ts diagnosticPhase (precedence order)",
+      "problem": "The order differs from the plan's tipIntegration line, where setup is the lowest phase. The code puts 'setup before the time-out' above exchange, lv-aorta and inject, and 'setup until a catheter reaches the root' above lv-aorta. The builder documented this (design choice 1). The acceptance tests are consistent with it and it is defensible for the legacy engine, which starts at the root, but the plan text and the code now disagree.",
+      "severity": "minor",
+      "fix": "No code change needed. Record the actual order in LAB_BUILD_PLAN section 9 (review notes), or in the diag-tip-context entry of lab-build-plan.json, the next time a package that owns docs/curriculum edits it, so that diag-study-report and the later diagnostic packages build on the real precedence."
+     },
+     {
+      "where": "src/ui/lab/diagnosticContext.ts graftSought / diagnosticStateEvents",
+      "problem": "In a graft case, any non-pigtail catheter at 'ascending-aorta' reports engage-graft instead of advance. On a radial route, subclavian-tortuosity and radial-loop are then not raised during that time unless a mammary graft is sought, and radial-loop never is. This edge only affects which tips show in the guided drawer.",
+      "severity": "minor",
+      "fix": "In diagnosticStateEvents, also treat engage-graft as 'on the arm' for the radial-loop and tortuous-subclavian checks when the access route is radial. One way: `const onTheArm = radial && (phases.includes('advance') || phases.includes('exchange') || ph.phase === 'engage-graft')`. Add a case to the 'events, vessel and route' test."
+     },
+     {
+      "where": "content (outside this package): src/content/manual/pci-manual/05-access.ts access-cabg-left-radial (alsoIn diagnostic setup)",
+      "problem": "In the browser, a routine non-CABG case at setup showed access-cabg-left-radial in the guided drawer. Its trigger is only phase plan / alsoIn diagnostic setup, and no registry tip uses requires ['prior-cabg'] yet, although the lab now raises prior-cabg. This is not a defect of this package, but the gating it enables is unused.",
+      "severity": "minor",
+      "fix": "Report to tip-retarget-catchup, which may edit lesson module files. Add `requires: ['prior-cabg']` to access-cabg-left-radial, diag-graft-op-note-first and the other graft-only tips, then replace the fixture copy in diagnosticContext.test.ts with the real tip."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 3,
+    "rejected": [
+     "Finding 2 (MODEL PARAMETER rows in docs/realism/facts): correct, but docs/ is outside this package's file list. It is left for whichever package owns docs/realism/facts. Rows needed: EXCHANGE_WIRE_LEAD (table-strip mm, controls.wireInsertion), EXCHANGE_HOLD_S (s), EXCHANGE_LOAD_S (s), NON_COAXIAL_QUALITY (dimensionless engagement quality), ENGAGE_FAIL_S (s). Each is 'MODEL PARAMETER, not from a source' and lives in src/ui/lab/diagnosticContext.ts.",
+     "Finding 4 (precedence order differs from the plan's tipIntegration line): the finding asks for no code change, and docs/curriculum is outside this package. Next time a docs/curriculum owner edits LAB_BUILD_PLAN section 9 or the diag-tip-context entry of lab-build-plan.json, it should record the actual order: finish > setup (before the time-out) > exchange > setup (until a catheter reaches the root; advance if the tip is in the route) > lv-aorta > inject > views > engage-graft > engage-left/right > advance.",
+     "Finding 6 (requires ['prior-cabg'] on access-cabg-left-radial, diag-graft-op-note-first and the other graft-only tips): this is content under src/content/manual/**, outside this package. It is for tip-retarget-catchup, which should then swap the fixture copy in diagnosticContext.test.ts for the real tip."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/sim/sessionModules.test.ts (3 files, 34 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied three of the six findings; the other three need changes in files outside this package. Tests pass and the typecheck is clean.\n\nApplied:\n1. Tip registry loading (finding 1), in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/Simulator.tsx. Mounting a session no longer loads the tip registry. The DEV hook window.__lab.diagnostic now loads it the first time tips() is called. registerLabHook is already a no-op outside DEV, so in production and exam nothing loads unless the drawer opens.\n\n2. Arm events while a graft is sought (finding 5), in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/diagnosticContext.ts. On a radial route, engage-graft now also counts as \"on the arm\":\n`const onTheArm = radial && (phases.includes(\"advance\") || phases.includes(\"exchange\") || phases.includes(\"engage-graft\"));`\nSo subclavian-tortuosity and radial-loop are raised while a graft is sought from the ascending aorta. I kept the existing rule that raises subclavian-tortuosity on any route while a mammary graft is sought, because a femoral approach to the LIMA or RIMA also passes through the subclavian. A new case in the graft test checks the radial behaviour and that the femoral route raises no radial-loop.\n\n3. Physics reading type (finding 3, using the reviewer's alternative). DiagnosticPhysicsReading.vessel is now `string | null`, and tipVesselOf accepts a string, so a PhysicsReading from src/ui/physics/types.ts can be passed structurally. Vessels outside the vocabulary fall back to the engaged side.\n   - The mapping contract (vessel as is; tipZone 'lv' for in-lv, below-valve or prolapsed, 'route' for not-in-root, else 'root'; graft only once graft geometry exists) is written as a doc comment on the physics field in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts, where diag-rod-physics will see it.\n   - A new test checks that OM1 maps to LCx and that an unknown vessel falls back to LM.\n   - Nothing sets session.physics yet, so the LAD/LCx tree-segment vessels and the tipZone branches stay unreachable until diag-rod-physics or a session module sets it.\n\nOut of scope (follow-ups for other packages):\n- docs/realism/facts needs rows for the five MODEL PARAMETERs (finding 2).\n- docs/curriculum should record the actual phase precedence (finding 4).\n- The manual content tips should add requires ['prior-cabg'] (finding 6; for tip-retarget-catchup)."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-13) at http://localhost:5173, went to Cath lab (Free cath lab, Routine left coronary, Guided practice). window.__lab is the DiagnosticLabSession, with events.raise, activeEvents, sessionView and tipContext. window.__lab.diagnostic (context, tips, state, step, events) is registered and window.__labHooks lists 'diagnostic'. modules is [] because no module files exist yet.",
+     "Browser acceptance for the attending drawer: I opened the drawer with the Attending button and called window.__lab.events.raise('vf'). It was an onset, the context events went to ['vf'], and tips() became [pci-mon-vf-roles, diag-vf-shock-then-amiodarone, ...]. The drawer showed the two Bail-out cards above the setup Caution cards. About 2.5 s later the drawer no longer showed it, because EVENT_HOLD_S gives vf a 2 s hold. Calling raise('vf') and then window.__labStep(61) also cleared it (activeEvents went from ['vf'] to []). MET.",
+     "Hold timing in the live app: raise('hypotension', 60) was still active at 59.0 s of lab time (__labStep(59, 0.1)) and gone at 61.5 s.",
+     "Real VF: setting store arrhythmia to 'vf' moved the engine to VF. The session raised 'vf' from source 'store' and kept re-raising it while the engine rhythm stayed VF, and the patient adapter added chest-pain.",
+     "Phases, live on the femoral routine case. At start the phase is 'setup': rootReached is false even though the store starts selective-lm. Withdrawing 40 mm gives 'advance' (ascending-aorta, rootReached true). Re-advancing gives 'engage-left' with vessel LM. aspirate, cine pedal and startInjection give 'inject' with vessel LM and inject tips. After the run with the pedal released, 'views' (lastFilmedSide left, vessel LM). Wire out 30 mm then withdrawing 30 mm gives 'exchange' (exchange tips), back to 'advance' after the 5 s hold. setCatheter('PIG') gives 'exchange' for the 15 s load window, then 'lv-aorta' with LV-gram tips. setFinishStep(true) gives 'finish' with finish tips, and false puts it back.",
+     "alsoIn in the live views context: tipsFor(ctx, 60) includes pci-interp-qca-calibrate.",
+     "Radial case tortuous-radial-0 (loaded with store.loadCase, which created a new session and moved window.__lab to it): route 'radial'. While advancing, events subclavian-tortuosity and radial-loop come from the case variants, and the radial root tips show.",
+     "CABG fixture (CASE_LIBRARY[0] plus an SVG and a LIMA graft): at setup, vessel SVG, prior-cabg held from source 'case', and diag-graft-op-note-first ranks first. With a JR4 lifted above the sinus: engage-graft, vessel SVG, and diag-svg-jr4-after-rca and diag-svg-right-graft-lao show.",
+     "Exam mode (policy.mode set to 'exam' briefly, then restored): tips() returned [] with VF active. Back in guided mode the VF tips returned.",
+     "Console: only Vite connect messages and the React DevTools notice. No errors or warnings. Closed tab-13 at the end."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sim/Simulator.tsx (Finish case button, about line 252) with DiagnosticLabSession.setFinishStep in src/ui/sim/labSession.ts:377",
+      "problem": "Nothing in the app ever calls setFinishStep. Only the tests call it. The Finish case button calls finishCase directly, so in the live lab the 'finish' phase starts only after store.finished is already true, when the case is over and the debrief covers the screen. The finish-phase tips (diag-acq-missing-territory, diag-interp-every-territory, diag-stop-for-heart-team, diag-rad-read-the-dose-panel) are meant to prompt the learner before finishing, but in practice they cannot be seen at a point where the learner can still act on them. The plan defines the phase as 'finish step open', and the acceptance test only exercises it through the hook.",
+      "severity": "major",
+      "fix": "In Simulator.tsx (a file this package owns), make Finish case a two-step action. The first click calls session.setFinishStep(true), opens the attending drawer when screens.attendingDrawer is set, and turns the header control into 'Confirm finish' and 'Keep going'. Confirm calls session.setFinishStep(false) and then finishCase(). Keep going calls session.setFinishStep(false). Exam mode, which has no drawer, can keep a single click that calls finishCase. Then add a browser check: click Finish case and confirm __lab.diagnostic.context().phase === 'finish' and that the drawer lists the finish tips."
+     },
+     {
+      "where": "src/content/manual/pci-manual/05-access.ts:2435 (access-cabg-left-radial, alsoIn diagnostic setup)",
+      "problem": "The routine left coronary case has no grafts, yet the tip 'Grafts with a LIMA: the left wrist or the groin' showed at setup in the guided drawer. Its alsoIn entry has no prior-cabg requirement. This is outside this package's files: it is tip content for tip-retarget-catchup or the content owner.",
+      "severity": "minor",
+      "fix": "Add requires: ['prior-cabg'] to the alsoIn entry, or to the tip, so that tipsFor drops it when the context lacks prior-cabg. This package's session already derives prior-cabg from caseData.grafts."
+     },
+     {
+      "where": "src/content/manual/complex-pci/07-acs-thrombus.ts:2171 (diag-stemi-radial-convert)",
+      "problem": "In the elective tortuous-radial-0 case, which has no STEMI, 'STEMI: if the radial route is costing time, go femoral' was the first tip in the drawer while advancing. Its trigger is only phase plus subclavian-tortuosity, radial-loop or engage-fail, with no STEMI gate. This is content outside this package.",
+      "severity": "minor",
+      "fix": "Add requires: ['stemi'] (the case event this vocabulary uses for STEMI) to the tip so that it shows only in STEMI cases. Report it to the content and retarget package."
+     },
+     {
+      "where": "src/ui/sim/Simulator.tsx:155-160 (window.__lab.diagnostic.tips)",
+      "problem": "The first tips() call after a session mounts, including every loadCase or restart, returns [] because the tips chunk loads lazily into a closure variable held per session. A verifier or the X-ray capture can read a false 'no tips'. This only affects the DEV hook, not the drawer.",
+      "severity": "minor",
+      "fix": "Keep the loaded module at module scope (let tipsModCache: TipsModule | null) so it survives session remounts. Or make tips() return null or a 'loading' marker until the chunk resolves, and say so in the labHooks doc comment."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 2 (access-cabg-left-radial shows at setup in a case without grafts): I checked it and it is right. src/content/manual/pci-manual/05-access.ts:2438 has alsoIn [{ lab: 'diagnostic', phase: ['setup'] }] with no prior-cabg requirement, and the live routine case listed access-cabg-left-radial among the setup tips. I did not change it because that is tip content outside this package's files. It belongs to tip-retarget-catchup or the content owner, who should add requires: ['prior-cabg'] to the alsoIn entry. This package's session already raises prior-cabg from caseData.grafts.",
+     "Finding 3 (diag-stemi-radial-convert has no STEMI gate): I checked it and it is right. src/content/manual/complex-pci/07-acs-thrombus.ts:2173 triggers on phase advance/engage-left/engage-right plus subclavian-tortuosity, radial-loop or engage-fail, and nothing requires a STEMI. I did not change it because that is content outside this package. It belongs to the content and retarget package, which should add requires: ['stemi'] (or whichever case event the vocabulary uses for STEMI)."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/sim/sessionModules.test.ts src/ui/lab/lab.test.ts (4 files, 46 tests passed)",
+     "Browser check on the running dev server (localhost:5173, Cath lab, guided mode) through window.__lab.diagnostic: before the click the phase was setup. After Finish case the phase was finish, tips() included diag-acq-missing-territory, diag-interp-every-territory, diag-stop-for-heart-team and diag-rad-read-the-dose-panel, the attending drawer was open showing those tips, and the header showed 'Keep going' and 'Confirm finish' in place of 'Finish case'. Keep going put the phase back to setup with finishing false and the case not finished. Finish case then Confirm finish finished the case: Try again appeared and finishing was false. After Try again, which remounts the session, the first tips() call returned a full list rather than []."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "Fixes applied, both inside this package's files.\n\n1. Finish step (major), in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/Simulator.tsx. In LabScreen, Finish case is now two steps whenever the attending drawer is offered (screens.attendingDrawer, which means guided practice). The first click calls session.setFinishStep(true) and opens the drawer. The header button is then replaced by 'Keep going' and 'Confirm finish'. Keep going calls setFinishStep(false). Confirm finish calls setFinishStep(false) and then finishCase(). Without the drawer (supervised, independent and exam) one click still calls finishCase, so nothing changes for those modes. An effect closes the finish step if the case finishes by another route or the drawer stops being offered.\n\n2. DEV hook tips() (minor). /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/useLabTips.ts now exports loadedTips(), a synchronous read of its existing module-scope tipsCache. Simulator.tsx no longer keeps the tip module in a per-session closure. tips() reads loadedTips(), so a loadCase or restart no longer empties it, and in DEV the chunk starts loading when the hook is registered. tips() can now return [] only in the moment before the chunk first loads on a page. I did not edit the labHooks.ts doc comment because that file is not in this package.\n\nNot tested automatically: vitest runs in a node environment with no DOM and the project has no testing library, so the two-click UI is covered by the browser check above, not by a vitest test. Exam mode keeping a single click was not checked in the browser; it follows from the twoStepFinish condition.\n\nOut of scope, reported (verified against the code and seen in the live lab): findings 2 and 3, the tip-content gates for access-cabg-left-radial and diag-stemi-radial-convert. Details are in rejected."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "diagnosticContext.test.ts: setup before the time-out; advance with the tip above the sinus; inject while the injector is active; views after a filmed selective run on the engaged side; exchange while a catheter is withdrawn over the wire; finish when the finish step is open; lv-aorta with PIG",
+      "met": true,
+      "evidence": "src/ui/lab/diagnosticContext.test.ts 'phase precedence' block has one test per phase (setup, advance, engage-left/right, inject, views, exchange, finish, lv-aorta with PIG). 'the session's trackers' block drives a real DiagnosticLabSession: setup until time-out and root reached, exchange when the catheter is withdrawn with wireInsertion beyond EXCHANGE_WIRE_LEAD and after a catheter change, views after a filmed bolus on the left, finish via setFinishStep and finished. All 24 tests pass."
+     },
+     {
+      "criterion": "An event raised with holdS 60 is active at 59 s and gone at 61 s of lab time",
+      "met": true,
+      "evidence": "diagnosticContext.test.ts has two tests: one on EventLog with an injected clock, one on DiagnosticLabSession stepped 590 x 0.1 s (wall() = 59, still active in tipContext().events) and then 20 more steps (wall() = 61, gone). Both pass."
+     },
+     {
+      "criterion": "tipsFor({lab:'diagnostic', phase:'views'}) can return pci-interp-qca-calibrate through alsoIn; a tip requiring prior-cabg is excluded without it",
+      "met": true,
+      "evidence": "diagnosticContext.test.ts 'borrowed and gated tips': pci-interp-qca-calibrate (lab pci) is returned for {lab:'diagnostic', phase:'views'} and for the context after a filmed LM run. A fixture copy of diag-graft-op-note-first with requires ['prior-cabg'] returns [] without grafts and is returned from a session whose case has a graft (caseEvents adds prior-cabg). Pass."
+     },
+     {
+      "criterion": "Reachability: from the raises exports of diagnosticContext.ts and the session modules, satisfiable diagnostic tips rise from about 40 of 154 to every tip whose events are raisable",
+      "met": true,
+      "evidence": "diagnosticTips.test.ts globs ../sim/modules/*.ts raises plus diagnosticContext raises: prints 'diagnostic tips satisfiable in the diagnostic lab: 1 -> 133 of 154; borrowed tips: 21' and asserts after >= 130 and that every unsatisfiable tip waits on an event. src/content/lab/reachability.test.ts (passes) reads the same export: diagnostic satisfiable 133, ready 133. I listed the 21 unsatisfiable diagnostic tips: each waits on a name another package owns in waiting.ts (catheter-kink, graft-not-found, contrast-streaming, total-occlusion, scad-suspected, ostial-spasm, radial-spasm, anomalous-origin, post-arrest via diag-acs-scenarios). None is owned by diag-tip-context."
+     },
+     {
+      "criterion": "browser: window.__lab.events.raise('vf') shows diag-vf-shock-then-amiodarone in the guided drawer; window.__labStep(61) clears it",
+      "met": true,
+      "evidence": "No verify report exists, but a test covers it. diagnosticTips.test.ts raises 'vf' into session.events and checks selectTips(..., {mode:'guided'}, DEFAULT_TIP_LIMIT), the same call the drawer makes through useDiagnosticTips/useContextTips, contains diag-vf-shock-then-amiodarone. The exam mode returns []. After 61 s of session.step the tip is gone. Simulator.tsx sets window.__lab = session (session.events is the EventLog) and window.__labStep steps session.step; AttendingDrawerWithTips calls useDiagnosticTips(session, ...)."
+     },
+     {
+      "criterion": "Tips (new test file beside diagnosticContext.ts): after the action that raises 'st-elevation', tipsFor(ctx, 20) includes diag-ohca-ecg-sorts; at phase 'setup' it includes diag-graft-op-note-first; every waiting.ts entry naming diag-tip-context becomes satisfiable, so the waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/lab/diagnosticTips.test.ts: a post-arrest case with an LAD culprit occlusion set on the engine is stepped until patientEvents raises st-elevation, and tipsFor(ctx,20) includes diag-ohca-ecg-sorts (plus diag-stemi-predict-artery). A CABG case at setup gives vessel SVG and prior-cabg, and tipsFor includes diag-graft-op-note-first. The test 'every waiting.ts entry naming diag-tip-context is satisfiable now' covers 131 entries, with none missing. In reachability.test.ts all 133 diagnostic entries now count as ready. The raw 'waiting' column still reads 154 because waiting.ts is not edited. LAB_BUILD_PLAN section 2 forbids feature packages from editing it (tip-retarget-catchup removes ready entries), so ready rising by 131 or more is the measurable fall."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/lab/diagnosticContext.ts (ENGAGE_FAIL_S, EXCHANGE_WIRE_LEAD, EXCHANGE_HOLD_S, EXCHANGE_LOAD_S, NON_COAXIAL_QUALITY)",
+      "problem": "These are labelled MODEL PARAMETER in code comments but are not recorded in docs/realism/facts. Section 3 of the plan asks for that, and docs/realism/facts is outside this package's file list. It is not an acceptance criterion.",
+      "severity": "minor",
+      "fix": "Record these five parameters, with their values and 'MODEL PARAMETER (not from a source)', in a docs/realism/facts file at a later docs or facts pass. Leave the code unchanged."
+     },
+     {
+      "where": "src/ui/lab/diagnosticContext.ts diagnosticPhase()",
+      "problem": "The precedence puts 'setup before the time-out' second, after finish and before exchange. The design text lists setup last (finish > exchange > lv-aorta > ...). This is a documented and tested design choice, so before the time-out the context always reads setup. It does not break any acceptance criterion.",
+      "severity": "minor",
+      "fix": "None needed for acceptance. If the plan's literal order is wanted, update the plan text in lab-build-plan.json to match the file header comment, which already documents the implemented order."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts (2 files, 30 tests passed)",
+     "npx vitest run src/ui/sim/sessionModules.test.ts src/ui/lab/eventLog.test.ts src/ui/lab/useContextTips.test.ts src/content/lab/reachability.test.ts (4 files, 26 tests passed; diagnostic satisfiable 133 of 154, ready 133)",
+     "npx vitest run src/ui/lab/patientEvents.test.ts src/content/lab/tips.test.ts (2 files, 42 passed, 1 skipped)",
+     "vite-node scratch script listing the 21 unsatisfiable diagnostic tips and their waiting.ts owners (none owned by diag-tip-context)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ]
+ }
+}

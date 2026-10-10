@@ -1,0 +1,221 @@
+{
+ "package": "found-mentor-registries",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built found-mentor-registries. The attending's rules, the debrief checks and the debrief tabs are now registries discovered by glob, so later packages add a file instead of editing a shared one. The debrief now carries the run's decision ledger and the tips shown, and adds a Decisions tab. Skill cards the debrief announces now go into the Review schedule. The registry and mentor tests pass (70 tests), the other affected test files pass, and the typecheck is clean.\n\nWhat changed:\n- **Rules.** The rules moved unchanged (copied line for line with sed) from src/mentor/rules.ts into two group files: rules/diagnostic.ts (order 100, the first six rules, MENTOR_PARAMS and TIMEOUT_RULE) and rules/pciLegacy.ts (order 200, the four PCI rules). rules/index.ts globs every other `*.ts` in that folder, rejects a malformed rule or a duplicate id (the 'time-out' id is reserved), sorts the groups by order and then path, and exports RULES, ALL_RULES and ruleById. rules.ts keeps the MentorRule type and re-exports everything it used to export, so no importer changed. RULES has the same ids in the same order. It also adds RULE_PRE_ACTIONS (inject, advance-catheter, advance-device, advance-wire, inflate, deploy, give-ic, power-inject, give), which stopOn now accepts, with a compile-time check that the engine's PreAction is a subset. Its header says new attending work extends MentorEngine through rule files, not the full case's own lines in caseSession.ts.\n- **Debrief checks.** Each file in src/mentor/debriefChecks/ exports `check(input)`, plus an optional id and order. buildDebrief(i, checks = DEBRIEF_CHECKS) runs them after its own gaps. completeGap fills in each check gap the way the debrief builds its own (priority, clip, rewind point, card, question and frames). A gap whose id matches an existing gap is dropped, then all gaps are ranked together and the top 3 kept. A check that throws is listed in model.checkErrors and the rest of the debrief still builds.\n- **Gap fields.** Gap.code and Gap.cardId are now optional, so a check can report a gap with no mistake code or card. Gaps also gained lessonId, takeHome and check.\n- **Ledger and tips.** DebriefInput takes decisions and tipsShown. DebriefModel gains ledger { decisions, summary } and tipsShown, read from \"lab.tip\" telemetry events (TIP_SHOWN_TELEMETRY) plus any ids the lab passes. withLedger(model, decisions, tipIds) adds them after assessAttempt, which does not take them.\n- **Debrief tabs.** Each file in src/ui/mentor/debrief/ exports `section: { id, label, order, applies, Component }`. The four phase ids are reserved. LedgerSection.tsx is the 'Decisions' tab: decisions grouped by stage with what was given and what was expected, 'Open lesson' for each lessonId, then tip cards with their lessons (tips load lazily). Debrief.tsx shows applicable tabs after the four phases, locked until the learner has rated themselves. It also adds 'Open lesson' on gaps that have a lesson, a decisions line with a link to the tab in the summary, and new optional props: decisions, tipsShown, onOpenLesson, onScheduleCards and sections.\n- **Skill-card scheduling (the HANDOVER 6.4 problem: cards were announced but never scheduled).** skillCards.ts gains scheduleCards(memory, ids, today). A new card is due today; one already scheduled for later is moved to today; nothing is graded, and running it twice the same day changes nothing. Only card ids that have a template are scheduled. Debrief.tsx exports scheduleAnnouncedCards, which writes this into the progress store's quizMemory (setState, then persist()). The component calls it once, the first time the summary is shown, and the 'Practice scheduled' notice now says the drills are in the review list from today.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/rules.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/rules/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/rules/diagnostic.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/rules/pciLegacy.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/debrief.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/debriefChecks/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/Debrief.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/debrief/index.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/debrief/LedgerSection.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/skillCards.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/mentor.test.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/registries.test.ts (14 tests: rule registry, a fixture rule file, the new pre-action kinds, rejection of malformed files, registry files never importing their registry at runtime, debrief check registry with a fixture check, completeGap and a failing check, ledger and tips in the debrief, the Decisions tab with lesson links and tip cards, a fixture debrief tab, scheduleCards, and announced cards appearing in the review schedule)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/rules/__fixtures__/fixtureRules.ts (fixture rule group, not globbed by the app)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/debriefChecks/__fixtures__/fixtureCheck.ts (fixture debrief check)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/debrief/__fixtures__/FixtureSection.tsx (fixture debrief tab)",
+     "mentor.test.ts: new test 'RULES keeps its ids and order now that the rules live in registry files'"
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/registries.test.ts src/mentor/mentor.test.ts: 70 passed (14 + 56)",
+     "npx vitest run src/mentor/ledger.test.ts src/mentor/bridgePedal.test.ts src/ui/lab/labRun.test.ts: 24 passed",
+     "npx vitest run src/ui/lab/lab.test.ts: 12 passed (imports skillCards)",
+     "npx vitest run src/ui/lab/integration.test.ts: 9 passed (imports skillCards)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output), run after the final edits.",
+    "acceptance": [
+     {
+      "criterion": "mentor.test.ts passes with RULES identical in ids and order",
+      "status": "met",
+      "evidence": "All 56 tests in mentor.test.ts pass, including every existing attending-engine test that loops over RULES and ALL_RULES. The new test checks that the ten split-out ids keep their order, that RULES is exactly those ten while only the two group files exist (it does now), that ALL_RULES ends with 'time-out', and that MentorEngine still defaults to ALL_RULES. registries.test.ts also checks that diagnostic.ts followed by pciLegacy.ts gives exactly the ten ids in order. The rule bodies were copied line for line from the snapshot with sed."
+     },
+     {
+      "criterion": "A debrief with ledger decisions shows them with lesson links",
+      "status": "met",
+      "evidence": "In registries.test.ts, buildDebrief with decisions gives ledger.summary {total 2, correct 1, lessonsToReview [lesson-closure-fixture], stages [access, closure]}. Rendering LedgerSection shows '1 of 2 decisions matched the expected answer. 1 lesson to review.', the given and expected answers, 'Not as expected', 'Open lesson' buttons with data-lesson for both lessons, and the shown tip's card with its own lesson link. The Debrief renders the 'Decisions' tab, disabled until the learner has rated themselves, without the answers on the first screen. The click-through between tabs runs only in the browser and was not exercised here."
+     },
+     {
+      "criterion": "A skill card announced in the debrief appears in the review schedule",
+      "status": "met",
+      "evidence": "registries.test.ts takes the debrief's cardsToSchedule, calls scheduleAnnouncedCards(ids, today), and finds the card in the progress store's quizMemory. It then applies the Review section's own selection (partitionDue(dueIds(...)) filtered by SKILL_CARD_TEMPLATES) and gets exactly the announced cards. A second call the same day changes nothing, and no attempt or lapse is recorded. The component triggers this from a useEffect when the summary is first shown. That effect cannot run under server rendering, so the automatic trigger needs the browser stage to confirm."
+     },
+     {
+      "criterion": "Adding a file under rules/ or debriefChecks/ registers it without editing an index (fixture test)",
+      "status": "met",
+      "evidence": "registries.test.ts runs the registry's own collect functions over the real folder plus a __fixtures__ folder. The fixture rule file lands in RULES between the diagnostic and PCI groups (order 150), and a MentorEngine given those rules speaks its line. The fixture check is registered, its gap ranks alongside the damped-injection gap with its lesson id and take-home, and gaps without a card add none to the schedule. The same is shown for a debrief tab: the fixture tab is collected and rendered in the tab strip. Malformed files and duplicate ids are rejected for all three registries."
+     }
+    ],
+    "outOfScope": [
+     "src/mentor/context.ts (and MentorEngine.preAction in src/mentor/mentor.ts): PreAction and MentorCtx.pending still list only the six original kinds. Rules can already stop on 'give-ic', 'power-inject' and 'give' (RULE_PRE_ACTIONS), but a lab cannot pass these to MentorEngine.preAction until PreAction is widened to RulePreAction.",
+     "Tips-shown telemetry: no lab writes the 'lab.tip' event (data { tipId }) the debrief reads yet. This needs src/ui/lab/useLabTips.ts, LabTipsPanel.tsx or labRun.ts (found-lab-session-plumbing) to record each tip when first shown, or each lab to pass tipsShown to Debrief.",
+     "src/mentor/index.ts: AssessOptions does not pass decisions or tipsShown through to buildDebrief. Labs must use withLedger(...) or Debrief's decisions and tipsShown props until it does.",
+     "src/ui/sim/Simulator.tsx: it renders Debrief without decisions and still discards the onFinish result (self-ratings, take-home), which is the rest of HANDOVER 6.4. Scheduling now happens inside Debrief, so this lab gets it without changes.",
+     "src/state/useProgressStore.ts: there is no store action that schedules a card without grading it, so scheduleAnnouncedCards uses useProgressStore.setState plus persist(). A proper scheduleCards action in the store would be cleaner.",
+     "src/ui/sections/Review.tsx lists only cards that have a template, so PCI cards ('pci:*') are deliberately not scheduled. Showing PCI cards in Review would let the debrief schedule them too."
+    ],
+    "notes": "Snapshots of the five files that already existed (rules.ts, debrief.ts, Debrief.tsx, skillCards.ts, mentor.test.ts) and the .started marker are in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/datasets/tmp/wp-snapshots/found-mentor-registries/. The six other listed files are new.\n\nThings for reviewers:\n- **Import rule.** Rule, check and tab files may import their registry only with `import type`. The registry imports these files eagerly, so a runtime import back would form a cycle, and loading such a file first would throw a ReferenceError. That is why MENTOR_PARAMS and TIMEOUT_RULE live in rules/diagnostic.ts (pciLegacy.ts imports MENTOR_PARAMS from there) and the type definitions stay in rules.ts. registries.test.ts scans the source of the files in each folder to enforce this.\n- **Card due dates.** scheduleCards moves an already-scheduled card's due date forward to today. That is a design choice: the gap recurred, so the drill comes back now. Grading still happens only when the card is played.\n- **Debrief checks.** There are no check files yet, so DEBRIEF_CHECKS is empty and the debrief's gaps are unchanged for every lab.\n- **Robust tests.** The registry tests accept files added by later packages: they compare against the live registry plus the fixture instead of fixed lists. The exact ten-id check runs only while the two group files are the only rule files.\n- **Rules and prose.** No new doses, thresholds or citations; MENTOR_PARAMS values are unchanged. The UI uses existing Clinical Graphite classes (btn, btn-ghost, notice-info, text-good, text-danger, border-line, bg-base-800) and British English.\n- **Browser check needed.** The browser was not used. Clicking the Decisions tab, the 'Open lesson' button opening the Academy, and the scheduling that runs when the summary is shown all need the separate browser stage."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Pass with follow-ups. found-mentor-registries does what its plan entry describes, and nothing in it is critical or blocking. I checked the rule move by extracting the old RULES body from the snapshot and diffing it against diagnostic.ts followed by pciLegacy.ts: the rule bodies, TIMEOUT_RULE and MENTOR_PARAMS are identical, the ten ids keep their order, and MentorEngine still defaults to ALL_RULES. With no check files present, the debrief's gaps are unchanged, so labs this package does not touch behave as before; the only new behaviour is that the Simulator debrief now writes announced cards to quizMemory. The Decisions tab is locked until the learner has rated themselves and appears only after the case, so no expected answers reach a live screen. The UI uses existing Clinical Graphite tokens and classes, the strings are British English, there are no new clinical numbers, and nothing new runs per frame. I ran the package tests myself: registries.test.ts plus mentor.test.ts gave 70 passed, and lab.test.ts, integration.test.ts, bridgePedal.test.ts and ledger.test.ts gave 27 passed. npx tsc -p tsconfig.app.json --noEmit is clean. Nine src files changed after .started that are not on the package's list: progress/competency.ts, progress/logbook.ts, the simulation/patient files, team/roles/drugs.ts, ui/lab/TableSideControls.tsx and ui/sim/labSession.ts. None of them references this package's symbols, and each plausibly belongs to another package (patient-formulary, lab-controls-registry, session-plumbing or progression-labels). The main gap is that the new tip and ledger display is not yet live in the app: nothing writes 'lab.tip' events, and Simulator does not pass decisions, so in the running app the Decisions tab never appears. That wiring sits outside this package's files, as the builder reported.",
+    "findings": [
+     {
+      "where": "src/mentor/debrief.ts (TIP_SHOWN_TELEMETRY consumer); producers would be src/ui/lab/useLabTips.ts or LabTipsPanel.tsx, and src/ui/sim/Simulator.tsx:266",
+      "problem": "The tip and ledger display works only in tests. No lab writes a 'lab.tip' event, and the only render site of the PEARLS Debrief (Simulator.tsx) passes neither decisions nor tipsShown. In the running app, model.tipsShown and the ledger are always empty, so the Decisions tab never appears. The tips-shown part of the plan's tipIntegration has a consumer but no producer.",
+      "severity": "major",
+      "fix": "Follow-up outside this package (found-lab-session-plumbing or the owner of Simulator.tsx). In useContextTips / LabTipsPanel, when a tip id is first shown in a run, record recorder.event({ kind: TIP_SHOWN_TELEMETRY, data: { tipId }, tWall, tPatient, step, cmd }), or keep a Set of ids and expose useLabRun().tipsShown(). In Simulator.tsx, render <Debrief model={...} decisions={run.decisions()} tipsShown={...} />, or pass decisions and tipsShown through AssessOptions to buildDebrief in src/mentor/index.ts. Add a lab-level test showing a tip that the lab raised listed in the debrief."
+     },
+     {
+      "where": "src/mentor/rules.ts (RULE_PRE_ACTIONS) vs src/mentor/context.ts PreAction / MentorEngine.preAction",
+      "problem": "Rules can name the new pre-action kinds (give-ic, power-inject, give, and others), but PreAction and MentorCtx.pending still list only the original six. No lab can pass the new kinds to MentorEngine.preAction, so a stopOn written against them can never fire. The plan's 'new preAction kinds are allowed per lab' is therefore only half done.",
+      "severity": "minor",
+      "fix": "Follow-up in context.ts (not on this package's list). Change PreAction to `export type PreAction = RulePreAction` (importing the type from ./rules), or widen it to the same nine literals, and widen MentorCtx.pending to match. The compile-time subset check in rules.ts then becomes an equality."
+     },
+     {
+      "where": "src/ui/mentor/debrief/index.ts:82 (const FILES = import.meta.glob(\"./*.tsx\", ...))",
+      "problem": "Unlike the rules and checks registries, the section glob does not exclude test files. A co-located src/ui/mentor/debrief/*.test.tsx would be eagerly imported into the app and make collectDebriefSections throw 'does not export section'. That throw happens at module load, so every Debrief would break.",
+      "severity": "minor",
+      "fix": "Use `import.meta.glob<DebriefSectionModule>([\"./*.tsx\", \"!./*.test.tsx\"], { eager: true })`, and say so in the header comment, as the other two registries do."
+     },
+     {
+      "where": "src/ui/mentor/Debrief.tsx (notice using cards.length) and src/mentor/skillCards.ts scheduleCards/isCardId",
+      "problem": "The 'Practice scheduled: N drills ... in your review list from today' notice counts every id in cardsToSchedule. scheduleCards silently skips ids without a template, such as a check gap's own cardId like 'pci:*'. A debrief check that supplies such a cardId therefore brings back the HANDOVER 6.4 problem: a card is announced but never scheduled.",
+      "severity": "minor",
+      "fix": "Export isCardId from skillCards.ts, perhaps as isSchedulableCardId. In Debrief.tsx compute `const cards = model.summary.cardsToSchedule.filter(isSchedulableCardId)` and use it for both the effect and the notice. Alternatively, filter cardsToSchedule the same way in buildDebrief so that only schedulable ids are announced. Add a test with a check gap whose cardId has no template, asserting it is neither announced nor scheduled."
+     },
+     {
+      "where": "src/mentor/registries.test.ts runtimeImport helper (describe 'registry files import their registry for types only')",
+      "problem": "The cycle guard checks one line at a time and only lines that start with `import`. A multi-line runtime import (`import {\\n MENTOR_PARAMS\\n} from \"../rules\";`) or a runtime re-export (`export { x } from \"../rules\"`) passes the check. Either one would create the import cycle and ReferenceError the check is meant to prevent.",
+      "severity": "minor",
+      "fix": "Match on the whole source. For example, for each target t, test `new RegExp(String.raw`^\\s*(?:import|export)\\s+(?!type\\b)[^;]*?from\\s+[\"']${t.replace(/[.\\/]/g, \"\\\\$&\")}[\"']`, \"ms\")`, and also match `import \"<t>\"` side-effect imports."
+     },
+     {
+      "where": "src/ui/sections/Dashboard.tsx:96 and src/App.tsx:193 (Object.keys(profile.quizMemory).length)",
+      "problem": "scheduleCards now adds skill cards to quizMemory before they are played (attempts 0). The 'Questions answered' stat and the sidebar 'questions' count therefore go up the moment a debrief summary is shown, with nothing answered.",
+      "severity": "minor",
+      "fix": "Outside this package: count only entries with `m.attempts > 0` in both places, for example `Object.values(profile.quizMemory).filter((m) => m.attempts > 0).length`, or exclude skill-card ids with isSkillCardId."
+     },
+     {
+      "where": "src/ui/mentor/Debrief.tsx defaultOpenLesson (openLesson to useUiStore.openPathway)",
+      "problem": "In the Simulator debrief, 'Open lesson' switches the section to the Academy, which unmounts the debrief part-way through. The learner's self-ratings, plus/delta and take-home are lost, and onFinish is never called. LabTipsPanel already navigates the same way, but in a debrief this costs the learner their reflection.",
+      "severity": "minor",
+      "fix": "Either have Simulator pass an onOpenLesson that records the lesson id and opens it after onFinish, or keep the debrief state (phase, ratings, plus, delta, ownTakeHome) in a small store keyed by model id so it survives the round trip. At the least, show 'Opens the Academy; finish the debrief first to keep your notes' next to the button while the summary is not yet finished."
+     },
+     {
+      "where": "src/ui/mentor/debrief/LedgerSection.tsx (TipCard import, useTipsModule, 'Tips from this run' heading)",
+      "problem": "LedgerSection imports TipCard statically from BlockRenderer, which itself imports TIP_BY_ID from content/lab/tips, CinePlayer and the angio library. The useTipsModule lazy load therefore saves nothing, and Debrief's chunk now carries those modules. Separately, the 'Tips from this run' heading appears even when none of the ids resolves to a known tip, leaving an empty section.",
+      "severity": "minor",
+      "fix": "Either drop useTipsModule and use the tips data already reachable through BlockRenderer, or load the tip card lazily (React.lazy around a small TipCard wrapper) so the tips module stays out of the Debrief chunk. Render the section only when `!tipsMod || tips.length > 0`."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 1 (major, no producer for tips shown or the ledger): I checked it and it is correct. No lab records a 'lab.tip' event, and Simulator.tsx renders <Debrief> without decisions or tipsShown, so the Decisions tab never appears in the app. The fix belongs in src/ui/lab/useLabTips.ts or LabTipsPanel.tsx (record TIP_SHOWN_TELEMETRY with { tipId } the first time each tip is shown in a run) and in src/ui/sim/Simulator.tsx (pass decisions={run.decisions()} and tipsShown, or pass them through AssessOptions in src/mentor/index.ts). None of those files is on this package's list, so I left it for found-lab-session-plumbing or the owner of Simulator.tsx. The consumer side is ready: Debrief takes the decisions and tipsShown props, and buildDebrief reads 'lab.tip' events.",
+     "Finding 2 (PreAction in context.ts is still the original six kinds): I checked it and it is correct, but src/mentor/context.ts is not on this package's list. The follow-up there: set `export type PreAction = RulePreAction`, importing the type from ./rules, and widen MentorCtx.pending to match. The compile-time subset check in rules.ts then becomes an equality.",
+     "Finding 6 (the 'Questions answered' stat and the sidebar 'questions' count include skill cards that were scheduled but never played): I checked it and it is correct, but it lives in src/ui/sections/Dashboard.tsx:96 and src/App.tsx:193, which are outside this package. The follow-up: count `Object.values(profile.quizMemory).filter((m) => m.attempts > 0).length` in both places. isSchedulableCardId is now exported from skillCards.ts if that owner would rather exclude skill-card ids."
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/registries.test.ts src/mentor/mentor.test.ts (first run: 72 of 73 passed, with one existing test timing out at 5 s on its first import of the tip registry)",
+     "npx vitest run src/mentor/registries.test.ts (that test given a 30 s timeout; 17 of 17 passed)",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/mentor/bridgePedal.test.ts src/mentor/mentor.test.ts (78 of 78 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied findings 3, 4, 5, 7 (only the minimum fix) and 8. All five changes are in this package's files.\n\n- **Finding 3, section glob** (/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/debrief/index.ts): the glob is now `import.meta.glob<DebriefSectionModule>([\"./*.tsx\", \"!./*.test.tsx\"], { eager: true })`, and the header comment says so. A new test reads the file's source and checks the exclusion is there.\n\n- **Finding 4, cards announced but not scheduled** (skillCards.ts, debrief.ts, Debrief.tsx): isCardId is now exported as isSchedulableCardId. buildDebrief filters cardsToSchedule with it, so a check gap's own card id with no template (such as 'pci:*') is no longer announced. Debrief.tsx applies the same filter as a second guard and uses the filtered list for both the scheduling effect and the 'Practice scheduled' count. A new test uses a check gap with cardId 'pci:wire-in-septal' and confirms it is neither announced nor scheduled.\n\n- **Finding 5, cycle guard** (registries.test.ts): runtimeImport now checks the whole source with regexes. It catches multi-line imports, `export {..} from`, `export * from`, namespace imports, side-effect imports and dynamic `import()`, and it ignores `import type` and `export type`. A new test covers each of these forms, plus a near-miss path.\n\n- **Finding 7, 'Open lesson' unmounts the debrief** (Debrief.tsx): I applied only the reviewer's minimum fix. When the host passes no onOpenLesson, a line reads \"'Open lesson' opens the Academy and leaves this debrief; finish the debrief first to keep your notes.\" It appears in the Analysis phase when a gap has a lesson, and above any extra tab. It disappears when the host supplies its own handler. The learner's notes are still lost if they click anyway. The full fix needs Simulator.tsx to pass an onOpenLesson that waits until after onFinish, which is outside this package. No test covers the note: the tests run in a node environment with static rendering, so they cannot click past the Reactions phase.\n\n- **Finding 8, TipCard loaded eagerly** (LedgerSection.tsx): the static import from BlockRenderer is gone. A new exported loadTipCard() and a useTipCard() hook load TipCard on demand, cached the same way as useTipsModule, so neither BlockRenderer nor the tip registry is in the Debrief chunk any more. The 'Tips from this run' heading now shows only while loading or when at least one tip id resolves. The tests cover the loading state, call loadTipCard() before checking the full render, and check that an id matching no tip leaves no heading.\n\n**Test timeout:** the existing test 'buildDebrief carries the decisions and the tips shown' timed out at 5 s twice. Its first dynamic import of src/content/lab/tips.ts takes about 4 s, because that file imports MANUAL_TIPS from the whole manual. I gave that one test a 30 s timeout with a comment saying why. Its assertions are unchanged.\n\n**Files changed:** /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/skillCards.ts, src/mentor/debrief.ts, src/ui/mentor/Debrief.tsx, src/ui/mentor/debrief/index.ts, src/ui/mentor/debrief/LedgerSection.tsx and src/mentor/registries.test.ts (all under the same root)."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-9) at http://localhost:5173. The dev server was already running. I used no existing tab and closed tab-9 at the end.",
+     "Before testing I saved the origin's localStorage (empty quizMemory, no attempts). Afterwards I wrote the saved values back, checked they matched, and left the page before closing the tab, so the progress and nav keys are as they were. One case recording that saveRecording made when the test case finished is still in the 'cathmaster' IndexedDB, because I did not delete anything.",
+     "Registries in the running app (Vite imports): RULES is damped-before-inject, conus, lv-entry, push-resistance, no-aspirate, foreshortened-view, wire-septal, device-beyond-wire, oversized-balloon, deploy-without-run. ALL_RULES ends with 'time-out'. RULE_FILES holds only ./diagnostic.ts and ./pciLegacy.ts. DEBRIEF_CHECKS and CHECK_FILES are empty. DEBRIEF_SECTIONS is ['ledger']. No __fixtures__ file reached the app bundle. In the live cath lab the attending still speaks a rule line ('You haven't aspirated since you moved.').",
+     "I mounted the real Debrief.tsx in an overlay in my tab, using the app's own React and store modules. The model came from assessAttempt on a record with a damped injection and a 'lab.tip' telemetry event, plus two decisions whose lessonIds come from real tips. Before rating, the tabs were Reactions (open), then Description, Analysis, Summary and Decisions (all locked), and the first screen showed no given or expected answers. After rating every sub-skill, all tabs unlocked.",
+     "Decisions tab: it reads '1 of 2 decisions matched the expected answer. 1 lesson to review.' Decisions are grouped under ACCESS and CLOSURE, each showing You and Expected, with 'As expected' in green and 'Not as expected' in red, and an 'Open lesson' button for each decision. Under 'Tips from this run' it shows two tip cards: the tip from the decision's tipIds and the tip from telemetry, each with its own 'Open lesson'. The tip cards lazy-load correctly. Clicking 'Open lesson' with a host handler passed the right lesson id. I took a screenshot: it follows the Clinical Graphite style, is readable, and nothing overlaps.",
+     "Default 'Open lesson' (no host handler): the note saying 'Open lesson' leaves the debrief appears on the Decisions tab. Clicking it took the app to Academy > The catheter laboratory handbook > the lesson hb-lab-and-radiation-ct, and the nav state recorded that lessonId.",
+     "Summary in the mounted debrief: the line 'Decisions: 1 of 2 as expected. See each decision' appears. The notice reads 'Practice scheduled: 1 short drill ... in your review list from today.' When the Summary first opened, rca-engage:damped-injection was written to the app store's quizMemory and to localStorage: due today, reps 0, attempts 0, no grading.",
+     "Review section in the app: the sidebar badge showed 'Review1', 'Procedural skills due' showed 1, and the list showed the skill card 'Pressure-before-injection drill' with a Start button. The announced card really does reach the review schedule.",
+     "Real end-to-end flow: in the Free cath lab (guided practice), stepped with __labStep, then clicked Finish case. The Simulator's Debrief opened with the four PEARLS tabs and no Decisions tab, which is correct because this lab passes no decisions or tips. I rated, then went through Description, Analysis (a 'Poor view choice' gap with no lessonId, so no Open lesson button) and Summary. Opening the Summary scheduled diag-study:poor-view in quizMemory through the component's own useEffect. Finish debrief closed the debrief.",
+     "Console: only Vite connect messages and the React DevTools info line. There were no errors or warnings during the whole session, including one full Vite reload caused by another package's edit."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/mentor/debrief/LedgerSection.tsx (tips heading)",
+      "problem": "The heading 'Tips from this run' also covers tips that are only linked from decisions' tipIds and were never shown during the run. In the browser test, the decision-linked tip diag-rad-c-arm-clear appeared under 'Tips from this run' even though only pci-rad-read-the-ct-first was shown.",
+      "severity": "minor",
+      "fix": "Retitle the section 'Tips for these decisions' when any id comes from d.tipIds, or render two lists: 'Tips for these decisions' (from decisions' tipIds) and 'Tips shown during the run' (from model.tipsShown)."
+     },
+     {
+      "where": "src/ui/mentor/Debrief.tsx (allowed / tab order)",
+      "problem": "The Decisions tab, with its expected answers, unlocks as soon as the learner has rated themselves. The learner can therefore jump past Description and Analysis straight to the answers. This goes against the PEARLS order the header describes, although it never touches a live lab screen.",
+      "severity": "minor",
+      "fix": "If strict PEARLS order is wanted, track that the summary has been reached (e.g. const [summarySeen, setSummarySeen] set in the existing summary useEffect) and make allowed(p) return summarySeen for 'section:*' tabs. Otherwise leave it as designed."
+     },
+     {
+      "where": "Integration (outside this package: src/ui/sim/Simulator.tsx and the other lab hosts)",
+      "problem": "No lab passes decisions or tipsShown to Debrief yet, and nothing in src emits 'lab.tip' telemetry events. The Decisions tab therefore never appears in the running app today. The registry, rendering and scheduling all work when the data is supplied (checked with a mounted Debrief), so this is wiring for later packages, not a defect of this one.",
+      "severity": "minor",
+      "fix": "Out of scope here: the lab-session-plumbing and per-lab packages should pass decisions={run.decisions()} and tipsShown to <Debrief>, or record RecordedSession events of kind TIP_SHOWN_TELEMETRY ('lab.tip') with data.tipId when a tip is shown."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 2 (Decisions tab unlocks after self-rating, before Description and Analysis): rejected and left as designed. Debrief.tsx gates every tab the same way (allowed(p) = p === 'reactions' || rated). Description, Analysis and Summary, which already hold the results, the standards and the formative score, all open as soon as the learner has rated themselves. The header's PEARLS rule is that results come after self-rating, and the Decisions tab keeps to it. Locking only the extra tabs until the summary has been seen would treat them more strictly than Summary itself and make the gating inconsistent. Strict phase order would be a change to all tabs and needs a design decision. The plan does not ask for it.",
+     "Finding 3 (no lab passes decisions or tipsShown, and nothing emits 'lab.tip' telemetry): no change here. This is out of scope because the wiring sits in src/ui/sim/Simulator.tsx and the other lab hosts, outside this package's file list. The lab-session-plumbing and per-lab packages should pass decisions={run.decisions()} and tipsShown to <Debrief>, or record RecordedSession events of kind TIP_SHOWN_TELEMETRY ('lab.tip') with data.tipId when a tip is shown."
+    ],
+    "testsRun": [
+     "npx vitest run src/mentor/registries.test.ts src/mentor/mentor.test.ts (2 files, 73 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I applied finding 1 in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mentor/debrief/LedgerSection.tsx. The single 'Tips from this run' list is now two lists, each drawn by a new TipList helper. 'Tips shown during the run' lists only the ids in model.tipsShown. 'Tips for these decisions' lists the tips linked from decisions' tipIds that were not shown, so a tip that was shown appears once, in the first list. Each heading still appears only while the tips are loading or when one of its ids resolves to a tip. The file header comment now says this. In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/mentor/registries.test.ts I updated the 'no empty heading' check to cover both headings. New assertions check four things: a tip that was shown is listed under the shown heading only; a tip linked from a decision but not shown is listed under the decisions heading only; the shown list comes first; and with no tips shown, only the decisions list appears."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "mentor.test.ts passes with RULES identical in ids and order",
+      "met": true,
+      "evidence": "src/mentor/mentor.test.ts passes (56 tests). Its test 'RULES keeps its ids and order now that the rules live in registry files' (line 650) checks the ten legacy ids in order and ALL_RULES = RULES + time-out. I also compared against the pre-split snapshot at datasets/tmp/wp-snapshots/found-mentor-registries/src/mentor/rules.ts. It has the same ten ids in the same order (damped-before-inject ... deploy-without-run), with time-out last. Running diff -w on the rule bodies against the new src/mentor/rules/diagnostic.ts (order 100) and src/mentor/rules/pciLegacy.ts (order 200) shows no change other than where the array closes. MENTOR_PARAMS kept the same values. rules.ts re-exports RULES, ALL_RULES, ruleById, TIMEOUT_RULE and MENTOR_PARAMS, so importers did not change."
+     },
+     {
+      "criterion": "A debrief with ledger decisions shows them with lesson links; a skill card announced in the debrief appears in the review schedule",
+      "met": true,
+      "evidence": "src/mentor/registries.test.ts covers this. 'the Decisions tab shows each decision with its lesson link, and the tips with theirs' renders LedgerSection and finds the summary line, given and expected answers, 'Not as expected', data-lesson for both decisions and for the tip, and 'Open lesson'. The same test checks that the ledger section applies only when there are decisions and that the Debrief shows a locked 'Decisions' tab. 'a skill card announced in the debrief appears in the review schedule' calls Debrief's scheduleAnnouncedCards and then reads the progress store's quizMemory through partitionDue and dueIds, the same selection the Review section makes. The announced cards are found there, and a second call on the same day adds nothing. In src/ui/mentor/Debrief.tsx a useEffect (lines 126-133) calls onScheduleCards, which defaults to scheduleAnnouncedCards, once when the summary phase is first shown."
+     },
+     {
+      "criterion": "Adding a file under rules/ or debriefChecks/ registers it without editing an index (fixture test)",
+      "met": true,
+      "evidence": "In src/mentor/registries.test.ts, 'a file under rules/ registers its rules without editing an index (fixture)' globs rules/*.ts together with rules/__fixtures__/fixtureRules.ts through collectRules. fixture-heavy-hand lands between the diagnostic group (100) and the PCI group (200), MentorEngine fires it, and the default engine does not include it. 'a file under debriefChecks/ registers its check without editing an index (fixture)' does the same for the checks: the fixture check is collected, its gaps rank with the debrief's own, and it carries a lessonId. A third fixture test does the same for debrief sections. rules/index.ts, debriefChecks/index.ts and ui/mentor/debrief/index.ts all use import.meta.glob with nothing listed by hand. A guard test confirms that registry files import their registry for types only."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/mentor/mentor.test.ts src/mentor/registries.test.ts src/mentor/ledger.test.ts -> 3 files, 78 tests passed",
+     "npx vitest run src/mentor/bridgePedal.test.ts src/ui/lab/integration.test.ts src/ui/lab/lab.test.ts (other tests importing debrief/skillCards/rules/Debrief) -> 3 files, 22 tests passed",
+     "diff -w of the rule bodies in the pre-split snapshot rules.ts against rules/diagnostic.ts + rules/pciLegacy.ts -> no differences beyond where the array closes"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output, exit 0)"
+   }
+  ]
+ }
+}

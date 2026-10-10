@@ -1,0 +1,240 @@
+{
+ "package": "physiology-engine-unify-and-setup",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "The package was already built when I started, so I reviewed it rather than rewriting it. The lead's note said the run-1 attempt failed before doing any work, but that is not what is on disk. The snapshot folder and .started are from 12:31. All 12 listed files were edited or created between 12:43 and 13:04, along with a new test file, src/ui/sections/PhysiologyLab.test.ts.\n\nI checked every file against the design in lab-build-plan.json, the lab request pm-physiology#1 and the lesson pm-physiology-setup text, and found the design fully in place:\n- **pwSession.ts** is a pure reducer over the pressure-wire state. It covers zero, connections, introduce, introducer out, flushing the guide and the aortic line, sensor and advance, equalise (valid only within the EQUALISE_MIN/MAX_MM window), guide change, wire reshape, a new wire, hyperaemia, measurement, pullback, drift check, thermodilution, stent and decide. Drift comes from MP_DRIFT_SD and each preset's fault from the lesson's troubleshooting table.\n- **pressureWire.ts** changes are additive: SENSOR_FROM_TIP_MM, EQUALISE_MIN_MM, equaliseValidAt, and optional channel errors on measure(). Default behaviour is unchanged and tested.\n- **PhysiologyLab.tsx** runs a PhysiologyRig: a PatientEngine whose profile is fitted to the preset's mean aortic pressure, on a 50 Hz setInterval model clock. Each step feeds the engine's mean aortic pressure and heart rate into the case. Air and contrast in the line are applied to the engine's transducer, and the guide is a tip input. The lab registers the window.__lab.physiology hook (context, tips, state, step, dispatch), launches through useLabLaunch, logs the run through useLabRun, and shows the case teaching text only after the decision. The old constants (PRE_EQUALISE_OFFSET, the 3.5 mmHg offset, the private drift ramp) are gone.\n- **The UI** is split into SetupPanel, MeasurePanel, TraceView, PullbackPlot and VesselStrip. PullbackPlot and VesselStrip take plain props so the PCI lab's console can reuse them.\n- **physiologyTips.ts** exports physiologyTipContext, a step-aware tip ranking and `raises`.\n- **core.launch.ts** lists all 15 presets (the 7 teaching cases and the 8 fault presets) under pm-physiology-setup.\n\nI made one change: source comments for the IV adenosine dose (140 \u00b5g/kg/min, from lesson pm-physiology-indices) in pwSession.ts and MeasurePanel.tsx. All five test files, 55 tests, pass, as do the content, tips, lab plumbing, practice index and reachability tests, and the typecheck.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pressureWire.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/SetupPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/MeasurePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/TraceView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/PullbackPlot.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/VesselStrip.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/physiology/core.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/pci/pwSession.test.ts (18 tests: equalisation window and drift, waveform faults, the other set-up faults, the console matching physiology.indices at equal MAP, presets, pullback, scoring, reducer purity)",
+     "src/ui/lab/physiologyTips.test.ts (13 tests: context vocabulary, damped and air contexts, patient events, tips per named preset, panel ranking, visibility policy, reachability against waiting.ts, launch file and practice index)",
+     "src/ui/sections/PhysiologyLab.test.ts (5 tests, new file beside the listed one: rig step(30) and context(), MAP fitting, traces on a clean set-up, air reaching the engine's transducer and the wedged guide as a tip, launch parsing)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/pwSession.test.ts src/ui/lab/physiologyTips.test.ts src/ui/sections/PhysiologyLab.test.ts src/simulation/pci/pressureWire.test.ts src/simulation/physiology.test.ts: 5 files, 55 tests passed",
+     "npx vitest run src/content/content.test.ts src/content/lab/tips.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/labRun.test.ts: 4 files, 129 passed, 1 skipped (already skipped)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts: passed (reachability: pci 553 tips, 125 satisfiable, 123 ready)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (after my last edit)",
+    "acceptance": [
+     {
+      "criterion": "pwSession.test.ts: equalising with the sensor 10 mm in leaves an offset and the drift check fails; equalising at the tip passes",
+      "status": "met",
+      "evidence": "pwSession.test.ts 'equalising with the sensor 10 mm in leaves an offset and the drift check fails; equalising at the tip passes'. It uses fault-deep-equalise with startSensorMm 10: eq.atTip false, the drift check fails with Pd/Pa > 1.02, and after pulling back to 0 mm and equalising the drift check passes. Passing."
+     },
+     {
+      "criterion": "With 'fault-offset-waveforms' mean Pd equals mean Pa but the mismatch flag is set and an FFR recorded is invalid; with air in the aortic line the verdict is overdamped and pressure context 'damped'",
+      "status": "met",
+      "evidence": "pwSession.test.ts waveform-fault tests. With fault-offset-waveforms, pd equals pa to 6 decimal places and pdpa is 1, but waveformMismatch and eq.mismatch are true and the FFR record has valid=false with a 'waveforms' problem. With fault-air-aortic, aorticLine verdict is 'overdamped' and guidePressure is 'damped'. physiologyTips.test.ts confirms ctx.pressure 'damped' with event pressure-damped, and PhysiologyLab.test.ts confirms the engine's transducer verdict is 'overdamped'. Passing."
+     },
+     {
+      "criterion": "physiology.test.ts values are unchanged at equal MAP",
+      "status": "met",
+      "evidence": "physiology.test.ts (13 tests) passes; physiology.ts was not edited. pwSession.test.ts checks with toBe that consoleReading equals physiology.indices exactly for every teaching case at its own MAP, x in {0, 0.5, 1}, h in {0, 1}, engaged and disengaged. It also checks pressureWire.measure is unchanged without channel errors."
+     },
+     {
+      "criterion": "browser: __lab.physiology.step(30) advances the session and context() shows phase 'physiology'",
+      "status": "needs-browser",
+      "evidence": "Not run in the browser (that is a separate stage). PhysiologyLab.tsx registers the hook with registerLabHook('physiology', { context, tips, state, events, step, dispatch }). The same calls are tested headlessly in PhysiologyLab.test.ts: rig.step(30) advances lab time and engine time by 30 s, and context() is { lab:'pci', phase:'physiology', vessel:'LAD' }. Passing."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/physiology/core.launch.ts under lessons pm-physiology-setup",
+      "status": "met",
+      "evidence": "physiologyTips.test.ts 'practiceIndex lists every scenario in core.launch.ts under lesson pm-physiology-setup...' checks all 15 presets, their other lessons and cases, and params { scenario, mode:'guided' }. core.launch.ts matches PHYSIOLOGY_PRESETS both ways. content.test.ts (launch validation) and practiceIndex.test.ts pass."
+     },
+     {
+      "criterion": "Tips: in a scenario from core.launch.ts, after the action that raises 'wire-side-branch', tipsFor(ctx, 20) includes pci-phys-wire-wrong-branch, and at phase 'physiology' it includes pci-phys-zero-outside; every waiting.ts entry naming physiology-engine-unify-and-setup becomes satisfiable, so the reachability waiting count for the pci lab falls by at least their number",
+      "status": "met",
+      "evidence": "physiologyTips.test.ts drives fault-ebu-lcx. Advancing the sensor to the guide tip takes the wire into the circumflex and raises wire-side-branch; tipsFor(ctx, 20) then includes pci-phys-wire-wrong-branch (ranked first) and pci-phys-zero-outside. No waiting.ts entry names this package, so that part holds trivially. The six request tips (listed under pci-tip-context) are all satisfiable from this lab's raises, and the pci still-waiting count falls from 483 to 448. Every pci-phys-* tip except the acetylcholine ones and pci-phys-jailed-side-branch is satisfiable. Passing."
+     }
+    ],
+    "outOfScope": [
+     "MODEL PARAMETER values (MP_* in pwSession.ts and PhysiologyLab.tsx, EQUALISE_MIN_MM in pressureWire.ts) are labelled in the code, as the codebase already does. There is no matching entry in docs/realism/facts, which this package does not own; if the owner wants one there, a docs package should add it.",
+     "The PCI lab's pressure-wire console reusing pwSession, TraceView, PullbackPlot and VesselStrip is the job of pci-pressure-wire-console (wave 19). Nothing in the PCI lab was changed here."
+    ],
+    "notes": "1. **The earlier attempt did real work.** The lead's note said the run-1 attempt failed before doing any work. On disk, though, datasets/tmp/wp-snapshots/physiology-engine-unify-and-setup/ (snapshot of PhysiologyLab.tsx and pressureWire.ts, plus .started) dates from 12:31. All 12 listed files and src/ui/sections/PhysiologyLab.test.ts were then written between 12:43 and 13:04. I did not overwrite the snapshot or re-touch .started. Overwriting would have replaced the true pre-package versions with the edited ones, leaving reviewers no baseline to diff against. Only those two files existed before the package; the other ten were created by it. In that window, other files changed (src/simulation/diagnosticScenarios/*, procedure.ts, session/multiSite.tips.test.ts, session/scenarios/crossover*, caseGenerator.ts, prebrief.ts, Simulator.tsx, labSession.ts). They belong to the packages running at the same time (diag-scenario-registry, access-multi-site, proc-*), not to this one.\n\n2. **One deliberate departure from the design.** The tipIntegration text lists 'air' among the fault events. Air in the aortic line is instead reported as pressure 'damped' plus the event pressure-damped, not as 'air'. I checked what 'air' would bring up at phase physiology: pci-air-first-moves and pci-air-find-source, which are coronary air-embolism tips and would be wrong advice for a bubble in the transducer line. The acceptance criterion (overdamped verdict, pressure 'damped') is met. The comment in physiologyTips.ts explains this and a test asserts it.\n\n3. **total-occlusion for CTO donor presets.** It reaches the context through launch events and preset events. No CTO-donor preset exists yet; physiology-decision-and-subsets adds those cases.\n\n4. **My only edits** were two source comments for the IV adenosine 140 \u00b5g/kg/min (module text 14-physiology.ts, lesson pm-physiology-indices: 'Intravenous: 140\u2013180 \u00b5g/kg/min'). The fault causes and remedies, the 3 cm sensor position and the 0.98\u20131.02 drift window were checked against the lesson pm-physiology-setup text and its troubleshooting table.\n\n5. **UI rules.** Generic names are used in the UI chrome ('Change to a better-fitting guide'). 'EBU 4.0' appears only in a case brief, as the lesson itself uses it. Trace colours are the original monitor colours, and all text is at least 12 px. Why a reading is wrong (log aids, the hyperaemia percentage) shows only when labScreens(policy).attendingDrawer is on. The answer and the set-up checklist appear only after the decision."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Changes requested. The acceptance criteria hold. All 5 package test files pass (55 tests), `npx tsc -p tsconfig.app.json --noEmit` is clean, and I checked the browser criterion myself on localhost:5173: `__lab.physiology.step(30)` moved session t from 4.98 to 34.98 and `context()` returned `{lab:'pci', phase:'physiology', pressure:'damped', events:['pressure-damped'], vessel:'LAD'}`. The pressureWire.ts changes are additive and its defaults are unchanged. physiology.ts was not touched, and the console matches `physiology.indices` exactly at equal MAP. The 12 listed files plus the new `src/ui/sections/PhysiologyLab.test.ts` are the only files tied to this package. The other files under src/ that are newer than `.started` were changed by concurrent packages: `src/content/lab/tips.ts` and `waiting.ts` were edited at 18:59, matching the repair-launch-fixture-and-tip-ties snapshot, and access, diag and proc own the rest. Two major problems remain. First, adenosine and nitrate never reach the PatientEngine, so the engine-driven blood pressure, heart rate and rhythm do not respond to the drugs, and `raises` claims patient events this lab cannot produce. Second, after the decision the lab disables every control, so the 'Stent the X lesion, then re-measure' path is a dead end. That is a regression from the old lab and breaks the tandem case. The minor issues are a false tick in the set-up panel, the validity of pullback records, uncapped drift, wrong-context tips at the start of a study, per-tick cost, and unlabelled constants.",
+    "findings": [
+     {
+      "where": "src/ui/sections/PhysiologyLab.tsx PhysiologyRig.dispatch (lines 123-134); src/ui/lab/physiologyTips.ts PHYSIOLOGY_PATIENT_EVENTS / raises (lines 55, 89-93); src/simulation/pci/pwSession.ts MP_IV_RAMP_S (line 70)",
+      "problem": "The design says aortic pressure, heart rate and rhythm come from the PatientEngine, but the 'hyperaemia' (IV/IC adenosine) and 'gtn' actions only change the reducer, never the engine. The engine does support adenosine: pharmacology.ts has sourced ADENOSINE constants and AV-block logic at engine.ts:682-699 and 1244-1258. So during IV adenosine the aortic pressure does not fall, the heart rate does not change and no AV block or bradycardia ever occurs. Lesson pm-physiology-indices (14-physiology.ts:438, 1294) teaches the fall in systolic pressure as the sign that hyperaemia is real. As a result, `raises` declares bradycardia, av-block, vf, vt, atrial-fibrillation, st-elevation, chest-pain and desaturation, which this lab (a stable SA profile in sinus rhythm, no drug given) cannot produce. The reachability gain (483 -> 448) is therefore partly false. The only test for these events (physiologyTips.test.ts 'patient events from the engine's vitals') feeds hand-made vitals `{hr:38, av:3}` instead of driving the rig. Separately, the MP_IV_RAMP_S comment says the real onset is 'about 1-2 min', but the lesson says 60-90 s.",
+      "severity": "major",
+      "fix": "In PhysiologyRig.dispatch, mirror the drug actions onto the engine. On {type:'hyperaemia',mode:'iv'}, call this.engine.startInfusion({drug:'adenosine', rate:140, ...}) with the InfusionOrder shape from pharmacology.ts (140 \u00b5g/kg/min, lesson pm-physiology-indices). On mode 'ic', call this.engine.giveDrug('adenosine', dose, 'ic', {side}), using the lesson's IC doses (RCA 50-100 \u00b5g, left 200 \u00b5g, 14-physiology.ts:410; use guideTip(s).side). On 'none', stop the infusion. On 'gtn', give the formulary nitrate with a dose cited from the module text or the formulary. Optionally take session hyperaemia from the engine's adenosine effect level instead of MP_IV_RAMP_S. Then cut PHYSIOLOGY_PATIENT_EVENTS to the events a rig test actually produces, for example: start IV adenosine on a fixed seed, step(40), assert that MAP fell and that context().events can include bradycardia or av-block (choose a seed that draws the block). Change the MP_IV_RAMP_S comment to 'time-compressed from 60-90 s (lesson pm-physiology-indices)'."
+     },
+     {
+      "where": "src/ui/sections/PhysiologyLab.tsx lines 377-384, 432-440, 452",
+      "problem": "After the decision, SetupPanel, MeasurePanel, ThermoPanel and VesselStrip all get disabled={decided}. The debrief still offers 'Stent the {id} lesion, then re-measure' for multi-lesion presets (tandem, whose decision is 'treat-first-then-remeasure'). Clicking it clears s.records, but the learner can no longer move the sensor, give adenosine or measure. The old lab kept its measurement controls enabled after the decision. The re-measure teaching of the tandem case is now unreachable, and 'Your measurements' simply empties.",
+      "severity": "major",
+      "fix": "Add `const locked = decided && s.treated.length === 0;` and pass disabled={locked} to SetupPanel, MeasurePanel and ThermoPanel, and disabled={locked || !!s.pullback?.active} to VesselStrip. Alternatively, leave the measure panels and strip enabled after the decision, as the old lab did. The run is already logged once at the decision, so later measurements do not affect scoring."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts pwSessionReducer (lines 641-645) and the 'introduce' case (700-714); src/ui/physiology/SetupPanel.tsx line 48",
+      "problem": "`did` records an action whenever the reducer returns a new object, and log() always does, so refused actions are ticked too. Example: on a packet preset, clicking 'Remove the introducer' before introducing the wire logs 'no wire in the guide' but adds 'remove-introducer' to did. 'Introduce' then puts the introducer in (introducer:true) without clearing that tick. The panel shows '\u2713 Remove the introducer' while the introducer is still in the valve, and an equalisation then absorbs the leak.",
+      "severity": "minor",
+      "fix": "In reduce() 'introduce', set `did: s.did.filter(t => t !== 'remove-introducer')`. In pwSessionReducer, skip adding to did when the action was refused: return a flag from reduce, or check `n.log[0] !== s.log[0] && n.log[0].bad`, and mark the refusals 'no wire in the guide' and 'not in the valve' as bad. Add a pwSession test: remove-introducer, then introduce, then expect did not to contain 'remove-introducer'."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts tick pullback record (line 663) and readingProblems (line 587)",
+      "problem": "Every completed pullback is recorded with valid:true whatever its problems, and readingProblems(n,'pullback') always contains 'the sensor is not distal to every lesion', because the pullback ends at the guide tip. Records with valid:true and a non-empty problems list contradict each other, and the debrief or any consumer cannot trust either field.",
+      "severity": "minor",
+      "fix": "In readingProblems, skip the distal check for kind 'pullback' as well as 'drift-check': `if (kind !== 'drift-check' && kind !== 'pullback' && ...)`. In the tick, set `valid: problems.length === 0` using the computed problems."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts PHYSIOLOGY_PRESETS driftPerS (line 151) with stepPressureWire",
+      "problem": "The old lab capped the 'drift' case's drift at c.drift (min(c.drift, elapsed/45 * c.drift)). The new driftPerS = c.drift/45 has no ceiling, so after 3 minutes of lab time the offset reaches about 16 mmHg. That changes the behaviour of a teaching case this package was meant to keep.",
+      "severity": "minor",
+      "fix": "Add an optional `driftCapMmHg` to PhysiologyPreset (set to c.drift for that case). In the tick, clamp the drift accumulated since the last equalisation: store `eqOffset` at equalise and clamp `wire.offset - eqOffset` to \u00b1cap. Alternatively, state the change in the case text and docs."
+     },
+     {
+      "where": "src/ui/lab/physiologyTips.ts physiologyTipContext / rankPhysiologyTips",
+      "problem": "Packet presets start with contrast in the guide, so ctx.pressure is 'damped' from t=0. In the browser, lad-intermediate (a mid-LAD lesion) put pci-phys-damped-guide and pci-phys-ostial-disengage ('Aorto-ostial lesion: equalise in the aorta, measure disengaged') at the top of the panel before any action. That is the wrong advice for a non-ostial lesion when the damping comes from contrast or air in the line.",
+      "severity": "minor",
+      "fix": "Outside this package's files: give pci-phys-ostial-disengage (14-physiology.ts:2312) a condition that only an ostial or obstructing-guide study raises, for example `requires:['ostial-lesion']`, and have physiologyTipContext raise it when sessionCase(s).guideObstructs. Report this to the tips owner. Inside the package: in rankPhysiologyTips, rank tips from lesson pm-physiology-subsets below the step's lessons unless sessionCase(session).guideObstructs."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts tick (line 667) / guidePressure (533-556); src/ui/sections/PhysiologyLab.tsx pdAt (194-202)",
+      "problem": "Every 20 ms tick calls guidePressure. For guide-obstructing presets that means 120 reading() calls, each JSON.stringify-ing the case in physiology.ts caseKey: about 6,000 stringify calls per second all the time. pdAt runs for every drawn trace sample in the rAF path and builds a new measuredCase object (spread plus lesion filter) on every call.",
+      "severity": "minor",
+      "fix": "Memoise guidePressure's classifyTip result in a small Map keyed on `${c.id}|${s.map}|${Math.round(hyperaemia(s)*50)}|${s.guideEngaged}|${s.treated.join()}`, as SHAPE_CACHE already does. Cache measuredCase per session object with a WeakMap<PwSessionState, CoronaryCase>, so pdAt reuses one object per state."
+     },
+     {
+      "where": "src/simulation/pci/pwSession.ts lines 587 (0.15), 677-678 (normal(rng,0,3)), 798 (h > 0.5), 814 (sensorX < 0.6); src/ui/lab/physiologyTips.ts line 101 (sensorMm <= 5); new MP_* constants overall",
+      "problem": "Several magnitudes have no label: the 'distal to every lesion' margin, the 3 mmHg SD of the post-zero offset, the hyperaemia threshold for an FFR pullback, the distal fraction for thermodilution and the step threshold. The project rule says every number is either cited from the module text or labelled MODEL PARAMETER in docs/realism/facts. The new MP_* constants are labelled in code only.",
+      "severity": "minor",
+      "fix": "Lift each value into a named `MP_...` constant with a 'MODEL PARAMETER' doc comment next to the existing ones, and reuse MP_* where one already fits (EQUALISE_MAX_MM for the 5 mm). Ask the docs owner to add the new MP_* entries to docs/realism/facts; that file is outside this package."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/pwSession.test.ts (20 passed)",
+     "npx vitest run src/ui/sections/PhysiologyLab.test.ts (8 passed)",
+     "npx vitest run src/ui/lab/physiologyTips.test.ts (14 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed; pci waiting 483 -> 452)",
+     "npx vitest run src/simulation/pci/pressureWire.test.ts src/content/lab/tips.test.ts src/ui/content/practiceIndex.test.ts src/ui/lab/lab.test.ts (all passed, 1 skipped)",
+     "Browser check on the running dev server through window.__labHooks.physiology: on tandem, the FFR control was disabled after the decision and enabled again after stenting a lesion; IV adenosine lowered MAP from 91 to 88; on lad-intermediate the ostial tip no longer appeared at the start; no console errors"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all 8 findings against the code and the plan, applied all of them and rejected none. Findings 6 and 8 also need changes outside this package's files (listed at the end). All edits are in the package's files and its test files.\n\n1. **Drugs now reach the patient engine (major)**, in PhysiologyLab.tsx through the new PhysiologyRig.applyDrug:\n   - IV adenosine starts an infusion on the engine at ADENOSINE.ivStandardUgKgMin (140 \u00b5g/kg/min) through a central line. Stopping adenosine, or switching away from IV, stops the infusion.\n   - An IC bolus uses the lesson's dose for the guide's side (14-physiology.ts:410): left 200 \u00b5g; right 100 \u00b5g, the \"no more than 100 \u00b5g\" RCA ceiling. These are in the new constant IC_ADENOSINE_UG.\n   - GTN is given IC at 200 \u00b5g (IC_GTN_UG; 14-physiology.ts:1117 \"100\u2013200 \u00b5g\" and :1284 \"at most 200 \u00b5g\").\n   - Session hyperaemia still uses the time-compressed MP_IV_RAMP_S. Driving it from the engine would not work: the engine's IV effect level tops out at about 0.91, below MP_MAX_H (0.95), so FFR would never count as maximal. The engine runs its own sourced onset for the pressure, rate and rhythm response. The MP_IV_RAMP_S comment now says \"time-compressed from 60-90 s (lesson pm-physiology-indices)\".\n   - Over 150 seeds, the rig produced hypotension, bradycardia and av-block, and nothing else. PHYSIOLOGY_PATIENT_EVENTS is cut to those three. Reachability is now 483 -> 452 (it was 448).\n   - New rig tests: on seed \"b13\", IV adenosine lowers MAP by more than 4 mmHg and raises all three events, and the block clears after the infusion stops. On seed \"s3\", MAP falls with no block. Spies check the doses and calls sent to the engine. The hand-made-vitals test stays as a check of the context function only.\n2. **Controls after the decision (major).** Added `locked = decided && s.treated.length === 0`. SetupPanel, MeasurePanel and ThermoPanel take `locked`, and VesselStrip takes `locked || pullback.active`. The tandem re-measurement works again.\n3. **Refused actions were ticked as done (minor).**\n   - pwSessionReducer no longer adds an action to `did` when its new log entry is `bad`. An out-of-range drift check is the one exception, because the check was done.\n   - The two remove-introducer refusals are now marked `bad`.\n   - 'introduce' clears the 'remove-introducer' tick.\n   - Covered by a new test.\n4. **Pullback records (minor).** readingProblems no longer applies the distal check to 'pullback'. The record's `valid` now equals `problems.length === 0`. Tests cover a clean pullback (valid) and one with contrast still in the guide (invalid).\n5. **Drift cap (minor).** New optional PhysiologyPreset.driftCapMmHg, set to |c.drift| on the drift case. In the tick, the first wire's drift since its last equalisation is clamped to the cap, using sinceEqualiseS, so no new state was needed. This restores the old lab's min(c.drift, elapsed/45 \u00d7 c.drift). A new wire draws its own drift with no cap. Covered by a test.\n6. **Ostial tip on a non-ostial case (minor), package part.** In rankPhysiologyTips, a pm-physiology-subsets tip that matches on a damped pressure now ranks last unless sessionCase(s).guideObstructs. The other subsets tips lose their step bonus in that case. Tested on lad-intermediate (the tip is out of the top 5, and the damped-guide tip stays in) and on guide-wedge (the tip is still in the top 5).\n7. **Performance (minor).**\n   - guidePressure's classifyTip loop for an obstructing guide is memoised in GUIDE_CACHE. The key is case id, MAP, hyperaemia rounded to 1/50 and the treated lesions, and the loop computes with that rounded hyperaemia so the cached result does not depend on call order.\n   - sessionCase and measuredCase are cached per state in WeakMaps, so pdAt reuses one case object per state.\n   - physiology.ts still JSON.stringifies the case inside reading(); that file is outside this package.\n8. **Unlabelled numbers (minor).**\n   - New MODEL PARAMETER constants in pwSession.ts: MP_DISTAL_MARGIN (0.15), MP_PULLBACK_FFR_H (0.5) and MP_THERMO_DISTAL_X (0.6).\n   - The post-zero offset SD (3 mmHg) is now MP_ZERO_OFFSET_SD_MMHG in pressureWire.ts. initialPressureWire uses it with the same value, so default behaviour does not change.\n   - physiologyTips' step threshold of 5 mm now uses EQUALISE_MAX_MM.\n\n**Out of scope (for other owners):**\n- **Tips owner:** give pci-phys-ostial-disengage (14-physiology.ts:2312) a condition that only an ostial or obstructing-guide study raises, for example `requires:['ostial-lesion']`, so it stops matching on any damped trace.\n- **Docs owner:** add docs/realism/facts entries for MP_ZERO_OFFSET_SD_MMHG, MP_DISTAL_MARGIN, MP_PULLBACK_FFR_H, MP_THERMO_DISTAL_X, PhysiologyPreset.driftCapMmHg, and the earlier MP_* constants of pwSession.ts and PhysiologyLab.tsx.\n- **physiology.ts owner (optional):** caseKey stringifies on every reading(); an identity cache there would remove most of the remaining per-sample cost.\n\n**Browser note:** the shared tab-4 was switched to Full case partway through, probably by my own earlier failed useUiStore.launch() call, so I ran the browser checks in my own tab (tab-5) and closed it afterwards.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pwSession.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/pressureWire.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-6) at http://localhost:5173 and opened the Pressure wire lab from the sidebar. window.__lab.physiology was registered with context, tips, state, events, step, dispatch and name.",
+     "Acceptance check in the browser: __lab.physiology.step(30) moved session.t from 6.58 to 36.58 s, and context() returned {lab:'pci', phase:'physiology', vessel:'LAD', pressure, events}. MET.",
+     "Full study on lad-intermediate (guided), driven by dispatch and step: zero, connections, flush the guide, flush the aortic line, introduce, remove the introducer, sensor at 0 mm, equalise (Pd/Pa 1.00, atTip true, mismatch false), IC nitrate, advance 80 mm, rest Pd/Pa 0.907 (valid), IV adenosine for 60 s, FFR 0.731 (valid), pullback (452 points, from 0.73 at x 0.73 down to 0.99 at the guide tip, sensor back at 0 mm), drift check 0.984 ok, decide 'treat'.",
+     "The case teaching text ('ideal PCI target') was not in the DOM before the decision and was present after it.",
+     "At the start of a study the guide is full of contrast (contrastFrac 1). The engine transducer read overdamped and the context gave pressure 'damped' with pressure-damped. Flushing the guide cleared it, and the pressure-damped event cleared after its hold time.",
+     "fault-ebu-lcx: with the sensor at the guide tip, branch became 'side' and context events included wire-side-branch. tips() ranked pci-phys-wire-wrong-branch first and included pci-phys-zero-outside. Changing the guide, re-introducing and equalising recovered the study: branch 'target', Pd/Pa 1.00.",
+     "fault-offset-waveforms: equalise gave eq.mismatch true (rms 6.75 mmHg) with mean Pd/Pa 0.999. The FFR record was valid=false with the waveform problems, and the guided console showed the aid line.",
+     "fault-air-aortic launched in exam mode through useLabLaunchStore.request('physiology', {scenario, mode:'exam'}): the badge read 'Exam', the transducer verdict was overdamped, pressure 'damped' with pressure-damped, the FFR record was valid=false with 'air in the aortic line', and there were no tips, no 'Teaching aid' line and no aid text in the console.",
+     "fault-deep-equalise: the study starts with the sensor at 10 mm. Equalising there gave atTip false, the FFR was invalid, and the drift check at the guide tip read 1.081 (not ok). Re-equalising at 0 mm gave a drift check of 1.000 (ok).",
+     "Took a screenshot of the guided layout at the pane width (about 800 px). The trace is mostly blank because rAF pauses while the pane is hidden, which is expected.",
+     "Console: no errors or warnings from the lab. The log shows only Vite HMR traffic. The page fully reloaded twice during testing because other packages were editing files, not because of this package."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/physiology/VesselStrip.tsx lines 118-122 (labels under the wire-position slider)",
+      "problem": "The three labels under the slider sit in a flex justify-between row with no gap. At the pane width (about 800 px) they wrap and run into each other ('wire tip at the guideadvance or withdraw the distal').",
+      "severity": "minor",
+      "fix": "Change the row to <div className=\"grid grid-cols-3 gap-3 text-[12px] text-ink-faint\"> and add className=\"text-center\" to the middle span and className=\"text-right\" to the last span (or add gap-3 to the flex row and text-center to the middle span)."
+     },
+     {
+      "where": "src/ui/sections/PhysiologyLab.tsx physiologyProfile() (around lines 88-98), together with src/ui/lab/physiologyTips.ts physiologyTipContext",
+      "problem": "The generated stable-angina patient can start bradycardic: HR 48 at baseline in fault-ebu-lcx with seed Date.now()%100000. The 'bradycardia' patient event is then raised before any adenosine, and the guided panel ranks the bail-out tip pci-adenosine-block-cough-wait ('Heart block after adenosine') second while the learner is still setting up the wire.",
+      "severity": "minor",
+      "fix": "In physiologyProfile, keep the seeded baseline HR at or above the patientEvents bradycardia threshold (for example baseline.hr = Math.max(p0.baseline.hr, <threshold + 5>), labelled MODEL PARAMETER). Alternatively, in physiologyTipContext add 'bradycardia' only when session.hyper.mode !== 'none' or adenosine was given in the last few seconds."
+     },
+     {
+      "where": "src/ui/lab/physiologyTips.ts rankPhysiologyTips (guided tip panel)",
+      "problem": "After a successful equalisation (Pd/Pa 1.00, no faults, no events), the bail-out tip pci-phys-equalise-fail ('Will not equalise: work through the causes') is ranked first in the panel. That is misleading when equalisation has just succeeded.",
+      "severity": "minor",
+      "fix": "In rankPhysiologyTips, drop or demote pci-phys-equalise-fail once s.eq exists with atTip && !mismatch, for the current wire (s.eq.wireId === s.wireId)."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/pwSession.test.ts src/simulation/pci/pressureWire.test.ts src/ui/lab/physiologyTips.test.ts src/ui/sections/PhysiologyLab.test.ts (4 files, 50 tests, all pass)",
+     "Check that the new resting-rate test fails without the fix: removing the clamp makes it fail with 'expected 50 to be greater than or equal to 55'. The clamp was then put back."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all three findings against the code and applied each one.\n\n1. **Slider labels running into each other (VesselStrip.tsx).** Confirmed: the label row was a flex justify-between row with no gap. It is now a three-column grid with a gap (`grid grid-cols-3 gap-3`). The middle label is centred and the last one is right-aligned.\n\n2. **Patient starting bradycardic before any adenosine (PhysiologyLab.tsx).** Confirmed, though the cause is slightly different from the finding. generatePatient never draws a resting rate below 50 bpm (patient.ts clamps it to 50-112). The bradycardia threshold is \"below 50\" (PATIENT_EVENT_THRESHOLDS.bradycardiaHr). So a seed at the floor, 50-51 bpm, shows rates under 50 from normal beat-to-beat variation. That raised the event at rest and pushed the \"Heart block after adenosine\" tip up the panel.\n   - **Fix:** a new exported constant, MP_MIN_REST_HR, set to the threshold plus 5 and labelled MODEL PARAMETER with its source. physiologyProfile now sets the baseline rate to at least this value (`hr: Math.max(p0.baseline.hr, MP_MIN_REST_HR)`).\n   - **Why this fix rather than the alternative:** I did not filter the event in physiologyTipContext. With the clamp, adenosine-induced bradycardia and AV block are still reported, and the existing adenosine test still reaches every declared patient event.\n   - **New test (PhysiologyLab.test.ts):** it finds seeds at the generator's floor for fault-ebu-lcx, the preset named in the finding. It checks that the profile rate is at least MP_MIN_REST_HR and that 20 s of the rig at rest never raises bradycardia.\n\n3. **\"Will not equalise\" tip ranked first after a good equalisation (physiologyTips.ts).** Confirmed.\n   - **Fix:** a new exported helper, equalisedCleanly(s), true when the current wire was equalised at the guide tip with matching waveforms (`!!s.eq && s.eq.atTip && !s.eq.mismatch && s.eq.wireId === s.wireId`). When it is true, rankPhysiologyTips moves pci-phys-equalise-fail to the end of the panel, the same way it already demotes the ostial tips. The tip is not removed, and it comes back for a new wire that has not been equalised.\n   - **New test (physiologyTips.test.ts):** it equalises cleanly on lad-intermediate and checks that the tip is out of the top 5 and last in the full ranking. It also checks that equalisedCleanly is false again after a new wire.\n\n**Files changed** (all on the package list, plus PhysiologyLab.test.ts, the test file this package created):\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physiology/VesselStrip.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/physiologyTips.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PhysiologyLab.test.ts\n\nNothing outside the package needed changing."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "pwSession.test.ts: equalising with the sensor 10 mm in leaves an offset and the drift check fails; equalising at the tip passes",
+      "met": true,
+      "evidence": "src/simulation/pci/pwSession.test.ts 'equalisation window and drift (acceptance)' first test: preset fault-deep-equalise starts at sensorMm 10, equalise gives eq.atTip false, drift check at the tip fails with pdpa > 1 + CUTOFF.drift and Pd - Pa above CUTOFF.drift*Pa; equalising after pulling to 0 mm passes the drift check. The test passes (20/20 in the file). EQUALISE_MAX_MM = 5 and MP_DRIFT_SD come from src/simulation/pci/pressureWire.ts and are re-exported by pwSession.ts."
+     },
+     {
+      "criterion": "With 'fault-offset-waveforms' mean Pd equals mean Pa but the mismatch flag is set and an FFR recorded is invalid; with air in the aortic line the verdict is overdamped and pressure context 'damped'",
+      "met": true,
+      "evidence": "pwSession.test.ts 'waveform faults (acceptance)': pd equals pa to 6 dp, pdpa 1, waveformMismatch true, eq.mismatch true, RMS above MP_MISMATCH_RMS_MMHG, measured FFR valid=false with a 'waveforms' problem. For fault-air-aortic, aorticLine(s).dynamic.verdict is 'overdamped' and guidePressure 'damped'. physiologyTips.test.ts checks physiologyTipContext(...).pressure === 'damped' with pressure-damped, and PhysiologyLab.test.ts checks that the engine transducer verdict is 'overdamped' and rig.context().pressure is 'damped'. All pass."
+     },
+     {
+      "criterion": "physiology.test.ts values are unchanged at equal MAP",
+      "met": true,
+      "evidence": "src/simulation/physiology.ts and physiology.test.ts were not modified (dated 5 Oct and 3 Oct). physiology.test.ts passes 13/13. pwSession.test.ts 'the console agrees with physiology.ts' checks that consoleReading equals indices() exactly for every PHYSIOLOGY_CASES case at its own MAP (x 0/0.5/1, h 0/1, guide on and off). pressureWire.measure is unchanged without channel errors, and pressureWire.test.ts passes 6/6."
+     },
+     {
+      "criterion": "browser: __lab.physiology.step(30) advances the session and context() shows phase 'physiology'",
+      "met": true,
+      "evidence": "In the browser pane on localhost:5173, in a fresh tab I opened the Pressure wire section. window.__lab.physiology.step is a function. step(30) moved session.t from 4.14 to 34.14, and context() returned {lab:'pci', phase:'physiology', vessel:'LAD', pressure:'damped', events:['pressure-damped']}. The console showed no errors. PhysiologyLab.test.ts 'step(30) advances the session and the engine...' covers the same thing without a page. The model clock is a setInterval at MODEL_STEP_S 0.02 s and does not use rAF."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/physiology/core.launch.ts under lessons pm-physiology-setup",
+      "met": true,
+      "evidence": "core.launch.ts lists all 15 presets (the 7 PHYSIOLOGY_CASES ids plus the 8 fault-* ids), each with pm-physiology-setup. In physiologyTips.test.ts, 'launch metadata and the practice index (acceptance)' checks practiceForLesson('pm-physiology-setup') for every scenario, the other lessons and cases, and that the ids and titles match PHYSIOLOGY_PRESETS. It passes. practiceIndex.test.ts passes 10/10."
+     },
+     {
+      "criterion": "Tips test beside physiologyTips.ts: after the action raising 'wire-side-branch', tipsFor(ctx,20) includes pci-phys-wire-wrong-branch, and at phase 'physiology' includes pci-phys-zero-outside; every waiting.ts entry naming this package becomes satisfiable, so the pci waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/lab/physiologyTips.test.ts (15/15 pass): in preset fault-ebu-lcx, after set-up and advancing to the guide tip, branch is 'side', and ctx.events includes wire-side-branch. tipsFor(ctx,20) includes pci-phys-wire-wrong-branch, which is also first, and pci-phys-zero-outside. The reachability test reports 'pci tips still waiting: 483 -> 452' from the lab's raises. No waiting.ts entry currently names raisedBy physiology-engine-unify-and-setup, so that part is trivially satisfied, and the test additionally checks that all 6 request tips (pm-physiology#1) become satisfiable. src/content/lab/reachability.test.ts passes 5/5 and picks up raises through its ui/**/*Tips.ts glob."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/pwSession.test.ts src/simulation/physiology.test.ts (33 passed)",
+     "npx vitest run src/ui/lab/physiologyTips.test.ts src/ui/sections/PhysiologyLab.test.ts src/simulation/pci/pressureWire.test.ts src/ui/content/practiceIndex.test.ts (40 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)",
+     "Browser pane (own tab on localhost:5173, Pressure wire section): window.__lab.physiology.step(30) then context() -> phase 'physiology', t advanced by 30 s, no console errors"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ]
+ }
+}

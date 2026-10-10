@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Clinical Graphite: neutral graphite surfaces, hairline borders, one clinical
+   blue accent, IBM Plex Sans with Plex Mono for numbers. Status colours only
+   for status; monitor trace colours only on monitors.
+   --------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0e1013;
+  color: #eceef1;
+  font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid #4f8ef7;
+  outline-offset: 2px;
+}
+
+/* Retired backdrop (kept as a no-op for older markup) */
+.cl-grid {
+  background-image: none;
+}
+
+@layer components {
+  .panel {
+    @apply relative rounded-[10px] border border-line bg-base-700;
+  }
+  .panel-glow {
+    @apply border-accent/50;
+  }
+  .panel-head {
+    @apply flex items-center justify-between gap-2 border-b border-line px-4 py-2.5 text-[13px] font-semibold text-ink;
+  }
+
+  /* Buttons: secondary by default; .btn-accent is the primary action */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-1.5 rounded-md border border-line-strong bg-[#181b20] px-3.5 py-[7px] text-sm leading-5 text-ink transition-colors hover:border-[#3a414a] hover:bg-base-600 disabled:cursor-not-allowed disabled:opacity-45;
+  }
+  .btn-accent {
+    @apply border-transparent bg-accent-strong font-medium text-white hover:border-transparent hover:bg-[#3a78e6];
+  }
+  .btn-good {
+    @apply border-[#24543d] bg-[#14271d] text-[#6fd3a2] hover:border-[#2e6a4d] hover:bg-[#183022];
+  }
+  .btn-danger {
+    @apply border-[#5c2a27] bg-[#2a1615] text-[#f2938c] hover:border-[#73352f] hover:bg-[#331a18];
+  }
+  .btn-ghost {
+    @apply border-transparent bg-transparent text-ink-soft hover:border-transparent hover:bg-base-600 hover:text-ink;
+  }
+
+  .chip {
+    @apply inline-flex h-6 items-center gap-1.5 rounded-full border border-line-strong px-2.5 text-xs text-ink-soft;
+  }
+
+  .stat {
+    @apply flex flex-col gap-1;
+  }
+  .stat-label {
+    @apply text-xs text-ink-faint;
+  }
+  .stat-value {
+    @apply font-mono text-lg text-ink;
+  }
+
+  .nav-item {
+    @apply flex h-8 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-[13.5px] text-ink-soft transition-colors hover:bg-base-600 hover:text-ink;
+  }
+  .nav-item-active {
+    @apply bg-accent-tint text-ink hover:bg-accent-tint;
+  }
+
+  .kbd {
+    @apply inline-flex min-w-[20px] items-center justify-center rounded border border-line-strong bg-base-900 px-1 py-px font-mono text-[11px] text-ink-soft;
+  }
+
+  /* Status dot: colour via text-* */
+  .led {
+    @apply inline-block rounded-full;
+    width: 7px;
+    height: 7px;
+    background: currentColor;
+  }
+
+  /* Numeric read-outs with tabular figures */
+  .metric {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  /* A monitor screen (the only place trace colours appear) */
+  .monitor {
+    background: #0a0c0e;
+    box-shadow: inset 0 0 0 1px #22262c;
+  }
+
+  /* Segmented control */
+  .seg {
+    @apply inline-flex items-center gap-0.5 rounded-lg border border-line bg-base-700 p-[3px];
+  }
+  .seg-btn {
+    @apply rounded-md px-2.5 py-1 text-[13px] leading-5 text-ink-soft transition-colors hover:text-ink;
+  }
+  .seg-btn-active {
+    @apply bg-[#24324d] text-ink;
+  }
+
+  /* Underlined tabs */
+  .tab {
+    @apply -mb-px h-10 border-b-2 border-transparent px-3 text-sm text-ink-soft transition-colors hover:text-ink;
+  }
+  .tab-active {
+    @apply border-accent font-medium text-ink;
+  }
+
+  /* Form fields */
+  .field {
+    @apply h-9 rounded-md border border-line-strong bg-[#0f1215] px-2.5 text-sm text-ink outline-none transition-colors focus:border-accent;
+  }
+
+  /* Notices */
+  .notice {
+    @apply flex gap-2.5 rounded-lg px-3.5 py-3 text-[13px] leading-snug;
+  }
+  .notice-info {
+    @apply bg-[#152033] text-[#a9c8ff];
+  }
+  .notice-warn {
+    @apply bg-[#2a2213] text-[#f0c978];
+  }
+  .notice-danger {
+    @apply bg-[#2a1615] text-[#f2938c];
+  }
+  .notice-good {
+    @apply bg-[#14271d] text-[#6fd3a2];
+  }
+
+  /* Progress bar */
+  .bar {
+    @apply h-1.5 overflow-hidden rounded-full bg-base-500;
+  }
+  .bar > span {
+    @apply block h-full rounded-full bg-accent;
+  }
+}
+
+/* Native selects and inputs pick up the field look by default */
+select,
+input[type="text"],
+input[type="number"],
+input[type="search"],
+textarea {
+  color-scheme: dark;
+}
+
+/* faint horizontal scanlines for monitor screens */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0px, rgba(0, 0, 0, 0.1) 1px, transparent 2px, transparent 3px);
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #262b31;
+  border-radius: 6px;
+  border: 2px solid #0e1013;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333941;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: #262b31;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #eceef1;
+  border: 3px solid #2f6bd8;
+  cursor: pointer;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #4f8ef7;
+}

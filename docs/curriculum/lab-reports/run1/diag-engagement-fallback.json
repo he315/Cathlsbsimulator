@@ -1,0 +1,279 @@
+{
+ "package": "diag-engagement-fallback",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built diag-engagement-fallback. In src/simulation/engagement.ts, computeEngagement takes a fifth argument, opts { difficultyScaled?: boolean }, which defaults to false. With the default, every difficulty uses one fixed threshold set, the old 'advanced' row (exported as FIXED_ENGAGEMENT_THRESHOLDS). The old beginner and intermediate rows are used only when { difficultyScaled: true } is passed, and only tests pass it. The new exports are EngagementThresholds, EngagementOptions, engagementThresholds() and CONUS_OVERSELECTION_THRESHOLDS, and every existing caller works without edits. src/ui/physics/types.ts defines the PhysicsDevices interface (init with model, route and coronaries; load and remove a catheter or guide; command; step; latest; dispose) and its reading (vessel, side, depthMm, coaxiality, wallForce, openFraction, prolapsed, kind, conus, costMs). It also defines the registry: collectPhysicsDevices and resolvePhysicsDevices, plus getPhysicsDevices(), which eagerly globs ./impl/*.ts (test files excluded) and returns null while that folder is empty. I made one change the design did not ask for. With the 'advanced' row alone, conus over-selection, and the VF injection that goes with it, could not be reached at all. A tip placed exactly on the conus ostium lines up with its axis at a cosine of 0.926 to 0.931, below the 0.94 needed. That broke store.test.ts (A2 conus to VF) and eight mentor.test.ts tests. So the conus hazard check now has its own fixed, difficulty-free tolerance, which reuses the old 'intermediate' values (selDist 5, alignSel 0.9) and is labelled MODEL PARAMETER. It can be reverted by changing one constant. One mentor test still fails, in files this package does not own (see outOfScope).",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/engagement.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/engagement.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pressure.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physics/types.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physics/types.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physics/__fixtures__/impl/fixture.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/engagement.test.ts: 'with physics off, engagement uses difficultyScaled false by default and the advanced row is the single fixed set'",
+     "src/simulation/engagement.test.ts: 'the scaled behaviour is reachable only through { difficultyScaled: true }'",
+     "src/simulation/engagement.test.ts: 'beginner and advanced difficulty give identical engagement classification for the same tip pose across 200 seeded poses' (also intermediate; checks the poses include selective-lm, selective-rca, non-selective and coaxial or near classes, and that the legacy scaling would have classified some of them differently)",
+     "src/simulation/engagement.test.ts: 'conus over-selection stays reachable with its own fixed tolerance, the same at every difficulty'",
+     "src/simulation/engagement.test.ts: 'rejects an unknown difficulty when scaling is asked for'",
+     "src/simulation/pressure.test.ts: 'a tip pose gives the same engagement and pressure reading at every difficulty'",
+     "src/ui/physics/types.test.ts (new, 5 tests): getPhysicsDevices() null with an empty impl/; the fixture under __fixtures__/impl/ is resolved by the same function; the fixture receives init, load, command and step and reports a reading; ordering by order then id; rejects a file without the export, a missing id, label or create, an invalid order, and a duplicate id",
+     "src/ui/physics/__fixtures__/impl/fixture.ts (new test fixture, not globbed by getPhysicsDevices)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/state/store.test.ts: 6 files, 53 tests passed",
+     "npx vitest run src/mentor/bridgePedal.test.ts src/mentor/registries.test.ts src/progress/progress.test.ts src/ui/lab/controls/controls.test.ts src/ui/lab/useContextTips.test.ts: all passed",
+     "npx vitest run src/mentor/mentor.test.ts: 1 failed out of the file's tests ('procedural skill cards > each diagnostic card resolves to a start state', over-rotation card: expected null not to be null); every other mentor test passed. With the 'advanced' row applied to the conus as well, 12 had failed; the separate conus tolerance fixed 11 of them."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors.",
+    "acceptance": [
+     {
+      "criterion": "engagement.test.ts: with physics off, engagement uses difficultyScaled false by default; the THRESH row for 'advanced' is the single fixed set; the scaled behaviour is reachable only through { difficultyScaled: true }",
+      "status": "met",
+      "evidence": "Two tests pass. getPhysicsDevices() is null. engagementThresholds(d), engagementThresholds(d, {}) and engagementThresholds(d, {difficultyScaled:false}) are the same object, FIXED_ENGAGEMENT_THRESHOLDS, for every difficulty, and that object equals the scaled 'advanced' row and is frozen. Default calls equal explicit false calls across 40 poses. Only with {difficultyScaled:true} do the beginner and intermediate rows differ, and they change at least one classification over 200 poses. One deviation: the conus hazard check uses CONUS_OVERSELECTION_THRESHOLDS (fixed, difficulty-free, the old intermediate selDist and alignSel), not the advanced row, because with the advanced row the conus can never be reached (see notes)."
+     },
+     {
+      "criterion": "engagement.test.ts: beginner and advanced difficulty give identical engagement classification for the same tip pose across 200 seeded poses",
+      "status": "met",
+      "evidence": "The test passes: for 200 Rng-seeded poses (4 roots, 8 catheters, 80% aimed at the LM, RCA or conus with jitter), the full EngagementState is toEqual across beginner, intermediate and advanced. The test also checks that the poses cover selective-lm, selective-rca, non-selective and a coaxial or near class, and that the legacy scaling would have classified some of the same poses differently."
+     },
+     {
+      "criterion": "pressure.test.ts passes, with any case that relied on the beginner radius moved inside the fixed radius; lab.test.ts and integration.test.ts pass unchanged",
+      "status": "met",
+      "evidence": "None of the three existing pressure cases depended on the beginner radius (LV, whip noise, pigtail in the root), so none needed moving. Added a test that the pressure reading at JL4 on the LM and JR4 on the RCA, at 7 insertion offsets, is identical at every difficulty. lab.test.ts (12) and integration.test.ts (9) pass without edits."
+     },
+     {
+      "criterion": "types.test.ts: getPhysicsDevices() returns null with no implementation and a fixture implementation placed under impl/ otherwise",
+      "status": "met",
+      "evidence": "types.test.ts passes (5 tests). The impl/ glob is empty and getPhysicsDevices() is null. The test-only folder __fixtures__/impl/fixture.ts, globbed with the same patterns plus the fixture folder and collected by the same resolvePhysicsDevices, gives the 'fixture' implementation, and its instance receives init, load, command and step and reports a reading with costMs. This follows the controls-registry pattern: no file is written into the real impl/ folder, which diag-rod-physics owns."
+     }
+    ],
+    "outOfScope": [
+     "src/mentor/skillCards.ts (SKILL_CARD_TEMPLATES 'over-rotation': preset 'torque', catheterId JR4, engagement 'near-rca'), checked by src/mentor/mentor.test.ts 'each diagnostic card resolves to a start state at the moment of the error'. With the fixed thresholds, no catheter reaches 'near-rca' in that card's case: within 8 mm of the RCA, alignment never drops below 0.90. The start class was already fragile before this change: under the old intermediate scaling only TIG (2 poses) and JR3.5 (5 poses) reached it, and JR4 reached it in none. The card's start state needs a different class (for example 'non-selective'), case or preset. That is a change for the owner of skillCards.ts; it does not belong in engagement.ts.",
+     "docs/realism/facts: the engagement thresholds (the fixed 'advanced' row) and CONUS_OVERSELECTION_THRESHOLDS are labelled MODEL PARAMETER in code comments only. If a facts entry is wanted, it belongs to whichever package owns that file. These values already existed; none is new.",
+     "The design says difficulty now changes assistance only (hints and attending prompts). This package does not touch the UI or mentor files, so any wording that tells the learner difficulty widens the capture tolerance has not been checked."
+    ],
+    "notes": "I snapshotted the 3 listed files that already existed into datasets/tmp/wp-snapshots/diag-engagement-fallback/src/simulation/ and created .started before editing. src/ui/physics/types.ts and types.test.ts are new. One file outside the list is new: the test fixture src/ui/physics/__fixtures__/impl/fixture.ts. It follows the existing __fixtures__ convention (controls, rules, debrief), and getPhysicsDevices() does not glob it.\n\nDeviation from the design, for the reviewer to decide. With the 'advanced' row alone (alignSel 0.94), conus over-selection, and the VF injection that goes with it, cannot be reached at all. JR4, JR3.5, AR or IKR placed exactly on the conus ostium in the normal right test case line up with its axis at a cosine of 0.926 to 0.931. Under the old scaling it was also unreachable at advanced difficulty. Applying the design strictly broke store.test.ts 'A2 conus over-selection to VF' and eight mentor.test.ts tests that script a conus injection through findStartControls. It would also remove the teaching state that the later diag-rod-physics tip 'diag-conus-withdraw' depends on. So the conus check uses CONUS_OVERSELECTION_THRESHOLDS = { selDist: 5, alignSel: 0.9 }, the old intermediate values reused, not new numbers. It is the same at every difficulty, so the 200-pose identity test holds. Coronary capture (selective, deep, coaxial, near) uses only the 'advanced' row. With {difficultyScaled:true} the conus is judged with the scaled row, as before. To revert, make conusThresholds() return t.\n\nThe signature of computeEngagement is unchanged apart from the optional fifth argument, so useSimulatorStore, LegacyDiagnosticHost and skillCards.findStartControls now get the fixed thresholds without edits.\n\nThe PhysicsReading I defined adds kind and conus (the existing engagement vocabulary) and side, beyond the fields the design names, so the existing too-deep, non-coaxial and engage-fail events can be fed unchanged. Each impl/*.ts must export `physicsDevices: { id, label, order?, create(opts?) }`. getPhysicsDevices() returns that registration, not an instance, so each lab session creates and owns its own. I did not use the browser and started no server."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Not ready to accept as is. The core change is correct and complete. computeEngagement(model, cath, controls, difficulty, opts = {}) now uses FIXED_ENGAGEMENT_THRESHOLDS, which is the frozen 'advanced' row, at every difficulty. The scaled rows are reachable only through { difficultyScaled: true }, and no non-test caller passes it (I grepped). All three callers (useSimulatorStore.ts:290, skillCards.ts:143, legacyDiagnostic.ts:110) pick up the fixed set without edits. src/ui/physics/types.ts defines the PhysicsDevices interface and its registry (getPhysicsDevices() eagerly globs ./impl/*.ts, excluding tests, and returns null while impl/ is empty), and its validation is sound. The tests are meaningful, not tautological: 200 seeded poses with coverage checks on selective-lm, selective-rca, non-selective and coaxial or near; a check that the legacy scaling would have classified the same poses differently; and a fixture reached through the same resolve function. I re-ran the package's tests and they all pass (engagement 15, pressure 6, types 5). lab.test.ts (12), integration.test.ts (9) and store.test.ts (6) pass unchanged, and npx tsc -p tsconfig.app.json --noEmit is clean. No new clinical numbers appear: the conus tolerance reuses the existing intermediate selDist 5 and alignSel 0.9, labelled MODEL PARAMETER in a comment. No UI or ground-truth exposure, and tip integration is correctly 'None'.\n\nThe conus deviation from the design is justified. With alignSel 0.94 conus over-selection cannot be reached at all, and diag-rod-physics's acceptance expects engagement.conus true for JR4. I recommend accepting it. One side effect should be recorded: at advanced difficulty (the daily challenge and exam), conus over-selection, and the VF injection that comes with it, is now reachable where before it was not. At beginner the conus check is now tighter than before.\n\nThree problems remain before sign-off:\n1. A live regression: the 'over-rotation' skill card can no longer resolve a start state. mentor.test.ts fails 1 of its tests, which I reproduced.\n2. The difficulty description in Settings.tsx is now false.\n3. Two assertions are hard-wired to an empty impl/ folder. They will turn red as soon as diag-rod-physics adds src/ui/physics/impl/rod.ts, which is in that package's file list.\n\nDiff review: engagement.ts, engagement.test.ts and pressure.test.ts differ from their snapshots only as described in the builder report. types.ts, types.test.ts and __fixtures__/impl/fixture.ts are new; the fixture is a test file under the existing __fixtures__ convention. The other newer files under src/ are not from this package and belong plausibly to concurrent packages: access/site.ts, sim/labSession.ts, Simulator.tsx, session/autopilot.ts, the modules and scenarios indexes, useLabTips.ts, diagnosticContext(.test).ts and diagnosticTips.test.ts. None of them references the new exports. A transient src/ui/lab/__scratch/probe.test.ts had disappeared by the time I checked.",
+    "findings": [
+     {
+      "where": "src/mentor/skillCards.ts:99 (SKILL_CARD_TEMPLATES 'over-rotation'), checked by src/mentor/mentor.test.ts 'procedural skill cards > each diagnostic card resolves to a start state at the moment of the error'",
+      "problem": "This is a regression caused by this package. findStartControls searches with difficulty 'intermediate', and with the fixed thresholds no RCA catheter reaches the 'near-rca' class. resolveDiagnosticStart therefore returns null, so the over-rotation card cannot start in the live app, and mentor.test.ts fails with 'over-rotation: expected null not to be null'. I reproduced this: 1 failed, 82 passed across lab, integration, store and mentor. The builder put it in outOfScope, but the package must not be closed with a red test and a broken card.",
+      "severity": "major",
+      "fix": "skillCards.ts is not in this package's files, so route it to its owner as a blocking follow-up, or extend this package's file list to include skillCards.ts. Change the 'over-rotation' start to a class that the fixed model reaches with a right-sided catheter. Note that 'non-selective' does not end in '-rca', so resolveDiagnosticStart would fall back to the left shapes, and the right side then has to come from catheterId JR4 and the case. Confirm with findStartControls(case, 'JR4', <class>) that it returns non-null. Do not make findStartControls pass { difficultyScaled: true }: that would bring the scaling back."
+     },
+     {
+      "where": "src/ui/physics/types.test.ts:22-25 and src/simulation/engagement.test.ts (first test in 'difficulty-free engagement', expect(getPhysicsDevices()).toBeNull())",
+      "problem": "Both tests assert the current contents of the real impl/ folder: expect(Object.keys(REAL)).toEqual([]) and getPhysicsDevices() toBeNull. diag-rod-physics lists src/ui/physics/impl/rod.ts among its files, so both suites will fail the moment that package lands, through no fault of its own. The engagement test also has no need to depend on the UI registry: computeEngagement is the analytic model whether or not an implementation exists.",
+      "severity": "major",
+      "fix": "In types.test.ts, replace the empty-folder assertions with 'returns null when there is no implementation': expect(resolvePhysicsDevices({})).toBeNull() and expect(getPhysicsDevices()).toEqual(resolvePhysicsDevices(REAL)). Optionally add if (Object.keys(REAL).length === 0) expect(getPhysicsDevices()).toBeNull(). In engagement.test.ts, delete the getPhysicsDevices() import and assertion, or guard it the same way."
+     },
+     {
+      "where": "src/ui/sections/Settings.tsx:11-15 (DIFF_HINT)",
+      "problem": "The learner-facing difficulty hints are now false. Beginner reads 'Wider engagement tolerances...', intermediate 'Realistic tolerances' and advanced 'Tight tolerances...'. The design says difficulty now changes assistance (hints and attending prompts) only, and engagement is identical at every difficulty. The builder flagged this area only in general terms and did not find the file.",
+      "severity": "major",
+      "fix": "Settings.tsx is in diag-rod-physics's file list, so record it as an outOfScope follow-up for that package, or for whichever package owns Settings.tsx first. Reword the hints in British English with no numbers, for example: beginner 'More hints and attending prompts while you learn the motions.', intermediate 'Fewer prompts; mistakes are logged normally.', advanced 'No prompts; the daily challenge and exam mode always use it.' Keep the claim about pressure only if pressure still scales with difficulty; pressure.ts shows no difficulty input."
+     },
+     {
+      "where": "src/simulation/engagement.ts CONUS_OVERSELECTION_THRESHOLDS / conusThresholds (deviation from design)",
+      "problem": "The design names the 'advanced' row as the single fixed set. The conus hazard check instead uses { selDist 5, alignSel 0.9 }, the old intermediate values, at every difficulty. The reasoning is sound: at 0.94 the conus is unreachable, store.test.ts A2 and 8 mentor tests depend on it, and so does diag-rod-physics's conus acceptance. It does change behaviour, though. Advanced difficulty, including the daily challenge and exam, can now produce conus over-selection and VF on injection where it never could before. Some poses near the RCA that were previously classified selective-rca at advanced now classify as conus. At beginner the conus check is tighter than before (5/0.9 instead of 7/0.85). This is documented only in a code comment.",
+      "severity": "minor",
+      "fix": "Accept the deviation and add one sentence to the package notes and LAB_BUILD_PLAN design entry: 'Conus over-selection is judged against a fixed hazard tolerance (former intermediate selDist and alignSel), the same at every difficulty.' If a docs/realism/facts entry for engagement MODEL PARAMETERS exists or is created, list FIXED_ENGAGEMENT_THRESHOLDS and CONUS_OVERSELECTION_THRESHOLDS there as MODEL PARAMETER, not sourced. No code change."
+     },
+     {
+      "where": "src/simulation/engagement.ts computeEngagement / engagementThresholds default parameter `opts: EngagementOptions = {}`",
+      "problem": "computeEngagement runs every simulator tick (useSimulatorStore.ts:290) and about 10,000 times per findStartControls search. When opts is omitted, which is every production call, the default parameter allocates a new empty object on each call. This is small next to the existing spreads of `base`, but it is avoidable churn on a per-frame path.",
+      "severity": "minor",
+      "fix": "Add `const NO_OPTS: EngagementOptions = Object.freeze({});` and use `opts: EngagementOptions = NO_OPTS` in both computeEngagement and engagementThresholds."
+     },
+     {
+      "where": "src/simulation/pressure.test.ts 'a tip pose gives the same engagement and pressure reading at every difficulty'",
+      "problem": "The test asserts only that the 'aortic' kind appears, so it would still pass if every one of the 14 poses gave plain aortic pressure. That would make the cross-difficulty identity check weak for the engaged states (damped or ventricularised at deep engagement) that the old beginner radius affected most.",
+      "severity": "minor",
+      "fix": "Also assert that at least one pose is engaged, for example expect([...kinds].some(k => k !== 'aortic')).toBe(true). If none is, add insertion offsets until a damped or ventricularised reading appears for JR4 or JL4. Alternatively, also collect the engagement kinds and assert that a selective or deep class is present."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 3,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts: 3 files, 26 tests, all passed",
+     "npx vitest run src/mentor/mentor.test.ts src/state/store.test.ts: store 6/6 passed; mentor 61 passed, 1 failed ('each diagnostic card resolves to a start state', over-rotation), the out-of-scope regression from finding 1, unchanged by this fix pass"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I verified all six findings and applied the three that fall inside this package's files. The other three are routed out of scope with concrete fixes. None were rejected.\n\nAPPLIED\n- Finding 2 (tests tied to an empty impl/ folder):\n  - src/ui/physics/types.test.ts: the empty-folder test is now 'returns null when there is no implementation'. It checks that resolvePhysicsDevices({}) is null and that getPhysicsDevices() equals resolvePhysicsDevices(REAL). It checks getPhysicsDevices() is null only while REAL is empty. diag-rod-physics adding impl/rod.ts no longer breaks it.\n  - src/simulation/engagement.test.ts: removed the getPhysicsDevices import and its assertion. The engagement model does not depend on the UI registry.\n- Finding 5 (allocation on every call): src/simulation/engagement.ts now has `const NO_OPTS: EngagementOptions = Object.freeze({})`. computeEngagement and engagementThresholds both use it as their default, so the per-tick call allocates nothing.\n- Finding 6 (weak pressure test): confirmed. The 14 original poses all read aortic, and the new assertion failed on them. In src/simulation/pressure.test.ts:\n  - the sweep now covers torque offsets [0, -0.3] and insertion offsets [-3, -1, 0, 1, 2, 3, 4, 8, 12], 36 poses;\n  - the engagement state must also be identical (toEqual) at beginner, intermediate and advanced, not just the pressure;\n  - at least one reading must be non-aortic (the -0.3 offset gives ventricularised conus readings);\n  - the engagement classes must include selective-lm, selective-rca, conus and non-selective.\n  - No pose in this sweep reaches deep engagement.\n\nOUT OF SCOPE (other packages' files; must be routed)\n1. Finding 1, blocking: src/mentor/skillCards.ts:99, card 'over-rotation'. Confirmed by probe: with the fixed thresholds no RCA catheter (JR4, JR3.5, AR, IKR) reaches 'near-rca' on the card's torque-preset case. JR4 never reached near-rca even under the old scaled 'advanced' row, so the cause is the advanced row itself, not the conus change. Within 8 mm of the RCA ostium the JR4 tip's alignment never fell below 0.916, which is above alignCoax 0.9, so such poses classify as coaxial.\n   - Recommended fix in skillCards.ts: change the card's engagement from 'near-rca' to 'coaxial-rca'. Verified: findStartControls(case, 'JR4', 'coaxial-rca') is non-null, and resolveDiagnosticStart returns JR4.\n   - Do not pass { difficultyScaled: true } in findStartControls.\n2. Finding 3: src/ui/sections/Settings.tsx DIFF_HINT (owned by diag-rod-physics). The beginner, intermediate and advanced hints still describe tolerance scaling. Reword them to describe assistance only, for example: beginner 'More hints and attending prompts while you learn the motions.', intermediate 'Fewer prompts; mistakes are logged normally.', advanced 'No prompts; the daily challenge and exam mode always use it.' pressure.ts has no difficulty input, so drop any claim that pressure scales with difficulty.\n3. Finding 4: accepted, no code change. The note belongs in docs/curriculum/LAB_BUILD_PLAN.md (and lab-build-plan.json), which are not in this package's files. Add this sentence to the diag-engagement-fallback entry: 'Conus over-selection is judged against a fixed hazard tolerance (former intermediate selDist and alignSel), the same at every difficulty.' If a docs/realism/facts entry for engagement exists or is created, list FIXED_ENGAGEMENT_THRESHOLDS and CONUS_OVERSELECTION_THRESHOLDS there as MODEL PARAMETER. The code comment in engagement.ts already labels them so.\n\nThe temporary probe test files used to check findings 1 and 6 were deleted.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/engagement.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/engagement.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pressure.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/physics/types.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-11) on http://localhost:5173 using the dev server already running. No existing tab was touched, and tab-11 was closed at the end.",
+     "Imported the live engagement module at the HMR URL the app had loaded (/src/simulation/engagement.ts?t=1791451997559). It exports FIXED_ENGAGEMENT_THRESHOLDS, CONUS_OVERSELECTION_THRESHOLDS and engagementThresholds. FIXED_ENGAGEMENT_THRESHOLDS is {selDist 3.6, alignSel 0.94, nearDist 8, alignCoax 0.9, deep 2.2}, which is the old advanced row, and it is frozen. engagementThresholds(d) returns that same object for all three difficulties. Only engagementThresholds('beginner', {difficultyScaled:true}) returns the old beginner row (7 / 0.85 / 12 / 0.8 / 3.6). CONUS_OVERSELECTION_THRESHOLDS is {selDist 5, alignSel 0.9}.",
+     "src/ui/physics/types.ts in the browser exports collectPhysicsDevices, resolvePhysicsDevices and getPhysicsDevices. getPhysicsDevices() returns null because impl/ does not exist. In the Free cath lab, window.__lab.physics and window.__labHooks.diagnostic.state().physics are both null, so the lab falls back to the analytic model.",
+     "Opened the Free cath lab (Routine left coronary, JL4, femoral). window.__lab, __labStep and __labHooks.diagnostic are all present. Note for later verifiers: a bare import('/src/state/useSimulatorStore.ts') returns a different store instance from the lab's, because the app loaded the ?t= HMR URL. I used window.__lab.store for every live check.",
+     "On the live lab store I swept 3,094 poses: 7 catheters (JL4, JR4, AL1, JL3.5, JR3.5, EBU3.5, IKR), insertion -16 to 16 and torque -3.2 to 3.2. At each pose I called setDifficulty for beginner, intermediate and advanced. The full EngagementState and the full pressure state were identical across the three difficulties at every pose (0 engagement mismatches, 0 pressure mismatches). The poses covered ascending-aorta, sinus-level, non-selective, coaxial-lm/rca, selective-lm/rca, in-lv and conus. The scaled beginner path ({difficultyScaled:true}) classified 443 of the same poses differently, so the old behaviour is reachable only through the option. An earlier sweep of 4,928 poses on a separate store instance gave the same result.",
+     "Borderline pose in the live lab (JL4, insertion -5, torque -0.1): the old scaled beginner model gives selective-lm and the fixed model gives coaxial-lm. After __labStep(0.25), at both beginner and advanced, store.engagement.kind and the tip context engagement were coaxial-lm, and the tips the drawer would show were the same.",
+     "Conus hazard in the live lab at beginner difficulty with JR4 (insertion -11.5, torque -0.45): engagement.conus was true and stayed true after __labStep. The tip context reported engagement selective-rca, pressure ventricularised and events including conus-selective. inject() followed by __labStep(0.2) set arrhythmia 'vf', logged the 'vf-arrest' event and raised the active lab event 'vf'. The same conus pose was found at advanced difficulty and produced VF there too, so the builder's conus tolerance change works at every difficulty.",
+     "Opened the Settings section to check the difficulty description shown to learners (see problems).",
+     "Console: one error, a 404 for /src/simulation/catheters.ts. My own exploratory import caused it (the network log confirms the request). The app produced no console errors."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/Settings.tsx lines 11-15 (DIFF_HINT), rendered on the Settings page",
+      "problem": "The difficulty descriptions now give learners wrong information. Settings shows beginner as 'Wider engagement tolerances and more forgiving pressure' and advanced as 'Tight tolerances and unforgiving anatomy'. After this package, engagement and pressure are identical at every difficulty: 3,094 poses checked in the running app, 0 differences. Per the plan, difficulty now changes assistance only (hints and attending prompts). Settings.tsx is not one of this package's files, so this needs a follow-up or the owning package.",
+      "severity": "minor",
+      "fix": "Rewrite DIFF_HINT to describe assistance only. For example: beginner 'More hints and attending prompts while you learn the motions.'; intermediate 'Fewer prompts; mistakes are logged normally.'; advanced 'Minimal assistance; the daily challenge and exam mode always use it.' Remove all wording about tolerances and pressure. Check the difficulty-assistance code for what each level actually changes before finalising the wording."
+     }
+    ],
+    "consoleErrors": [
+     "Failed to load resource: 404 (Not Found) for http://localhost:5173/src/simulation/catheters.ts. My own exploratory dynamic import caused this; it is not an app error."
+    ]
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Settings.tsx DIFF_HINT (minor): the finding is correct, but I could not apply it in this package. It is out of scope, not wrong. src/ui/sections/Settings.tsx lines 11-15 still read beginner 'Wider engagement tolerances and more forgiving pressure...', intermediate 'Realistic tolerances...' and advanced 'Tight tolerances and unforgiving anatomy...'. After this package, computeEngagement (store line 290, legacyDiagnostic line 110) ignores difficulty unless { difficultyScaled: true } is passed. That wording is now false. Settings.tsx is not in this package's file list; lab-build-plan.json gives it to diag-rod-physics, so the fix belongs there or in a separate follow-up."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts: 3 files, 26 tests, all passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "Nothing changed. The only finding is about src/ui/sections/Settings.tsx, which is not one of this package's files.\n\noutOfScope: someone needs to rewrite DIFF_HINT in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Settings.tsx. The package that owns it (diag-rod-physics per lab-build-plan.json) or a follow-up should do it.\n\nThe wording the finding suggests is not right either. I traced the learner difficulty: profile.difficulty goes FreeLab.tsx -> loadCase -> useSimulatorStore.difficulty -> computeEngagement. In the legacy mentor host it goes legacyDiagnostic.ts -> computeEngagement. Both calls are now difficulty-free by default. I found no code where difficulty changes hints or attending prompts. So 'More hints and attending prompts' would also be untrue today, unless the owning package adds assistance scaling.\n\nThe follow-up should check what each level actually changes before writing the text, as the finding itself says. If it changes nothing yet, the hint should say that difficulty does not alter engagement or pressure tolerances. The 'daily challenge and exam mode always use advanced' clause should stay only if that is still true."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "engagement.test.ts: with physics off, engagement uses difficultyScaled false by default; the THRESH row for 'advanced' is the single fixed set; the scaled behaviour is reachable only through { difficultyScaled: true }",
+      "met": true,
+      "evidence": "src/simulation/engagement.ts: EngagementOptions { difficultyScaled?: boolean }, default NO_OPTS; engagementThresholds() returns FIXED_ENGAGEMENT_THRESHOLDS (= THRESH.advanced, frozen) unless opts.difficultyScaled === true. A grep of src shows no production caller passes difficultyScaled (useSimulatorStore.ts:290, mentor/hosts/legacyDiagnostic.ts:110 and mentor/skillCards.ts:143 all use the 4-argument form). Tests 'with physics off, engagement uses difficultyScaled false by default and the advanced row is the single fixed set' and 'the scaled behaviour is reachable only through { difficultyScaled: true }' pass. One deviation, documented in the code: the conus over-selection check uses its own fixed CONUS_OVERSELECTION_THRESHOLDS (the existing intermediate selDist and alignSel values, labelled MODEL PARAMETERS). This is still the same at every difficulty, and a test covers it."
+     },
+     {
+      "criterion": "engagement.test.ts: beginner and advanced difficulty give identical engagement classification for the same tip pose across 200 seeded poses",
+      "met": true,
+      "evidence": "The test 'beginner and advanced difficulty give identical engagement classification ... across 200 seeded poses' generates 200 poses from Rng('diag-engagement-fallback') over 4 roots and 8 catheters. It asserts toEqual across beginner, intermediate and advanced, checks that selective-lm, selective-rca, non-selective and coaxial/near classes are all covered (so the comparison is not vacuous), and checks that the legacy scaling would have differed. It passes."
+     },
+     {
+      "criterion": "pressure.test.ts passes, with any case that relied on the beginner radius moved inside the fixed radius; lab.test.ts and integration.test.ts pass unchanged",
+      "met": true,
+      "evidence": "pressure.test.ts: 6/6 pass, including the new 'a tip pose gives the same engagement and pressure reading at every difficulty' test. The original three cases (LV, whip noisy, pigtail aortic) do not depend on the capture radius and pass unmodified. src/ui/lab/lab.test.ts (12) and src/ui/lab/integration.test.ts (9) pass, 21/21. Their mtimes (Oct 5) predate this package, so they are unchanged."
+     },
+     {
+      "criterion": "types.test.ts: getPhysicsDevices() returns null with no implementation and a fixture implementation placed under impl/ otherwise",
+      "met": true,
+      "evidence": "src/ui/physics/types.ts defines PhysicsDevices (init/load/remove/command/step/latest/dispose), PhysicsReading (vessel, depthMm, coaxiality, wallForce, openFraction, prolapsed, costMs, plus kind/side/conus/t) and getPhysicsDevices(), which eagerly globs ./impl/*.ts (src/ui/physics/impl/ does not exist yet). types.test.ts 5/5 pass. getPhysicsDevices() is null with an empty impl/. resolvePhysicsDevices over a glob that includes __fixtures__/impl/fixture.ts returns the 'fixture' implementation, and that implementation receives init, load, command and step and reports a reading. Ordering and malformed-implementation rejection are also tested."
+     },
+     {
+      "criterion": "Package tests pass",
+      "met": true,
+      "evidence": "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts: 3 files, 26/26 tests passed."
+     },
+     {
+      "criterion": "Typecheck clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit exited with no output (about 5 s)."
+     },
+     {
+      "criterion": "No regression in other tests that depend on the engagement model (rule: shared behaviour stays green)",
+      "met": false,
+      "evidence": "src/mentor/mentor.test.ts > procedural skill cards > 'each diagnostic card resolves to a start state at the moment of the error' FAILS with 'over-rotation: expected null not to be null' (mentor.test.ts:936). A probe of the over-rotation card's case (generateBatch('torque',1,'card:over-rotation')) over the same insertion/torque grid as findStartControls found the cause. Under the old default (intermediate scaled row), near-rca was reachable with JR3.5 (5 grid points) and TIG (2). Under FIXED_ENGAGEMENT_THRESHOLDS, near-rca is reachable with none of JR4, AR, JL4, TIG, JR3.5 or IKR: nearDist is 8 and alignCoax is 0.9, and the analytic JR tips are well aligned near the RCA, so a near tip classifies as coaxial-rca instead. The failure is therefore caused by this package. Other dependants pass: src/state/store.test.ts, src/ui/lab/diagnosticContext.test.ts, src/ui/sim/sessionModules.test.ts and src/mentor/bridgePedal.test.ts (28 + 6 tests)."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/mentor/skillCards.ts:99 (SKILL_CARD_TEMPLATES['over-rotation']), surfaced by src/mentor/mentor.test.ts:936",
+      "problem": "With the difficulty-free engagement model, no catheter that resolveDiagnosticStart tries can reach the 'near-rca' class for the over-rotation card (preset 'torque', catheterId JR4). So resolveDiagnosticStart returns null, the skill-card test fails, and in the app this drill would have no start state. This file is outside the package's file list, so the change needs the owning package (or the orchestrator) to make it; the package itself must not pass difficultyScaled.",
+      "severity": "major",
+      "fix": "In src/mentor/skillCards.ts, give the over-rotation card a start class that the fixed thresholds can reach. Do not pass { difficultyScaled: true } in findStartControls, because no lab may use the scaled rows. Two options: (a) change its start to { kind: 'diagnostic', preset: 'torque', catheterId: 'JR4', engagement: 'coaxial-rca' }, which is reachable with JR4 (329 grid points) and still sits short of seated, matching the brief 'reach the ostium without swinging past it'; or (b) keep 'near-rca' but give it a caseId/catheter where near-rca is reachable under FIXED_ENGAGEMENT_THRESHOLDS, verified by the same grid search. Then rerun: npx vitest run src/mentor/mentor.test.ts."
+     },
+     {
+      "where": "src/ui/physics/__fixtures__/impl/fixture.ts",
+      "problem": "Test-support file outside the listed package files. It is used only by types.test.ts and is not globbed by getPhysicsDevices(), so this is acceptable as a test file and not a blocker; noted for the record.",
+      "severity": "minor",
+      "fix": "None required. Optionally add it to the package's file list in docs/curriculum/lab-build-plan.json so ownership is explicit."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts (3 files, 26/26 passed)",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts (2 files, 21/21 passed)",
+     "npx vitest run src/mentor/mentor.test.ts src/state/store.test.ts (1 failed / 61 passed: mentor.test.ts 'each diagnostic card resolves to a start state at the moment of the error', over-rotation)",
+     "npx vitest run src/ui/lab/diagnosticContext.test.ts src/ui/sim/sessionModules.test.ts src/mentor/bridgePedal.test.ts (3 files, 28/28 passed)",
+     "npx vite-node scratchpad/probe.ts (grid search of near-rca reachability for the over-rotation case, fixed vs legacy intermediate thresholds)"
+    ],
+    "tsc": "clean: npx tsc -p tsconfig.app.json --noEmit produced no errors"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "engagement.test.ts: with physics off, engagement uses difficultyScaled false by default; the THRESH row for 'advanced' is the single fixed set; the scaled behaviour is reachable only through { difficultyScaled: true }",
+      "met": true,
+      "evidence": "src/simulation/engagement.ts 230-260: THRESH is frozen, FIXED_ENGAGEMENT_THRESHOLDS = THRESH.advanced, and engagementThresholds() returns the fixed set unless opts.difficultyScaled === true. computeEngagement takes opts with the shared frozen NO_OPTS as its default. The only non-test callers (useSimulatorStore.ts:290, mentor/skillCards.ts:143, mentor/hosts/legacyDiagnostic.ts:110) pass no options, and grep finds no difficultyScaled outside engagement.ts and the tests. Tests in engagement.test.ts lines 172-206 and 248-250 pass. One deviation, noted only: the conus over-selection hazard check uses its own fixed, difficulty-free tolerance (CONUS_OVERSELECTION_THRESHOLDS, the former 'intermediate' selDist and alignSel). It is labelled MODEL PARAMETER with a measured reason (at the fixed alignment of 0.94 the conus could never be reached), and a test covers it (lines 231-246). Coronary capture radius and tolerance are the advanced row."
+     },
+     {
+      "criterion": "engagement.test.ts: beginner and advanced difficulty give identical engagement classification for the same tip pose across 200 seeded poses",
+      "met": true,
+      "evidence": "engagement.test.ts lines 208-229 build 200 poses from Rng('diag-engagement-fallback') across 4 roots and 8 catheters. The beginner, intermediate and advanced results are required to be equal with toEqual on the whole EngagementState. The test also checks that the poses cover selective-lm, selective-rca, non-selective and coaxial or near classes, and that the legacy scaled model classifies some of the same poses differently, so the comparison is not empty. Passes."
+     },
+     {
+      "criterion": "pressure.test.ts passes, with any case that relied on the beginner radius moved inside the fixed radius; lab.test.ts and integration.test.ts pass unchanged",
+      "met": true,
+      "evidence": "pressure.test.ts passes (6/6). Its original three cases (LV, noisy, aortic with a pigtail) do not depend on the capture radius. It adds a check across difficulties: one pose gives the same engagement and pressure at every difficulty, covering selective-lm, selective-rca, conus and non-selective, plus a reading that is not aortic. src/ui/lab/lab.test.ts (12/12) and src/ui/lab/integration.test.ts (9/9) pass, and neither file is in the package's file list."
+     },
+     {
+      "criterion": "types.test.ts: getPhysicsDevices() returns null with no implementation and a fixture implementation placed under impl/ otherwise",
+      "met": true,
+      "evidence": "src/ui/physics/types.ts eagerly globs ./impl/*.ts (excluding tests) and returns resolvePhysicsDevices(FILES), which is null while src/ui/physics/impl/ does not exist (confirmed). types.test.ts (5/5 pass) checks: resolvePhysicsDevices({}) is null; getPhysicsDevices() equals the real impl/ glob and is null when that glob is empty; with the fixture folder (__fixtures__/impl/fixture.ts) added to the same collector, the fixture is returned and it records init, load, command, step, latest and dispose. Ordering, duplicate ids and malformed implementations are also covered. The PhysicsDevices interface has init, load, remove, command, step, latest and dispose, and its reading carries vessel, depthMm, coaxiality, wallForce, openFraction, prolapsed and costMs. The fixture sits under __fixtures__/impl/ rather than the live impl/ folder so the app never registers it. This reasonably meets 'placed under impl/'."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/mentor/mentor.test.ts:936 ('procedural skill cards > each diagnostic card resolves to a start state at the moment of the error'), driven by the over-rotation card in src/mentor/skillCards.ts:99",
+      "problem": "This package caused a regression in another suite. The over-rotation drill starts on preset 'torque' with JR4 and engagement 'near-rca'. findStartControls used to search at 'intermediate' difficulty, which under the old scaled thresholds had nearDist 10 and alignCoax 0.85. Now the fixed advanced row applies (nearDist 8, alignCoax 0.9). A probe with vite-node on generateBatch('torque', 1, 'card:over-rotation')[0] shows near-rca was reachable before (JR3.5 at 5 grid points, TIG at 2) and is now unreachable with every catheter tried (JR4, AR, JL4, TIG, JR3.5, IKR). resolveDiagnosticStart therefore returns null, and mentor.test.ts fails 1 of 56 tests. The package's own tests, lab.test.ts, integration.test.ts, store, registries, bridgePedal, diagnosticTips, diagnosticContext, controls and sessionModules tests all pass.",
+      "severity": "major",
+      "fix": "This file is outside the package's list, so it needs an out-of-scope change by the owner of src/mentor/skillCards.ts. Give the over-rotation start a case where near-rca is reachable under the fixed thresholds: change line 99 to { kind: \"diagnostic\", preset: \"torque\", caseId: \"small-root-0\", catheterId: \"JR4\", engagement: \"near-rca\" }. A probe confirmed findStartControls(caseById('small-root-0'), 'JR4', 'near-rca') returns controls, and so do JR3.5, AR, IKR and TIG. An alternative that keeps a generated torque-preset case is to make findStartControls iterate over a few generateBatch('torque', n, seed) cases until one reaches the class, since cases #0 and #1 of generateBatch('torque', 6, 'probe') reach near-rca with JR4. Then rerun npx vitest run src/mentor/mentor.test.ts."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts (3 files, 26/26 passed)",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts (2 files, 21/21 passed)",
+     "npx vitest run src/mentor/mentor.test.ts (1 failed / 55 passed: over-rotation card start state null)",
+     "npx vitest run src/state/store.test.ts src/mentor/bridgePedal.test.ts src/mentor/registries.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/lab/diagnosticContext.test.ts (5 files, 54/54 passed)",
+     "npx vitest run src/ui/lab/controls/controls.test.ts src/ui/sim/sessionModules.test.ts (2 files, 15/15 passed)",
+     "vite-node scratchpad probes (probe.ts, probe2.ts): near-rca reachability under fixed versus scaled thresholds for the over-rotation card's case, and for named and generated torque cases"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (major, over-rotation skill card cannot reach 'near-rca'): I checked it and it is correct, but I did not apply it here. The fix belongs in src/mentor/skillCards.ts, which is not on this package's file list, and the finding itself gives that file to the owning package or the orchestrator. Passing { difficultyScaled: true } from this package would break the plan's rule that no lab uses the scaled rows, so I did not do that either.",
+     "Finding 2 (minor, src/ui/physics/__fixtures__/impl/fixture.ts lies outside the listed files): the finding asks for no code change. The file is test support, used only by types.test.ts, and getPhysicsDevices() does not glob it. The optional ownership note would go in docs/curriculum/lab-build-plan.json, which this package does not own, so I left it for the orchestrator."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/engagement.test.ts src/simulation/pressure.test.ts src/ui/physics/types.test.ts -> 3 files, 26 of 26 tests passed",
+     "npx vitest run src/mentor/mentor.test.ts -> 55 passed, 1 failed: 'each diagnostic card resolves to a start state at the moment of the error' (over-rotation: expected null not to be null). This is finding 1's failure.",
+     "A temporary check in src/simulation/zz_tmp_overrot.test.ts, deleted after it ran: on the 'torque' preset case (seed 'card:over-rotation'), resolveDiagnosticStart with engagement 'near-rca' returns null; with 'coaxial-rca' it resolves to JR4, and LegacyDiagnosticHost then classifies the start as coaxial-rca."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0, no errors.",
+    "notes": "I made no edits in this round, and the package's own files are unchanged. All of its tests pass and the typecheck is clean. outOfScope: finding 1 is still open and must be fixed by whoever owns src/mentor/skillCards.ts. That file is outside this package's file list (engagement.ts, engagement.test.ts, pressure.test.ts, ui/physics/types.ts, types.test.ts). The fix is option (a) from the finding: in SKILL_CARD_TEMPLATES['over-rotation'] (src/mentor/skillCards.ts, around line 99), change engagement from 'near-rca' to 'coaxial-rca' and keep preset 'torque' and catheterId 'JR4'. Do not pass difficultyScaled in findStartControls. My check showed coaxial-rca resolves with JR4 and the host classifies it as coaxial-rca, which stops short of seated. After that edit, rerun npx vitest run src/mentor/mentor.test.ts, which should give 56 of 56. Finding 2: the orchestrator may want to add src/ui/physics/__fixtures__/impl/fixture.ts to this package's file list in docs/curriculum/lab-build-plan.json. The temporary check file I made is deleted, and nothing is left in src/."
+   }
+  ]
+ }
+}

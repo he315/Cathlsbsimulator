@@ -1,0 +1,148 @@
+[
+  {
+    "lab": "angio-pci + impella + haemo",
+    "what": "One shared-patient cardiogenic shock case chained across the haemodynamics lab, the microaxial pump console and the fluoroscopic PCI lab: anterior STEMI with SCAI stage C shock (lactate, MAP, drug doses shown), a venous sheath and pulmonary artery catheter giving RA, PA, wedge and Fick output before the coronary injections, a decision point for pump placement before PCI, an occluded proximal LAD culprit plus severe non-culprit RCA and circumflex lesions and a chronic occlusion that a wire can wrongly enter, slow flow after stenting, and post-PCI numbers that either meet the weaning targets or show a failing RV. A 'cardiogenic shock' context flag (or the 'hypotension' event raised throughout) so that the shock tips appear in plan, wire, physiology and finish phases. The 'hypotension' event must be raised in the plan, wire and select phases of a shock case: tips mcs-shock-support-before-pci (mcs select + hypotension) and pci-shock-chronic-not-culprit (pci wire + hypotension) now depend on it, so that they no longer appear in elective cases. The haemodynamics display should show the Tehrani shock definition (Fick CI, wedge, CPO, PAPi below 1.0) alongside the NCSI thresholds (PAPi 0.9).",
+    "learnerDoes": "Calls the shock team, chooses guided femoral arterial plus venous access, records CPO and PAPi before the angiogram, agrees support before PCI, engages in the STEMI order, names the culprit, treats only it, gives intracoronary vasodilator for slow flow, declines FFR, recalculates CPO and PAPi after PCI, chooses weaning, right-sided support or escalation, and images the cannulated femoral artery before leaving. States which PAPi threshold (1.0 for the Tehrani definition, 0.9 for NCSI weaning and RV failure) applies at each decision, and checks the NCSI exclusions before choosing a pump.",
+    "success": "Culprit-only PCI with TIMI 3 flow, no FFR or non-culprit stenting in shock, correct CPO and PAPi before and after PCI with the matching next step, a vascular check before leaving, and a written staged plan.",
+    "tips": [
+      "pci-shock-one-call-team",
+      "access-shock-femoral-and-vein",
+      "haemo-shock-measure-first",
+      "haemo-support-cpo-papi",
+      "mcs-shock-support-before-pci",
+      "pci-shock-each-true-culprit",
+      "pci-shock-chronic-not-culprit",
+      "pci-shock-culprit-only",
+      "pci-support-ffr-in-shock",
+      "mcs-manage-post-pci-escalation"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-shock-setup",
+      "cp-complex-patients-shock-culprit"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "VF events in the PCI lab with a working defibrillator panel: VF on reperfusion, VF after an injection through a damped guide or into a plugged ostium, torsades or VF after intracoronary adenosine (a conscious patient who can be asked to cough), and VF that persists despite shocks. The panel needs pad positions, synchronised and unsynchronised modes, energy selection, a running count of shocks, adrenaline and amiodarone with timings, and a team panel where the learner names the person who shocks and asks the radiographer to move the C-arm. Pulseless electrical activity from tamponade after a wire perforation, with a pericardiocentesis action available at once. Also: a defibrillator left in synchronised mode that does not discharge in VF; a cardioversion mode for poorly tolerated VT or atrial arrhythmia with lead choice (tallest QRS), sync marker on the R wave, starting energy (200 J monophasic or 150 J biphasic for stable arrhythmias) and firm paddle pressure; ALS drug timing (adrenaline after the third shock and every 3–5 minutes, amiodarone 300 mg after three shocks and 150 mg after five, stacked opening shocks counted as the first shock); a severe contrast reaction ('contrast-reaction' event) with IM then IV adrenaline options; air embolism treated with oxygen by mask, a distal wire and aspiration; and a pericardiocentesis action with fluoroscopic and pressure guidance and a 20–50 mL drainage response.",
+    "learnerDoes": "Recognises VF, keeps the wire, delivers up to three quick unsynchronised high-energy shocks, switches off synchronised mode if it was left on, starts compressions and the ALS drug sequence, withdraws a catheter that caused the VF before re-injecting, asks a conscious patient to cough after adenosine, and drains the pericardium immediately when tamponade causes arrest. Switches a non-discharging defibrillator out of synchronised mode, times the ALS drugs correctly, treats anaphylaxis in Oxford's order, and drains tamponade at once under fluoroscopy.",
+    "success": "Return of circulation without losing wire position, correct mode and energy at the first shock, the cause identified and removed, and no echo delay in tamponade arrest.",
+    "tips": [
+      "pci-mon-vf-roles",
+      "pci-arrest-defib-settings",
+      "diag-vf-shock-then-amiodarone",
+      "pci-arrest-adenosine-cough",
+      "pci-arrest-tamponade-drain",
+      "pci-arrest-mechanical-cpr",
+      "pci-arrest-oblique-views"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-lab-arrest"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "VF during diagnostic angiography: an RCA injection into the conus branch, a JR that damps on a stenosed ostium, contrast that does not clear from the artery, and plugging of a small intermediate branch, each able to trigger VF on the next injection; the 'vf' event raised with the catheter position preserved so that the debrief can show the cause.",
+    "learnerDoes": "Defibrillates, then withdraws the catheter from the ostium before any further injection, re-engages more carefully or with a smaller catheter, and names the cause.",
+    "success": "No repeat injection from the same obstructive position after VF; correct identification of conus selection, damping or contrast hold-up.",
+    "tips": [
+      "diag-vf-catheter-cause",
+      "diag-vf-shock-then-amiodarone"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-lab-arrest"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "ecmo",
+    "what": "An extracorporeal CPR scenario: arrest in the lab with mechanical compressions running, a contraindication screen (aortic regurgitation, aortic dissection, uncontrolled bleeding), cannulation under CPR in which the femoral angiogram is skipped and the antegrade leg sheath placed after flow starts, fluoroscopic wire checks (venous wire in the superior vena cava, arterial wire in the thoracic aorta), cannula sizes by sex (25 Fr venous; 15 Fr or 17 Fr arterial), a wet connection, and a near-infrared leg saturation display that triggers the antegrade perfusion catheter below 50% or with a gap over 15%. Challenges to include: resistance at the skin entry (more dilation), femoral venous thrombosis or an IVC filter (contralateral femoral or internal jugular vein), a wire that has slipped back into the right atrium, a prolapsed arterial wire, and bubbles in the arterial (side port) or venous (circuit or reconnect) line; mechanical CPR running with its own complication risk (rib or sternal fracture).",
+    "learnerDoes": "Screens for contraindications, chooses right femoral vein and left femoral artery, gives heparin, confirms both wire positions on fluoroscopy before advancing either cannula, connects without air, starts flow, then adds and connects the antegrade sheath when the leg saturation falls. Punctures both vessels under ultrasound, handles each challenge as Brilakis describes, and decides whether a 15–17 Fr arterial cannula needs an antegrade catheter from the NIRS readings.",
+    "success": "Flow established with no cannula in a wrong position, no air in the circuit, and leg perfusion restored by the antegrade sheath.",
+    "tips": [
+      "mcs-ecpr-check-before-cannulating",
+      "mcs-ecpr-cannulate-under-cpr",
+      "pci-arrest-no-rosc-ecmo",
+      "mcs-ecmo-groins"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-lab-arrest"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Resuscitated out-of-hospital arrest case generator: a post-ROSC ECG with or without persistent ST elevation, haemodynamic status, the arrest history (witnessed, bystander CPR, first rhythm, time to return of circulation, adrenaline given) and vasopressor use, with a triage decision (lab now, or intensive care first with delayed angiography) before the lab opens; radial access in a patient on vasopressors carries a high spasm probability. A 'post-arrest' context flag is needed so that tip diag-ohca-ecg-sorts appears only in these cases (it currently relies on its opening condition and the st-elevation event).",
+    "learnerDoes": "Sends persistent ST elevation to primary PCI whether or not the patient responds, sends stable patients without ST elevation to intensive care first, chooses femoral access when support may be needed, names who defibrillates and keeps pads on.",
+    "success": "Triage matches the 2023 ESC recommendations (class I with persistent ST elevation, class III for routine immediate angiography in stable patients without it), and no time is lost to radial spasm in a vasopressor-dependent patient.",
+    "tips": [
+      "diag-ohca-ecg-sorts",
+      "access-arrest-radial-spasm"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-ohca"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Coronary engagement through a transcatheter valve frame (the brief's proposed build): a self-expanding supra-annular frame with selectable implant depth (optimal or high), commissural post orientation relative to each ostium, sinus width and ostial height, and a balloon-expandable frame with optimal or high implant. Catheters can pass through frame cells; an extra back-up guide crossing a cell at an acute angle can kink and become trapped; a wide sinus puts the RCA beyond a JR4. A 'prior TAVI' context flag so that TAVI tips appear only in these cases.",
+    "learnerDoes": "Reviews the valve type and depth, chooses femoral access, engages the left main with a JL3.5 or JL3 or, for a high implant, a short-tipped JR4 through a cell above the ostium, engages the RCA with a JR4 or Ikari right and changes to a JR4.5, JR5 or AR2 for a wide sinus, crosses perpendicularly at ostial level, and backs a caught guide out over a balloon or wire.",
+    "success": "Selective or adequate non-selective images of both coronaries without guide entrapment or deep intubation, and the catheters and cell used recorded in the report.",
+    "tips": [
+      "diag-tavr-left-catheter",
+      "diag-tavr-cross-perpendicular",
+      "diag-tavr-rca-wide-sinus",
+      "pci-tavr-guide-trapped",
+      "pci-tavr-wire-then-rail"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-tavr-after"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "PCI through a transcatheter valve: an anterior STEMI in a patient with a high self-expanding implant in which the guide can only sit non-coaxially, requiring the coronary to be wired first and the guide or a guide extension railed into the ostium, followed by a heavily calcified culprit that needs lesion preparation before stenting.",
+    "learnerDoes": "Wires the coronary from a non-selective position, rails a guide extension into the ostium, avoids deep intubation, prepares the calcified lesion before stenting and records how access was achieved.",
+    "success": "Reperfusion with a well-expanded stent and no entrapment, damping or dissection.",
+    "tips": [
+      "pci-tavr-wire-then-rail",
+      "pci-tavr-guide-trapped"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-tavr-after"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab + haemo",
+    "what": "TAVI work-up study: a severe aortic stenosis patient with a slow-rising, low-amplitude aortic trace that is not damping, high coronary flow that a small diagnostic catheter cannot fill (streaming), an aortogram for the valve–aorta angle, and an iliofemoral run with a graded pigtail above the bifurcation (table height, panning to both femoral heads, 20 mL at 20 mL/s, measured diameters). Optional valve crossing with an AL1 and straight hydrophilic wire, exchanged for a pigtail. Haemodynamic grading of aortic stenosis against Oxford's Table 5.1 (valve area, peak and mean gradient), with simultaneous LV–aortic pressures versus a pull-back peak-to-peak gradient so that the learner sees the timing error of the pull-back.",
+    "learnerDoes": "Distinguishes the aortic stenosis pulse from damping, upsizes to a larger lumen without side holes when the artery will not fill, declares a non-diagnostic run rather than reading streaming as stenosis, performs the aortogram and the iliofemoral run correctly, and crosses the valve only when indicated.",
+    "success": "A complete work-up (coronaries, aortogram, iliofemoral run with measurements) with no false stenosis reported from under-filled runs and no unnecessary valve crossing.",
+    "tips": [
+      "haemo-as-slow-rise-not-damping",
+      "diag-as-high-flow-fill",
+      "structural-tavi-iliofemoral-run"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-tavr-before"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "tavi",
+    "what": "A re-access risk display in the TAVI planning and deployment stages: from the CT inputs (sinotubular junction, sinus height and width, leaflet length and bulk, coronary height) and the chosen valve, commissural orientation, skirt height and implant depth, show how hard later coronary engagement will be and why.",
+    "learnerDoes": "Reads the anatomy, chooses the valve and a target depth, and states the predicted difficulty of later coronary access and the factors driving it.",
+    "success": "The learner names the dominant re-access factors for the case and links them to the catheter strategy taught in the TAVI re-access lesson.",
+    "tips": [
+      "structural-tavr-plan-reaccess"
+    ],
+    "lessonIds": [
+      "cp-complex-patients-tavr-before",
+      "cp-complex-patients-tavr-after"
+    ],
+    "priority": "P3"
+  }
+]

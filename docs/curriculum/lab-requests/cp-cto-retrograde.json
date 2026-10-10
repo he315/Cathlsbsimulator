@@ -1,0 +1,128 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A retrograde stage for the mid-RCA CTO scenario, with a collateral-selection step. After dual injection the learner sees two or three septal channels from the LAD (differing in tortuosity, size, stent jailing of the origin, exit angle and distance from the exit to the distal cap) and one tortuous epicardial channel from the circumflex. The learner picks a channel, chooses a wire class and tip shape (large bend to enter, small bend to cross), surfs it (gentle advance, retreat and redirect when the tip buckles) or maps it with a backflow-checked microcatheter tip injection, then brings a microcatheter across. Old films are available alongside today's, and the dominant collateral can shift during the case. A deflectable-tip microcatheter option helps enter an acutely angled septal but must be straightened before it is moved. A stuck microcatheter can be solved by low-pressure septal dilation (balloon 1.5 mm or less, 2–4 atm), more support (guide extension in the donor guide, anchoring) or a lower-profile microcatheter. Requires a donor guide and an ACT readout with the retrograde target (above 350 s, Brilakis's figure; analysers differ).",
+    "learnerDoes": "Grades the channels, selects the septal with the best combination of straightness, size, angles, no stent jailing and short distance to the cap; crosses it with the right wire shapes; uses septal dilation when the microcatheter stalls; parks the microcatheter at the distal cap.",
+    "success": "Microcatheter at the distal cap through the chosen septal with no collateral perforation; choosing the epicardial channel or balloon-dilating it, forcing a stiff wire, spinning a push-only microcatheter or retrograde work with ACT below target are scored as errors with visible consequences (perforation blush, microcatheter damage, donor thrombus).",
+    "tips": [
+      "pci-cto-retro-septal-surf",
+      "pci-cto-strategy-microcatheter-injection",
+      "pci-cto-retro-microcatheter-stalls",
+      "pci-cto-retro-donor-ischaemia"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-septal"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An epicardial (and ipsilateral) variant of the retrograde stage: a contralateral epicardial channel from the circumflex to the posterolateral RCA, and a second scenario with an ipsilateral epicardial loop in a circumflex CTO worked from one guide or two guides in the same artery (ping-pong). Balloon dilation of the channel is possible but produces a perforation with rapid pericardial filling.",
+    "learnerDoes": "Chooses an ultra-low tip-load or soft polymer-jacketed wire and a small-outer-diameter microcatheter, avoids balloon dilation, adds support from the guide side, and chooses a connection without tension (portal technique) at the end.",
+    "success": "Crossing without perforation and a portal-technique connection; any ballooning of the epicardial channel triggers the collateral-perforation pathway.",
+    "tips": [
+      "pci-cto-retro-epicardial-rules",
+      "pci-cto-retro-collateral-perforation"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-epicardial"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A prior-CABG CTO scenario: occluded native RCA, LIMA to LAD (the LAD depends on it and gives septal collaterals) and a patent vein graft to the PDA with an acutely angled distal anastomosis. Equipment length matters (100 vs 90 cm guides, 135 vs 150 cm microcatheters, 300 cm and externalisation wires). An angled-tip (120°) microcatheter turns the wire back at the anastomosis. After native recanalisation the graft shows competitive flow and can be closed with a vascular plug chosen from a size list, landed in a segment the learner measures, repositioned before release. A second catheter in the graft can be used purely to show the target while equipment goes down the native artery. A distal branch perforation after stenting may bleed slowly and declare itself hours later, so close monitoring and no IIb/IIIa inhibitor or cangrelor are part of the scoring.",
+    "learnerDoes": "Rejects the LIMA route, plans reach, uses the angled microcatheter, completes reverse CART and native stenting, then sizes a plug 30–50% larger than the graft at a landing zone long enough for the device and releases it.",
+    "success": "Native RCA open through the vein graft route without ischaemia from the LIMA, plug sized within 30–50% oversize and released in a branch-free segment; a LIMA route provokes global ischaemia (ST change, hypotension) that resolves only when the equipment is withdrawn.",
+    "tips": [
+      "pci-cto-retro-lima-donor",
+      "pci-cto-retro-svg-angled-microcatheter",
+      "pci-cto-retro-svg-plug",
+      "pci-graft-route-reach",
+      "pci-lima-pseudolesion",
+      "pci-cabg-perforation-act-now"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-grafts"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Stepwise retrograde completion in the mid-RCA CTO scenario: retrograde wiring attempt at the distal cap, then reverse CART with wire overlap, antegrade balloon size choice, IVUS showing where each wire lies and the vessel size, and an optional guide extension advanced towards the overlap. A power injection or forceful antegrade injection after proximal dilation can create an aorto-coronary dissection (spreading ostial stain) that requires stopping injections through the guide (any distal check only through a dual-lumen microcatheter or aspiration catheter in the distal vessel) and an ostial stent protruding 1–2 mm into the aorta.",
+    "learnerDoes": "Performs reverse CART; when it fails, images with IVUS, upsizes the balloon or brings a guide extension; avoids power injections; treats an ostial stain correctly if it occurs.",
+    "success": "Retrograde wire into the proximal true lumen and antegrade guide; no power injections after proximal dilation; correct ostial stenting if a dissection is triggered.",
+    "tips": [
+      "pci-cto-retro-reverse-cart-troubleshoot",
+      "pci-cto-retro-no-power-injection",
+      "pci-cto-retro-aortocoronary-dissection"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-reverse-cart"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "The connection step: once the retrograde wire is in the antegrade guide, the learner chooses between advancing the retrograde microcatheter and externalising a 330–350 cm wire, trapping the wire in the guide with a balloon, snaring in the aorta (allowed only with an externalisation wire after the microcatheter has crossed), tip-in to an antegrade microcatheter (or balloon) positioned at the guide's outer curve followed by antegrade conversion, catch-it in the ascending aorta when the wire will not enter the guide, rendezvous or deep dive rendezvous inside the occlusion, or antegrade microcatheter probing when the retrograde microcatheter is already in the guide. Each option is available only in the situation the lesson's 'When' column gives. Over an externalised wire, the antegrade balloon and stent tips and the retrograde microcatheter tip are tracked; contact causes interlocking and entrapment. Rail tension is displayed and high tension strains the collateral and the donor ostium.",
+    "learnerDoes": "Picks a connection suited to the collateral, keeps device tips apart and rail tension low, and frees an interlocked system without pulling hard if it happens.",
+    "success": "Antegrade wire or externalised rail established and stents delivered without interlocking, donor ostial injury or collateral tear.",
+    "tips": [
+      "pci-cto-retro-connect-options",
+      "pci-cto-retro-no-interlock",
+      "pci-cto-retro-microcatheter-entrapment"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-connect"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "End-of-case and complication pathways for retrograde work: a final donor injection after the retrograde equipment is removed that can show (a) nothing, (b) a contained septal blush with a small septal haematoma on echo that may grow over time, or (c) contrast streaming from an epicardial channel into the pericardium with falling blood pressure. Coils (0.014 and 0.018 inch compatible, pushable and detachable) can be delivered through a microcatheter from either artery; sealing must be confirmed by injecting both arteries. The tamponade hands over to the pericardiocentesis lab on the same patient, and a growing septal haematoma with outflow obstruction requires circulatory support. Echo distinguishes septal haematoma from a pericardial collection (dry tamponade is possible). Coil delivery requires choosing a microcatheter that matches the coil (most stock coils need 0.018 inch), and sealing may take a few minutes to show.",
+    "learnerDoes": "Always performs the final donor and target injections; observes a stable septal blush with echo, treats it if it grows (coils at both ends, or microcatheter aspiration) and recognises that it can still compress after coiling; for epicardial perforation applies general measures, drains the pericardium if unstable, coils the channel and confirms sealing from both sides; reverses heparin only after equipment is out.",
+    "success": "Correct pathway chosen for each finding; no pericardiocentesis for a septal haematoma; no heparin reversal with equipment in the coronaries; contralateral confirmation of sealing.",
+    "tips": [
+      "pci-cto-retro-final-donor-check",
+      "pci-cto-retro-septal-haematoma",
+      "pci-cto-retro-collateral-perforation",
+      "pci-cto-retro-donor-ischaemia"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-complications"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Tip-context events for retrograde work (needs a change to src/content/lab/tips.ts LAB_EVENTS, outside this module). Today the retrograde tips can only trigger on 'total-occlusion', which the vocabulary defines as an occlusion that is acute or chronic, so they would also show while wiring an acutely occluded STEMI culprit, and they compete with the cp-cto-strategy tips for the 6-tip limit. Requested: a 'chronic-occlusion' event raised only in CTO scenarios, and a 'retrograde' event raised once a wire or microcatheter is in a collateral or graft route (or LAB_EVENTS entries such as 'retrograde-collateral', 'retrograde-connection' and 'collateral-perforation'), plus a route value (septal, epicardial, SVG, LIMA). Once they exist, the retrograde tips in this module should be retriggered on them: septal, epicardial, connection, interlock, donor-ischaemia, reverse CART and septal-haematoma tips on 'retrograde'; graft-route, LIMA-donor and graft-closure tips on 'chronic-occlusion' with the native vessel.",
+    "learnerDoes": "Nothing new: the events make each retrograde tip appear at its own moment.",
+    "success": "Each tip in this module appears only at its step: septal tips while crossing a septal, epicardial tips in an epicardial channel, connection tips once the wire is in the antegrade guide, perforation tips only for collateral perforation.",
+    "tips": [
+      "pci-cto-retro-septal-surf",
+      "pci-cto-retro-microcatheter-stalls",
+      "pci-cto-retro-donor-ischaemia",
+      "pci-cto-retro-epicardial-rules",
+      "pci-cto-retro-lima-donor",
+      "pci-cto-retro-svg-angled-microcatheter",
+      "pci-cto-retro-svg-plug",
+      "pci-cto-retro-reverse-cart-troubleshoot",
+      "pci-cto-retro-aortocoronary-dissection",
+      "pci-cto-retro-no-power-injection",
+      "pci-cto-retro-connect-options",
+      "pci-cto-retro-no-interlock",
+      "pci-cto-retro-final-donor-check",
+      "pci-cto-retro-septal-haematoma",
+      "pci-cto-retro-collateral-perforation"
+    ],
+    "lessonIds": [
+      "cp-cto-retrograde-septal",
+      "cp-cto-retrograde-epicardial",
+      "cp-cto-retrograde-grafts",
+      "cp-cto-retrograde-reverse-cart",
+      "cp-cto-retrograde-connect",
+      "cp-cto-retrograde-complications"
+    ],
+    "priority": "P1"
+  }
+]

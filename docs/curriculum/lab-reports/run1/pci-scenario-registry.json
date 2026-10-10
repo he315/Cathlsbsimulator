@@ -1,0 +1,314 @@
+{
+ "package": "pci-scenario-registry",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built the PCI scenario registry. The four hard-coded PCI_SCENARIOS are now typed PciScenarioDefs (shared Lesion type, several lesions per case, anatomy, patient, setup, start states, hidden axes drawn by seed, variantAxes). They live in a pack file that registry.ts finds by import.meta.glob, with an engine-free sibling core.launch.ts. legacy.ts toPciScenario builds the engine's PciScenario. The legacy target/calcium fields stay in charge of the active lesion, so tests that override `target` and the ladder variants still work. generate.ts resolveScenario(id, variant, {seed}) handles ladder variant ids through the catalogue's pciVariantById/applyPciVariant; any other variant string is treated as a seed. geometry.ts PciGeom gained lesions[] and targetIdx, plus lesionGeom() and setTarget(g, idx), which returns a new geometry and leaves the input unchanged. actions/scenario.ts: scenarioCase now builds every lesion, dominance, root, variants, grafts, scenarioId and case events; PCI_SCENARIOS and SCENARIO_BY_ID are taken from the registry; new startPci() opens a named start ('guide-in-root' default, 'guide-engaged', 'wire-across', which parks the wire in the true lumen beyond the lesion). catalogue.ts now builds PCI_BASES from registry defs marked ladderBase; the calcium rule comes from def.variantAxes, and every ladder variant is unchanged. src/ui/pci/launch.ts resolves launch params or a full-case transfer (transfer first) into scenario, start, mode, technique/step/workspace and events, through takePciLaunch() and the usePciLaunch() hook. The core four give the same initPci state, the same anatomy case fields and the same coronary-tree radii as before, so the renderer output should not change.",
+    "filesChanged": [
+     "src/simulation/pci/scenarios/types.ts",
+     "src/simulation/pci/scenarios/registry.ts",
+     "src/simulation/pci/scenarios/generate.ts",
+     "src/simulation/pci/scenarios/legacy.ts",
+     "src/simulation/pci/scenarios/packs/core.ts",
+     "src/simulation/pci/scenarios/packs/core.launch.ts",
+     "src/simulation/pci/scenarios/scenarios.test.ts",
+     "src/simulation/pci/scenarios/launch.test.ts",
+     "src/simulation/pci/actions/scenario.ts",
+     "src/simulation/pci/geometry.ts",
+     "src/ui/pci/launch.ts",
+     "src/content/mentor/catalogue.ts",
+     "src/simulation/pci/scenarios/tips.test.ts (new test file)"
+    ],
+    "testsAdded": [
+     "src/simulation/pci/scenarios/scenarios.test.ts (13 tests: registry has no problems; every entry builds a tree and its lesion geometry; core four match the frozen pre-registry literal in initPci state, anatomy case and tree radii; ladder bases and every L/X variant match the old algorithm; resolveScenario variants and seeds; scenario events; multi-lesion fixture with setTarget and target override; collect problem detection; start states for all four core scenarios; launch seed reaches the rng)",
+     "src/simulation/pci/scenarios/launch.test.ts (8 tests: core.launch.ts found and the whole content validates; unknown scenario, start and exam variant refused in a drill block and in a links entry; starts and practice variants declared, no exam variants; practice index lists each scenario under every named lesson and case, and all ids resolve; resolvePciLaunch and takePciLaunch for a link, a transfer, and unknown ids)",
+     "src/simulation/pci/scenarios/tips.test.ts (3 tests: rca-cto events plus phase finish give pci-post-ecg-complex; a bifurcation-site fixture gives pci-post-ecg-bifurcation; no waiting.ts entry names pci-scenario-registry)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/ src/simulation/pci/facade.test.ts src/progress/progress.test.ts: 5 files, 98 tests passed",
+     "npx vitest run src/simulation/angioPci.test.ts src/simulation/pci/coronaryWire.test.ts src/simulation/pci/guide.test.ts: 32 passed",
+     "npx vitest run src/simulation/pci/indeflator.test.ts ivus.test.ts lesionAssessment.test.ts pressureWire.test.ts stentGeometry.test.ts src/simulation/complications/complications.test.ts: 35 passed",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts src/content/lab/retarget.test.ts (with progress.test.ts): 105 passed",
+     "npx vitest run src/content/content.test.ts: 53 passed, 6 failed, all in 'lab launch links'. They failed the same way with core.launch.ts moved out of the tree (checked): the cause is default.launch.ts plus the test's one-track fixture. 'existing content and every .launch.ts validate' passes with core.launch.ts",
+     "npx vitest run src/mentor/mentor.test.ts src/ui/lab/labRun.test.ts: 73 passed, 1 failed (diagnostic skill card 'over-rotation' start state). It also fails with the pre-package catalogue.ts put back, so it is not this package's"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no output)",
+    "acceptance": [
+     {
+      "criterion": "scenarios.test.ts: every registry entry builds a coronary tree, pciGeom finds every lesion with startMm < endMm, and toPciScenario(core four) reproduces the current initPci state (severity, resistance, guide id)",
+      "status": "met",
+      "evidence": "The tests 'every registry entry builds a coronary tree...' and 'toPciScenario(core four) reproduces...' check deep equality of initialPci against a frozen copy of the old PCI_SCENARIOS, with three option sets. An extra test checks that the anatomy case fields, the tree radii and g.lesion are the same as before. All pass."
+     },
+     {
+      "criterion": "resolveScenario('rca-calcified','pci-rca-calcified~L3') is deterministic and equals catalogue pciVariantById output",
+      "status": "met",
+      "evidence": "scenarios.test.ts: two calls give equal results; the target fields equal pciVariantById('pci-rca-calcified~L3'); the legacy fields equal applyPciVariant(SCENARIO_BY_ID['rca-calcified'], v); 'L3' and '~L3' resolve the same; a variant of another scenario is refused."
+     },
+     {
+      "criterion": "launch.test.ts: validateLaunchLinks with a fixture link rejects an angio-pci link with an unknown scenario or start id",
+      "status": "met",
+      "evidence": "launch.test.ts rejects both in a lesson drill block and in a .launch.ts links entry, and also refuses an exam variant. Valid start and variant links pass."
+     },
+     {
+      "criterion": "browser: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) then mount gives window.__pci.s.id === 'rca-cto'",
+      "status": "needs-browser",
+      "evidence": "Headless half is met: resolvePciLaunch({scenario:'rca-cto',mode:'exam'}) gives resolved.scenario.id 'rca-cto' and mode exam, and takePciLaunch takes a store request once. The mount half needs src/ui/sections/AngioPci.tsx (owned by pci-lab-shell-session) to call usePciLaunch/takePciLaunch. That file is not in this package's list, so the browser check cannot pass yet."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in core.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "status": "met",
+      "evidence": "launch.test.ts: for each of the 86 lesson ids and 2 case ids, the lesson or case exists in TRACKS/ALL_CASES and the practice index has an angio-pci entry {scenario, mode:'guided'} from core.launch.ts. PRACTICE_INDEX.known.problems is empty."
+     },
+     {
+      "criterion": "Tips: after the action that raises 'cto', tipsFor(ctx,20) includes pci-post-ecg-complex; after the action that raises 'bifurcation' it includes pci-post-ecg-bifurcation; every waiting.ts entry naming pci-scenario-registry becomes satisfiable",
+      "status": "partly",
+      "evidence": "tips.test.ts: the registry's scenario events for rca-cto ('cto') with phase finish give pci-post-ecg-complex. A definition declaring the 'bifurcation' site gives pci-post-ecg-bifurcation, but none of the core four is a bifurcation, so that check uses a test fixture. waiting.ts has no entry naming this package (checked). Not done: no PCI event source raises these events in the live lab, and the 'finish' phase is not raised either. Both belong to pci-tip-context (src/ui/lab/pciEvents/, not created yet); both tips are waiting on pci-tip-context in waiting.ts."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/sections/AngioPci.tsx (pci-lab-shell-session): call usePciLaunch()/takePciLaunch() on mount, then build the case with startPci({def, scenario: resolved.scenario, seed: resolved.seed}, g, launch.start.id) and the launch mode. Until then the browser criterion cannot pass and lessons' 'Practise this in the lab' rows open the default case.",
+     "src/content/content.test.ts (found-launch-links): the 6 'lab launch links' fixture tests validate a one-lesson track against every real .launch.ts, so every lessonId in other launch files is reported as unknown. They already failed before this package because of src/simulation/session/scenarios/default.launch.ts, and core.launch.ts adds more of the same errors. Fix: filter the errors to the fixture lesson, or validate against the full TRACKS.",
+     "PCI event source (pci-tip-context, src/ui/lab/pciEvents/): raise registry.scenarioEvents()/ResolvedPciScenario.events plus the launch's events for the whole run, raise the 'finish' phase, and export `raises`. That would make pci-post-ecg-complex and pci-post-ecg-bifurcation reachable in the lab.",
+     "docs/realism/facts: record MP_START_WIRE in src/simulation/pci/actions/scenario.ts (where the 'wire-across' start parks the tip: 30 mm beyond the shoulder, at least 5 mm beyond, 5 mm short of the end-of-vessel danger zone, 0.5 mm lumen margin) as a MODEL PARAMETER. The docs are not in this package's files.",
+     "src/mentor/mentor.test.ts 'each diagnostic card resolves to a start state at the moment of the error' (over-rotation) fails, and also fails with the pre-package catalogue.ts restored, so it is unrelated to this package (most likely a diagnostic package)."
+    ],
+    "notes": "Snapshots of the three listed files that already existed (actions/scenario.ts, geometry.ts, catalogue.ts) are in datasets/tmp/wp-snapshots/pci-scenario-registry/, with .started. The other listed files are new.\n\nChanges and design choices:\n- The core packs keep their content word for word. The lesions add only fields the old data already implied: calcium grades, role 'target', morphology 'thrombus' for lcx-stemi and 'cto' for rca-cto, sites ['cto'] for rca-cto, and a case event 'stemi' for lcx-stemi. No eGFR, CTO cap shape, thrombus grade or guide alternatives were invented; those fields are left absent.\n- Lesson links in core.launch.ts are the lessons whose PCI-lab drill task names the scenario (for example 'In the PCI lab (calcified mid-RCA)'). rca-cto also links cases cx-case-rca-cto and cp-cto-antegrade-case-rca. I found them with a scratch vite-node script over TRACKS.\n- core.launch.ts declares the 25 practice ladder variants (pci-<id>~L0..L24); a test checks the count against LADDER_PARAMS. Exam variants are left undeclared, so lessons cannot link them.\n- setup.guideInRoot defaults to true, as the design says, so the default start is 'guide-in-root' (guide not engaged). The current AngioPci.tsx still calls initialPci(s), which opens with the guide engaged. Nothing changes until the lab shell adopts startPci; its owner should confirm the default start.\n- setup.french 7 is applied by startPci through initialGuide; initialPci in state.ts (not mine) still hard-codes 6.\n- PCI_BASES order changed from lad-focal, lcx-stemi, rca-calcified, rca-cto to registry order (lad-focal, rca-calcified, lcx-stemi, rca-cto). Nothing depends on the order; logbook uses find().\n- ladderFor still reports playableRungs 1 for PCI, because the lab UI does not take variants yet.\n- PCI_SCENARIOS leaves out held-out definitions and keeps lad-focal first, since the core pack is always ordered first.\n- New facade exports (startPci, startInitOptions, MP_START_WIRE) come through `export *`, which facade.test.ts allows.\n- No renderer file was touched, and the core four's tree radii are identical, so no realism re-capture is needed."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve with minor fixes. The design is fully and correctly implemented within the package's files. Of the 12 listed files, three existed before (geometry.ts, actions/scenario.ts, catalogue.ts) and their diffs against the snapshots match the builder's report. The others are new, plus the extra test src/simulation/pci/scenarios/tips.test.ts, which the rules allow. The other files under src/ changed after .started are src/simulation/session/{autopilot,caseSession,scenarios/index,scenarios.test,ledgerTips.test}.ts, src/state/useProcedureStore{,.test}.ts, src/ui/lab/useLabTips.ts, src/ui/sections/ProcedureLab.tsx and src/ui/sim/Simulator.tsx. Each is listed by another package (proc-foundation-scenarios-ledger, diag-tip-context, found-lab-session-plumbing and others), and none imports the PCI registry. I ran the checks myself. The 3 package test files passed 24/24. facade.test.ts, angioPci.test.ts and progress.test.ts passed 88/88. practiceIndex.test.ts and reachability.test.ts passed. `npx tsc -p tsconfig.app.json --noEmit` is clean. Three things from the report hold up. First, the core four still build the same state: the frozen pre-registry literal gives a deep-equal initPci state, the same anatomy-case fields and the same tree radii. Second, the renderer is unaffected: coronaryTree.ts derives calcium and thrombus from lesion.kind only, so the new lesion fields (calcium, morphology, sites, role) on AnatomyCase.lesions do not change it. Third, the lesson links are justified: I checked all 86 core.launch.ts lessonIds against their drill task text, and each names its scenario, with one exception (finding 4). Every ladder variant (L and X) matches the old algorithm, and the engine defaults are unchanged (initialPci in state.ts is untouched). The current AngioPci.tsx still calls initialPci(s), so behaviour in the live lab is unchanged. No new clinical numbers are unsourced: MP_START_WIRE is labelled MODEL PARAMETER in code. No ground truth reaches a live screen (the hidden draws are only returned in ResolvedPciScenario), and there are no per-frame allocations. Two failures elsewhere are real and not this package's. content.test.ts fails 6 'lab launch links' fixture tests; core.launch.ts adds about 88 lesson-id errors to failures that default.launch.ts already caused, and the fix belongs to the found-launch-links owner. The mentor.test.ts failure on the diagnostic 'over-rotation' card is unrelated. The browser criterion, and making the tips reachable in the lab, depend on pci-lab-shell-session (AngioPci.tsx) and pci-tip-context, as the builder reported.",
+    "findings": [
+     {
+      "where": "src/ui/pci/launch.ts usePciLaunch()",
+      "problem": "The hook does not keep the 'transfer first' rule that takePciLaunch() and the file header promise. On mount, useLabHandover delivers a pending transfer first, then useLabLaunch delivers a pending link. onLaunch is therefore called twice, and the link's scenario, applied last, replaces the full-case transfer and its patient. No test covers usePciLaunch.",
+      "severity": "minor",
+      "fix": "In the link callback, drop or defer a link when a transfer was delivered in the same mount, or when peekHandover(PCI_SIM) is not null. For example, keep a ref `tookHandover` that the handover callback sets, and have the link callback return early when it is set during the initial mount pass (or re-queue the link). Alternatively, run one effect that calls takePciLaunch() on mount and then subscribes to both stores. Add a test with both stores pending before mount that asserts onLaunch receives only the transfer."
+     },
+     {
+      "where": "src/simulation/pci/scenarios/scenarios.test.ts 'start states' describe",
+      "problem": "The checks that each start opens at its declared phase (pciTipContext(startPci(...)).phase === start.phase), that the 'across' start leaves the wire out of the danger zone, and that the default start resolves all loop over CORE only. start.phase is only logged by startPci and never enforced. A future pack whose start declares, say, phase 'lesion-prep' with wire 'in-guide' would pass every registry check while opening in a different phase.",
+      "severity": "minor",
+      "fix": "Loop over PCI_SCENARIO_DEFS instead of CORE. For every def and every start, build the geometry, call startPci and expect pciTipContext(st, g.lesion).phase toBe start.phase. Expect guide.engaged toBe start.guideEngaged, and for wire 'across' expect tipMm > g.lesion.endMm and wire.distal.inDanger false. Also assert that GUIDE_BY_ID[def.setup.guideDefault] exists for every def (in the test, so the registry stays engine-free)."
+     },
+     {
+      "where": "src/simulation/pci/scenarios/types.ts PciSetupDef (guideInRoot, guidesAcceptable) and src/simulation/pci/actions/scenario.ts scenarioCase/startInitOptions",
+      "problem": "setup.guideInRoot and setup.guidesAcceptable are declared but read nowhere. The default start comes from the order of starts, not from guideInRoot, so a definition with guideInRoot:false still opens 'guide-in-root'. scenarioCase sets acceptableCatheters to [s.guide] only, so a pack's guidesAcceptable never reaches the anatomy case.",
+      "severity": "minor",
+      "fix": "In scenarioCase, use the definition's guides: acceptableCatheters = [s.guide, ...(r.guidesAcceptable ?? [])]. Carry setup.guidesAcceptable through toPciScenario as an extra, which is empty for the core four, so the case stays unchanged. Then either have defProblems() report a definition whose default start's guideEngaged contradicts setup.guideInRoot, or remove guideInRoot from the type and document that the first start is the default."
+     },
+     {
+      "where": "src/simulation/pci/scenarios/packs/core.launch.ts rca-cto lessonIds",
+      "problem": "'pm-wiring-wire-choice' is linked to rca-cto, but its drill task names only the focal mid-LAD, calcified mid-RCA and circumflex STEMI scenarios. This breaks the file's own stated rule that a lesson is listed only when its PCI-lab drill names the scenario.",
+      "severity": "minor",
+      "fix": "Remove 'pm-wiring-wire-choice' from the rca-cto lessonIds, or add the CTO scenario to that drill's task text in the module (another package's file, so report it rather than edit it)."
+     },
+     {
+      "where": "src/content/mentor/catalogue.ts PCI_BASES / src/simulation/pci/scenarios/registry.ts defProblems",
+      "problem": "PCI_BASES is looked up with find(b => b.epa === epa). If a later pack marks a second definition ladderBase for the same EPA, the first silently wins, and the second's variants still exist in pciVariantById. Separately, calciumRange is described as a range but the draw takes only its two endpoints, so [0, 2] would never produce grade 1.",
+      "severity": "minor",
+      "fix": "In collectPciScenarios, record ladderBase EPAs and push a problem `${where}: second ladderBase for EPA ${d.epa} (first ${prev})` (scenarios.test.ts already requires no problems). Rename PciVariantAxes.calcium to a pair documented as 'the two grades a variant takes (lower 60% of the time, MODEL PARAMETER)', or draw uniformly across the range only if a new variant id prefix is introduced, so existing ladder ids stay stable."
+     },
+     {
+      "where": "docs/realism/facts (outside this package's files)",
+      "problem": "MP_START_WIRE (BEYOND_MM 30, MIN_MM 5, END_MARGIN_MM 5, LUMEN_MARGIN_MM 0.5) is labelled MODEL PARAMETER in src/simulation/pci/actions/scenario.ts, but it has no entry in docs/realism/facts as the rules require. The builder reported this as out of scope.",
+      "severity": "minor",
+      "fix": "The owner of docs/realism/facts adds an entry naming MP_START_WIRE in src/simulation/pci/actions/scenario.ts as a MODEL PARAMETER, describing where the start parks the wire rather than any anatomy or device fact."
+     },
+     {
+      "where": "src/content/content.test.ts 'lab launch links' (found-launch-links)",
+      "problem": "I confirmed 6 fixture tests fail: 91-94 errors where 0-1 are expected. The fixture validates a one-lesson track against every real .launch.ts, so every lessonId in core.launch.ts (86 lessons and 2 cases) and in default.launch.ts is reported as unknown. These tests already failed before this package; it makes the failure larger.",
+      "severity": "minor",
+      "fix": "The owner of content.test.ts filters errsFor() to errors that start with the fixture lesson's id (as launch.test.ts does with 'fixture-lesson '), or builds `known` from the DEMO file alone: launchKnown({ '/test/ct-demo.launch.ts': { launch: DEMO } }) without the glob."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 4 (core.launch.ts rca-cto lists pm-wiring-wire-choice): rejected. The drill in src/content/manual/pci-manual/11-wiring.ts (line 601, inside lesson pm-wiring-wire-choice, which runs from line 464 to 622) names the CTO scenario: 'For the mid-RCA CTO scenario, state which wire would start, which might follow...'. The link meets the file's own rule, so it stays.",
+     "Finding 6 (MP_START_WIRE has no docs/realism/facts entry): not applied here because docs/realism/facts is outside this package. It goes to outOfScope for the facts owner.",
+     "Finding 7 (content.test.ts 'lab launch links' fixture failures): not applied here because src/content/content.test.ts is outside this package. It goes to outOfScope for the content.test.ts owner."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/tips.test.ts (3 files, 28 tests passed: 16, 9, 3)",
+     "npx vitest run src/simulation/pci/facade.test.ts (8 passed; it reads scenarioCase)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit reports one error, and it is not in this package: src/simulation/pci/equipment.test.ts(1,24) TS2305, Module \"node:fs\" has no exported member 'readdirSync'. That test file belongs to another package. No package file has an error.",
+    "notes": "I applied 5 findings, rejected 1 and passed 2 to outOfScope.\n\n1. usePciLaunch now keeps the transfer-first rule (src/ui/pci/launch.ts). Before, the hook called two store hooks, so a link pending beside a transfer could reach onLaunch after it and replace the transfer and its patient. Now takePciLaunch() empties both stores. When a transfer is present it wins, and any pending link is set aside and named in problems ('a pending link to \"<id>\" was set aside: the transfer is taken first'). The new exported subscribePciLaunch(onLaunch) runs takePciLaunch() once at mount, then subscribes to both stores for later arrivals through subscribeLabHandover and subscribeLabLaunch. usePciLaunch wraps it in a single useEffect. In launch.test.ts, the transfer-before-link test now expects the link to be set aside instead of returned by a second take. A new test puts both a link and a transfer in place before mount and checks that onLaunch receives only the transfer, then each later link and transfer, and nothing after unsubscribe. Nothing else in src imports this module.\n\n2. Start states are now checked for every registered scenario, not only the core four (scenarios.test.ts). The new test loops over PCI_SCENARIO_DEFS and every start. It checks the tip phase against start.phase, guide.engaged against start.guideEngaged, and the wire: for 'across', the tip is beyond lesion.endMm and distal.inDanger is false; otherwise tipMm < 0. It also checks that the default start is logged, and that GUIDE_BY_ID has setup.guideDefault and every guidesAcceptable entry. The check lives in the test, so the registry stays engine-free.\n\n3. guidesAcceptable and guideInRoot are now used. PciScenarioExtras gained guidesAcceptable; legacy.ts toPciScenario copies setup.guidesAcceptable into it, and scenarioCase now sets acceptableCatheters to the scenario's guide followed by those guides, without duplicates. The core four set none, so their case is unchanged; a test confirms this and also covers a fixture that sets them. For guideInRoot, defProblems() now reports a definition whose default start contradicts an explicitly set setup.guideInRoot. The types.ts doc now says the default start decides where the lab opens.\n\n4. Two fixes to the ladder bases. First, collectPciScenarios now reports a second non-held-out ladderBase for the same EPA as '<where>: second ladderBase for EPA <epa> (first <id>)'. A test covers it, and the PCI_BASES doc in catalogue.ts says there is one base per EPA. Second, the calcium axis is renamed: PciVariantAxes.calcium is now calciumGrades, documented as the two grades a variant takes (the first 60% of the time, MODEL PARAMETER; a pair, not a range). PciBase.calciumRange in catalogue.ts is now calciumGrades, and core.ts is updated. The draw is unchanged, so every ladder variant id and its values stay the same; the existing ladder test still passes. Nothing outside these files used the old names.\n\n5. The registry header comment now lists the new problem kinds.\n\nRejected:\n- Finding 4 is wrong. The pm-wiring-wire-choice drill names the CTO scenario (see rejected).\n\noutOfScope (owners must act; I did not touch these files):\n- docs/realism/facts needs a MODEL PARAMETER entry for MP_START_WIRE in src/simulation/pci/actions/scenario.ts: BEYOND_MM 30, MIN_MM 5, END_MARGIN_MM 5, LUMEN_MARGIN_MM 0.5. These set where the 'wire-across' start parks the wire; they are not anatomy or device data.\n- src/content/content.test.ts 'lab launch links' fixture: errsFor() should keep only errors for the fixture lesson, or `known` should be built from the DEMO file alone. Until then, the real *.launch.ts lessonIds make these fixture tests fail. They failed before this package.\n- src/simulation/pci/equipment.test.ts fails the typecheck: Module \"node:fs\" has no exported member 'readdirSync'.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/pci/launch.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/types.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/registry.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/legacy.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/packs/core.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/actions/scenario.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/mentor/catalogue.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/scenarios.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/launch.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-17) at http://localhost:5173 on the dev server that was already running, and closed it afterwards. No existing tab was touched.",
+     "Registry in the browser: the app's own instance of src/simulation/pci/scenarios/registry.ts gives PCI_SCENARIO_DEFS = lad-focal, rca-calcified, lcx-stemi, rca-cto and PCI_REGISTRY_PROBLEMS = [] (empty).",
+     "Browser acceptance criterion: I called the app's useUiStore.getState().openSim('angio-pci', {scenario:'rca-cto', mode:'exam'}) through the module URL the app itself loaded (with its ?t= stamp). The section changed to angio-pci, but after 3 s window.__pci.s.id was 'lad-focal', not 'rca-cto'. useLabLaunchStore still held the request ({scenario:'rca-cto', mode:'exam'}), so nothing took it. This confirms the builder's 'needs-browser' status: the criterion is NOT met. grep shows src/ui/sections/AngioPci.tsx does not import or call usePciLaunch/takePciLaunch. It uses useState(PCI_SCENARIOS[0].id).",
+     "Headless half, run in the page: resolvePciLaunch({scenario:'rca-cto', mode:'exam'}) gave id rca-cto, mode exam, start guide-in-root, events ['cto']. {scenario:'nope'} gave launch null with the problem 'unknown PCI scenario \"nope\"'. {scenario:'rca-calcified', variant:'pci-rca-calcified~L3', start:'wire-across'} gave id 'rca-calcified~L3', start wire-across, events ['calcified-lesion']. An unknown start or mode falls back to the default and lists a problem. takePciLaunch() took the pending rca-cto request once; a second call returned null.",
+     "Regression check on the scenario picker in the live PCI lab: I switched the select through rca-calcified, lcx-stemi, rca-cto and back to lad-focal. Each time __pci.s.id followed the choice. Target vessel and severity were RCA/80, LCx/99, RCA/100 and LAD/85. g.lesions had length 1 with targetIdx 0, g.lesion equalled lesions[0], and startMm < endMm in every case (60-78, 43-59, 40-58, 61-73). __pci.st keeps its usual engine fields (guide, severity, resistance, etc.).",
+     "Rendering: __pciDraw() ran without error. A screenshot of lad-focal showed the fluoroscopy canvas with the vessel and guide, the view buttons and the Clinical Graphite chrome, with no visual breakage. The device names in the UI chrome were generic (Workhorse wire, Semi-compliant balloon).",
+     "Console: only Vite connect messages and the React DevTools info line. No errors or warnings while opening, switching scenarios or drawing."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/AngioPci.tsx (owned by pci-lab-shell-session, not by this package)",
+      "problem": "The PCI lab never takes a launch. After openSim('angio-pci', {scenario:'rca-cto', mode:'exam'}), the lab mounts lad-focal (window.__pci.s.id === 'lad-focal') and the request stays pending in useLabLaunchStore. The acceptance criterion 'openSim(...) then mount gives window.__pci.s.id === rca-cto' fails. Every lesson or case link to a PCI scenario (the 86 lessonIds in core.launch.ts) opens the default case.",
+      "severity": "major",
+      "fix": "In AngioPci.tsx (handled by pci-lab-shell-session, or with that package's agreement), import { usePciLaunch } from '../pci/launch' and call usePciLaunch((r) => { if (r.launch) { setSid(r.launch.resolved.scenario.id ...) } }, !handover). Build the scenario from r.launch.resolved.scenario rather than looking up PCI_SCENARIOS by sid, so that ladder variants such as 'rca-calcified~L3' (which are not in PCI_SCENARIOS) work. Apply startPci(r.launch.start.id) for the start state, and pass r.launch.mode and r.launch.events to the mode and tip context. Then re-run the browser check: openSim('angio-pci', {scenario:'rca-cto', mode:'exam'}) should give __pci.s.id === 'rca-cto' and leave useLabLaunchStore.pending['angio-pci'] empty."
+     },
+     {
+      "where": "src/ui/sections/AngioPci.tsx line 113 (`PCI_SCENARIOS.find((x) => x.id === sid)!`)",
+      "problem": "Once the launch is wired, a resolved variant id such as 'rca-calcified~L3' (what resolvePciLaunch returns) is not in PCI_SCENARIOS. Setting sid to it would make the non-null find return undefined and crash the lab.",
+      "severity": "minor",
+      "fix": "Keep the resolved PciScenario in state (useState<PciScenario>) instead of an id plus a find. Alternatively, fall back to SCENARIO_BY_ID[base id] with applyPciVariant when the id contains '~'."
+     },
+     {
+      "where": "Tips acceptance (src/ui/lab/pciEvents/, owned by pci-tip-context)",
+      "problem": "In the live lab, nothing raises the 'cto', 'bifurcation' or 'finish' events from the registry definitions, so pci-post-ecg-complex and pci-post-ecg-bifurcation cannot appear. The bifurcation check uses only a test fixture, because none of the core four is a bifurcation. The builder reports this criterion as only partly met.",
+      "severity": "minor",
+      "fix": "No change needed in this package. pci-tip-context should call scenarioEvents(def) / resolvePciLaunch(...).launch.events as its event source. A later scenario pack should add a bifurcation definition, so that the bifurcation tip check can use a real registry scenario instead of the fixture."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 1 (the PCI lab never takes a launch): the finding is correct but the fix is out of scope. The wiring belongs in src/ui/sections/AngioPci.tsx, which is owned by pci-lab-shell-session and is not on this package's file list. Everything this package owes the lab is already exported from src/ui/pci/launch.ts: usePciLaunch / takePciLaunch / resolvePciLaunch, plus resolved.scenario, start, mode and events. startPci(req, g, startId) is exported from src/simulation/pci/actions/scenario.ts. pci-lab-shell-session must make the AngioPci.tsx change. It needs usePciLaunch((r) => { if (r.launch) { keep r.launch.resolved.scenario in state; st = startPci({ def: r.launch.resolved.def, scenario: r.launch.resolved.scenario, seed: r.launch.resolved.seed }, g, r.launch.start.id); pass r.launch.mode and r.launch.events on } }, !handover).",
+     "Finding 3 (live lab never raises cto / bifurcation / finish events): the finding itself says no change is needed in this package. The event source belongs to pci-tip-context (src/ui/lab/pciEvents/), which should use resolvePciLaunch(...).launch.events or scenarioEvents(def). A real bifurcation scenario belongs to a later scenario pack, so none was added here. Both are out of scope."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/tips.test.ts (3 files, 29 tests, all passed; scenarios.test.ts now 17 tests including the new pciScenarioById test)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no errors)",
+    "notes": "Finding 2 is applied, on this package's side only. The crash it describes is real. The line `PCI_SCENARIOS.find((x) => x.id === sid)!` in AngioPci.tsx (lines 113 and 218) returns undefined for a resolved ladder variant id such as 'rca-calcified~L3', because ladder variants are not in PCI_SCENARIOS. AngioPci.tsx is not on this package's file list, so I did not edit it. Instead I added `export function pciScenarioById(id: string): PciScenario | undefined` to src/simulation/pci/actions/scenario.ts. It accepts a registered id, with or without the 'pci-' prefix, and returns the SCENARIO_BY_ID entry. It also accepts a ladder variant id ('rca-calcified~L3' or 'pci-rca-calcified~L3') and returns resolveScenario(base, '~L3').scenario, whose id is the variant id the lab holds. Any id the registry and the ladder do not know returns undefined, so the shell never needs a non-null find.\n\nI added a test to src/simulation/pci/scenarios/scenarios.test.ts covering every registered scenario under both id forms. It also checks every ladder rung and exam variant of every PCI base against resolveScenario, and checks that unknown, malformed, doubled-rung and empty ids return undefined.\n\nStill to do in src/ui/sections/AngioPci.tsx, by pci-lab-shell-session: keep the PciScenario in state (useState<PciScenario>, which the finding prefers), or replace both finds with pciScenarioById(id) and handle undefined. Then wire usePciLaunch as described under finding 1. After that, the browser check is: openSim('angio-pci', {scenario:'rca-cto', mode:'exam'}) should give __pci.s.id === 'rca-cto' and leave useLabLaunchStore.pending['angio-pci'] empty.\n\nFiles changed in this fix: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/actions/scenario.ts and /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/scenarios.test.ts."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "scenarios.test.ts: every registry entry builds a coronary tree, pciGeom finds every lesion with startMm < endMm, and toPciScenario(core four) reproduces the current initPci state (severity, resistance, guide id)",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/scenarios.test.ts lines 116-149. The test loops over PCI_SCENARIO_DEFS, builds the tree and checks every g.lesions entry has startMm < endMm, refDiameter > 0 and g.lesion === g.lesions[targetIdx]. It also compares toPciScenario(def) against a frozen PRE_REGISTRY copy of the four old scenarios, checking initialPci deep equality for three option sets and [severity, resistance, guide.id]. 17/17 tests pass."
+     },
+     {
+      "criterion": "resolveScenario('rca-calcified','pci-rca-calcified~L3') is deterministic and equals catalogue pciVariantById output",
+      "met": true,
+      "evidence": "scenarios.test.ts lines 194-214. Two calls give equal results, a.variant equals pciVariantById('pci-rca-calcified~L3'), and the target severity, length, position and calcium match the variant and applyPciVariant. Shorthand forms and refusals are also tested. Passes."
+     },
+     {
+      "criterion": "launch.test.ts: validateLaunchLinks with a fixture link rejects an angio-pci link with an unknown scenario or start id",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/launch.test.ts lines 40-55. A fixture lesson drill block and a fixture .launch.ts links entry are rejected with 'unknown scenario \"no-such-pci-case\"' and 'unknown start \"no-such-start\"', and held-out exam variants are refused. 9/9 tests pass."
+     },
+     {
+      "criterion": "browser: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) then mount gives window.__pci.s.id === 'rca-cto'",
+      "met": false,
+      "evidence": "No verify report or test covers mounting the lab. launch.test.ts only covers resolvePciLaunch/takePciLaunch/subscribePciLaunch at function level. src/ui/sections/AngioPci.tsx never calls usePciLaunch, takePciLaunch or useLabLaunchStore.take('angio-pci'). A grep of src finds no caller outside launch.ts and its test. Line 112 initialises sid to PCI_SCENARIOS[0].id ('lad-focal'), and line 234 sets window.__pci = { st, g, s } from that state. After openSim with scenario rca-cto, the lab therefore mounts lad-focal, so window.__pci.s.id would be 'lad-focal'. AngioPci.tsx is not in this package's file list; per the plan it belongs to pci-lab-shell-session (wave 7)."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in packs/core.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "met": true,
+      "evidence": "launch.test.ts lines 72-92. For each CORE_LAUNCH scenario, lessonIds is non-empty and every id is a real lesson in TRACKS. practiceForLesson(id) contains the angio-pci entry with params {scenario, mode:'guided'} and source core.launch.ts. Case ids resolve, PCI_DEF_BY_ID lessonIds equal the launch file's, and PRACTICE_INDEX.known.problems is empty. Passes."
+     },
+     {
+      "criterion": "Tips (new test file beside its event source): in a core.launch.ts scenario, after the action raising 'cto' tipsFor(ctx,20) includes pci-post-ecg-complex; after the action raising 'bifurcation' it includes pci-post-ecg-bifurcation; every waiting.ts entry naming pci-scenario-registry becomes satisfiable",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/tips.test.ts passes 3/3. rca-cto, a core.launch.ts scenario, gives resolveScenario events ['cto'], and tipsFor at phase 'finish' with those events includes pci-post-ecg-complex. It is absent without the event. Caveat: the bifurcation case uses a fixture definition derived from CORE[0], because no core scenario has a bifurcation site and the design keeps core content unchanged. Both checks use a hand-built finish context rather than pciTipContext, because the event source (src/ui/lab/pciEvents/base.ts) and the 'finish' phase belong to pci-tip-context (wave 8), which does not exist yet. waiting.ts has no entry with raisedBy 'pci-scenario-registry', which the test asserts, so the requirement is vacuously met. Both tips wait under pci-tip-context. reachability.test.ts passes (pci: 553 tips, 13 satisfiable)."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/sections/AngioPci.tsx (lines 110-113, 218, 234); not in this package's file list, owned by pci-lab-shell-session",
+      "problem": "The lab never consumes launch params or a full-case hand-over. src/ui/pci/launch.ts exports usePciLaunch and takePciLaunch, but nothing in the app calls them. After openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}), the lab mounts with the default lad-focal and window.__pci.s.id is 'lad-focal', not 'rca-cto'. No verify report or test covers the browser criterion.",
+      "severity": "major",
+      "fix": "In AngioPci.tsx, call usePciLaunch((r) => { if (!r.launch) return; setSid(r.launch.resolved.scenario.id); /* also apply r.launch.start via startPci and keep r.launch.mode */ }). Look up s with pciScenarioById(sid) from src/simulation/pci/actions/scenario.ts instead of PCI_SCENARIOS.find, so variant ids such as 'rca-calcified~L3' resolve. Line 218 needs the same change. Then confirm in the running dev server (port 5173) that window.__pci.s.id === 'rca-cto' after openSim, and record it in a verify report or a component test. The file is outside this package, so the orchestrator must either let pci-scenario-registry edit AngioPci.tsx or move this acceptance criterion to pci-lab-shell-session."
+     },
+     {
+      "where": "src/simulation/pci/scenarios/tips.test.ts lines 27-35",
+      "problem": "Non-blocking deviation. The bifurcation check uses a fixture definition, not a scenario from core.launch.ts, and both tip checks use a hand-built finish-phase LabContext rather than a lab action through pciTipContext. The core four have no bifurcation by design, and the 'finish' phase and event source belong to the later pci-tip-context package.",
+      "severity": "minor",
+      "fix": "Either reword the criterion so a fixture definition satisfies the bifurcation case, or re-run the check against a real bifurcation pack once pci-bifurcation-provisional lands. When pci-tip-context lands, drive pciTipContext from pciEvents/base.ts in its own test."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/tips.test.ts (3 files, 29 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed; pci 553 tips, satisfiable 13, waiting 553, ready 12)",
+     "npx vitest run src/simulation/pci/facade.test.ts src/simulation/pci/lesionAssessment.test.ts (13 passed, regression check)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   },
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "scenarios.test.ts: every registry entry builds a coronary tree, pciGeom finds every lesion with startMm < endMm, and toPciScenario(core four) reproduces the current initPci state (severity, resistance, guide id)",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/scenarios.test.ts passes (17 tests). One test loops PCI_SCENARIO_DEFS: buildCoronaryTree, g.lesions.length equals def.lesions.length, startMm < endMm for each lesion. A second compares toPciScenario(def) with a frozen PRE_REGISTRY copy of the four old scenarios, and initialPci(old) toEqual initialPci(new) for three option sets, including [severity, resistance, guide.id]."
+     },
+     {
+      "criterion": "resolveScenario('rca-calcified','pci-rca-calcified~L3') is deterministic and equals catalogue pciVariantById output",
+      "met": true,
+      "evidence": "Test 'resolveScenario(...) is deterministic and equals the catalogue's pciVariantById' passes: two calls are toEqual; a.variant equals pciVariantById('pci-rca-calcified~L3'); target severity, length, position and calcium match; legacyPart equals applyPciVariant(SCENARIO_BY_ID['rca-calcified'], v)."
+     },
+     {
+      "criterion": "launch.test.ts: validateLaunchLinks with a fixture link rejects an angio-pci link with an unknown scenario or start id",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/launch.test.ts passes (10 tests). A fixture lesson drill block and a fixture .launch.ts links entry are both checked, and both report unknown scenario \"no-such-pci-case\"/\"ghost\" and unknown start \"no-such-start\"/\"nowhere\"."
+     },
+     {
+      "criterion": "browser: openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) then mount gives window.__pci.s.id === 'rca-cto'",
+      "met": false,
+      "evidence": "Only the headless half has a test (launch.test.ts: openSim then takePciLaunch resolves 'rca-cto'). There is no verify report. I checked in the running dev server (my own background tab, now closed): calling the app's useUiStore openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) moved the section to angio-pci, but window.__pci.s.id was 'lad-focal'. src/ui/sections/AngioPci.tsx never calls usePciLaunch or takePciLaunch. It starts with useState(PCI_SCENARIOS[0].id) (line 112). The hook in src/ui/pci/launch.ts has no consumer anywhere in the app."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in core.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "met": true,
+      "evidence": "launch.test.ts 'the practice index lists every core scenario...' passes. Every lessonId exists in TRACKS. practiceForLesson(id) has an angio-pci entry for the scenario, sourced from core.launch.ts. caseIds resolve. PRACTICE_INDEX.known.problems is empty. src/ui/content/practiceIndex.test.ts also passes (10 tests)."
+     },
+     {
+      "criterion": "Tips (new test file beside its event source): after the action raising 'cto' tipsFor(ctx,20) includes pci-post-ecg-complex; after the action raising 'bifurcation' it includes pci-post-ecg-bifurcation; every waiting.ts entry naming pci-scenario-registry becomes satisfiable",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/tips.test.ts (beside registry.ts) passes (3 tests). For rca-cto, resolveScenario gives events ['cto'], and a finish-phase context includes pci-post-ecg-complex but not without the event. No core scenario is a bifurcation, because the core content must stay unchanged, so the test uses a fixture built from CORE[0] with sites ['bifurcation']; it gives pci-post-ecg-bifurcation. WAITING_TIPS and DEFERRED_RETARGETS have no entry with raisedBy 'pci-scenario-registry', so the waiting count needs no fall. src/content/lab/reachability.test.ts passes."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/sections/AngioPci.tsx (line 112, scenario state); src/ui/pci/launch.ts usePciLaunch has no consumer",
+      "problem": "The browser acceptance check fails. After openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) and mount, window.__pci.s.id is 'lad-focal', not 'rca-cto', because the PCI lab never takes the pending launch. AngioPci.tsx is not in this package's file list (pci-lab-shell-session owns it, wave 7), so the builder cannot make the change within its files.",
+      "severity": "major",
+      "fix": "In AngioPci.tsx, import usePciLaunch from '../pci/launch' and pciScenarioById from the simulation. Call usePciLaunch((r) => { if (!r.launch) return; const ns = pciScenarioById(r.launch.resolved.scenario.id) ?? r.launch.resolved.scenario; set sid/s to ns and reset st with startPci({ def: r.launch.resolved.def, scenario: r.launch.resolved.scenario, seed: r.launch.resolved.seed }, g, r.launch.start.id) or initialPci(ns) }). Because s is found through PCI_SCENARIOS.find(x => x.id === sid), also let s fall back to pciScenarioById(sid) so ladder variant ids (rca-calcified~L3) load. After the edit, verify in the browser that window.__pci.s.id === 'rca-cto'. AngioPci.tsx is outside this package's files, so the orchestrator must either allow this package to edit it (coordinating with pci-lab-shell-session) or move this browser criterion to pci-lab-shell-session's acceptance, keeping launch.test.ts as the headless evidence here."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/tips.test.ts (3 files, 30 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts (10 passed)",
+     "Browser check on localhost:5173 (background tab, closed afterwards): app useUiStore.openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}) gave section 'angio-pci', window.__pci.s.id === 'lad-focal'"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no errors, 4.4 s)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 0,
+    "rejected": [
+     "Finding 1 (major, AngioPci.tsx never consumes launches): the finding is correct but I did not apply it, because the fix is outside this package's files. I checked the code. src/ui/sections/AngioPci.tsx line 112 still does useState(PCI_SCENARIOS[0].id) and PCI_SCENARIOS.find, and line 218 (reset) does the same. Nothing in src calls usePciLaunch or takePciLaunch. AngioPci.tsx is in pci-lab-shell-session's file list, and that package depends on pci-scenario-registry, so I left it alone. Inside this package I added the headless half of the check to launch.test.ts: it calls useUiStore.openSim('angio-pci',{scenario:'rca-cto',mode:'exam'}), then takePciLaunch() returns rca-cto in exam mode with no problems, and pciScenarioById resolves 'rca-cto', 'rca-calcified~L3' and 'pci-rca-calcified~L3' and gives undefined for an unknown id. OUT OF SCOPE for the orchestrator: in AngioPci.tsx, call usePciLaunch((r) => { if (r.launch) { reset(r.launch.resolved.scenario.id); apply startPci(..., r.launch.start.id); keep r.launch.mode } }). Replace PCI_SCENARIOS.find at lines 113 and 218 with pciScenarioById(sid) from src/simulation/pci/actions/scenario.ts. Then check in the dev server on port 5173 that window.__pci.s.id === 'rca-cto' after openSim. Either give that work and the browser acceptance criterion to pci-lab-shell-session, or allow this package to edit AngioPci.tsx.",
+     "Finding 2 (minor, the bifurcation tip check uses a fixture definition): I did not apply it. The criterion asks for a bifurcation scenario from core.launch.ts, but the plan says packs/core.ts keeps the four current scenarios unchanged in content, and none of them is a bifurcation. So no core scenario can meet the criterion as written. Both suggested fixes are outside this package: changing the criterion means editing the plan, and checking a real bifurcation pack needs pci-bifurcation-provisional, which has not landed. Driving the check through pciTipContext belongs to pci-tip-context. OUT OF SCOPE: change the criterion so a fixture definition counts, or move the bifurcation half to pci-bifurcation-provisional and the pciTipContext half to pci-tip-context."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/launch.test.ts src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/tips.test.ts (3 files, 30 tests passed: scenarios 17, tips 3, launch 10)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "I applied neither finding, because both fixes are outside this package's files. Finding 1 is correct: the lab still opens at lad-focal whatever the launch says. Finding 2 cannot be met by the core four, which the plan says stay unchanged. The one change I made is a new test in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/scenarios/launch.test.ts. It calls the real useUiStore.openSim for rca-cto in exam mode, takes the launch with takePciLaunch, and looks the scenario up with pciScenarioById, including the ladder variant ids. The browser criterion (window.__pci.s.id === 'rca-cto') stays unmet until AngioPci.tsx calls usePciLaunch and replaces PCI_SCENARIOS.find with pciScenarioById at lines 113 and 218. That file belongs to pci-lab-shell-session, which depends on this package. I edited no other package file."
+   }
+  ]
+ }
+}

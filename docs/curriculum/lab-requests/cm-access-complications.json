@@ -1,0 +1,142 @@
+[
+  {
+    "lab": "procedure",
+    "what": "Retroperitoneal haematoma management sequence. When the closure engine schedules a delayed femoral bleed (more likely after a puncture above the inferior epigastric artery, a back-wall puncture, several attempts, an unguided puncture, uncontrolled hypertension, or GP IIb/IIIa inhibitor or cangrelor use), present it as hypotension with sweating, low abdominal or back pain and often a slow pulse within about 3 hours, with a soft groin; the haemoglobin should lag. Offer the general measures (large IV or central access, crystalloid without reflex large volumes, type and cross with early transfusion, a vasopressor if the pressure will not hold, haemoglobin, pressure at the site, reversal of anticoagulation once the diagnosis is made). If the in-lab angiogram shows no bleeding, the learner should not treat a bleeding point: with evidence of a haematoma (a dented bladder) but no active bleeding, continue conservative management under the general measures; with no evidence of a haematoma, look for another cause of the hypotension (module reasoning: Fig. 29.4 gives no next step after the in-lab 'No bleeding' box). For cangrelor-treated patients, the debrief should ask for the oral P2Y12 plan once bleeding is controlled. If the patient is still on the table, let the learner screen the bladder (dented bladder sign when contrast was given) and obtain contralateral femoral access for iliofemoral angiography; if in recovery, branch on haemodynamic stability (unstable: back to the lab or theatre; stable: CT showing haematoma with or without active extravasation, or none).",
+    "learnerDoes": "Suspects the bleed, starts the general measures, chooses the right diagnostic route for the patient's location and stability, and reverses anticoagulation only after the diagnosis is established.",
+    "success": "General measures within the first minute; no CT for an unstable patient; no reflex litres of crystalloid; bladder screen and contralateral angiography when still in the lab; anticoagulation reversed after diagnosis.",
+    "tips": [
+      "access-cx-rp-in-lab",
+      "access-closure-hypotension-retroperitoneal",
+      "access-cx-iliac-wire-fluoro"
+    ],
+    "lessonIds": [
+      "cm-access-complications-femoral-bleeding"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Endovascular control of iliofemoral bleeding from the opposite groin. On the access fluoroscopy, render extravasation from either a large vessel (external iliac or common femoral) or a small branch (inferior epigastric or lateral circumflex iliac). The learner crosses over the aortic bifurcation, inflates a low-pressure balloon over the site, and then chooses: for a large vessel, a covered stent (balloon-expandable placed precisely in the iliac artery; self-expanding preferred in the common femoral artery; never across the femoral bifurcation, which goes to surgery; sheath size and the 5 mm minimum diameter checked); for a small branch, coils after a check for retrograde filling, or glue, microspheres or thrombin for very distal holes, or a covered stent over the branch origin. Coiling a large vessel or using a bare stent should fail; covering the bifurcation should lose the profunda.",
+    "learnerDoes": "Balloon first at low pressure, then the treatment that matches the vessel and the segment.",
+    "success": "No definitive device before balloon occlusion; correct device class for the vessel; bifurcation never covered; retrograde filling excluded before coiling.",
+    "tips": [
+      "access-cx-iliofemoral-balloon-first",
+      "access-cx-small-branch-embolise",
+      "mcs-cx-covered-stent-site"
+    ],
+    "lessonIds": [
+      "cm-access-complications-femoral-bleeding",
+      "cm-access-complications-large-bore"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Groin haematoma and pseudoaneurysm at follow-up, reusing the access ultrasound engine. In recovery or on the next-day review, present either a non-pulsatile haematoma or a pulsatile tender lump with a bruit. The learner chooses where to press (just proximal to the skin puncture), the aftercare (bandage, 6–8 hours of bed rest), and asks for duplex. The ultrasound view should show a cavity with colour flow in and out through a neck, with measurable cavity size and neck width; variants: under 2 cm (observe), 2 cm or more with a narrow neck (thrombin: 5000 IU in 5 mL, slow injection of 0.5–1 mL through a 23-gauge needle, cavity 'smokes' and clots; repeat scan in 2–3 days), wide neck (surgery), over 6 cm or with infection or skin necrosis (surgery). An arteriovenous fistula variant shows simultaneous venous filling and a continuous flow signal.",
+    "learnerDoes": "Presses over the arterial hole, requests duplex, measures cavity and neck, and chooses observation, thrombin, compression or surgery accordingly.",
+    "success": "Correct pressure site; correct branch of the treatment ladder for each variant; no thrombin through a wide neck.",
+    "tips": [
+      "access-cx-groin-haematoma-press",
+      "access-cx-psa-size-and-neck",
+      "access-cx-arterial-sheath-first"
+    ],
+    "lessonIds": [
+      "cm-access-complications-femoral-bleeding",
+      "cm-access-complications-femoral-other"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "impella",
+    "what": "Leg-perfusion checks after large-bore access, as the ECMO circuit already does. After the 14 Fr sheath is in, require a femoral angiogram that shows flow into the superficial femoral artery, and record a baseline distal pulse or Doppler signal. During support, prompt timed limb checks (colour, temperature, pulses, pain, movement and sensation); in some runs raise limb-ischaemia, which the learner investigates by imaging the leg and involving the vascular surgeons. Add a balloon-pump variant in which the correct first action for a cold, pulseless leg is removal of the pump and its sheath with manual haemostasis (re-siting support elsewhere if still needed), with imaging and surgeons if the leg does not recover. Make the leg risk depend on iliofemoral size (over 5 mm needed) and disease.",
+    "learnerDoes": "Takes the post-insertion femoral angiogram, records baseline perfusion, performs timed checks, and acts on a deteriorating limb.",
+    "success": "Angiogram taken before positioning the pump; baseline and timed checks recorded; limb ischaemia recognised at the first abnormal check.",
+    "tips": [
+      "mcs-largebore-limb-check",
+      "access-cx-cold-leg-six-ps"
+    ],
+    "lessonIds": [
+      "cm-access-complications-limb"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Acute limb ischaemia and iliofemoral dissection after femoral access. Events: a flow-limiting dissection on the femoral angiogram (after an injection against a damped trace or a forced wire), a collagen plug deployed into the lumen, or an embolus. The learner recognises the six Ps (versus livedo with intact pulses for cholesterol emboli), obtains contralateral access, images the leg and treats by cause: iliac dissection with a self-expanding stent after crossing into the true lumen; common femoral dissection or an intraluminal plug to the surgeons (endarterectomy, plug removal); thrombus with angioplasty, thrombectomy or thrombolysis.",
+    "learnerDoes": "Prevents the dissection (good waveform, wire through the sheath before injecting, no forceful injection), and treats an ischaemic leg by cause from the other groin.",
+    "success": "No injection against a damped trace; correct treatment by segment; cholesterol embolisation not treated as acute occlusion.",
+    "tips": [
+      "access-cx-iliac-dissection-crossover",
+      "access-cx-cold-leg-six-ps",
+      "access-closure-cold-leg"
+    ],
+    "lessonIds": [
+      "cm-access-complications-limb"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Forearm haematoma and radial perforation events in the full procedure (radial occlusion is already decided at band removal). Radial perforation: when the learner forces a wire or catheter against resistance in the forearm, or through a radial loop without balloon-assisted tracking, show extravasation on a radial angiogram; the learner keeps the wire, advances a catheter across the hole (seals in most runs) or, failing that, a long low-pressure balloon. Forearm haematoma: make band position matter (the arterial hole lies proximal to the skin puncture, more so with a flat needle angle; a band too distal bleeds into the forearm, too proximal at the wrist). Present the haematoma by grade (I local, II to about 10 cm, III below the elbow, IV above it, V ischaemic threat) with forearm circumference measurements, and let the learner reposition or add a band, apply ice, use a timed arm cuff (the sources differ on pressure: above systolic, 20 mmHg below, up to 15 mmHg below) with finger saturation monitoring, control pain and blood pressure, consider stopping antithrombotic infusions, and call the surgeons for compartment syndrome signs (pain on passive stretch, pallor, pulselessness, paralysis, paraesthesia). Compression, pain relief, blood pressure control and heparin reversal should count only as measures to stop a haematoma progressing; once compartment syndrome signs appear, the correct action is an immediate surgical call (fasciotomy).",
+    "learnerDoes": "Places the band slightly proximal to the puncture, uses balloon-assisted tracking for loops, seals a perforation over a catheter or balloon, and grades and treats a forearm haematoma.",
+    "success": "Band correctly placed; no forced advancement; perforation sealed with wire position kept; haematoma grade named and treatment matched; compartment syndrome escalated at once.",
+    "tips": [
+      "access-cx-radial-band-proximal",
+      "access-cx-forearm-haematoma-grade",
+      "access-cx-radial-perforation-cover",
+      "access-cx-radial-loop-bat",
+      "access-cx-compartment-call",
+      "access-radial-band-bleeding"
+    ],
+    "lessonIds": [
+      "cm-access-complications-radial-bleeding"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "procedure",
+    "what": "Radial spasm on sheath removal and late radial complications. On withdrawal, raise radial-spasm in some runs (more often with small arteries, large sheaths, many exchanges, women, smokers, anxious or under-sedated patients, no vasodilator); forceful traction should avulse the artery. Rescue options: vasodilators (through the side arm, or intravenously if the side arm will not aspirate), more sedation (rarely general anaesthesia or a nerve block), warming, a lubricious solution, a 5-minute upper-arm cuff above systolic. At follow-up, offer variants: a pulsatile lump (radial pseudoaneurysm: most thrombose; compression, thrombin or surgery) and a red nodule with sterile discharge (sterile granuloma: settles, steroid cream, excision if persistent).",
+    "learnerDoes": "Releases spasm without traction and recognises the late radial complications.",
+    "success": "No forceful withdrawal; correct diagnosis and plan for each follow-up variant.",
+    "tips": [
+      "access-radial-spasm-no-traction"
+    ],
+    "lessonIds": [
+      "cm-access-complications-radial-other"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "impella",
+    "what": "Large-bore bleeding scenario in the full-case access workspace. At the end of protected PCI, let the learner set up (or omit) a crossover balloon from the opposite femoral or a radial artery into the iliac artery of the pump side and choose whether to keep a 0.035 inch wire in the pump-side artery. On removal, show the pump bleeding through the sheath while outlet is out and inlet in (slow removal costs blood), then, in some runs, a pre-close suture that breaks or a closure that fails. Show the bleed on haemodynamics (falling pressure, heart rate change) and on access fluoroscopy (extravasation; dented bladder for iliac tears). The crossover balloon should be optional at set-up (Brilakis offers it as an option) but its absence should cost blood when closure fails. The learner inflates the crossover balloon at low pressure, keeps the wire, and if a jet persists chooses a covered stent (self-expanding in the common femoral artery with a landing zone, not across the bifurcation; balloon-expandable for an iliac tear) or surgery, which should score as equally correct for a common femoral hole near the bifurcation. A further suture device over the wire may be offered as an option, labelled as an extrapolation of the manual's remedy for a suture that fails during deployment. If the wire is lost, regaining it from the opposite groin over the bifurcation into the superficial femoral artery should be the quicker route. An iliac rupture variant during sheath insertion should require rapid second access, balloon occlusion and a covered stent. Finish with a limb check and a femoral angiogram.",
+    "learnerDoes": "Sets up the safety net before removal, removes the pump quickly, controls bleeding from inside, keeps wire access, and chooses the right definitive treatment, then checks the leg.",
+    "success": "Crossover balloon and wire in place before removal; balloon inflated within seconds of a failed closure; no wire removal before haemostasis; no stent across the femoral bifurcation; final limb assessment done.",
+    "tips": [
+      "mcs-cx-crossover-balloon-before-removal",
+      "mcs-cx-largebore-bleed-balloon",
+      "mcs-cx-covered-stent-site",
+      "mcs-largebore-removal-sutures",
+      "access-suture-loose-second-device"
+    ],
+    "lessonIds": [
+      "cm-access-complications-large-bore"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "ecmo",
+    "what": "Cannula bleeding and anticoagulation during VA-ECMO and balloon-pump support. Events: limb ischaemia from the arterial cannula (antegrade perfusion sheath: 6 Fr 24 cm in the common or superficial femoral artery, ideally placed before the cannula but possible after flow starts; may not be needed with 15–17 Fr cannulae; NIRS below 50% or more than 15% lower than the other leg; venous and arterial cannulae in different groins), bleeding or a haematoma at the arterial cannula (displacement), vessel laceration if a cannula is advanced against resistance or without the wire confirmed in the superior vena cava, and major retroperitoneal bleeding during support. The learner checks cannula position, inserts cannulae under fluoroscopy over stiff wires, and decides about anticoagulation (both devices can run briefly without it in active bleeding; the balloon pump at 1:1 if anticoagulation stops).",
+    "learnerDoes": "Recognises cannula-related bleeding, avoids forced advancement, and manages anticoagulation during active bleeding (noting that Oxford lists contraindications to anticoagulation among contraindications to ECMO).",
+    "success": "No cannula advanced against resistance; correct anticoagulation decision; balloon pump switched to 1:1 when anticoagulation is stopped.",
+    "tips": [
+      "mcs-cx-ecmo-cannula-bleed",
+      "mcs-cx-iabp-bleeding-anticoag",
+      "mcs-cx-iabp-ischaemic-leg"
+    ],
+    "lessonIds": [
+      "cm-access-complications-large-bore",
+      "cm-access-complications-limb"
+    ],
+    "priority": "P3"
+  }
+]

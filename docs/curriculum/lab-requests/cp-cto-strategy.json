@@ -1,0 +1,159 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Tip-context events for CTO scenarios. Today the PCI lab raises only complication events, wire-side-branch, guide-backout and wire-not-crossing (whenever the wire tip sits inside any target lesion), and never sets the 'plan' or 'physiology' phases, so most CTO tips are visible only inside lessons. Requested: (1) add a dedicated 'chronic-occlusion' event to LAB_EVENTS and raise it in the mid-RCA CTO scenario (and any later CTO scenario) from the start of the case, and only there. Blocker: do not raise 'total-occlusion' in the PCI lab until 'chronic-occlusion' exists and every tip in this module that lists 'total-occlusion' has it replaced by 'chronic-occlusion' (act-recheck and stop-rules keep their low-act, contrast and dose events alongside; subintimal-wire is keyed on wire-subintimal and needs no change), because 'total-occlusion' covers acute occlusions too and the tips would then appear in the LCx STEMI scenario; (2) raise 'low-act' when the running ACT falls below the target for the current strategy; (3) raise 'high-contrast-volume' when contrast passes 3.7 × the scenario patient's estimated creatinine clearance and 'high-radiation-dose' when air kerma passes 5 Gy without crossing; (4) raise 'wire-subintimal' when the CTO wire leaves the plaque for the subintimal space; (5) set the 'plan' phase before the guide is engaged and the 'physiology' phase while a pressure wire is in use.",
+    "learnerDoes": "Nothing new: the events make the existing CTO tips appear at the right moment.",
+    "success": "Each CTO tip in this module appears in the CTO scenario at its trigger and never in the focal-LAD, calcified-RCA or LCx STEMI scenarios (except the ACT, contrast and dose tips, whose text is prefixed 'In a CTO').",
+    "tips": [
+      "diag-cto-strategy-defer-adhoc",
+      "pci-cto-strategy-act-recheck",
+      "pci-cto-strategy-guide-choice",
+      "pci-cto-strategy-dual-injection",
+      "pci-cto-strategy-microcatheter-injection",
+      "pci-cto-strategy-no-blind-cap",
+      "pci-cto-strategy-hybrid-first-choice",
+      "pci-cto-strategy-change-early",
+      "pci-cto-strategy-stop-rules",
+      "pci-cto-strategy-step-down",
+      "pci-cto-strategy-subintimal-wire",
+      "pci-cto-strategy-confirm-before-advancing",
+      "pci-cto-strategy-poststent-physiology"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-setup",
+      "cp-cto-strategy-angiogram",
+      "cp-cto-strategy-cap-ambiguity",
+      "cp-cto-strategy-hybrid",
+      "cp-cto-strategy-finish"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A CTO planning step in the existing mid-RCA CTO scenario (which already supports contralateral injection): before wiring is allowed, the learner records the four angiographic features on a short form (proximal cap clear or ambiguous; occlusion length in mm measured on the dual run; distal vessel good or poor, with calibre, disease, branches at the distal cap; interventional collateral yes or no, septal or epicardial, straight or tortuous). The lab scores each answer against the scenario's ground truth and shows the length measured on an RCA-only run beside the dual-injection length, so the learner sees the overestimate from antegrade-only filming.",
+    "learnerDoes": "Films with both syringes at low magnification without panning, keeps acquiring until the distal vessel fills, measures the occlusion length, and fills in the four features.",
+    "success": "All four features correct; length within 5 mm of the scenario's true length; the learner used a dual-injection run, not an antegrade-only run, for the measurement.",
+    "tips": [
+      "pci-cto-strategy-dual-injection"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-angiogram"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A hybrid-algorithm decision step after the four features: the learner chooses the first strategy (antegrade wire escalation, antegrade dissection and re-entry, retrograde wire escalation, retrograde dissection and re-entry) and a fallback. The scenario generator should vary the four features across runs (clear vs ambiguous cap at a branch; length under or over 20 mm; distal bifurcation at the cap; septal collateral CC0/CC1/CC2, straight or tortuous; flush aorto-ostial variant) so that every branch of the algorithm is exercised. Feedback cites the algorithm branch and notes where the Asia Pacific algorithm would allow a different choice (length alone not deciding).",
+    "learnerDoes": "Picks a first strategy and a fallback for each generated CTO.",
+    "success": "First strategy matches the hybrid algorithm for the generated features (retrograde when the cap is ambiguous or the distal target poor and an interventional collateral exists; otherwise antegrade; under 20 mm wiring, otherwise dissection and re-entry) in at least 4 of 5 consecutive scenarios.",
+    "tips": [
+      "pci-cto-strategy-hybrid-first-choice",
+      "pci-cto-strategy-no-blind-cap"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-hybrid",
+      "cp-cto-strategy-cap-ambiguity"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "CTO set-up choices before the case: access (femoral, radial, biradial, sheath length), guide size and shape for each artery (AL, EBU/XB, JR4; 6, 7 or 8 Fr), anticoagulant (unfractionated heparin vs bivalirudin) and the ACT target. A running ACT that falls with time and must be checked every 20–30 minutes, raising the existing 'low-act' event when it is below 300 s in antegrade work or below 350 s once a retrograde wire is in a collateral. A 6 Fr guide should disable the IVUS-at-the-cap option later in the case. Include a variant with a significant donor-artery lesion proximal to the septal collateral, which must be treated before any retrograde equipment enters the collateral.",
+    "learnerDoes": "Sets up access, guides and heparin; rechecks and corrects the ACT during wiring.",
+    "success": "7–8 Fr supportive guides chosen (AL for the RCA, EBU or XB for the left), a guide rather than a diagnostic catheter in the donor artery when retrograde is possible, heparin not bivalirudin, ACT kept above the target for the current strategy with checks at 20–30 minute intervals; no IIb/IIIa inhibitor or cangrelor given at any stage. In the donor-lesion variant, the donor lesion is treated before retrograde work begins.",
+    "tips": [
+      "pci-cto-strategy-guide-choice",
+      "pci-cto-strategy-act-recheck",
+      "pci-cto-anticoagulant-choice"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-setup"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Stop-rule meters for CTO scenarios: a live contrast counter shown against 3.7 × the patient's estimated creatinine clearance, a live air kerma counter, and a 'progress' state (no crossing / crossing). The lab raises 'high-contrast-volume' when contrast passes 3.7 × clearance and 'high-radiation-dose' when air kerma passes 5 Gy without crossing, so the stop-rule tip appears. A 'stop and plan repeat' action ends the case with a debrief that credits a timely stop.",
+    "learnerDoes": "Calculates the contrast limit at the start, changes strategy when progress stalls, and stops when a threshold is passed without progress.",
+    "success": "Learner states the contrast limit before wiring; changes strategy at least once before thresholds are reached when the first strategy fails; stops (or completes an already crossed lesion economically) when a threshold is passed.",
+    "tips": [
+      "pci-cto-strategy-stop-rules",
+      "pci-cto-strategy-change-early"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-hybrid"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Ambiguous proximal cap variant of the CTO scenario: the occlusion starts at a large side branch that overlies it in standard views. Tools offered: extra projections, selective microcatheter injection near the cap (requires confirming backflow first), IVUS run (only with a 7–8 Fr guide), a CT overlay, and a 'move the cap' option. A stiff wire advanced at the presumed cap without any clarification should risk a wire exit with contrast staining (raising 'perforation').",
+    "learnerDoes": "Recognises the ambiguous cap, clarifies it or chooses retrograde/move the cap, and never advances a stiff wire blind.",
+    "success": "Cap located by at least one valid method, or a retrograde/move-the-cap plan chosen, before any stiff-wire advance; no wire exit.",
+    "tips": [
+      "pci-cto-strategy-no-blind-cap",
+      "pci-cto-strategy-microcatheter-injection",
+      "pci-cto-strategy-confirm-before-advancing"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-cap-ambiguity"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "An IVUS pullback from a side branch whose origin coincides with the start of an occluded main vessel, so the learner can find the proximal cap on the IVUS frames (plaque at the main-vessel origin) and mark the entry point on the matched angiogram. Use a solid-state (phased-array) catheter model, which the manual prefers for CTO crossing because it images closer to the tip.",
+    "learnerDoes": "Runs IVUS from the branch, identifies the frame where the occluded vessel leaves, and marks the cap on the angiogram.",
+    "success": "Marked cap within one frame (or 1 mm) of the true origin.",
+    "tips": [
+      "pci-cto-strategy-no-blind-cap"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-cap-ambiguity"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Post-crossing sequence in the CTO scenario: confirm the distal true lumen with contralateral injection in two orthogonal views (with a wire-exit variant showing the wire outside the contour, abnormal motion and ventricular ectopics), advance the microcatheter, exchange the crossing wire for a workhorse, then stent a long segment with imaging optimisation; a final donor-vessel and collateral injection step. Post-stent pressure-wire pullback with a step-up at an underexpanded segment.",
+    "learnerDoes": "Confirms position before advancing any device, exchanges the wire, stents with imaging, checks the donor and collaterals, and acts on a post-stent step-up.",
+    "success": "No device advanced over an exited wire; wire exchanged before balloons; no IIb/IIIa inhibitor; step-up segment re-treated; final donor injection performed.",
+    "tips": [
+      "pci-cto-strategy-confirm-before-advancing",
+      "pci-cto-strategy-poststent-physiology"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-finish"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A diagnostic case in which a stable patient has a CTO with contralateral collaterals. The lab should raise 'chronic-occlusion' (the new event requested in the first entry; 'total-occlusion' also covers acute occlusions) in the views phase, accept long low-magnification runs without panning, and offer an 'end and plan staged CTO PCI' versus 'proceed ad hoc' choice in the finish phase, debriefing against Brilakis's reasons to plan.",
+    "learnerDoes": "Films the collaterals properly and chooses to plan rather than proceed ad hoc.",
+    "success": "Collateral runs long enough for the distal vessel to fill, without panning; planned procedure chosen.",
+    "tips": [
+      "diag-cto-strategy-defer-adhoc"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-selection"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Antegrade wiring of the CTO scenario with a wire ladder: soft tapered polymer-jacketed, intermediate-penetration (polymer-jacketed or composite core) and stiff high-penetration wires. Cap type (tapered or blunt) varies by run. The wire tip can stay in plaque, enter the subintimal space or exit the vessel. Tools: redirect, leave the wire as a marker and pass a second wire alongside (parallel wire, with an optional dual-lumen microcatheter), IVUS-guided re-entry (only with an 8 Fr guide) and a dissection and re-entry option. Advancing subintimally well beyond the distal cap should create a compressing haematoma that narrows the distal true lumen.",
+    "learnerDoes": "Chooses the first wire by the cap, escalates only as needed, de-escalates once 1–2 mm through the proximal cap, and manages a subintimal wire by redirection, parallel wiring or dissection and re-entry without tracking far beyond the distal cap.",
+    "success": "First wire matches the cap type; de-escalation within 2 mm of cap penetration; no subintimal tracking significantly beyond the distal cap; no device advanced over an exited wire.",
+    "tips": [
+      "pci-cto-strategy-step-down",
+      "pci-cto-strategy-subintimal-wire",
+      "pci-cto-strategy-confirm-before-advancing"
+    ],
+    "lessonIds": [
+      "cp-cto-strategy-hybrid",
+      "cp-cto-strategy-finish"
+    ],
+    "priority": "P2"
+  }
+]

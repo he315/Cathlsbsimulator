@@ -1,0 +1,51 @@
+# --- build output and local tooling ---
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+npm-debug.log*
+*.log
+*.tsbuildinfo
+__pycache__/
+*.pyc
+.claude/settings.local.json
+.claude/*.lock
+.backups/
+
+# --- data: lives in DATA_DIR (OneDrive), mirrored at these repo-relative paths; see datasets/MANIFEST.json ---
+# real-angiogram datasets and the built library (datasets/ATTRIBUTION.md); raw, extracted and tmp may be
+# symlinks into DATA_DIR, so no trailing slash
+datasets/raw
+datasets/extracted
+datasets/tmp
+datasets/library
+datasets/library-shards
+
+# derivatives of real angiogram frames (HANDOVER 6.6): images, per-frame traces, tracks, profiles and
+# per-run measurements, and the outputs of the scripts that make them
+scripts/anatomy_validation/out/
+scripts/anatomy_validation/data/
+scripts/thorax/out/
+scripts/realism/jobs/library_jobs.json
+docs/realism/wave2/C1-sheets/
+src/physics/calibration/traces.json
+src/physics/calibration/raw-*.json
+docs/realism/research/**/*.json
+docs/realism/research/**/*.jsonl
+docs/realism/research/**/*.txt
+docs/realism/research/**/*.html
+docs/realism/research/**/*.xml
+docs/realism/research/**/*.pdf
+docs/realism/research/anatomy/runtraces.sh
+docs/realism/research/harness/lib
+docs/realism/research/mentor/png/
+docs/realism/wave1/.start
+
+# third-party texts: reference handbooks, paper copies and excerpts
+docs/reference/*
+!docs/reference/BRILAKIS_PRINCIPLES.md
+docs/realism/research/ref/
+scripts/anatomy_validation/refs/

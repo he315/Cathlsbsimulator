@@ -1,0 +1,105 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Live dose readouts in the PCI lab, matching the diagnostic lab: cumulative air kerma (Gy), dose-area product, dose rate (mGy/min), fluoroscopy time and a separate count of cine runs and cine seconds. A dose model in which cine costs about ten times the fluoroscopy dose per second and is not added to the fluoroscopy time (Brilakis 28.2). Announcements at every 1 Gy and/or every 30 minutes, a radiographer warning at 1 Gy (Oxford ch 1), a dose-rate warning above 20 mGy/min, and the 'high-radiation-dose' event raised when cumulative air kerma passes 5 Gy (Brilakis 2.5: usually stop at 5–7 Gy).",
+    "learnerDoes": "Watches the dose panel during the scenario, responds to the dose-rate warning by changing angle, magnification, collimation or geometry, and at the end states air kerma, DAP and fluoroscopy time and explains why the fluoroscopy time understates the dose.",
+    "success": "Dose rate brought below 20 mGy/min within a few seconds of each warning; final debrief correctly names which number tracks skin injury (air kerma), which tracks total radiation (DAP), and that cine is excluded from fluoroscopy time.",
+    "tips": [
+      "diag-rad-read-the-dose-panel",
+      "pci-rad-operator-dose-alarm",
+      "diag-rad-low-magnification"
+    ],
+    "lessonIds": [
+      "hb-lab-and-radiation-dose",
+      "hb-lab-and-radiation-reduce"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Imaging controls with dose consequences in the PCI lab: fluoroscopy frame rate (3.75, 7.5, 15 fps), magnification fields, collimators, table height and detector height, C-arm angulation, and a fluoroscopy-save button. Dose model per Brilakis 28.2: 7.5 fps half the dose of 15 fps; magnification raises dose rate; collimation lowers DAP but not air kerma; angles beyond about 30° from AP raise the dose automatically; geometry multipliers from Fig. 28.6 (table high and detector close 1.0; table low, detector close 1.4; table low, detector raised 2.6 with a 40–50% larger image); a radiation pad in the field raises tube output. Collimation hides the guide tip and wire tip outside the field, so the scenario can let the wire migrate distally or the guide engage deeply unseen.",
+    "learnerDoes": "Sets 7.5 fps, lowest magnification, table high and detector low before the first image; chooses a working view within about 30° of AP; collimates to the lesion and opens the field at intervals to check the guide and wire tips; documents inflations with fluoroscopy save rather than cine.",
+    "success": "Scenario completed with air kerma and DAP within a target band set for the scenario, no cine runs used for inflations, and no unseen distal wire migration or deep guide engagement.",
+    "tips": [
+      "diag-rad-fluoro-rate-default",
+      "pci-rad-shallow-working-view",
+      "pci-rad-collimate-check-edges",
+      "diag-rad-grainy-image-flatten"
+    ],
+    "lessonIds": [
+      "hb-lab-and-radiation-xray-system",
+      "hb-lab-and-radiation-reduce"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Skin-entry tracking for long cases: a simple map of the back showing where the beam has entered and how much dose each area has received, so that changing projection visibly spreads the dose (Brilakis 28.2.2.4.6; Oxford ch 8: vary the view in prolonged PCI, skin dosimeters on newer systems). Used in the mid-RCA CTO scenario and a long two-vessel scenario with a staging decision at about 5 Gy.",
+    "learnerDoes": "Changes the projection during a long case so that no single area accumulates most of the dose, and decides at about 5–7 Gy whether to stop and stage the remaining lesion.",
+    "success": "No single skin area receives most of the total; the learner stages the second vessel or justifies continuing in different projections, and arranges skin follow-up when air kerma exceeds 5 Gy.",
+    "tips": [
+      "pci-rad-operator-dose-alarm"
+    ],
+    "lessonIds": [
+      "hb-lab-and-radiation-reduce"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Operator protection in the diagnostic lab: a pre-brief step in which the learner positions the ceiling shield (height and distance from the patient), places a disposable pad (on the abdomen or, wrongly, in the field), chooses distance using a manifold extension, and confirms apron, thyroid collar, lead glasses and dosimeter. An operator-dose readout that falls with the inverse square of distance, rises when the shield is high or away from the patient, falls in RAO and rises in steep LAO, and a debrief showing the operator dose next to the patient dose. Add a LAB_EVENT 'operator-dose-alarm', raised when the operator-dose readout crosses a set rate (the real-time personal dosimeter of Brilakis 2.5 and 28.2), so that an operator-specific tip can fire; today the tip pci-rad-operator-dose-alarm is triggered by the patient-dose event 'high-radiation-dose' and is worded for a high patient dose.",
+    "learnerDoes": "Sets the shield low and against the patient between beam and operator, puts the pad outside the field, steps back for cine runs, keeps hands out of the beam, and responds to a personal-dosimeter alarm.",
+    "success": "Operator dose in the debrief within the target band; the shield and pad positions correct; no hand in the field on any run.",
+    "tips": [
+      "diag-rad-lead-check",
+      "diag-rad-shield-low-close",
+      "diag-rad-step-back-for-cine",
+      "pci-rad-operator-dose-alarm"
+    ],
+    "lessonIds": [
+      "hb-lab-and-radiation-operator"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Pedal discipline and pre-imaging checks in the diagnostic lab: the lab detects screening while the C-arm is still moving and screening with no catheter or wire movement for several seconds ('heavy foot', Brilakis 28.2), shows the count in the debrief, and adds a pre-brief pregnancy-status check for women of child-bearing potential (Oxford ch 1 and ch 2). The pre-brief should also ask about previous procedures under fluoroscopy and show the back for a radiation skin injury; when one is present, the learner limits cine runs and keeps the injured area out of the beam (Brilakis 1.1 and 1.6).",
+    "learnerDoes": "Screens only while moving or checking something, waits for the C-arm to stop, and confirms pregnancy status before the first exposure when the patient is a woman of child-bearing potential. Asks about previous fluoroscopic procedures and checks the back before the first exposure.",
+    "success": "No screening during C-arm movement; idle screening below a set threshold; pregnancy status confirmed when required.; prior radiation history checked.",
+    "tips": [
+      "diag-rad-pedal-discipline",
+      "diag-rad-c-arm-clear",
+      "diag-rad-pregnancy-check"
+    ],
+    "lessonIds": [
+      "hb-lab-and-radiation-reduce",
+      "hb-lab-and-radiation-dose",
+      "hb-lab-and-radiation-xray-system"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A 'beam controls' panel for teaching (kV, mA, added filtration) with the effects from Oxford Table 1.1 shown on a photon number and photon energy display, image contrast and dose, and automatic dose-rate control switched on so that a steeper angle or a larger patient visibly raises tube output.",
+    "learnerDoes": "Changes one control at a time and predicts the effect on photon number, photon energy, contrast and dose before seeing it.",
+    "success": "Correct predictions for kV, mA and filtration, and for the output rise that dose-rate control makes in a steep view.",
+    "tips": [
+      "diag-rad-grainy-image-flatten"
+    ],
+    "lessonIds": [
+      "hb-lab-and-radiation-xray-system"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "glossary",
+    "what": "An interactive timeline of the milestones (1929 Forssmann; 1941 Cournand; Zimmerman's left heart work, 1947 in Oxford and published 1950; 1953 Seldinger; 1956 Nobel Prize; Sones 1958 or 1959; Dotter and Judkins mid-1960s; 1977 first PTCA; 1986 first coronary stents) with the points where sources disagree marked, and the definitions (cardiac catheterisation, coronary angiography, PTCA, PCI) fed into the Review queue.",
+    "learnerDoes": "Places each milestone on the timeline and matches each term with its definition.",
+    "success": "All milestones in order and all definitions matched.",
+    "tips": [],
+    "lessonIds": [
+      "hb-lab-and-radiation-history"
+    ],
+    "priority": "P3"
+  }
+]

@@ -1,0 +1,125 @@
+[
+  {
+    "lab": "views",
+    "what": "Chamber and valve-plane overlay in the view trainer: at any C-arm angle, an optional semi-transparent cardiac silhouette showing the LV cavity with its five walls (anterior, apex, inferior, septum, posterolateral), the aortic root and valve, the right atrium, RV apex and outflow tract, and the coronary sinus. Preset angles RAO 30° and LAO 60°/cranial 20° (Oxford ch 4 ventriculography views), with the spine and diaphragm visible.",
+    "learnerDoes": "At RAO 30° and then LAO 60°/cranial 20°, taps where each LV wall, the aortic valve, the RV apex and the coronary sinus project, then names the artery that supplies each LV wall.",
+    "success": "All five LV walls placed in the correct view and matched to LAD, PDA (RCA or circumflex by dominance) or circumflex/obtuse marginals; RV apex placed just medial to the apex of the silhouette on AP.",
+    "tips": [
+      "diag-bg-wall-to-territory",
+      "diag-lv-gram-views"
+    ],
+    "lessonIds": [
+      "hb-background-silhouette"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Ventriculogram with selectable regional wall-motion abnormalities (anterior, apical with a wrapping LAD, inferior, posterolateral) and a coronary dominance setting (right 85%, left 8%, co-dominant 7%), filmed in RAO 30° and LAO 60°/cranial 20°, followed by a matching coronary angiogram.",
+    "learnerDoes": "Films the ventriculogram in both views, grades each segment (normal, hypokinetic, akinetic, dyskinetic), names the territory, then confirms it on the angiogram, including an apical defect from a long LAD in a right-dominant heart and an inferior defect in a left-dominant heart.",
+    "success": "Territory named correctly from the wall-motion pattern and dominance before the angiogram is shown; debrief flags an apical-plus-distal-inferior defect attributed to the RCA.",
+    "tips": [
+      "diag-bg-wall-to-territory"
+    ],
+    "lessonIds": [
+      "hb-background-silhouette"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Depth teaching mode: a toggle that shows a lateral (or orthogonal) thumbnail beside the working view, so the learner can see whether the catheter tip or a branch lies anteriorly or posteriorly; graft ostia marked on the anterior ascending aorta at their usual levels (circumflex highest, LAD/diagonal just above the left coronary ostium, RCA lowest, just above and in front of the native RCA); sternal wires visible as markers.",
+    "learnerDoes": "Names each projection from the spine, identifies the circumflex as the left coronary branch nearest the spine, and in a post-CABG patient finds each vein graft by level and checks in RAO that the tip points anteriorly.",
+    "success": "Projection and circumflex identified on every run; each graft found at its expected level with the tip shown pointing anteriorly before injection.",
+    "tips": [
+      "diag-bg-name-view-first",
+      "diag-bg-depth-second-view",
+      "diag-aortogram-graft-roadmap"
+    ],
+    "lessonIds": [
+      "hb-background-depth"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "OCT plaque-reading frames: a pullback through an ACS culprit containing normal three-layered wall, fibrous plaque, calcific plaque (sharp-bordered, measurable arc and depth), lipid-rich plaque with a thin cap (<65 μm, blurred border, hidden media), white thrombus and red thrombus with shadowing; three culprit variants (rupture with a cavity and red thrombus, erosion with an intact cap and white thrombus, calcified nodule with protruding calcium). Include a calcified segment scored on the three OCT features linked to underexpansion (arc over 180°, thickness over 0.5 mm, length over 5.0 mm) and a heavily lipid-laden segment where the outer vessel wall cannot be seen.",
+    "learnerDoes": "Labels each frame, names the culprit mechanism, flags the lipid-rich segment as a distal-embolisation risk, and places stent edges on segments with <50% plaque burden and no lipid. Scores the calcium, recommends plaque modification when all three features are present, sizes the stent to the distal reference and flags segments where plaque burden cannot be judged.",
+    "success": "Frames labelled correctly (calcium versus lipid by border), mechanism named, and neither stent edge lands on lipid or TCFA.",
+    "tips": [
+      "pci-bg-lipid-embolisation-forecast",
+      "pci-img-landing-zone"
+    ],
+    "lessonIds": [
+      "hb-background-plaque"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "MI classification step in the diagnostic debrief: after a troponin-positive case the learner chooses the 2026 setting (primary, secondary, procedure-related) and mechanism, or MINOCA (myocardial injury with non-obstructive coronary arteries) when no stenosis reaches 50%, with case variants for SCAD, coronary embolism, stent thrombosis beyond 30 days and supply–demand imbalance on obstructive disease without acute pathology. Secondary MI requires obstructive disease defined as a stenosis of 70% or more (or 50% or more if flow-limiting on physiology) without acute pathology; include a 60% non-flow-limiting variant that does not confirm it.",
+    "learnerDoes": "Writes the report line using the fifth universal definition and, for non-obstructive arteries, recommends cardiac MR within 2 weeks.",
+    "success": "Correct setting chosen for each variant (SCAD, embolism and late stent thrombosis as primary MI); MINOCA reported as a working diagnosis with MR advised.",
+    "tips": [
+      "diag-bg-minoca-working",
+      "diag-bg-secondary-mi-question"
+    ],
+    "lessonIds": [
+      "hb-background-mi"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "haemo",
+    "what": "Atrial fibrillation event during right heart catheterisation: AF triggered by atrial manipulation (or by ischaemia or pericarditis), usually self-terminating; a severe-compromise variant (rate above 150, hypotension, pulmonary oedema, ischaemia or reduced conscious level) needing high-flow oxygen, IV heparin and synchronised cardioversion under sedation or general anaesthesia; and a mild-to-moderate variant (rate below 150, breathless or mildly hypotensive) managed with heparin and, if there is no structural heart disease or pulmonary oedema, flecainide, with amiodarone as a less effective alternative. Needs an 'af' entry in LAB_EVENTS so the tip haemo-bg-af-in-lab can trigger on the event rather than on the whole right-heart phase.",
+    "learnerDoes": "Withdraws from the atrium and watches the self-limiting variant; in the severe variant gives oxygen and heparin and delivers a synchronised shock; in the milder variant chooses heparin and a drug according to the structural-heart-disease status.",
+    "success": "No cardioversion for the self-terminating episode; synchronised (not unsynchronised) shock delivered promptly in the compromise variant.",
+    "tips": [
+      "haemo-bg-af-in-lab"
+    ],
+    "lessonIds": [
+      "hb-background-general"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Contrast-sensitive patients: case settings with LV impairment, a high LVEDP, severe aortic stenosis or dialysis dependence, a running contrast total against a ceiling of 3.7 × GFR, and a pulmonary oedema event (falling saturation, breathlessness) when the volume is excessive or a full ventriculogram is filmed despite a recent good echo.",
+    "learnerDoes": "Sets the contrast ceiling from the GFR at the start, skips the ventriculogram when the echo answers the question (and in critical aortic stenosis, severe left main disease, LVEDP above 35 mmHg, pulmonary oedema or LV thrombus), and treats oedema if it occurs: sit up, high-flow oxygen, IV loop diuretic, IV nitrates if systolic pressure is above 100 mmHg, CPAP, consider a balloon pump.",
+    "success": "Case finished below the ceiling without an oedema event, or oedema recognised and treated within the first minute.",
+    "tips": [
+      "diag-bg-contrast-heart-failure"
+    ],
+    "lessonIds": [
+      "hb-background-general"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "Peripheral access scenarios in the procedure lab: (1) both femoral pulses impalpable; (2) one femoral pulse weaker, with an iliac occlusion found on angiography if the learner persists; (3) an axillofemoral graft with a strong femoral pulse but an occluded abdominal aorta; (4) a known abdominal aortic aneurysm with mural thrombus on ultrasound; (5) an unsuspected aneurysm in which the J wire loops back in the abdomen. (6) A history of a previous access-site complication in the right groin, or an Angio-Seal closure device placed there within 90 days.",
+    "learnerDoes": "Records pulses on both sides before choosing access, chooses the radial route in scenarios 1, 3 and 4, and in scenario 5 stops, images, exchanges only over a wire and considers a long sheath or the radial route. In scenario 6 chooses the other groin or the radial route.",
+    "success": "No femoral puncture in scenarios 1, 3 and 4; in scenarios 2 and 5 the wire is never forced and the obstacle is imaged before any further advance.",
+    "tips": [
+      "access-bg-pulses-both-groins",
+      "access-bg-axillofemoral",
+      "access-bg-aaa-thrombus",
+      "access-root-aneurysm-suspect"
+    ],
+    "lessonIds": [
+      "hb-background-peripheral"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Right heart manipulation complications: ventricular ectopy and VT provoked by vigorous catheter work in the RV (especially the outflow tract), and a catheter knot after prolonged manipulation.",
+    "learnerDoes": "Eases off and repositions when ectopy or VT appears; when a knot is shown, stops, calls for help, does not pull it tight, tries to undo it by advancing the wire, and otherwise pulls it small and withdraws it to the sheath.",
+    "success": "Arrhythmia settles after repositioning; the knot is never pulled tight before an attempt to undo it.",
+    "tips": [],
+    "lessonIds": [
+      "hb-background-silhouette"
+    ],
+    "priority": "P3"
+  }
+]

@@ -1,0 +1,197 @@
+{
+ "package": "found-patient-formulary",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built found-patient-formulary. pharmacology.ts now has 28 new drugs, 3 new routes (neb, oral, crushed) and 12 new infusions, with unit-aware rates and an infusion-only flag. Oral and crushed doses absorb through a gut compartment, and an opioid on board slows them (the IMPRESSION figures). New effects cover antiplatelet, anticoagulant, antithrombotic and DOAC reversal, the thrombus and stent-thrombosis multipliers, bronchodilation, antiarrhythmic and pro-arrhythmic drive, microvascular dilation and diuresis. Flumazenil and naloxone reverse in steps. A sourced interaction table covers PDE-5 windows, a nitrate infusion blunting a bolus, opioid and P2Y12, amiodarone or verapamil or flecainide cautions, and HOCM.\n\nThe heparin half-life mapping is refitted to the lesson's 30, 60 and 150 min points. FORMULARY_REFERENCE lists 43 module-text dose statements with file:line, and a test checks each line still says it.\n\nengine.ts adds giveDrug() (refuses a dose without throwing and returns the interaction flags), setOxygen() as an FiO2 term in SpO2, setHaemorrhage(), setVasodilation(), a dynamic LVOT obstruction for HCM, diuresis, and VT from IV 1 mg adrenaline with a pulse. It also adds over-sedation events, rightHeart(), thrombusHazard() with the pure thrombusHazardFor(), contrastBudget(), contrast.budget events, new Vitals fields and snapshot state that older snapshots can still restore. responses.ts splits a reaction into skin, airway and circulation, and salbutamol relieves only the airway part. patient.ts gains optional profile facts (lvot, vasodilation, pde5, doac, recentContrast, preExcitation) and presetPatient() with lcx-stemi, hcm-obstructive and vasodilated. generatePatient is unchanged, so seeded patients are the same.\n\nThe new contrastBudget.ts carries the Brilakis rule (3.7 \u00d7 GFR, or 3.7 \u00d7 CrCl in CTO) and the Oxford 5\u20137 mL/kg rule, subtracts recent contrast, applies a plan override and the advanced-CKD advisory, and sets the 80% warning and the 50% and 100% announcement points. The team tables cover every new DrugId and route. Grams are read as milligrams, the nurse asks for a rate when an infusion-only drug is ordered as a bolus, and an infusion of a drug the team's infusion intent cannot carry is no longer read as a bolus. S9.md documents every sourced value with its line and every MODEL PARAMETER.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/pharmacology.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/engine.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/responses.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/contrastBudget.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/contrastBudget.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/params.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/intents.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/roles/drugs.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/facts/S9.md",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/formulary.test.ts (new test file)"
+    ],
+    "testsAdded": [
+     "src/simulation/patient/patient.test.ts: 21 new tests in the 'formulary: \u2026' describe blocks: heparin half-life; ACT at 10 and 70 min; noradrenaline in vasodilation against bleeding; dobutamine and phenylephrine in HCM; infusion-only refusal; IV adrenaline 1 mg; furosemide; rightHeart patterns; flumazenil and naloxone; oxygen; salbutamol and reaction components; PDE-5 and GTN; nitrate tolerance; antiarrhythmic flags; eptifibatide; ticagrelor and the lcx-stemi hazard; crushed against whole and the opioid delay; nitroprusside IC against IV; bivalirudin ACT and DOAC reversal; reference lines still in the module text; snapshot replay",
+     "src/simulation/patient/contrastBudget.test.ts (new, 7 tests): eGFR 45 \u2192 166.5 mL, with 60 mL two days earlier subtracted; both rules with sources; source lines still state the rules; recent window; CTO CrCl rule and Oxford winning in a small patient; 80% warning and 50/100% announcements with crossedPoints; plan override and advanced-CKD advisory; engine contrast.budget events once each",
+     "src/simulation/team/formulary.test.ts (new, 5 tests): every DrugId has an alias, spoken name, threshold and role, and each alias resolves to its own drug; parsing of new drugs, routes and grams, with non-team infusions not read as boluses; nebulised and crushed read-back and give through the engine; infusion-only query and nitroprusside route query; idarucizumab in grams"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts src/simulation/team/team.test.ts src/simulation/team/formulary.test.ts: 4 files, 118 tests passed, before the furosemide test was added",
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts: 2 files, 82 tests passed (final run, including the furosemide test)",
+     "npx vitest run src/simulation/session/caseSession.test.ts: 14 passed (full-case ACT test unchanged)",
+     "npx vitest run src/ui/lab/integration.test.ts src/ui/lab/patientEvents.test.ts src/simulation/angioPci.test.ts: 42 passed (diagnostic-lab and PCI ACT tests unchanged)",
+     "npx vitest run src/ui/lab/eventLog.test.ts src/ui/lab/integration.test.ts src/ui/lab/lab.test.ts src/ui/lab/labRun.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/useContextTips.test.ts src/ui/team/team-ui.test.ts src/audio/audio.test.ts: 8 files, 95 passed",
+     "npx vitest run src/mentor/bridgePedal.test.ts src/mentor/ledger.test.ts src/mentor/mentor.test.ts src/simulation/access/access.test.ts src/simulation/complications/complications.test.ts: 5 files, 87 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no output. The first run flagged node:path resolve in the new tests, which the node shim does not declare; this was switched to join, and optional TelemetryEvent.data accesses were fixed.",
+    "acceptance": [
+     {
+      "criterion": "patient.test.ts: heparin half-life is 30 +/- 5 min after 25 U/kg and 60 +/- 8 min after 100 U/kg; existing diagnostic and PCI ACT tests are updated with the new values and pass",
+      "status": "met",
+      "evidence": "Measured time for the plasma level to halve: 29.9 min after 25 U/kg, 60.0 min after 100 U/kg and 150.6 min after 400 U/kg (Brilakis's three points, 03-antithrombotics.ts:72). The existing ACT tests in patient.test.ts, caseSession.test.ts, ui/lab/integration.test.ts, angioPci.test.ts and team.test.ts all pass. None needed new values: the initial half-life at the 100 U/kg level is about 74 min under both the old and new mappings, so the 10-minute ACT is unchanged (about 328 s, inside 290\u2013350). A new test also checks the ACT has dropped below the Hemochron target 60 minutes later."
+     },
+     {
+      "criterion": "patient.test.ts: noradrenaline raises MAP more in a vasodilated profile than during ongoing bleeding; dobutamine lowers MAP in the HCM profile and phenylephrine raises it; flumazenil steps reduce midazolam sedation and naloxone does not; oxygen raises SpO2 under the same respiratory depression",
+      "status": "met",
+      "evidence": "Each has a passing test. Noradrenaline at 10 \u00b5g/min: MAP 84\u2192107 mmHg in presetPatient('vasodilated') against a continued fall during 3 mL/s haemorrhage. HCM: dobutamine 10 \u00b5g/kg/min drops MAP by more than 10 mmHg and raises the hocm-inotrope flag; phenylephrine 100 \u00b5g raises it by more than 4 mmHg; the same dobutamine in a normal heart does not lower MAP. Five flumazenil 0.2 mg steps give a monotonic fall to under 25% of the midazolam sedation; naloxone leaves over 95% (but does reverse fentanyl respiratory depression). Oxygen at 4 L/min: same respiratory depression above 0.45, over-sedation event raised, SpO2 more than 1 point higher."
+     },
+     {
+      "criterion": "patient.test.ts: GTN after a PDE-5 inhibitor drops MAP more than without; eptifibatide raises the antithrombotic effect and lowers the thrombus hazard",
+      "status": "met",
+      "evidence": "GTN 200 \u00b5g IC with sildenafil 6 h earlier drops MAP by more than 2 mmHg extra and emits drug.interaction pde5-nitrate. There is no flag outside the 24 h window, and tadalafil is still flagged at 30 h (48 h window). Eptifibatide (180 \u00b5g/kg plus 2 \u00b5g/kg/min): gpi above 0.5, antithrombotic up by more than 0.3, thrombus hazard rate below 75% of no drug, and the effect fades with the 2 h half-life."
+     },
+     {
+      "criterion": "patient.test.ts: ticagrelor 180 mg loading 30 min before wiring lowers the seeded thrombus-hazard rate of the lcx-stemi patient profile against no load; crushed and whole routes use separate onset parameters; nitroprusside given 'ic' lowers MAP less than the same dose IV",
+      "status": "met",
+      "evidence": "presetPatient('lcx-stemi') copies the angioPci.ts scenario's thrombotic LCx lesion. The seeded base rate is the same in both arms, the rate is below 90% of no load (about 76% observed), a different seed gives a different base, there is no hazard without a thrombotic lesion, and engine.thrombusHazard() matches. ORAL_ONSET_S differs between crushed and oral for all four oral antiplatelets; crushed gives higher inhibition at 30 min, and an opioid lowers it. Nitroprusside 200 \u00b5g: the IC MAP drop is above 0 and smaller than the IV drop by more than 1 mmHg (3.2 against 6.6 in the probe); IC also gives microvascular dilation above 0.4."
+     },
+     {
+      "criterion": "contrastBudget.test.ts: eGFR 45 gives 166.5 mL by the Brilakis rule; 60 mL two days earlier is subtracted; both rules are reported with their source",
+      "status": "met",
+      "evidence": "brilakis-gfr ceilingMl 166.5, availableMl 106.5, recentMl 60. Oxford reports 400 mL at 5 mL/kg \u00d7 80 kg and 340 mL available. Each rule carries a book and a file:line, and a separate test checks that each cited line still contains its rule text. Further tests cover the CTO CrCl rule, the 80% warning, the 50/100% announcements, the plan override, the advanced-CKD advisory and engine contrast.budget events."
+     },
+     {
+      "criterion": "team.test.ts passes with the new DrugIds; npx tsc -p tsconfig.app.json --noEmit is clean",
+      "status": "met",
+      "evidence": "team.test.ts: 32 passed. The new formulary.test.ts (5 tests) checks every DrugId has an alias, spoken name, QUERY_ABOVE threshold and DRUG_ROLE, and that the new routes are read back. The typecheck is clean."
+     }
+    ],
+    "outOfScope": [
+     "src/simulation/team/types.ts and src/simulation/team/roles/scrub.ts: the TeamIntent 'infusion' drug union and scrub.ts's startInfusion and unit text cover only adenosine, noradrenaline and heparin. Until they are widened to pharmacology.ts InfusionDrug, intents.ts returns 'unknown' (say again) for spoken infusions of dobutamine, eptifibatide and the other new infusion drugs, rather than misreading them as boluses.",
+     "src/simulation/team/roles/sedation.ts and src/simulation/team/agent.ts: the team's oxygen order only emits core.act({a:'oxygen'}) and never calls the engine. To make a spoken oxygen order raise SpO2, agent.ts PatientPort needs 'setOxygen' and sedation.ts should call core.patient?.setOxygen(lpm), including 0 for off."
+    ],
+    "notes": "I snapshotted the 9 listed files that already existed into datasets/tmp/wp-snapshots/found-patient-formulary/ and created .started there. contrastBudget.ts and contrastBudget.test.ts did not exist beforehand. Outside the list, I only added the new test file src/simulation/team/formulary.test.ts and a temporary probe test, which I deleted.\n\nDefaults are kept. generatePatient draws nothing new, and all new profile fields are optional. Effect code takes the original expressions when a new drug is absent (PDE-5, nitrate infusion, aminophylline, reversal agents, oxygen, bronchodilator, antiarrhythmic), and all pre-existing patient, team, lab, mentor, case and PCI tests pass unchanged. Two intended changes do affect existing paths. The heparin half-life is now dose-dependent as the lesson states; the 10-minute ACT is unchanged, but later ACTs after small doses are lower than before. Any IV adrenaline bolus now adds a small high-dose pressor and VT-drive term, about 2% SVR at 100 \u00b5g, by design.\n\nAPI for later packages:\n- engine.giveDrug(drug, dose, route, {side}) returns {ok, flags} or {ok:false, reason}.\n- engine.interactionFlags(drug).\n- engine.setOxygen(lpm), setHaemorrhage(mlPerS), setVasodilation(fraction).\n- engine.rightHeart(), thrombusHazard(), contrastBudget(opts).\n- New Vitals fields: respiratory, reaction, antithrombotic, losses.\n- pharmacology exports: INTERACTIONS, interactionFlags, PDE5_WINDOW_H, ORAL_ONSET_S, OPIOID_P2Y12, INFUSIONS, FORMULARY_REFERENCE (doses with module file:line), MP_FORMULARY, MP_INTERACTION.\n- presetPatient('lcx-stemi' | 'hcm-obstructive' | 'vasodilated').\n- contrastBudget.ts: contrastBudget, contrastBudgetForProfile, crossedPoints, CONTRAST_BUDGET_DEFAULTS.\n\nJudgement calls, all labelled MODEL PARAMETER in S9.md:\n- The FiO2 per L/min conversion is a model value, not a sourced one.\n- Cangrelor's 5-min half-life: the module says only \"short\".\n- Andexanet and PCC have no dose in the module, so their reversal curves are models.\n- The 7-day window for recent contrast: the module says neither manual states it.\n- The default Oxford figure is 5 mL/kg, the stricter end of 5\u20137.\n- QTc 0.47 s and LVEF 40% stand in for 'prolonged QT' and 'poor LV', for which the module gives no numbers.\n\nPatientEngine.advance() caps one call at 120 s, so the new long-span tests step in 60 s chunks."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/simulation/patient/engine.ts slowTick ('IV adrenaline at arrest doses with a pulse' block) and src/simulation/patient/pharmacology.ts effects() (adrIv = sum(\"adrenaline\", \"iv\"))",
+      "problem": "An arrest-dose IV adrenaline given during VF counts as 'with a pulse' once circulation returns. The guard only checks !this.rhythm.arrested at the moment of the draw, so after ROSC the remaining drug (drive about 0.89) triggers the high-dose SVR term and a 50% VT draw labelled 'IV adrenaline with a pulse'. I tested 6 seeds with VF, CPR, 1 mg IV at 5 s and a shock at 36 s, then 60 s of running. Post-ROSC systolic was 238-455 mmHg against 207-317 mmHg on the pre-package engine, and 2 of 6 seeds went straight into VT. The extra rng.chance draw also shifts the engine's random stream for every arrest-lab run, so behaviour changes in labs this package does not touch.",
+      "severity": "major",
+      "fix": "Mark boluses given during an arrest and leave them out of the high-dose term. In pharmacology.ts add `arrest?: boolean` to DoseOrder and to Bolus, copy it in give() (`this.st.boluses.push({ ..., arrest: o.arrest })`), and in effects() compute `adrIv` only from boluses where `b.drug === \"adrenaline\" && b.route === \"iv\" && !b.arrest`. In engine.give() pass `this.pharm.give({ ...o, arrest: o.drug === \"adrenaline\" && this.rhythm.arrested })`. Add a patient.test.ts case: VF, then adrenaline 1000 \u00b5g IV during CPR, then shock to sinus and 60 s of running. Assert there is no rhythm.vt event, and that systolic is within 10 mmHg of the same run on a build without the high-dose term (or below 320)."
+     },
+     {
+      "where": "src/simulation/patient/patient.ts presetPatient case \"lcx-stemi\"",
+      "problem": "The preset contradicts itself. The angiocad grades are left as generatePatient drew them, and only profile.culprit is overwritten to Prox LCx grade 5. With the default seed, culpritOf(profile.angiocad.grades) is Prox RCA grade 5 while Prox LCx is grade 0. Seeds 2, 3 and 'other-seed' give a Mid LAD or Mid RCA grade-6 culprit. Any consumer that builds lesions from the profile (new PatientEngine({ profile }) without lesions, lesionsFromProfile) or reads its anatomy (vignette, haemoFingerprint, a chart) gets an RCA or LAD STEMI rather than the circumflex case the preset is named for.",
+      "severity": "major",
+      "fix": "Use clear(p), then set the LCx grade to match the lesion: `const c = clear(generatePatient(seed, { indication: \"STEMI\", sex: \"M\", ageY: 54 })); const grades = { ...c.angiocad.grades, \"Prox LCx\": 5 }; return { profile: { ...c, angiocad: { ...c.angiocad, grades }, culprit: { segment: \"Prox LCx\", grade: 5 } }, lesions }`. Keep the STEMI baseline rhythm if clear() resetting it to sinus is not wanted. Add to the ticagrelor test: `expect(culpritOf(profile.angiocad.grades)).toEqual(profile.culprit)` for two seeds."
+     },
+     {
+      "where": "src/simulation/team/roles/drugs.ts resolveDrug (infusion-only query) with src/simulation/team/intents.ts (TEAM_INFUSIONS guard)",
+      "problem": "When dobutamine, dopamine or vasopressin is ordered as a bolus, the nurse replies 'What rate do you want?'. Every spoken infusion of those drugs then parses as { k: \"unknown\" } (say again), because the team's infusion intent only carries adenosine, noradrenaline and heparin. The operator is invited to give a rate the team cannot act on, which is a dialogue dead end.",
+      "severity": "minor",
+      "fix": "Until types.ts and scrub.ts are widened (already listed in outOfScope), drop the invitation: return `${cap} goes up as an infusion, not a bolus.` without 'What rate do you want?'. Restore the question in the package that widens the infusion intent. Update the regex in formulary.test.ts to /infusion, not a bolus\\.$/."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts checkRenal (contrast.budget loop)",
+      "problem": "The announcement points are iterated in Set insertion order ([0.5, 1, 0.8]), so one large injection that crosses both 80% and 100% emits the 100% event before the 80% warning. When recent contrast has already used up the ceiling (ceilingMl 0), the engine never emits contrast.budget at all, while crossedPoints() in contrastBudget.ts returns every point for that case. The engine and the shared helper therefore disagree.",
+      "severity": "minor",
+      "fix": "Reuse the helper. Keep the previous total in a private field `budgetPrevMl` (snapshotted in form) and call `for (const f of crossedPoints(budget, this.budgetPrevMl, ml)) if (!this.budgetAnnounced.includes(f)) { ...emit... }`, then set `this.budgetPrevMl = ml`. crossedPoints sorts the points and handles ceilingMl 0. Add an engine test with a profile whose recentContrast exceeds the ceiling: the first injection emits each point once, in ascending order."
+     },
+     {
+      "where": "src/simulation/patient/contrastBudget.ts contrastBudgetForProfile",
+      "problem": "`{ egfr, crclMlMin, weightKg, recent: opts.recent ?? p.recentContrast, ...opts }` spreads opts last. A caller that passes `recent: undefined` explicitly, for example forwarding an optional field, overwrites the profile's recent contrast with undefined, and the CT contrast silently stops counting.",
+      "severity": "minor",
+      "fix": "Spread opts first: `contrastBudget({ ...opts, egfr: p.renal.egfr, crclMlMin: p.renal.crclMlMin, weightKg: p.weightKg, recent: opts.recent ?? p.recentContrast })`."
+     },
+     {
+      "where": "src/simulation/patient/engine.ts startInfusion (amiodarone) vs give()",
+      "problem": "The long-QT and pre-excited-AF VF chance (proVfArmed) is armed only by an amiodarone bolus. An amiodarone infusion raises the same flags (drug.interaction is emitted) but never arms VF, so the table says one thing and the engine does another, depending on how the drug is given.",
+      "severity": "minor",
+      "fix": "In startInfusion, after computing flags: `if (o.drug === \"amiodarone\" && flags.some((f) => f.id === \"long-qt-antiarrhythmic\" || f.id === \"pre-excitation-antiarrhythmic\") && this.rng.chance(MP_INTERACTION.proarrhythmiaP)) this.proVfArmed = true;`. Factor this into a private helper shared with give()."
+     },
+     {
+      "where": "src/simulation/patient/patient.test.ts ('antiarrhythmics are flagged\u2026') and the interaction tests",
+      "problem": "Several interaction-table entries the plan names have no test. Nothing checks the pre-excitation-antiarrhythmic flag (preExcitation plus AF), that proVfArmed leads to VF, or the hocm-nitrate flag. Nothing checks that a running GTN infusion emits nitrate-infusion-blunts-bolus as a drug.interaction event; the existing test checks only the blunted venodilation inside Pharmacology.",
+      "severity": "minor",
+      "fix": "Extend the antiarrhythmic test. Use `ready({ ...healthy(69), preExcitation: true, baseline: { ...healthy(69).baseline, rhythm: \"af\" } })` and expect interactionFlags(\"amiodarone\") to contain \"pre-excitation-antiarrhythmic\". Over 20 seeds, give amiodarone 300 mg IV with qtc 0.47, run 300 s, and assert that some seeds and not all reach VF. Use presetPatient(\"hcm-obstructive\") and expect interactionFlags(\"gtn\") to contain \"hocm-nitrate\". Start a GTN infusion in an engine, give a GTN bolus, and expect a drug.interaction event with id \"nitrate-infusion-blunts-bolus\"."
+     },
+     {
+      "where": "docs/realism/facts/S9.md (formulary section) and src/simulation/team/params.ts QUERY_ABOVE additions",
+      "problem": "The 28 new QUERY_ABOVE thresholds are labelled MODEL PARAMETERS only in a code comment. S9.md's MODEL PARAMETER list leaves them out, although the package rule asks for each number to be cited or listed there.",
+      "severity": "minor",
+      "fix": "Add a bullet under '### MODEL PARAMETERS' in S9.md: 'Team query thresholds (team/params.ts QUERY_ABOVE) for the new drugs: set above each FORMULARY_REFERENCE dose, so that only a unit or decimal slip is queried', followed by the values or a pointer to the table."
+     },
+     {
+      "where": "src/simulation/patient/pharmacology.ts effects()",
+      "problem": "effects() runs on every 50 ms slow tick (20 Hz). The sum() helper does a filter() and reduce() over all boluses per call, and the package raises the number of calls from about 15 to about 45, plus a further filter for furosemide. That is roughly 900 short-lived arrays per second during a case. It is not a render path, but the steady garbage adds up over a long case.",
+      "severity": "minor",
+      "fix": "Do one pass over this.st.boluses at the start of effects(), adding b.e into preallocated per-drug totals (a reused Record<DrugId, number> or a Float64Array indexed by drug, with separate slots for adenosine ic-left, ic-right and iv, nitroprusside and nicardipine ic and iv, adrenaline iv, and furosemide plasma a). Read from those totals instead of calling sum(). Zero the arrays at the start of each call instead of reallocating them."
+     }
+    ],
+    "verdict": "The package is not ready yet. It needs two fixes, then it can be accepted. Most of the design is in place and correct: the drug, route and infusion lists, unit-aware infusions, gut absorption with the opioid delay, the sourced interaction table, the stepped flumazenil and naloxone reversal, oxygen as an FiO2 term, the dynamic LVOT obstruction, the heparin half-life refit, rightHeart(), thrombusHazard(), the split of reactions into skin, airway and circulation, and contrastBudget.ts. The tests run real engines rather than restating the code. Every module citation I spot-checked holds: lines 154, 310, 311, 261, 797-799, 856-857, 1183 and 1026 of the lab-drugs and antithrombotics modules, 698-735 of the patient-complications module, and the CTO line 861.\n\nWhat I ran:\n- `npx vitest run src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts src/simulation/team/formulary.test.ts src/simulation/team/team.test.ts`: 4 files, 119 tests passed.\n- `npx vitest run src/simulation/session/caseSession.test.ts src/simulation/angioPci.test.ts src/ui/lab/integration.test.ts`: 37 passed.\n- `npx tsc -p tsconfig.app.json --noEmit`: clean.\n\nDefaults are kept. With no new drug, profile field or setter in use, the engine and the reactions take the original expressions and the random number stream is untouched. The one exception is the arrest case below.\n\nThe two major findings:\n1. Arrest-dose IV adrenaline given during VF is treated as 'with a pulse' after ROSC. In my probe, post-ROSC systolic reached up to 455 mmHg (up to 317 before the package), and 2 of 6 seeds went into VT. This changes the arrest labs.\n2. presetPatient('lcx-stemi') keeps angiocad grades whose culprit is the RCA or LAD, which contradicts its LCx culprit and lesion.\n\nThe rest are minor. Since there is no git history, I compared the find -newer list against the plan: every file changed outside this package's list is a plausible change by another package (session plumbing, handover, lab controls, dev hooks, progress). The only out-of-list file from this builder is the permitted new test, src/simulation/team/formulary.test.ts. Both outOfScope notes are correct and still needed: the team's infusion intent and scrub.ts must be widened, and the sedation nurse's oxygen order must call setOxygen.\n\nA note for later packages: drug.interaction events carry truth such as 'A PDE-5 inhibitor (sildenafil) was taken\u2026', and the new Vitals fields reaction, antithrombotic and respiratory.depression are also truth. They must reach the debrief only, never a live screen, or they would give away the planted chart problems."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 9,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts (78 passed)",
+     "npx vitest run src/simulation/patient/contrastBudget.test.ts (9 passed)",
+     "npx vitest run src/simulation/team/formulary.test.ts (5 passed)",
+     "npx vitest run src/simulation/team/team.test.ts (32 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all 9 findings against the code, and all 9 were right. I applied each one, staying inside the package's listed files and its test files.\n\n1. Arrest-dose adrenaline (major). pharmacology.ts: DoseOrder and Bolus gain `arrest?: boolean`, and give() copies it onto the bolus. The high-dose SVR term and the pro-arrhythmic drive now count only IV adrenaline boluses given without an arrest. engine.give() passes `arrest: o.drug === \"adrenaline\" && this.rhythm.arrested`. After return of circulation the drive stays at 0, so the engine makes no extra VT rng draw and the random stream in arrest labs no longer shifts. New patient.test.ts test: VF, CPR, 1000 \u00b5g IV, a shock that converts, then 60 s of running, over up to 3 converted seeds. It checks there is no rhythm.vt event, the adrenaline boluses carry arrest=true, and systolic is below 320.\n\n2. lcx-stemi preset (major). patient.ts now runs the profile through clear(), sets the Prox LCx grade to 5 and keeps the STEMI baseline rhythm from the generated profile. The ticagrelor test now checks, for the default seed, 'other-seed', 2 and 3, that culpritOf(grades) equals profile.culprit, which is Prox LCx grade 5, and that lesionsFromProfile gives only LCx lesions. thrombusHazardFor is seeded by profile.seed only, so the existing hazard tests are unaffected.\n\n3. Infusion-only reply. drugs.ts no longer asks 'What rate do you want?'. The test regex is now /infusion, not a bolus\\.$/ and the test name changed to match.\n\n4. contrast.budget ordering. checkRenal now emits points from crossedPoints(budget, budgetPrevMl, ml), still deduplicated by budgetAnnounced. budgetPrevMl is a private field and goes into snapshot form as an optional `budgetPrevMl?`. An older snapshot without it restores the field as the current contrast total, so points already passed are not announced again. New contrastBudget.test.ts test covers three cases: one large injection emits [0.5, 0.8, 1] in order; recent contrast of 5000 mL gives ceilingMl 0, and the first injection emits each point once and the second emits none; after a snapshot and restore no point is announced again.\n\n5. contrastBudgetForProfile now spreads opts first. New test: passing `recent: undefined` keeps the profile's 30 mL.\n\n6. Amiodarone infusion. A private armProarrhythmia(drug, flags) helper is now shared by give() and startInfusion(). The rng draw happens only when the long-QT or pre-excitation flag is raised, so other runs keep the same random stream.\n\n7. Interaction tests. The antiarrhythmic test now also checks the pre-excitation-antiarrhythmic flag (preExcitation with AF baseline) and the hocm-nitrate flag (hcm-obstructive preset, gtn). A new test covers amiodarone with a long QT. Over 20 seeds a 300 mg IV bolus followed by 100 s of running leads to VF in some seeds and not all. A 15 mg/min infusion arms proVfArmed in some seeds and not all; this is read from the snapshot without running, to keep runtime down. 100 s replaces the suggested 300 s for the same reason: the effect site is past the 0.3 release level by then. A new test starts a GTN infusion, gives a GTN bolus and expects a drug.interaction event with id nitrate-infusion-blunts-bolus.\n\n8. S9.md. The MODEL PARAMETERS list now includes the 28 QUERY_ABOVE values. I also documented four other changes there: the arrest-dose rule for adrenaline, the amiodarone chance being drawn for both bolus and infusion, the cleared anatomy of the lcx-stemi preset, and the ascending crossedPoints order with the case where recent contrast has used the whole ceiling.\n\n9. effects() efficiency. A single pass over the boluses fills a reused per-drug Record (zeroed over a module-level DRUG_IDS) and reused route slots for adenosine (IC left, IC right, IV), nitroprusside (IC and IV), nicardipine IC, IV adrenaline not given in an arrest, and the furosemide plasma amount. All sum() calls are gone. The sums are added in the same order from 0 as before, so results are bit-identical and seeded runs do not change.\n\nFiles edited: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/pharmacology.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/engine.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/contrastBudget.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/roles/drugs.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/docs/realism/facts/S9.md, and the tests /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.test.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/contrastBudget.test.ts, /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/team/formulary.test.ts.\n\noutOfScope: for finding 3, the 'What rate do you want?' question should come back in the package that widens the team's infusion intent (types.ts and scrub.ts) to carry dobutamine, dopamine and vasopressin."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "patient.test.ts: heparin half-life is 30 +/- 5 min after 25 U/kg and 60 +/- 8 min after 100 U/kg; existing diagnostic and PCI ACT tests are updated with the new values and pass",
+      "met": true,
+      "evidence": "src/simulation/patient/patient.test.ts:1012 asserts |h25-30|<=5 and |h100-60|<=8 (plus 400 U/kg ~150 min and a second weight); :1025 keeps the ACT near 320 s at 10 min after 100 U/kg; the original :491 ACT test passes. Every other test file that touches heparin or ACT passes against the new kinetics: angioPci, handover, caseSession, labRun, integration, patientEvents, complications, mentor, lesionAssessment and access (184 tests)."
+     },
+     {
+      "criterion": "patient.test.ts: noradrenaline raises MAP more in a vasodilated profile than during ongoing bleeding; dobutamine lowers MAP in the HCM profile and phenylephrine raises it; flumazenil steps reduce midazolam sedation and naloxone does not; oxygen raises SpO2 under the same respiratory depression",
+      "met": true,
+      "evidence": "patient.test.ts:1039 (dVaso > dBleed + 8), :1061 (dobutamine drops MAP by more than 10 in hcm-obstructive, phenylephrine raises it, healthy control does not drop), :1175 (five 0.2 mg flumazenil steps each reduce sedation monotonically to <25%; naloxone stays >95%), :1208 (equal depression, higher FiO2, SpO2 > air + 1). All pass."
+     },
+     {
+      "criterion": "patient.test.ts: GTN after a PDE-5 inhibitor drops MAP more than without; eptifibatide raises the antithrombotic effect and lowers the thrombus hazard",
+      "met": true,
+      "evidence": "patient.test.ts:1249 (drop2 > drop1 + 2, pde5-nitrate interaction flagged, window respected); :1333 (gpi > 0.5, antithrombotic +0.3, thrombus hazard rate < 0.75x). Pass."
+     },
+     {
+      "criterion": "patient.test.ts: ticagrelor 180 mg loading 30 min before wiring lowers the seeded thrombus-hazard rate of the lcx-stemi patient profile against no load; crushed and whole routes use separate onset parameters; nitroprusside given 'ic' lowers MAP less than the same dose IV",
+      "met": true,
+      "evidence": "patient.test.ts:1356 (lcx-stemi preset, same seeded base rate, loaded rate < 0.9x, stent-thrombosis multiplier < 1); :1388 (ORAL_ONSET_S crushed differs from and is less than oral for all four antiplatelets, and crushed gives a higher P2Y12 effect at 30 min); :1408 (IC drop > 0 and < IV drop - 1). Pass."
+     },
+     {
+      "criterion": "contrastBudget.test.ts: eGFR 45 gives 166.5 mL by the Brilakis rule; 60 mL two days earlier is subtracted; both rules are reported with their source",
+      "met": true,
+      "evidence": "src/simulation/patient/contrastBudget.test.ts:9 checks Brilakis ceiling 166.5 and available 106.5, recentMl 60, Oxford 400/340 and the source book and location for each rule; :29 checks that each source line still states the rule in the module text. 9/9 pass."
+     },
+     {
+      "criterion": "team.test.ts passes with the new DrugIds; npx tsc -p tsconfig.app.json --noEmit is clean",
+      "met": true,
+      "evidence": "src/simulation/team/team.test.ts 32/32 pass, src/simulation/team/formulary.test.ts 5/5 pass (every DrugId has an alias, a spoken name, a query threshold and a role), src/ui/team/team-ui.test.ts passes. tsc -p tsconfig.app.json --noEmit exited with no output (clean)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/patient/contrastBudget.test.ts (87/87 pass)",
+     "npx vitest run src/simulation/team/team.test.ts src/simulation/team/formulary.test.ts src/ui/team/team-ui.test.ts (41/41 pass)",
+     "npx vitest run src/simulation/angioPci.test.ts src/simulation/session/handover.test.ts src/simulation/session/caseSession.test.ts (38/38 pass)",
+     "npx vitest run src/ui/lab/labRun.test.ts src/ui/lab/integration.test.ts src/ui/lab/patientEvents.test.ts src/simulation/complications/complications.test.ts (56/56 pass)",
+     "npx vitest run src/mentor/mentor.test.ts src/simulation/pci/lesionAssessment.test.ts src/simulation/access/access.test.ts (76/76 pass)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no errors, about 34 s)"
+   }
+  ]
+ }
+}

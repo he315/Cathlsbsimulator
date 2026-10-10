@@ -1,0 +1,166 @@
+[
+  {
+    "lab": "haemo",
+    "what": "Crossing a stenotic aortic valve as a decision and a manoeuvre, before the existing aortic stenosis pressure scenario: a pre-study screen showing the echo report (good-quality concordant echo in one variant; poor windows with discordant Doppler and inconclusive TOE and CT calcium scoring in the other) and a 'cross or not' decision; when crossing, a choice of catheter (5 F AL1, pigtail, JR4) and wire (straight hydrophilic, standard J, stiff straight), an optional aortogram showing the Prussian helmet landmark where the leaflets open, a manipulation-quality monitor that flags forceful or uncontrolled wire movement at the valve (Oxford's call for controlled manipulation), a possible on-table neurological event after crossing that the learner must answer by stopping manipulation and calling the stroke team, then an exchange-length J wire swap to a pigtail. A second arterial catheter option for simultaneous LV and aortic pressures versus a single-catheter pullback versus LV against femoral pressure, with the measured gradient differing accordingly.",
+    "learnerDoes": "Declines to cross when echo and symptoms agree; when the echo is non-diagnostic, crosses with an AL1 and straight hydrophilic wire after an aortogram, exchanges for a pigtail, places a second aortic catheter, and records the mean gradient from simultaneous traces before any pullback.",
+    "success": "No crossing in the concordant variant; in the discordant variant, valve crossed with the AL1 and hydrophilic wire without forceful manipulation, simultaneous mean gradient recorded and compared with the pullback peak-to-peak value.",
+    "tips": [
+      "haemo-as-cross-only-if-discordant",
+      "haemo-as-al1-straight-wire",
+      "haemo-as-simultaneous-gradient",
+      "haemo-as-slow-rise-not-damping"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-as"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "haemo",
+    "what": "A classical low-flow low-gradient aortic stenosis scenario (LVEF below 50%, low stroke volume index, valve area of 1.0 cm² or less with a mean gradient below 40 mmHg) in which the Gorlin area is computed live from output, heart rate, ejection period and mean gradient, and visibly changes with flow; variants for true severe, pseudo-severe and no-flow-reserve responses to a staged dobutamine infusion, with a results table filled in at each stage.",
+    "learnerDoes": "Recognises the discordant pattern, explains that the Gorlin formula underestimates area at low output, and decides from how output, gradient and area move together whether the stenosis is true severe, pseudo-severe or indeterminate, using CT valve calcium scoring (2025 ESC/EACTS Agatston thresholds) as complementary information.",
+    "success": "Correct classification in all three variants, with the stage table completed.",
+    "tips": [
+      "haemo-as-simultaneous-gradient"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-as"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Mitral stenosis with atrial fibrillation: the existing mitral stenosis scenario with an irregular rhythm option so that the beat-to-beat mean gradient varies with cycle length, a beat counter and an averaging tool, and the Gorlin mitral formula (constant 37.7, diastolic filling period) computed from the averaged gradient. Display Oxford's severity bands and the ESC 1.5 cm² line together.",
+    "learnerDoes": "Records simultaneous wedge and LV pressures, averages at least 10 beats, notes that the wedge probably overestimates left atrial pressure by 2–3 mmHg, and calculates the mitral valve area.",
+    "success": "Gradient averaged over at least 10 beats; valve area within 0.1 cm² of the model value; band named on both scales.",
+    "tips": [
+      "haemo-ms-wedge-lv-ten-beats"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-mitral"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Left ventriculography and aortography with angiographic grading of regurgitation: a pigtail LV run with selectable injection volume and rate (30–35 mL at 10–15 mL/s; reduced 30 mL at 10 mL/s), a rendered left atrium that fills to grade I–IV, an LVEDP check that warns above 25 mmHg and stops the run above 35 mmHg, catheter-induced regurgitation and ectopic runs when the pigtail is placed against the mitral apparatus; an aortogram (40–60 mL at 20 mL/s, LAO) with LV filling to grade I–IV against the aorta and false regurgitation when the pigtail sits on the leaflets. Raise phase 'lv-aorta' with catheter 'PIG' so the grading tips appear.",
+    "learnerDoes": "Checks LVEDP, positions the pigtail mid-cavity, chooses the injection, discards ectopic beats, and grades mitral and aortic regurgitation; repositions the aortogram catheter off the leaflets before grading.",
+    "success": "Correct grade on clean runs in all variants; no grading of catheter-induced or ectopic regurgitation; no ventriculogram with LVEDP above 35 mmHg.",
+    "tips": [
+      "diag-lvgram-catheter-induced-mr",
+      "diag-aortogram-ar-grading"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-mitral",
+      "hb-specific-conditions-ar-right"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Pulmonary stenosis scenario (valvar, with a subvalvar variant) for a slow PA-to-RV pullback with continuous recording, and a severe tricuspid regurgitation scenario with large c and v waves and loss of the x descent on the RA trace, plus a tricuspid stenosis variant with mitral disease in which a 5 mmHg diastolic gradient is detectable only with two matched catheters (RA and RV) and is lost in a single-catheter pullback. Include an atrial fibrillation option that removes the a wave.",
+    "learnerDoes": "Localises the pulmonary obstruction from the systolic step and diastolic contour; identifies tricuspid regurgitation from the RA waveform after checking the rhythm; places two matched catheters to measure the tricuspid gradient.",
+    "success": "Correct level of pulmonary obstruction; tricuspid regurgitation named from the RA trace; tricuspid gradient measured simultaneously to within 1 mmHg.",
+    "tips": [
+      "haemo-ps-continuous-pullback",
+      "haemo-tr-ra-v-wave",
+      "haemo-ts-two-matched-catheters"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-ar-right"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Ventilation toggle for the constriction, restriction and tamponade scenarios: with mechanical ventilation the respiratory swings of RA pressure reverse (rise on inspiration), so an apparent Kussmaul's sign appears in every patient; inspiration markers on the recording; a measurement tool for the inspiratory change in LV and RV systolic peaks and for the systolic area index.",
+    "learnerDoes": "Recognises that an inspiratory RA rise in a ventilated patient is not Kussmaul's sign, records simultaneous LV and RV traces in spontaneous breathing, and decides constriction or restriction from systolic discordance.",
+    "success": "Correct diagnosis in each scenario, and no Kussmaul's sign called in a ventilated patient.",
+    "tips": [
+      "haemo-constriction-simultaneous-lv-rv",
+      "haemo-constriction-check-ventilation"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-constriction"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "haemo",
+    "what": "Provocation and its consequences in the HOCM scenario: a Valsalva action and a sublingual GTN action that increase the LVOT gradient, with the GTN variant producing hypotension (raise the 'hypotension' event in the left-heart phase) that responds to stopping the nitrate, normal saline and a short wait, and to phenylephrine when extreme or persistent, worsens with dobutamine or adrenaline, and offers a balloon pump option that is refused as contraindicated. The pullback should show the pressure drop below the valve with a second aortic catheter, and the existing PVC response should be labelled before and after the ectopic. Add an end-hole catheter option for the localising pullback, since a pigtail's side holes straddle the gradient.",
+    "learnerDoes": "Records the resting gradient, provokes with Valsalva, draws up phenylephrine before any vasodilator, treats hypotension with phenylephrine and saline, and uses the post-ectopic aortic pressure to separate dynamic from fixed obstruction.",
+    "success": "Resting and provoked gradients reported with their conditions; hypotension corrected without inotropes or a balloon pump.",
+    "tips": [
+      "haemo-hocm-pullback-second-catheter",
+      "haemo-hocm-provoke-valsalva-gtn",
+      "haemo-hocm-post-ectopic-aorta",
+      "haemo-hocm-hypotension-phenylephrine"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-hocm"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Acute massive pulmonary embolism scenario: hypotension, dilated RV, raised RA and RV pressures with a PA systolic pressure that can be set above or below 60 mmHg; a venous access choice (left or right femoral, internal jugular) against a duplex showing iliofemoral thrombus or a caval filter, with clot dislodgement and desaturation after a puncture on the clot side; RV ectopy and runs of VT with forceful manipulation; a pulmonary angiography module (pigtail in the main PA, AP, 30–40 mL at 12–20 mL/s, digital subtraction with breath-hold, 10 mL selective branch hand injections) that renders filling defects, and that warns when a main-PA power injection is chosen with PA systolic pressure above 60 mmHg. Raise phase 'setup' for access and 'right-heart' with catheter 'PIG' for the angiogram.",
+    "learnerDoes": "Chooses venous access away from the clot, records PA and arterial pressures continuously, reaches the PA gently (off the apex, tip cranial), applies the 60 mmHg rule, and performs the angiogram with Oxford's protocol when pressures are normal.",
+    "success": "No clot dislodgement, no sustained VT, no main-PA power injection above 60 mmHg, and filling defects identified on the normal-pressure variant.",
+    "tips": [
+      "haemo-pe-venous-access-clot",
+      "haemo-pe-pa-pressure-limit",
+      "haemo-pulmonary-angiography-protocol"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-pe"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Coronary angiography in a high-flow state (severe aortic stenosis or obstructive hypertrophic cardiomyopathy): with a 4–5 F side-hole catheter the artery fills patchily with streaming that mimics disease, corrected by a larger catheter without side holes and a firmer injection; the aortic trace is parvus et tardus without true damping.",
+    "learnerDoes": "Recognises streaming from high flow rather than diffuse disease, upsizes the catheter, removes side holes, injects firmly, and reports a non-diagnostic run if filling remains incomplete.",
+    "success": "No false report of coronary disease; complete opacification after the catheter change.",
+    "tips": [
+      "diag-as-high-flow-fill",
+      "haemo-as-slow-rise-not-damping"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-as",
+      "hb-specific-conditions-hocm"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "haemo",
+    "what": "Scenario-specific tip triggers for the haemo lab. The tips for pulmonary embolism (haemo-pe-venous-access-clot, haemo-pe-pa-pressure-limit, haemo-pulmonary-angiography-protocol), constriction (haemo-constriction-simultaneous-lv-rv, haemo-constriction-check-ventilation), tricuspid and pulmonary valve disease (haemo-ps-continuous-pullback, haemo-tr-ra-v-wave, haemo-ts-two-matched-catheters), aortic and mitral stenosis and HOCM currently trigger on phase alone ('setup', 'right-heart', 'left-heart', 'valves'), so with the five-tip limit in useLabTips they would appear in every haemo study and crowd out relevant tips. When HaemoLab gains tip support, raise scenario events (for example 'pe', 'constriction', 'restriction', 'hocm', 'aortic-stenosis', 'mitral-stenosis', 'tricuspid') in LAB_EVENTS and attach them to these tips through TipTrigger.requires.",
+    "learnerDoes": "Sees only the tips for the condition being studied (for example the venous-access and 60 mmHg tips only in the pulmonary embolism scenario).",
+    "success": "No pulmonary embolism, constriction, tricuspid or HOCM tip appears in an unrelated scenario; each appears in its own scenario at the right phase.",
+    "tips": [
+      "haemo-pe-venous-access-clot",
+      "haemo-pe-pa-pressure-limit",
+      "haemo-pulmonary-angiography-protocol",
+      "haemo-constriction-simultaneous-lv-rv",
+      "haemo-constriction-check-ventilation",
+      "haemo-ps-continuous-pullback",
+      "haemo-tr-ra-v-wave",
+      "haemo-ts-two-matched-catheters",
+      "haemo-as-cross-only-if-discordant",
+      "haemo-as-al1-straight-wire",
+      "haemo-as-simultaneous-gradient",
+      "haemo-ms-wedge-lv-ten-beats",
+      "haemo-hocm-pullback-second-catheter",
+      "haemo-hocm-provoke-valsalva-gtn",
+      "haemo-hocm-post-ectopic-aorta"
+    ],
+    "lessonIds": [
+      "hb-specific-conditions-as",
+      "hb-specific-conditions-mitral",
+      "hb-specific-conditions-ar-right",
+      "hb-specific-conditions-constriction",
+      "hb-specific-conditions-hocm",
+      "hb-specific-conditions-pe"
+    ],
+    "priority": "P1"
+  }
+]

@@ -1,0 +1,99 @@
+[
+  {
+    "lab": "impella",
+    "what": "A device-choice step at the start of the microaxial pump console (and mirrored at the start of the IABP and VA-ECMO consoles), scored against the patient's profile. Presets give: baseline haemodynamics (normal, abnormal but stable, shock, arrest) with RA, PA, wedge, cardiac output, MAP and mixed venous saturation; the planned procedure (unprotected left main, last remaining vessel, atherectomy, retrograde CTO, or a simple lesion); echo findings (mechanical aortic valve, LV thrombus, aortic regurgitation grade, atrial or ventricular septal defect); iliofemoral diameters with calcium and tortuosity; availability of axillary or transcaval expertise; bleeding status; oxygen saturation.",
+    "learnerDoes": "Classifies the patient (no support, standby with a 4 Fr femoral sheath, upfront support after discussion, shock, arrest), then walks Brilakis's algorithm: pump contraindications, iliofemoral route over 5 mm without severe calcium or tortuosity, alternative route, then balloon pump or VA-ECMO contraindications (severe aortic regurgitation, dissection, uncontrolled bleeding, plus aortic aneurysm for the balloon pump and severe peripheral arterial disease for VA-ECMO). In shock: hypoxaemia persisting despite optimal oxygenation and ventilation, RV failure (RA above 12 mmHg or PAPi below 0.9), then severity of LV failure (pre-shock index above 2.0, severe, refractory).",
+    "success": "The device chosen matches the algorithm branch for the preset; the learner names the deciding finding. Choosing a microaxial pump with a mechanical aortic valve or LV thrombus, a left-sided device with isolated RV failure, a balloon pump for severe shock, VA-ECMO for hypoxaemia before ventilation has been optimised, or anything but VA-ECMO for refractory hypoxaemic shock or arrest scores as wrong. For abnormal haemodynamics with a high-risk procedure, both upfront support and standby with the access in are accepted (Brilakis versus CHIP-BCIS3), provided the learner states the trade-off.",
+    "tips": [
+      "pci-support-plan-two-axes",
+      "pci-support-standby-sheath",
+      "mcs-select-impella-contraindications",
+      "mcs-select-hypoxaemia-ecmo",
+      "mcs-select-biventricular",
+      "mcs-select-shock-severity"
+    ],
+    "lessonIds": [
+      "pm-support-choice-when",
+      "pm-support-choice-which",
+      "pm-support-choice-shock"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "haemo",
+    "what": "A cardiogenic shock preset in the haemodynamics lab with a before-PCI and an after-PCI measurement set, and a CPO and PAPi calculator step: LV-predominant, RV-predominant and biventricular variants, plus a high-risk elective preset with wedge above 25 mmHg and mixed venous saturation below 50%.",
+    "learnerDoes": "Records RA, PA, wedge, cardiac output and MAP; calculates CPO (MAP × CO ÷ 451) and PAPi ((PA systolic − PA diastolic) ÷ RA); applies the shock-protocol decision table after PCI (wean, right-sided support, more left-sided support).",
+    "success": "CPO within 0.02 W and PAPi within 0.1 of the true values; the decision matches the table (CPO above 0.6 and PAPi above 0.9 wean; CPO below 0.6 with PAPi below 0.9 right-sided support; CPO below 0.6 with PAPi above 0.9 more support; CPO above 0.6 with PAPi below 0.9 right-sided support if RV dysfunction is suspected).",
+    "tips": [
+      "haemo-support-rhc-thresholds",
+      "haemo-support-cpo-papi",
+      "mcs-manage-post-pci-escalation"
+    ],
+    "lessonIds": [
+      "pm-support-choice-when",
+      "pm-support-choice-shock",
+      "pm-support-choice-rv"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "impella",
+    "what": "Extend the existing RV-failure recognition scenario of the microaxial pump console with an RV support decision: suction alarms and falling flow with a rising RA pressure and low PAPi; options to lower the pump speed, give fluid, add a right-sided device, or move to VA-ECMO while keeping the left-sided pump as a vent; and a weaning check (off all drugs, CPO above 0.6 W, PAPi above 0.9).",
+    "learnerDoes": "Lowers the pump speed by one or two levels, avoids fluid when the RA pressure is already high, chooses a right-sided device for isolated RV failure or VA-ECMO with the left-sided pump retained when both ventricles fail or the patient is hypoxaemic; later applies the weaning criteria.",
+    "success": "Does not raise pump speed into suction; does not remove the left-sided pump when VA-ECMO is started; removes support only when all three weaning criteria are met.",
+    "tips": [
+      "mcs-select-biventricular",
+      "mcs-wean-criteria"
+    ],
+    "lessonIds": [
+      "pm-support-choice-rv"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A cardiac arrest event in the fluoroscopic PCI lab (VF during primary PCI with the wire across the lesion): manual CPR, application of a mechanical compression device (piston over the sternum, a short pause in compressions), the device visible in the posteroanterior image, and the option to continue the PCI in oblique projections; a timer for return of circulation with a VA-ECMO escalation choice. Note for the build: the manuals give no device-specific placement steps or recommended projections; only that the device obscures the posteroanterior view and that coronary work is mostly done in oblique views (Yadav and Truong 2018).",
+    "learnerDoes": "Starts manual CPR, calls for the device, fits it with the shortest pause, checks it stays over the sternum, continues shocks without stopping compressions, finishes the PCI in oblique views, and escalates to VA-ECMO if circulation does not return promptly; rejects a balloon pump as arrest support.",
+    "success": "Compression pause during application kept short; PCI completed in an oblique view; VA-ECMO chosen when circulation does not return; no balloon pump or transseptal bypass pump chosen for arrest.",
+    "tips": [
+      "pci-arrest-mechanical-cpr",
+      "pci-arrest-oblique-views",
+      "pci-arrest-no-rosc-ecmo"
+    ],
+    "lessonIds": [
+      "pm-support-choice-cpr"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "A high-risk elective PCI planning step in the full-procedure lab: the right heart study at the start, the decision between no support, standby (placing a 4 Fr femoral arterial sheath alongside the working access) and prophylactic support, and leaving the pulmonary artery catheter in for the case.",
+    "learnerDoes": "Reads the right heart numbers, classifies the patient, places the standby sheath when indicated, and keeps the pulmonary artery catheter in.",
+    "success": "Standby sheath placed when only one of abnormal haemodynamics or high procedural risk is present; when both are present, the learner records a reasoned choice between upfront support and standby with the access in, the device in the room and the pulmonary artery catheter retained.",
+    "tips": [
+      "pci-support-plan-two-axes",
+      "pci-support-standby-sheath",
+      "pci-support-swan-stays",
+      "haemo-support-rhc-thresholds"
+    ],
+    "lessonIds": [
+      "pm-support-choice-when"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "ecmo",
+    "what": "A refractory hypoxaemia branch for VA-ECMO in infarct-related shock: a patient on a microaxial pump with pulmonary oedema and an oxygen saturation in the mid-80s on high-flow oxygen, with failure of both ventricles. Before cannulation the console offers ventilation options (CPAP, intubation); after femoral VA-ECMO starts with the microaxial pump retained as an LV vent, it shows right radial and femoral arterial gases so that differential (upper-body) hypoxaemia can be recognised.",
+    "learnerDoes": "Optimises oxygenation and ventilation and treats the pulmonary oedema first; starts VA-ECMO only if hypoxaemia persists; keeps the microaxial pump in as a vent; samples right radial gases and recognises a low right radial PaO2 with a high femoral PaO2 as differential hypoxaemia, then optimises ventilation.",
+    "success": "No VA-ECMO before ventilation is optimised; the microaxial pump is not removed when VA-ECMO starts; the right radial line is used to judge oxygenation of the heart and brain.",
+    "tips": [
+      "mcs-select-hypoxaemia-ecmo",
+      "mcs-select-biventricular"
+    ],
+    "lessonIds": [
+      "pm-support-choice-shock",
+      "pm-support-choice-rv"
+    ],
+    "priority": "P2"
+  }
+]

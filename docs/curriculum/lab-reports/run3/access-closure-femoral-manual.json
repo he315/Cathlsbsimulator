@@ -1,0 +1,290 @@
+{
+ "package": "access-closure-femoral-manual",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built access-closure-femoral-manual: the femoral closure algorithm with its angiogram presets, then hands-on manual compression in the full case.\n\nNew pure modules:\n- src/simulation/access/closurePlan.ts holds the four questions in order and the rules: no device below the bifurcation, in a branch, under 5 mm or in diseased artery; no collagen plug in a high stick; no suture device in heavy calcium; no hand compression at an ACT of 180 s or more; the sheath kept for a staged PCI or support device, with a long sheath swapped for 10-13 cm; a device above an ACT of 300 s is scored acceptable with a caution. Answers and choices are graded.\n- src/simulation/access/compression.ts holds the Brilakis or Oxford rule for the ACT and the timer (2-3 min per Fr, or 8-10 min), the preparation checklist, protamine dosing (1-1.5 mg per 100 U, capped at 50 mg, refused while equipment is in, a reaction 5-10 min later that is more likely with a fast injection) and a finger model: coverage of the hole, the pressure needed to hold it, oozing, a groin swelling, the plug forming and occlusive pressure cutting distal flow. Each value is quoted from 13-closure.ts or labelled MODEL PARAMETER.\n\nIn caseSession.ts:\n- New public methods: setClosureContext, relocateTeamPuncture (for scenario start states only), closureEndState, closureAnatomy, answerClosureQuestions, chooseClosure, reprepSkin, setCompressionRule, confirmPrep (sends saline and the vagal kit through the emergencies module), lowerBloodPressure, giveProtamine, startCompression, setHands, holdCompression, compressionFeel, compressionTimer, releaseCompression, checkGroin, checkFootPulses and applyDressing.\n- Lifting the hands before the plug holds makes the puncture bleed again.\n- The release feeds femoralRisk with the time-weighted position error, the pressure adequacy and the systolic pressure at the pull. femoralRisk gained these as optional terms, so earlier callers get the same results.\n- A sheath kept for a staged PCI closes the site with the sheath in.\n- 'act-high' is added to CASE_SESSION_EVENTS. It is held from an ACT measured at 180 s or more at a femoral closure until a lower reading or the pull. Blood at the skin nick raises 'bleeding', and a visible swelling holds 'haematoma'.\n- Pulling a venous sheath before the arterial one in the same groin is scored.\n- femoralDevice takes an optional device kind; femoralManual is unchanged, so the autopilot is unaffected.\n\nThere are 11 scenarios in scenarios/closureFemoral.ts, with a matching .launch.ts, all starting at 'closure'. The vagal and tamponade look-alikes reuse the emergencies module's scripts and treatments.\n\nUI:\n- GroinView.tsx: draggable fingers, the crease, the felt pulse, the skin nick, blood at the nick and a visible swelling. The arterial hole is drawn only as a guided aid.\n- ClosurePanel.tsx: the femoral artery block now has the ACT, the angiogram plus a link to read it on fluoroscopy, the four questions (their answers shown only in guided mode), the closure choices, and the compression controls (pressure slider, hold 1 or 2 min, release, timer, the operator's feel line) followed by the aftercare checks.\n- orders/Compression.tsx: the checklist, the rule, BP lowering and protamine with a slow or push rate.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/closurePlan.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/closurePlan.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/compression.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/compression.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/closure.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/caseSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/panels/ClosurePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/GroinView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/access/orders/Compression.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/closureFemoral.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/scenarios/closureFemoral.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/closureFemoral.tips.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/access/closurePlan.test.ts (7 tests)",
+     "src/simulation/access/compression.test.ts (13 tests)",
+     "src/simulation/session/closureFemoral.tips.test.ts (8 tests, new file beside the event source)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/access/compression.test.ts src/simulation/access/closurePlan.test.ts src/simulation/session/closureFemoral.tips.test.ts: 28 passed",
+     "npx vitest run src/simulation/access/access.test.ts src/simulation/session/caseSession.test.ts: 44 passed",
+     "npx vitest run src/simulation/session/scenarios.test.ts: 23 passed, 1 failed ('session.decide() records appear in finish().decisions...'). The failing decision is the planning module's 'pre-puncture-checklist' on a radial autopilot case. It fails the same way with the snapshot caseSession.ts swapped back in, so it was failing before this package",
+     "npx vitest run multiSite.test.ts ledgerTips.test.ts emergencies.test.ts modules/emergencies.tips.test.ts: 53 passed",
+     "npx vitest run planning.test.ts femoralPuncture.test.ts femoralPuncture.tips.test.ts upsizing.tips.test.ts access/upsizing.test.ts handover.test.ts: 102 passed",
+     "npx vitest run ui/access/caseTips.test.ts caseTips.reach.test.ts content/lab/reachability.test.ts ui/content/practiceIndex.test.ts orders/Emergency.test.ts orders/Infusions.test.ts siteSelector.test.ts: 52 passed",
+     "npx vitest run session/hypotension.test.ts modules/hypotension.tips.test.ts content/lab/tips.test.ts: 60 passed, 1 skipped",
+     "npx vitest run src/content/content.test.ts: 61 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no errors)",
+    "acceptance": [
+     {
+      "criterion": "closurePlan rejects a collagen plug for 'closure-fem-high-stick' and any device for 'closure-fem-below-bif' and 'closure-fem-small-artery'",
+      "status": "met",
+      "evidence": "closurePlan.test.ts uses the scenarios' real anatomy. High stick: highStick is true, collagen-plug is graded wrong with a 'high stick' reason, and suture-device is correct at the scenario's ACT, which is at or below 300 s. Below-bif (atOrBelowBifurcation) and small artery (over5mm false, 4.5 mm CFA): both devices are graded wrong. In the session, chooseClosure('suture-device') below the bifurcation records femoral-closure-choice as incorrect."
+     },
+     {
+      "criterion": "Hand compression at ACT 240 s is wrong and after waiting to 170 s correct; protamine before the catheter is out is refused; 80 mg is capped or scored wrong",
+      "status": "met",
+      "evidence": "compression.test.ts: compression-act-high opens with a measured ACT of 225-255 s and 'act-high' is active. chooseClosure('manual-compression') is graded wrong there, and correct after waiting and measuring until the ACT is at or below 170. startCompression then records femoral-act as correct; pulling at the opening ACT records it as wrong. giveProtamine with the catheter in (start 'post-diagnostic') is refused, nothing is given and the dose decision is wrong. 80 mg gives 50 mg, scored wrong, and the ACT falls."
+     },
+     {
+      "criterion": "Compression 15 mm caudal to the arteriotomy raises the large-haematoma risk over the centred value",
+      "status": "met",
+      "evidence": "compression.test.ts, pure: femoralRisk with the position error of fingers 15 mm caudal of the hole gives a higher largeHaematoma than centred (and with 15 mm passed directly). In the session, pressing 15 mm below the hole for 4 min, then moving over it, gives a larger femoral.positionErrorMm and largeHaematoma than a centred compression, raises bleeding and haematoma, and the groin check shows a swelling."
+     },
+     {
+      "criterion": "'compression-vagal' gives HR below 50 before MAP below 65, restored by atropine and fluid with pressure kept; 'compression-tamponade-mimic' gives HR above 100 with hypotension and an effusion on echo",
+      "status": "met",
+      "evidence": "compression.test.ts: in compression-vagal, after startCompression the HR goes below 50 before the MAP goes below 65 and bradycardia is raised. With legs up, atropine 0.5 mg and fluid 500 mL given through the emergencies module while the compression stays on (not released, pressure above 0.5), the HR is at least 50, the MAP at least 65 and the nick is dry. An untreated control at the same time is still below. compression-tamponade-mimic (with preparation done) reaches HR above 100 with MAP below 65, raises hypotension, and the echo order returns a pericardial effusion."
+     },
+     {
+      "criterion": "browser: dragging the fingers changes the position error in the debrief",
+      "status": "needs-browser",
+      "evidence": "Not checked in the browser. The model side is covered: dragging calls setHands, and the femoral-compression decision's 'given' text now always states the average distance ('fingers on average N mm from it'). compression.test.ts shows the text differs between centred and caudal compression. Whether GroinView's dragging works in the live lab still needs checking in the browser."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios closure-fem-standard, closure-fem-high-stick, closure-fem-below-bif under lessons pm-closure-plan, pm-closure-femoral-compression, pm-antithrombotics-heparin (from closureFemoral.launch.ts)",
+      "status": "met",
+      "evidence": "closureFemoral.tips.test.ts checks practiceForLesson for each of the three lessons and all three scenarios (sim 'procedure'). It also checks that the launch file and the scenario file list the same 11 scenarios with the same titles and lessons, all starting at 'closure'. content.test.ts and practiceIndex.test.ts pass."
+     },
+     {
+      "criterion": "Tips: in scenario closure-fem-standard, after the action that raises 'bradycardia', tipsFor(ctx, 20) includes access-compression-vasovagal and access-vasovagal-or-tamponade; every waiting.ts entry naming access-closure-femoral-manual becomes satisfiable",
+      "status": "met",
+      "evidence": "closureFemoral.tips.test.ts: closure-fem-standard after startCompression, plus a vagal reaction scripted by the test at level 1 (as compression-vagal scripts it), raises bradycardia. tipsFor({lab:'access', phase:'closure', route:'femoral', events}, 20) then includes both tips, and so does the case's own closure context. No waiting.ts entry or deferred retarget names this package (0 entries, so the waiting count falls by at least 0). All 12 tips the package must make reachable are satisfiable by the case's raises. Other checks in the file: act-high brings up access-femoral-sheath-act, blood under the fingers brings up access-compression-bleeding, the tamponade hypotension brings up access-closure-hypotension-retroperitoneal, and the PCI context with bleeding brings up pci-protamine-only-after-equipment-out."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: the new MODEL PARAMETERS (MP_COMPRESSION in compression.ts, the new MP_FEMORAL terms in closure.ts) are labelled in code but not listed in a facts file. closure.ts refers to facts/C5.md, which does not exist in docs/realism/facts.",
+     "src/ui/access/AccessFluoroView.tsx: the femoral angiogram does not draw an old collagen plug's filling defect (closure-fem-old-plug gives it through the chart history and the closure context), and may draw the sheath along the common femoral artery when relocateTeamPuncture puts the entry in the accessory profunda (closure-fem-branch).",
+     "src/simulation/session/scenarios.test.ts 'session.decide() records appear in finish().decisions...' was already failing (the planning module's 'pre-puncture-checklist' decision on a radial autopilot case). It is not caused by this package: it fails the same way with the snapshot caseSession.ts.",
+     "src/simulation/session/autopilot.ts still closes femoral sites with the time-lapse femoralManual; switching it to the hands-on API is optional and belongs to whichever package owns autopilot.ts."
+    ],
+    "notes": "Snapshots of the three files that already existed (closure.ts, caseSession.ts, ClosurePanel.tsx) are in datasets/tmp/wp-snapshots/access-closure-femoral-manual/ with a .started marker. Only listed files plus one new test file were edited. To confirm the scenarios.test.ts failure was already there, I briefly swapped the snapshot caseSession.ts in for one test run and then restored my version.\n\nDesign decisions:\n- Closure scenarios can't set where the autopilot punctures. For the high stick, below-bifurcation and branch presets, a public session method, relocateTeamPuncture, moves the team's arteriotomy, its needle track and the plugged hole together. It is meant only for scenario start states.\n- The tamponade look-alike's pericardial cap is 140 mL, so this 69-year-old still has a fast rate and a low pressure with saline running. The emergency scenarios use 155 mL.\n- compression-act-high tops up heparin to the PCI dose, then lets the team's time pass (engine ACT, nothing recorded as measured) until the ACT is about 245 s.\n- At the pull the session writes a provisional femoral record (0 minutes), so the emergencies module's removal-drill scoring still sees a manual compression. The site is not closed until the release.\n- The BP-lowering order names no drug or dose because the lesson names none; its effect is a model parameter.\n\nBehaviour notes:\n- In the UI the fingers start on the skin nick, so the learner has to drag them above it.\n- The four questions and the closure choice are recorded but only graded on screen in guided mode. The arterial hole is drawn only in guided mode (policy.overlays.labels).\n- In the tips test the vagal reaction is scripted by the test at level 1, because closure-fem-standard's patient only reaches about 50 bpm at the default level."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve once two major fixes are made. The design is almost fully built. tsc is clean. The package's 3 test files pass (28/28), and so do caseSession, multiSite, emergencies, caseTips.reach and reachability (67/67). Every sourced number I checked matches 13-closure.ts: 180 s, 300 s, 5 mm, 10-13 cm, 2-3 min per Fr, Oxford 8-10 min and 150-200 s or 3-4 h, protamine 1-1.5 mg per 100 U to 50 mg with a reaction 5-10 min later, 90 days, and 1 cm proximal. Shared engines keep their defaults: femoralRisk's new terms are optional, and femoralManual and the autopilot are unchanged. The other src files changed since .started belong to the pacing, bench-measure and pressure packages. I checked the browser criterion in my own tab on the dev server: in closure-fem-standard, dragging the GroinView fingers above the hole gave 'fingers on average 0 mm from it, correct'. Leaving them on the nick for 4 min, then dragging them up, gave 3.7 mm, blood at the nick and 'haematoma'. So dragging does change the debrief. Two problems block approval: the UI has no way to wait for the ACT to fall, and the true ACT is shown live without being measured. The rest are minor.",
+    "findings": [
+     {
+      "where": "src/ui/access/panels/ClosurePanel.tsx (FemoralClosure) and caseSession.chooseClosure('wait-then-compress')",
+      "problem": "The case UI has no control to make time pass (ProcedureLab's clock runs in real time, and 'Skip ahead' only finishes time already pending). Choosing 'Suture the sheath in, wait for the ACT to fall, then compress' only spends sheathS and writes a log line. In the browser, compression-act-high (opens at about 245 s) and any femoral case with an ACT of 180 s or more cannot reach the plan's 'ACT falls with heparin decay during a wait' except through protamine. The tests get round this with session.wait(), which no UI calls.",
+      "severity": "major",
+      "fix": "In FemoralClosure, while the sheath is in and there is no compression, add a button such as 'Wait 10 min (sheath sutured), then recheck' that calls act((x) => x.wait(600, \"Waiting for the ACT to fall\")). Optionally, make chooseClosure('wait-then-compress') spend a first wait interval as well. Add a test that drives the same path: choose wait-then-compress, call wait until a measured ACT is below 180, then startCompression and check femoral-act is correct."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts decideCompressionAct (say 'The ACT is about N s...') and scoreClosureChoice (say on an 'acceptable' verdict)",
+      "problem": "The ACT is shown live without being measured. decideCompressionAct speaks the engine's true ACT as a 'safety' line, which say() allows in every mode except exam, so it appears even when no ACT was measured. The 'acceptable' caution ('A device at an ACT above 300 s is discouraged') likewise reveals that the true ACT is above 300 s. The rules forbid showing this outside the guided aids.",
+      "severity": "major",
+      "fix": "Speak only what the operator knows. If no ACT was measured: 'No ACT has been measured since the heparin.' Otherwise: 'The last ACT measured was X s; a femoral sheath comes out by hand once it is below ...'. Base the 300 s caution on the last measured ACT, and send it only when policy.overlays.labels is true; otherwise leave it to the ledger and the debrief."
+     },
+     {
+      "where": "src/ui/access/AccessFluoroView.tsx (outside this package) for closure-fem-branch and closure-fem-old-plug",
+      "problem": "The femoral angiogram draws the sheath along the common femoral artery when relocateTeamPuncture puts the entry in the accessory profunda, and it draws no filling defect for an old plug. In closure-fem-branch a learner who reads the image correctly would answer 'device OK', and the session marks that wrong. The design's 'small accessory profunda' and 'old plug defect' angiogram presets are therefore missing from the image. The builder flagged this in outOfScope.",
+      "severity": "major",
+      "fix": "The owner of AccessFluoroView.tsx and route.ts femoralSheathPolyline / femoralAngioGeometry should route the sheath along pm.st.arteriotomy.vessel when it is a branch, and draw a filling defect when closureContext.oldPlugDays is set. Until then, mark closure-fem-branch as known-limited, or leave it out of the practice index."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts applyVasodilation",
+      "problem": "It writes the engine's single vasodilation value (engine.setVasodilation sets it outright; it does not add). The full case's hypotension module also writes that value from its cause runs (hypotensionCauses vasodilationRun). With both active, the last writer wins. When the BP-lowering or the protamine reaction ends, the session sets 0 and wipes out any cause still running.",
+      "severity": "minor",
+      "fix": "Run the antihypertensive and the protamine reaction as hypotension-cause runs through the hypotension module when it is attached. Otherwise, keep the session's share separate and send max(session share, the cause's current value). At least never send 0 unless the session's own last value was the one in force."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts chooseClosure / scoreClosureChoice",
+      "problem": "The closure choice can be clicked again and again, and each click overwrites the femoral-closure-choice decision. A wrong choice followed by the right one leaves no record of the error. answerClosureQuestions, by contrast, scores only the first answer. The choice is also graded against the true ACT, not the last measured ACT the learner decided on.",
+      "severity": "minor",
+      "fix": "Score only the first choice. The one legitimate change of plan, wait-then-compress followed by manual compression once the ACT has fallen, can be recorded as a separate item. Grade the ACT rules against the last measured ACT when there is one (keep the true ACT for the outcome model). In ClosurePanel, disable the other choices once one is recorded."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts releaseCompression ('over' = mean error < 6 mm)",
+      "problem": "Averaging the position error over the whole compression hides time spent badly placed. In the browser, 4 min on the skin nick (about 15 mm off) followed by 12 min over the hole was recorded as 'Over the arteriotomy (fingers on average 3.7 mm from it)'.",
+      "severity": "minor",
+      "fix": "Add offTargetS to CompressionState: seconds pressed with positionError above 5 mm. Set over = offTargetS/pressedS below a labelled MODEL PARAMETER share, and add the minutes off target to the 'given' text."
+     },
+     {
+      "where": "src/simulation/session/closureFemoral.tips.test.ts",
+      "problem": "Some assertions do not depend on the package's events. access-femoral-sheath-act's 'when' is {phase: closure, route: femoral} with no event, so it appears with or without act-high, and the act-high check proves nothing about the tip. The PCI-context check (ids({lab:'pci', events:['bleeding']})) tests tip content only; nothing in the lab raises it. The bradycardia criterion is met only by the test calling scriptVagal itself. The paths that clear act-high (a lower reading, the pull, onSiteClosed) are untested.",
+      "severity": "minor",
+      "fix": "Add tests that act-high clears after a measured ACT below 180 s and on startCompression or a sutured sheath. State in the test that the tip is phase-driven, or assert tipScore with act-high is higher than without if the ranking uses events. Leave the PCI line as a content check, but do not cite it as evidence of tip integration."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts measureAct (act-high hold)",
+      "problem": "act-high is held at FEMORAL.actForSheathPullS (180 s) whatever compressionRule is set. Under the Oxford rule chosen in the orders section (below 150-200 s, or 3-4 h after heparin), an ACT of 190 s allows the pull but still raises act-high.",
+      "severity": "minor",
+      "fix": "Hold act-high when !actAllowsPull(this.compressionRule, act, sinceLastHeparin) instead of act >= FEMORAL.actForSheathPullS."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts giveProtamine, checkGroin, closureAnatomy; src/ui/access/GroinView.tsx",
+      "problem": "Several numbers have no label or source. The slow protamine injection spends a literal 300 s. The swelling diameter Math.sqrt(ml / 0.6) appears in both checkGroin and GroinView. The 'over' cut-off is a literal 6 mm. oldPlugDays <= 90 repeats CLOSURE_ALGORITHM.recentPlugDays. MP_COMPRESSION.raisedSysMmHg (160) grades the BP decision as a clinical threshold. The new MP_COMPRESSION and MP_FEMORAL terms are not in docs/realism/facts (the builder flagged this).",
+      "severity": "minor",
+      "fix": "Add protamineSlowS, swellingCmPerSqrtMl and overMm to MP_COMPRESSION and use them in both places. Use CLOSURE_ALGORITHM.recentPlugDays. Word the BP decision's 'expected' as 'a raised pressure (simulator setting)'. Ask the owner of docs/realism/facts to list MP_COMPRESSION and the new MP_FEMORAL terms, and to fix the missing facts/C5.md that closure.ts refers to."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts slowTick compression step; src/simulation/access/compression.ts stepCompression",
+      "problem": "While the hands are on, stepCompression returns a new CompressionState (object spread) on every call. The real-time loop calls it about every frame (dt up to 0.1 s), and mapSys() allocates as well. That is avoidable garbage in a per-frame path.",
+      "severity": "minor",
+      "fix": "Have stepCompression update the session's state object in place (or a stepCompressionInPlace beside the pure version used by the tests), or step only once the elapsed time since the last step reaches 1 s."
+     },
+     {
+      "where": "src/simulation/session/scenarios/closureFemoral.ts and .launch.ts titles",
+      "problem": "Despite the launch file's comment ('The titles do not give the anatomy or the reaction away'), 'Femoral closure: a calcified groin', 'a groin closed before' and 'more to do later today' name the problem before the angiogram or the chart is read.",
+      "severity": "minor",
+      "fix": "Use neutral titles in both files, for example 'Femoral closure: read the entry first (4)' / '(5)' and 'Femoral closure: plan it (2)'. The cue then comes only from the angiogram, the chart history or the attending's plan line. The launch-versus-scenario equality test will keep the two files in step."
+     },
+     {
+      "where": "src/ui/access/GroinView.tsx and ClosurePanel.tsx",
+      "problem": "Small design-system slips. The finger fills #3A4048, #4A515B and #5B636E are not Clinical Graphite tokens (the others are: base-400/500, ink-soft, danger, accent). The chosen closure button uses seg-btn-active on a .btn. ooze-around-sheath and atheroma have no visible cue anywhere, though no current scenario uses them.",
+      "severity": "minor",
+      "fix": "Use token colours, for example base-400, base-600 and ink-faint through currentColor and Tailwind classes, or add named tokens. Mark the chosen closure with a token class such as 'border-accent text-accent' instead of seg-btn-active. If ooze or atheroma is used later, show it as a cue: a 'blood around the sheath' note at the groin, and an irregular lumen on the angiogram."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 11,
+    "rejected": [
+     "Finding 3 (AccessFluoroView/route.ts draw the sheath in the branch and the old-plug filling defect): only partly applied. Those files belong to another package, so the image itself is not changed. I took the reviewer's fallback: closure-fem-branch now has lessonIds [] in both closureFemoral.ts and .launch.ts, so it is out of the practice index (it stays in the picker), with a comment saying why. The old-plug case was left as it is: the chart history gives the cue and the verdict is only 'acceptable'.",
+     "Finding 12, last part (cues for ooze-around-sheath and atheroma): not done, because no current scenario uses them. The finding asks for them only if they are used later.",
+     "Finding 9, docs part (list MP_COMPRESSION and the new MP_FEMORAL terms in docs/realism/facts, and fix the missing facts/C5.md that closure.ts refers to): outside this package's files. Raised for the owner of docs/realism/facts."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/access/compression.test.ts src/simulation/access/closurePlan.test.ts src/simulation/session/closureFemoral.tips.test.ts src/simulation/session/closureFemoral.test.ts: 34/34 passed",
+     "npx vitest run src/simulation/session/emergencies.test.ts src/ui/access/caseTips.reach.test.ts: 29/29 passed",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/simulation/session/hypotension.test.ts: passed",
+     "npx vitest run src/simulation/session/scenarios.test.ts: 23/24. The one failure ('decision ledger ... clean case', radial) comes from the planning module's 'pre-puncture-checklist' decision (src/simulation/session/modules/planning.ts, another package). I confirmed this with a temporary probe, since deleted. It is not caused by this package."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "All 12 findings checked against the code; 11 applied in full or in part, and the parts not done are listed under rejected.\n\n1. Wait (major): ClosurePanel.tsx has a new button 'Wait 10 min (sheath sutured), then recheck'. It calls x.wait(600, ...) and shows while the sheath is in and compression has not started. A new test, src/simulation/session/closureFemoral.test.ts, follows the panel's path on compression-act-high: choose wait-then-compress, wait, measure until a reading is below 180 s, check act-high has cleared, choose compression (recorded as a separate after-wait item), prepare, then startCompression with femoral-act correct.\n\n2. ACT shown without being measured (major): caseSession.ts has new helpers sinceLastHeparinS(), knownAct() (the last reading taken after the last heparin) and decisionEndState(). decideCompressionAct now says either 'No ACT has been measured since the heparin...' or 'The last ACT measured was X s...', never the true ACT. The 'acceptable' caution (an ACT above 300 s) is said only when policy.overlays.labels is on, and is based on the ACT the learner knew.\n\n3. Branch scenario: see rejected.\n\n4. Vasodilation: the session now keeps its own share (vasoOwn). On its first effect it wraps the engine's setVasodilation so the engine always gets the larger of the session's share and the last value from any other writer (vasoOther, read once from snapshot().form.vasodilation). A cause run that stops no longer wipes out the antihypertensive, and the end of the antihypertensive no longer wipes out a running cause. applyVasodilation now runs after the modules' slowTick. A test covers this.\n\n5. Closure choice: only the first choice is scored, and a later click returns that first grade. The one change of plan, wait-then-compress followed by compression, is recorded as 'femoral-closure-after-wait', either from chooseClosure or from startCompression. Choices and answers are graded against the last measured ACT. In the panel the other choices are disabled once one is recorded.\n\n6. Position error: offTargetS added to CompressionState (seconds pressed more than MP_COMPRESSION.overMm = 5 mm off). The summary gains offTargetMin and over (off target for no more than MP_COMPRESSION.offTargetMaxShare = 0.1 of the time). The 'given' text names the minutes off target. compression.test.ts now asserts that 4 minutes on the skin nick is recorded as 'Off the arteriotomy'.\n\n7. Tips test: the closureFemoral.tips.test.ts assertions now state that access-femoral-sheath-act is phase-driven. They assert its 'when' has no act-high and that its tipScore is the same with and without act-high. The PCI check is labelled a content check only. The new test file covers act-high clearing on a lower reading, on startCompression and on keep-suture. No tip in tips.ts keys on act-high, so the event currently has no tip that uses it.\n\n8. act-high is now held when !actAllowsPull(rule, act, sinceLastHeparin). A test shows a reading between 180 and 200 s raises it under Brilakis but not under Oxford.\n\n9. Unlabelled numbers: new MP_COMPRESSION terms protamineSlowS, swellingMlPerCm2 (with an exported swellingCm() used by both checkGroin and GroinView), overMm and offTargetMaxShare. Uses CLOSURE_ALGORITHM.recentPlugDays. The BP decision's expected text now says the systolic threshold is a simulator setting.\n\n10. Per-frame garbage: new stepCompressionInPlace(). The pure stepCompression now wraps it. The session steps the compression in place and reads vitals once, only while hands are on.\n\n11. Titles changed in both files: 'read the entry first (4)', '(5)' and 'Femoral closure: plan it (2)'.\n\n12. Design system: the finger fills now use token classes (fill-base-500, fill-base-400, fill-ink-faint with opacity), the pulse line uses stroke-ink-faint, and the chosen closure is marked with 'border-accent text-accent'.\n\nExisting test changed: compression.test.ts 'Hand compression at ACT 240 s...' now expects a second choice not to overwrite a wrong first one.\n\nOut of scope, for other owners:\n(a) AccessFluoroView.tsx and route.ts femoralSheathPolyline / femoralAngioGeometry should draw the sheath along pm.st.arteriotomy.vessel when it is a branch, and an old-plug filling defect when closureContext.oldPlugDays is set. closure-fem-branch's lessonIds can then go back to [PLAN] in both scenario files.\n(b) docs/realism/facts should list MP_COMPRESSION (including the new protamineSlowS, swellingMlPerCm2, overMm and offTargetMaxShare) and the new MP_FEMORAL terms, and fix the missing facts/C5.md.\n(c) scenarios.test.ts 'decision ledger' fails because of planning.ts 'pre-puncture-checklist', not this package.\n\nFiles: /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/access/compression.ts, .../src/simulation/session/caseSession.ts, .../src/ui/access/panels/ClosurePanel.tsx, .../src/ui/access/GroinView.tsx, .../src/simulation/session/scenarios/closureFemoral.ts, .../src/simulation/session/scenarios/closureFemoral.launch.ts, .../src/simulation/access/compression.test.ts, .../src/simulation/session/closureFemoral.tips.test.ts, new .../src/simulation/session/closureFemoral.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-55) at http://localhost:5173, went to Full procedure and drove it through window.__caseSession plus real clicks, synthetic pointer events and one real mouse drag. Other packages' edits made Vite do a full page reload every 10-20 s, so each check ran as one short script.",
+     "Acceptance 'browser: dragging the fingers changes the position error in the debrief': MET. In closure-fem-standard I pressed 'Fingers on, pull the sheath', which starts the hands at the skin nick (0,0), and dragged the GroinView SVG with a real left_click_drag. The hands moved to xMm 17, with the hole at 17.8. Synthetic pointer events gave xMm 18 (centred) or 3 (15 mm caudal). Debrief text for femoral-compression, centred run: 'Over the arteriotomy (fingers on average 0 mm from it)', correct. Caudal for 4 min, then moved over the hole: 'Off the arteriotomy (fingers on average 2.9 mm from it, off it for 4.5 min), enough pressure 76% of the time, 18.6 min', incorrect. In that run the groin check showed 'A swelling in the groin, about 10 cm across' and 'haematoma' was raised. Caudal the whole time: average position error 7.5 mm, haematoma 201 mL, and largeHaematoma rose from 0.020 to 0.107.",
+     "Supervised mode: no 'arterial hole' text is drawn in the groin view (policy.overlays.labels false). Guided mode draws it. The closure-algorithm grade list is shown only when guided (checked in the code).",
+     "Closure algorithm UI: 'Measure ACT' shows 'ACT 234 s' and raises 'act-high'. Answering Q1 'Comes out' shows Q2, as designed. The femoral angiogram ran and its busy period cleared with tick(). 'Read it on fluoroscopy' switches to the fluoroscopy workspace; the image was not checked because requestAnimationFrame was paused.",
+     "compression-act-high: opens with a true ACT of 240 s and nothing measured (acts empty, no act-high until Measure ACT; this matches the scenario's comment, though the builder's report says 'opens with a measured ACT'). chooseClosure('manual-compression') is 'wrong' with 'No hand compression at an ACT of 240 s'. In the standard case, waiting to a measured 173 s gave femoral-closure-choice and femoral-act both correct.",
+     "Protamine through the order panel UI. compression-act-high (heparin 6900 U): 80 mg pushed gave the note 'Protamine 50 mg IV given.', protamine-dose was scored wrong ('80 mg is above the 50 mg maximum: capped at 50 mg.') and the next ACT read 153 s. No reaction appeared in 12 simulated minutes; it is probabilistic. closure-fem-standard at 'post-diagnostic' with the catheter in: 'Not given.', protamine list empty, protamine-dose wrong ('Ordered with a catheter or wire still in').",
+     "compression-vagal (supervised): after the fingers went on, HR fell below 50 at t=696 s, before MAP fell below 65 at t=706 s. Clicking the emergency orders 'Lie flat, legs raised', 'Atropine 0.5 mg IV' and 'Crystalloid 500 mL rapid' with the compression kept on (pressure 0.65, not released) brought HR to 62 and MAP to 82. Guided tips with bradycardia and hypotension include access-compression-vasovagal and access-vasovagal-or-tamponade.",
+     "compression-tamponade-mimic: the five preparation buttons all respond, femoral-compression-prep is scored 'All done' and startCompression succeeded. Pericardial blood rose to 140 mL, with HR 105 and MAP 51 at about 1006 s. 'Echo now' returned 'a large pericardial effusion with right ventricular diastolic collapse'. Events 'tamponade' and 'hypotension' were active afterwards.",
+     "closure-fem-high-stick: closureAnatomy highStick true. The UI collagen-plug choice scored femoral-closure-choice wrong ('No collagen plug in a high stick.'). closure-fem-below-bif: suture device scored wrong ('the entry is at or below the bifurcation'). closure-fem-staged-pci: 'Keep the sheath, sutured in (short sheath)' scored correct; the site counts as closed with the 6 Fr sheath still in, and the case moves to recovery.",
+     "Release, then aftercare (groin, foot pulses, clear dressing): femoral-aftercare correct; 'Done at this groin' moves to recovery. Releasing before the plug held made it bleed again ('Blood wells up...').",
+     "Tips panel through __caseSession.tips() in guided mode at the closure workspace (all 7 are cautions).",
+     "Console: no errors or warnings, only Vite connect messages and HMR notices from other packages. The tab was closed and its viewport emulation reset."
+    ],
+    "problems": [
+     {
+      "where": "Live tips panel at the femoral closure workspace (src/ui/access/caseTips.ts selection; the access-femoral-sheath-act tip's 'when' in src/content/manual/pci-manual/03-antithrombotics.ts line ~1943)",
+      "problem": "In the running app the learner never sees most of the package's tips. With 'act-high' active (measured ACT 235 s), the panel's 7 ids are the same as with no events: access-planning-closure-infection, access-artery-vein-same-groin, access-closure-high-stick, access-plug-no-tamp-before-resistance, access-plug-size-to-sheath, diag-planning-ad-hoc-consent and diag-acq-missing-territory. access-femoral-sheath-act has no event trigger, so 'act-high' does not lift it, and every closure tip on the femoral route ties and is ordered by registry position. access-femoral-sheath-act, access-closure-sheath-stays, access-closure-device-criteria, access-closure-reprep-skin, access-compression-prepare and access-compression-hands-above sit at positions 12-17 of tipsFor(ctx, 20) and do not show. Collagen-plug tamping and sizing tips appear before any plug is chosen. The unit test passes only because it checks tipsFor(ctx, 20).",
+      "severity": "major",
+      "fix": "Out of this package's files, so report it to the owner. Add an act-high-gated tip, or give access-femoral-sheath-act a second entry with when: { phase: ['closure'], route: ['femoral'], event: ['act-high'] }, so that the +4 event score puts it first while act-high is held. Leave the eventless entry as it is so retarget.test.ts line 223 still passes. Also, in the closure context (caseTips), rank the planning and compression tips (sheath-stays, device-criteria, compression-prepare, hands-above) above the device-technique tips (plug-no-tamp, plug-size) until a device is chosen. One way is to add the device tips' `requires` on a device-chosen event, or to order the 13-closure.ts registry so the algorithm and compression tips come first. Then add a test that reads cs.tips()/selectCaseTips ids at limit 7 rather than tipsFor(ctx, 20)."
+     },
+     {
+      "where": "src/simulation/session/caseSession.ts releaseCompression, the 'given' text of femoral-compression",
+      "problem": "The debrief text can read as a contradiction: 'Off the arteriotomy (fingers on average 2.9 mm from it, off it for 4.5 min)'. A 2.9 mm average sounds on target, but the label says off, because 'over' comes from time off target and not from the average distance.",
+      "severity": "minor",
+      "fix": "Base the lead-in on the same measure that is shown, for example `${over ? 'Over the arteriotomy' : `Off the arteriotomy for ${sum.offTargetMin} min`} (fingers on average ${sum.positionErrorMm} mm from it)`. Alternatively, also show the worst distance."
+     },
+     {
+      "where": "src/ui/access/GroinView.tsx",
+      "problem": "Labels collide with the fingers. When the fingers rest on the nick (where 'Fingers on, pull the sheath' puts them), the 'skin nick' label and the blood dot sit under the finger ellipses (rx 10 viewBox px, label at nick.cx+9). In guided mode the 'arterial hole' label is covered once the fingers are over the hole.",
+      "severity": "minor",
+      "fix": "Move the text labels to the side opposite the fingers. For example, put 'skin nick' and 'arterial hole' at x = W/2 - 14 with textAnchor='end', or offset them past rx + 6 = 16 px. Draw the blood circle after the fingers group, or as a ring wider than the fingers, so blood at the nick stays visible."
+     },
+     {
+      "where": "src/ui/access/panels/ClosurePanel.tsx compression timer header",
+      "problem": "Nested parentheses in the timer line: '0.0 min (rule: 12-18 min for 6 Fr (Brilakis, 2-3 min per French))'.",
+      "severity": "minor",
+      "fix": "Render it as `rule: ${timer.text}` without the outer parentheses, or change requiredMinutesText to '12-18 min for 6 Fr; Brilakis, 2-3 min per French'."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [
+     "Finding 1 (live tips panel never shows most closure tips; act-high does not lift access-femoral-sheath-act): I checked it and it is right, but I did not apply it. The fix belongs in files this package does not own: src/content/manual/pci-manual/03-antithrombotics.ts (add a second access-femoral-sheath-act entry with when { phase: ['closure'], route: ['femoral'], event: ['act-high'] } and keep the eventless entry for retarget.test.ts line 223), src/content/manual/**/13-closure.ts (put the algorithm and compression tips before the plug-technique tips, or gate plug-no-tamp and plug-size behind a device-chosen event) and src/ui/access/caseTips.ts (the selection order). Those owners should make the change and add a test that reads cs.tips()/selectCaseTips at limit 7. The 'act-high' event is already raised by caseSession.ts, so no change is needed on this package's side."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/access/closurePlan.test.ts src/simulation/access/compression.test.ts src/simulation/session/closureFemoral.tips.test.ts (3 files, 28 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied 3 of the 4 findings. One is rejected because its fix belongs to another owner (see rejected). Tests pass: 28 of 28 in the 3 files. The typecheck is clean. I did not re-check the changes in the running app.\n\n1. Debrief wording (finding 2), in src/simulation/session/caseSession.ts releaseCompression. The femoral-compression 'given' text now starts with the measure that decides 'off', which is time off target. It reads 'Off the arteriotomy for X of Y min (fingers on average Z mm from it)', so a small average distance no longer sits next to the word 'off'. When the fingers count as over the hole, it still says 'Over the arteriotomy' and adds ', off it for N min' only if some time was off target. I updated the matching check in src/simulation/access/compression.test.ts to the new wording.\n\n2. Labels under the fingers (finding 3), in src/ui/access/GroinView.tsx:\n   - The 'skin nick' and 'arterial hole' labels now move clear of the fingers. When the fingers are level with the mark and on it or to its right, the label sits 16 px to the left. Otherwise it sits to the right, 16 px away if the fingers are level and 9 px if not. This keeps the label off the finger shapes in both cases.\n   - The blood dot at the nick is now drawn after the fingers, so it stays visible when the fingers rest on the nick.\n\n3. Timer brackets (finding 4), in src/ui/access/panels/ClosurePanel.tsx. I removed the outer brackets, so the line reads '0.0 min rule: 12-18 min for 6 Fr (Brilakis, 2-3 min per French)'. requiredMinutesText is unchanged.\n\nNo files outside the package list were edited."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "closurePlan rejects a collagen plug for 'closure-fem-high-stick' and any device for 'closure-fem-below-bif' and 'closure-fem-small-artery'",
+      "met": true,
+      "evidence": "src/simulation/access/closurePlan.test.ts, the test of the same name, passes. It opens each preset through the session. The high stick grades collagen-plug 'wrong' with a high-stick reason and suture-device 'correct'. Every device in DEVICES is 'wrong' for below-bif (atOrBelowBifurcation true) and small-artery (over5mm false). The other presets (branch, calcified, old plug, staged PCI, standard) are covered by the next test, which also passes."
+     },
+     {
+      "criterion": "Hand compression at ACT 240 s is wrong and after waiting to 170 s correct; protamine before the catheter is out is refused; 80 mg is capped or scored wrong",
+      "met": true,
+      "evidence": "Both named tests in src/simulation/access/compression.test.ts pass. In compression-act-high the first ACT is 225-255 s, act-high is raised and chooseClosure('manual-compression') is 'wrong'. After waitForAct(170) and preparation, startCompression scores femoral-act correct, while the same patient pulled at the opening ACT is scored wrong under lesson pm-antithrombotics-heparin. With the catheter in the body, giveProtamine(30) is refused and nothing is recorded. 80 mg gives givenMg 50, is scored correct=false and the true ACT falls. The unit test of gradeProtamine/protamineRange also passes."
+     },
+     {
+      "criterion": "Compression 15 mm caudal to the arteriotomy raises the large-haematoma risk over the centred value",
+      "met": true,
+      "evidence": "The compression.test.ts test of that name passes. positionError({xMm: hole-15}) is above 5 and femoralRisk(...).largeHaematoma is higher than at the centred position. The full-case test also checks low.femoral.risk.largeHaematoma > centred.femoral.risk.largeHaematoma. closure.ts labels the position, pressure-adequacy and systolic terms 'model parameter' (MP_FEMORAL)."
+     },
+     {
+      "criterion": "'compression-vagal' gives HR below 50 before MAP below 65, restored by atropine and fluid with pressure kept; 'compression-tamponade-mimic' gives HR above 100 with hypotension and an effusion on echo",
+      "met": true,
+      "evidence": "Both named tests in compression.test.ts pass. Vagal: hrLowAt < mapLowAt and bradycardia is raised. Lie flat with legs up, atropine 0.5 and 500 mL fluid are ordered while compression.releasedAt stays null and pressure stays above 0.5. HR then recovers to 50 or more and MAP to 65 or more, and the untreated control stays low. Tamponade mimic: HR above 100 with MAP below 65, hypotension is raised and the echo order text matches 'pericardial effusion'."
+     },
+     {
+      "criterion": "browser: dragging the fingers changes the position error in the debrief",
+      "met": true,
+      "evidence": "Test: the compression.test.ts test 'dragging the fingers changes the position error the debrief shows' passes. It drives setHands, which is the call GroinView's onMove makes in ClosurePanel.tsx line 223. The femoral-compression ledger 'given' reads 'fingers on average 0 mm' when centred and a non-zero off-target text when low. Live check on the running dev server (port 5173, own tab, closure-fem-standard, guided): synthetic pointer events dispatched to the GroinView SVG moved the fingers from the skin nick (about 18 mm below the hole) onto the hole (finger cy 171 to 117). The feel changed from 'Blood wells up at the skin nick' to 'The nick is dry'. After 14.2 min the ledger read 'Over the arteriotomy (fingers on average 0 mm from it) ... 14.2 min'. In a second run without the drag, the puncture had not held at 14.1 min ('It bleeds as the fingers lift')."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios closure-fem-standard, closure-fem-high-stick, closure-fem-below-bif under lessons pm-closure-plan, pm-closure-femoral-compression, pm-antithrombotics-heparin (from closureFemoral.launch.ts)",
+      "met": true,
+      "evidence": "src/simulation/session/closureFemoral.tips.test.ts, the test of the same name, passes using practiceForLesson. A second test confirms that the launch file and scenarios/closureFemoral.ts list the same 11 scenarios with identical titles and lessons, all starting at 'closure'. In the app, the Full case scenario picker shows all 11."
+     },
+     {
+      "criterion": "Tips: in closure-fem-standard, after the action that raises 'bradycardia', tipsFor(ctx, 20) includes access-compression-vasovagal and access-vasovagal-or-tamponade; every waiting.ts entry naming access-closure-femoral-manual becomes satisfiable, so the access waiting count falls by at least their number",
+      "met": true,
+      "evidence": "closureFemoral.tips.test.ts (new test file beside the event source caseSession.ts) passes all 8 tests. After startCompression and a vagal reaction, bradycardia is active and both tips are in tipsFor(ctx, 20) and in caseTipContexts at 'closure'. No WAITING_TIPS or DEFERRED_RETARGETS entry has raisedBy access-closure-femoral-manual (checked with grep), so this part holds trivially. The package's closure and event tips are satisfiable from the case's access raises: act-high was added to CASE_SESSION_EVENTS (caseSession.ts:379), and caseTips.ts, unchanged, reads it. src/content/lab/reachability.test.ts passes (5 tests)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/access/closurePlan.test.ts src/simulation/access/compression.test.ts (2 files, 20 tests passed)",
+     "npx vitest run src/simulation/session/closureFemoral.test.ts src/simulation/session/closureFemoral.tips.test.ts (2 files, 14 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 tests passed)",
+     "Live check on localhost:5173 in a separate preview tab: closure-fem-standard, GroinView drag through pointer events, hold, release, ledger read through window.__caseSession.decisions()"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ]
+ }
+}

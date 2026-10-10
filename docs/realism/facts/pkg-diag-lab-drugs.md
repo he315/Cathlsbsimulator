@@ -1,0 +1,15 @@
+# diag-lab-drugs: model parameters
+
+Drugs in the diagnostic lab: the drugs tab and its session module (`src/ui/lab/controls/tabs/DrugsTab.tsx`, `src/ui/sim/modules/drugs.ts`), the attending's drug rules (`src/mentor/rules/diagDrugs.ts`), the PDE-5 question (`src/ui/lab/labTeam.ts`) and the drug scenarios (`src/simulation/diagnosticScenarios/drugs.ts`). Drugs come from the shared formulary (found-patient-formulary); this package added none.
+
+Sourced values carry their location in the code and are not repeated as model parameters: the menu's doses and their module locations (`DRUG_MENU[].source` and `ref`: intracoronary nitroglycerin by systolic pressure, Brilakis 6.3; 100-200 µg through the sheath, Brilakis; verapamil 2-3 mg into the radial artery, Brilakis, and 2.5 mg in Oxford's cocktail; heparin 2500 IU in Oxford's radial cocktail and Brilakis's 50 units/kg to at most 5000 units in a diagnostic study; all in src/content/manual/pci-manual/04-lab-drugs.ts); Brilakis's nitroglycerin ladder (`NITRATE_DOSE_LADDER`: above 120 mmHg 200 µg, 100-120 mmHg 100 µg, below 100 mmHg 50 µg or none; 04-lab-drugs.ts); Brilakis's IV nitroglycerin range 10-200 µg/min (`NITRATE_INFUSION_RANGE_UG_MIN`, Brilakis 3.2); the PDE-5 nitrate windows (the formulary's `PDE5_WINDOW_H`).
+
+| Constant | File | Value | Unit | Rests on |
+|---|---|---|---|---|
+| `VASODILATOR_HOLD_S` | src/ui/sim/modules/drugs.ts | 300 | s of lab time | MODEL PARAMETER: 'vasodilator-given' is held after a vasodilator (lab request cm-patient-complications#10, 'raised for a few minutes'; LAB_BUILD_PLAN diag-lab-drugs, hold 300 s) |
+| `MP_RECENT_VASODILATOR_S` | src/mentor/rules/diagDrugs.ts | 300 | s | MODEL PARAMETER: within this of a vasodilator a systolic below 100 mmHg is taken as its fall, so no more nitrate ('Repeating doses into falling pressure; give no more', 09-interpreting.ts); the same few minutes as above, with nitroglycerin's half-life of 1.5-7.5 min (04-lab-drugs.ts) |
+| `MP_TIP_SPASM_HOLD_S` | src/simulation/diagnosticScenarios/drugs.ts | 300 | s | MODEL PARAMETER: a catheter-tip spasm event is held once the RCA trace has ventricularised or damped (the 1-2 minute wait after nitrate, 04-lab-drugs.ts, with time to re-engage and repeat the view) |
+| Saline menu volumes (`DRUG_MENU` saline) | src/ui/sim/modules/drugs.ts | 250, 500 | mL | MODEL PARAMETERS: the lab's choices for saline in nitrate hypotension (Brilakis 3.2); 500 mL is the foot of the anaphylaxis bolus of 500-1000 mL |
+| `MP_PDE5_ANSWER_HOURS` | src/ui/lab/labTeam.ts | recentH 12, yesterdayH 36 | h | MODEL PARAMETER for display phrasing only: under 12 h the patient says 'about N hours ago', under 36 h 'yesterday', else 'a couple of days ago' |
+| `MP_ANSWER_WINDOW_S` | src/ui/sim/modules/drugs.ts | 20 | s | MODEL PARAMETER (display only): the patient's reply is shown with the drug talk this long after the PDE-5 question |
+| `MP_GIVEN_SYRINGE_SHOW_S` | src/ui/sim/modules/drugs.ts | 15 | s | MODEL PARAMETER (display only): a given syringe stays on the table view, emptied |

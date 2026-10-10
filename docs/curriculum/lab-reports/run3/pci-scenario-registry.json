@@ -1,0 +1,38 @@
+{
+ "package": "pci-scenario-registry",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "scenarios.test.ts: every registry entry builds a coronary tree, pciGeom finds every lesion with startMm < endMm, and toPciScenario(core four) reproduces the current initPci state (severity, resistance, guide id)",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/scenarios.test.ts tests 'every registry entry builds a coronary tree and pciGeom finds every lesion with startMm < endMm' (lines 116-131: tree.vessels > 0, g.lesions length equals def lesions, startMm < endMm for each) and 'toPciScenario(core four) reproduces the earlier scenarios and their initPci state' (lines 133-149: compares against a frozen PRE_REGISTRY copy, initialPci deep-equal under three option sets, and [severity, resistance, guide.id]). Both pass."
+     },
+     {
+      "criterion": "resolveScenario('rca-calcified','pci-rca-calcified~L3') is deterministic and equals catalogue pciVariantById output",
+      "met": true,
+      "evidence": "scenarios.test.ts lines 194-214: two calls deep-equal, a.variant equals pciVariantById('pci-rca-calcified~L3'), target severity/length/position/calcium match the variant, and the legacy fields equal applyPciVariant of the base. Passes."
+     },
+     {
+      "criterion": "launch.test.ts: validateLaunchLinks with a fixture link rejects an angio-pci link with an unknown scenario or start id",
+      "met": true,
+      "evidence": "src/simulation/pci/scenarios/launch.test.ts lines 42-57: a fixture track lesson drill block with scenario 'no-such-pci-case' yields 'unknown scenario', start 'no-such-start' yields 'unknown start', and a fixture .launch.ts links entry is refused for both unknown start and unknown scenario. Passes."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/simulation/pci/scenarios/packs/core.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "met": true,
+      "evidence": "launch.test.ts lines 74-94: for each CORE_LAUNCH scenario, lessonIds non-empty, each lessonId exists in TRACKS, practiceForLesson(id) contains the angio-pci entry with source core.launch.ts, caseIds resolve, and PRACTICE_INDEX.known.problems is empty. Passes."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/scenarios/scenarios.test.ts src/simulation/pci/scenarios/launch.test.ts -> 2 files, 27 tests passed (17 + 10)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ]
+ }
+}

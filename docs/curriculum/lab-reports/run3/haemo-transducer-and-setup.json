@@ -1,0 +1,257 @@
+{
+ "package": "haemo-transducer-and-setup",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built haemo-transducer-and-setup. Each haemodynamics study now carries a transducer set-up in the study reducer (haemoStudy.ts):\n- **Levelling:** the mid-thoracic level is set halfway between the front of the sternum and the table. The transducer is mounted on a pole or on the table rail, and the table can move.\n- **Zeroing:** the monitor zeroes only when the stopcock is open to air.\n- **The line:** air, a kink, clot and a 300 cm extension, each with its fix.\n- **Fast-flush test:** the learner reads the result and the reading is graded.\n- **Manifold:** four ports. A visible or hidden bubble can be flushed, found by inspecting the manifold, or injected; injecting air is a critical error.\n\nA normal study starts fully set up and records exactly what measure() gives, so the existing labs behave as before. The five set-up presets (setup-v4-level on 'pah'; setup-table-move, setup-overdamped-air, setup-underdamped-long-line and setup-hidden-bubble on 'normal') open as starts declared in setup.launch.ts. They keep the phase at 'setup' until the transducer is zeroed and level, with the catheter's phase alongside. Recorded pressures are what the recorder displays: the hydrostatic and zero offsets, plus the line's damping simulated through the Transducer. The true values and the faults at the time of recording are kept for a debrief shown after the diagnosis.\n\nNew events: 'pressure-damped' while the line is overdamped, and 'air' after air is injected. Both are in HAEMO_DYNAMIC_EVENTS, so the `raises` export in haemoTips.ts carries them.\n\nIn TracePanel every channel runs through its own Transducer at a fixed 0.5 ms internal step, so a hidden or throttled pane does not change the ringing. A fast flush rings on every channel, and the chips show the displayed values. TracePanel also hosts the new SetupPanel, which shows only what an operator would see: the level when checked, the zero status, a frozen flush strip and any visible bubble. Truth appears only in the debrief.\n\ntransducer.ts gets additions only: fastFlushReading(), flushOscillations(), FLUSH_READINGS, FLUSH_MIN_FN_HZ, FLUSH_MAX_OSCILLATIONS and MP_FLUSH_VISIBLE. dynamic() and DEFAULT_LINE are unchanged.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/TracePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/SetupPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/haemo/setup.launch.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.test.ts (new describe blocks: levelling and zeroing, fast-flush test and line, manifold, presets/recording/debrief; 13 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/haemoTips.setup.test.ts (new: setup-phase tips per preset, events, raises, waiting.ts, launch file and practice index)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.flush.test.ts (new: fastFlushReading and flushOscillations; dynamic() unchanged for DEFAULT_LINE)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/setupPanel.test.ts (new: SetupPanel and TracePanel render smoke tests, flush strip, debrief)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemoStudy.test.ts: 35/35 passed",
+     "npx vitest run src/ui/lab/haemoTips.setup.test.ts: 6/6 passed",
+     "npx vitest run src/simulation/patient/transducer.flush.test.ts src/ui/haemo/setupPanel.test.ts: 8/8 passed",
+     "npx vitest run src/ui/haemo/setupPanel.test.ts src/ui/haemo/panels.test.ts: 13/13 passed (after the final debrief-condition edit)",
+     "npx vitest run src/ui/haemo/valvePanel.test.ts src/simulation/haemo.test.ts: passed",
+     "npx vitest run src/ui/lab/haemoTips.test.ts: 2 failures, both about the aortic-stenosis scenarios added by haemo-aortic-stenosis-studies. 'core.launch.ts declares every scenario of the library' fails because the as-*/lflg-* scenarios are in HAEMO_SCENARIOS but not in core.launch.ts. 'no ... HOCM tip appears in an unrelated scenario' fails because haemo-hocm-* and haemo-as-* tips appear in as-concordant-echo and similar studies. Neither involves a file this package touches, and normal studies keep the phase logic they had before. I did not confirm by reverting.",
+     "npx vitest run src/content/lab/reachability.test.ts src/simulation/haemo/avCrossing.test.ts src/simulation/haemo/avCrossing.tips.test.ts: 33/33 passed",
+     "npx vitest run src/simulation/patient/patient.test.ts (shared transducer engine): 88/88 passed",
+     "npx vitest run src/content/content.test.ts src/ui/content/practiceIndex.test.ts: 71/71 passed",
+     "npx vitest run src/ui/lab/studyReport.tips.test.ts src/ui/lab/physiologyTips.leftMain.test.ts (glob every .launch.ts): 23 passed, 1 skipped"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors in this package's files. The only remaining errors are 2 in src/simulation/pci/pwSession.hyperaemia.test.ts (Array.prototype.at against the lib target), which belongs to another package. Earlier runs also showed errors in src/ui/angio/labels.ts from another package's in-progress work; these had cleared by the final run.",
+    "acceptance": [
+     {
+      "criterion": "A transducer 10 cm above the level under-reads RA by about 7.4 mmHg; zeroing after levelling removes it; a table move after zeroing with a pole transducer re-introduces it",
+      "status": "met",
+      "evidence": "haemoStudy.test.ts 'a transducer 10 cm above the level under-reads RA by about 7.4 mmHg...'. The setup-v4-level preset puts the transducer 10 cm above the level: offset -7.4 (toBeCloseTo 1 dp), recorded RA mean and a-wave about 7.4 low. Levelling at mid-thoracic and zeroing to air gives a recorded RA equal to measure(). Lowering the table 10 cm with a pole transducer re-introduces the -7.4; raising it gives +7.4; a table-rail transducer is unaffected. The table-move preset raises the table automatically at the first insertion after set-up, and re-levelling is detected (relevelledAfterMove)."
+     },
+     {
+      "criterion": "Fast-flush verdicts: optimal for the default line, overdamped with 0.3 mL air, underdamped with a 300 cm line",
+      "status": "met",
+      "evidence": "haemoStudy.test.ts 'fast-flush verdicts...': lineReading is optimal for HAEMO_LINE (fn above 24 Hz, 2 visible oscillations), overdamped with MP_PRESET_AIR_ML = 0.3, underdamped with HAEMO_LONG_LINE_CM = 300; kink and clot also read overdamped. The verdict is the new fastFlushReading(Transducer.dynamic()), not dynamic().verdict; see notes for why."
+     },
+     {
+      "criterion": "Injecting through an unflushed manifold raises air and is a critical error",
+      "status": "met",
+      "evidence": "haemoStudy.test.ts 'injecting through an unflushed manifold raises air and is a critical error': with a catheter in, manifold-inject sets airInjected, studyEvents contains 'air', and scoreStudy with the correct diagnosis has passed false and criticalErrors 1. Flushing every port first injects no air. Hidden-bubble preset test: the bubble is invisible until inspected and is injected unless found or flushed."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in setup.launch.ts under lessons pm-monitoring-transducers, hb-cardiac-catheterisation-setup",
+      "status": "met",
+      "evidence": "haemoTips.setup.test.ts: every preset link (scenario plus start) is in practiceForLesson for both lessons. buildKnownLaunch over core.launch.ts and setup.launch.ts reports no problems, each start resolves on its scenario, and initialStudy(scenario, start) opens the preset. The presets are starts added to 'normal' and 'pah' rather than new scenarios; see notes."
+     },
+     {
+      "criterion": "Tips: in a scenario from setup.launch.ts at phase 'setup', tipsFor(ctx, 20) includes haemo-mon-zero-level and haemo-setup-manifold-check; every waiting.ts entry naming haemo-transducer-and-setup becomes satisfiable",
+      "status": "met",
+      "evidence": "haemoTips.setup.test.ts: for all 5 presets the context phase is 'setup' and tipsFor includes both tips, including with the catheter in RA before set-up (phases ['right-heart']). waiting.ts names no tip under haemo-transducer-and-setup (the set-up tips are listed under haemo-study-session-and-tips), so the waiting count cannot fall; the test checks every such entry would be satisfiable. raises now includes 'pressure-damped' and 'air'; reachability.test.ts passes."
+     },
+     {
+      "criterion": "Every haemo trace goes through the Transducer model at a fixed internal dt (design)",
+      "status": "needs-browser",
+      "evidence": "TracePanel.chainAt steps a per-channel Transducer at CHAIN_DT_S = 0.5 ms and restarts the chain 1 s back after a clock gap over 2 s; a fast flush calls fastFlush() on every chain. Server-render tests confirm the panel and readouts, but the live canvas ringing has not been checked in a browser."
+     },
+     {
+      "criterion": "Recorded pressures compared with true values in the debrief (design)",
+      "status": "met",
+      "evidence": "Recorded.truth and Recorded.faults are stored per chamber when the set-up altered or faulted a reading. setupDebrief and setupChecks are rendered by SetupDebrief after the diagnosis (setupPanel.test.ts checks 'not level', the flush reading against expected, and the critical-error line). Score: three quarters study, one quarter set-up checks for presets (MODEL PARAMETERS)."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/sections/HaemoLab.tsx should pass study={study} and dispatch={dispatch} to TracePanel explicitly. Until it does, TracePanel takes them from its CatheterPanel child's props. This works today but is a bridge.",
+     "src/ui/sections/HaemoLab.tsx repeat() rebuilds the study with initialStudy(id, 'pre'|'post'|null, raised), so repeating a set-up preset loses the preset and starts a prepared study. The start, or studySetup(study).preset, should be passed through.",
+     "src/ui/sections/HaemoLab.tsx dispatch logs only calculations, the shock decision and the diagnosis to the run ledger. The set-up decisions (setup-read-flush graded readings, the manifold-inject critical error, re-levelling after the table move) should become r.decide entries with lessonIds pm-monitoring-transducers and hb-cardiac-catheterisation-setup, and tipIds haemo-mon-fast-flush, haemo-mon-zero-level and haemo-setup-manifold-check.",
+     "docs/realism/facts/S9.md (\u00a7Transducer chain) should list the new MODEL PARAMETERS: HAEMO_LINE (100 cm x 0.45 mm catheter, 30 cm x 0.9 mm line), MP_CHEST_DEPTH_CM 20, MP_TABLE_MOVE_CM 10, MP_HAEMO_LEVEL_TOL_CM 1, MP_UNZEROED_OFFSET_MMHG 6, MP_KINK_RMM 0.2, MP_FLUSH_VISIBLE 0.03 and the four manifold ports. It should also note that fastFlushReading uses the already sourced 24 Hz and '1-2 oscillations' (Deranged Physiology) facts.",
+     "src/ui/lab/haemoTips.test.ts (owned by haemo-study-session-and-tips or haemo-aortic-stenosis-studies) fails 2 tests. HAEMO_SCENARIOS now holds the as-*/lflg-* scenarios, but core.launch.ts does not declare them and the 'unrelated scenario' family test does not allow for them. Neither failure comes from this package."
+    ],
+    "notes": "**Fast-flush verdict.** The plan says the verdicts come from Transducer.dynamic(). I tested 'optimal for the default line, underdamped with a 300 cm line' against the existing lumped model. Under dynamic().verdict the bands cannot be met with useful margins. Lengthening the line lowers \u03b6 by at most about 10-15%, so a line in the 0.55-0.75 optimal band cannot fall below 0.45. The only way to pass is \u03b6 0.575 against 0.532, and those two fast flushes would look the same on screen.\n\nI therefore added fastFlushReading(dynamic()) to transducer.ts, additions only. It reads the line the way the bedside test is read:\n- **Overdamped:** no visible oscillation.\n- **Underdamped:** more than two oscillations, or a natural frequency under 24 Hz (resonance; the module says longer tubing makes resonance more likely).\n- **Optimal:** otherwise.\n\nThe 24 Hz and '1-2 oscillations' figures are already sourced in docs/realism/facts S9; the visibility fraction (3%) is a MODEL PARAMETER. dynamic() and DEFAULT_LINE are unchanged: the diagnostic lab default still reads 'underdamped' under dynamic(), and a test pins this. The haemodynamics lab uses its own HAEMO_LINE, a MODEL PARAMETER. One limitation: the 300 cm line is called underdamped mainly because its natural frequency drops (about 20 Hz against 26 Hz). Both lines show two oscillations after a flush, so in the flush strip the long line differs mainly by slower ringing.\n\n**Presets as starts.** The plan names the presets setup-v4-level and the others. HaemoLab.launchStudy refuses scenario ids that are not in HAEMO_SCENARIOS, and haemo.ts and HaemoLab.tsx are outside this package. So setup.launch.ts adds them as starts (`links` with `adds.starts`) on 'normal' and 'pah', and initialStudy reads such a start as a set-up preset. The lab opens them through its existing launch path, and haemoTips.test's count of haemo scenarios is unchanged.\n\n**No ground truth on live screens.** SetupPanel shows the zero status, a visible bubble, and the transducer's position only after 'Check the level'. The flush strip is a monitor-style frozen response. Fault names, true pressures and the graded flush readings appear only in the debrief after the diagnosis. Tips (guided aids) follow the 'setup' phase and the pressure-damped and air events.\n\n**Snapshot.** Taken before any edit in datasets/tmp/wp-snapshots/haemo-transducer-and-setup/, with .started. SetupPanel.tsx and setup.launch.ts did not exist beforehand.\n\n**Not checked in a browser.** The live trace ringing and the hidden-pane behaviour were not checked, as the task asked. Check them through window.__lab.haemo.dispatch, for example `{type:'setup-fast-flush'}`."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/simulation/haemoStudy.ts (HAEMO_LINE, HAEMO_LONG_LINE_CM, setupLineSpec); src/simulation/patient/transducer.ts fastFlushReading; src/ui/haemo/SetupPanel.tsx FlushStrip and READING_LABEL",
+      "problem": "The learner cannot tell the underdamped long-line preset from the expected answer, and the grading contradicts the module. I ran a probe. HAEMO_LINE gives fn 25.7 Hz, zeta 0.415, 2 visible oscillations. The 300 cm line gives fn 20.2 Hz, zeta 0.379, also 2 visible oscillations. Recorded PA through the long line is 25/10, identical to the true value, so there is no systolic overshoot. The module (02-monitoring.ts, 'Doing and reading the test') defines underdamped as 'Several oscillations. The systolic peak overshoots'. The panel's own answer label says 'Several oscillations (underdamped)'. A learner who sees two oscillations and answers 'A couple of oscillations (normal)' is graded wrong, the flush and records set-up checks fail, and every record is logged as faulty even though the numbers equal the truth. The answer can only come from the text 'Long extension line (300 cm)', which turns the preset into a label-reading task. Separately, the line called 'optimal' (zeta 0.415) sits outside the sourced optimal band of 0.64-0.7 named in the transducer.ts header, and Transducer.dynamic().verdict returns 'underdamped' for HAEMO_LINE, so the same file gives two conflicting verdicts.",
+      "severity": "major",
+      "fix": "Make the long line visibly underdamped: at least 3 visible oscillations after a flush and a systolic overshoot on the trace and in the recording. For example, give the extension its own MODEL PARAMETER bore and stiffness in setupLineSpec so that fn falls to about 10-14 Hz with zeta about 0.25-0.3. If the lumped model cannot reach that, add an optional, defaulted resonance or compliance field to LineSpec (additive, so DEFAULT_LINE and dynamic() keep their values). Retune HAEMO_LINE towards zeta 0.55-0.7 (1-2 oscillations, fn > 24 Hz), or document why 0.415 is called optimal. Add tests: lineReading(long).oscillations > 2, and displayedMeasure PA sys > true sys + 3 with the long line. As a minimum alternative, draw a time grid on FlushStrip with a stated paper speed (MODEL PARAMETER), change the underdamped option to 'Several oscillations, or slow ringing (below 24 Hz)', and test that the strip period distinguishes 20 Hz from 26 Hz."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts haemoStudyReducer case 'rhc-advance' (st.rhc < 0 && su.tableMovePending && setupComplete(su))",
+      "problem": "In the table-move preset the table moves only if the right heart catheter is first inserted after set-up is complete. A probe confirmed the gap: insert, then level and zero, then advance 3 more times, and tableMoved stays false with tableMovePending true. The table never moves, the 'Re-levelled after the table moved' check never appears, and the preset loses its point. The builder's own phase test deliberately inserts first and so never exercises the move.",
+      "severity": "major",
+      "fix": "Move the table at the first rhc-advance (or the first record) after setupComplete(su), whatever the catheter position. Drop the `st.rhc < 0` condition and keep `su.tableMovePending && setupComplete(su)`, or also trigger it in the 'record' case. Add a test: setup-table-move with insert, then SET_UP, then rhc-advance gives tableMoved true, phase 'setup', and RA reading about +7.4."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts presetSetup('setup-v4-level') (landmark: 'v4'); src/ui/haemo/SetupPanel.tsx level buttons (su.landmark === l.id ? 'btn-accent')",
+      "problem": "The V4-level preset's only task is to find a transducer levelled at V4, but the live panel highlights the 'Level with the V4 electrode' button from the start. This puts the fault on a live screen before any level check, against the rule of no ground truth on live screens.",
+      "severity": "major",
+      "fix": "In presetSetup for 'setup-v4-level', set landmark: null and keep transducerCm at landmarkHeightCm('v4'). Alternatively, highlight a landmark only after the learner has chosen it, for example with a `landmarkSetBy: 'learner'` flag. Keep the V4 origin for the debrief only, for example with a startFault 'v4-level' and a 'levelled at V4 by a colleague' line. Add a SetupPanel render test asserting that the V4 button has no btn-accent class in the preset's initial state."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts setupChecks key 'records'",
+      "problem": "'Every pressure recorded with the transducer zeroed, level and a sound line' requires recordsFaulty === 0, a running count. A learner who records, notices the low values, finds the fault and re-records every chamber correctly still fails the check, although the final recorded data are correct. The natural way to discover the fault in the V4 preset is therefore penalised permanently.",
+      "severity": "minor",
+      "fix": "Base the check on the final recorded data: every chamber in every visited set has rec.faults?.[c] empty, and at least one chamber was recorded. Keep recordsFaulty as a metric only. If the stricter rule is intended, say so in the debrief label."
+     },
+     {
+      "where": "src/ui/haemo/TracePanel.tsx (ctx && <SetupPanel \u2026/>, studyOf bridge)",
+      "problem": "Through the children-props bridge, every haemodynamics study now shows the full Transducer and manifold panel, including valve, shunt, shock and PCI studies that this package does not target. Its controls let the learner move the transducer, open to air or inject in a prepared study. That flips the phase back to 'setup' and changes the recordings. Scoring for those studies is unchanged, but their screen and behaviour are not.",
+      "severity": "minor",
+      "fix": "Render SetupPanel only when su.preset is set. For prepared studies, either render nothing or a collapsed <details> showing 'Transducer: levelled and zeroed' whose controls open on request. Add a render test that initialStudy('normal') without a preset does not show the manifold controls, or shows them only collapsed."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts TransducerSetup.mount, line.kinked, line.clot; SetupPanel LINE_FIXES",
+      "problem": "Only tests can reach the table-rail mount, the kink and the clot. No action sets the mount and no preset sets a kink or a clot, so 'Check the line for a kink' and 'Aspirate and flush the catheter' never change anything, and the pole-versus-rail distinction cannot be practised. The design calls for 'pole or table mounted'.",
+      "severity": "minor",
+      "fix": "Add a { type: 'setup-mount'; mount: TransducerMount } action and a control in the Level section, and test that moving the table with a rail mount keeps RA true. Alternatively, record kink and clot as future presets in the plan notes. Keep the no-op fix buttons, because hiding them would reveal ground truth."
+     },
+     {
+      "where": "src/ui/haemo/SetupPanel.tsx FlushStrip (bg-[#04070b], stroke '#4FD6EE'); src/ui/haemo/TracePanel.tsx LINE_COLOR",
+      "problem": "Monitor colours are hard-coded hex values instead of the Clinical Graphite monitor class and trace token: tailwind.config.js defines spo2 '#4FD6EE', and index.css defines .monitor as the only place where trace colours appear.",
+      "severity": "minor",
+      "fix": "Wrap the strip in the `monitor` class, for example <div className=\"monitor rounded-md\"><svg \u2026>, and draw the path with className=\"text-spo2\" stroke=\"currentColor\". In TracePanel, take LINE_COLOR from the token or an existing shared constant rather than a new literal."
+     },
+     {
+      "where": "src/ui/haemo/TracePanel.tsx chainAt / src/simulation/patient/transducer.ts Transducer.step; src/simulation/haemoStudy.ts lineReading/displayedMeasure",
+      "problem": "Two allocation costs in the trace and render paths. Per frame: every 0.5 ms Transducer.step calls dynamics(), which allocates a {wn, zeta} object, about 33 allocations per channel per frame at 60 fps. Per render: each displayedMeasure, studyEvents and setupFaults call runs lineReading(), which constructs a new Transducer, and TracePanel calls read(c) twice per chamber per render.",
+      "severity": "minor",
+      "fix": "Additively in transducer.ts, add a stepWith(dt, pTip, wn, zeta) or cache dynamics on the instance, invalidated by setAir, setLumenPlug and line changes, and call it from chainAt. Leave step() unchanged. Memoise lineReading by the setupLineSpec, airMl and clot key, the same key lineDistortion already uses."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts setupReducer",
+      "problem": "setupReducer's switch has no default, so an unrecognised action type, for example from window.__lab.haemo.dispatch, returns undefined as the study state.",
+      "severity": "minor",
+      "fix": "Add `default: return st;` to setupReducer."
+     },
+     {
+      "where": "Outside this package's files: src/ui/sections/HaemoLab.tsx, src/content/lab/raisable/waiting.ts, docs/realism/facts/S9.md",
+      "problem": "The following need changes outside this package's file list. HaemoLab repeat() drops the preset, so Repeat on a set-up preset gives a prepared study. HaemoLab does not pass study and dispatch to TracePanel, which relies on the children bridge. Set-up decisions (flush readings graded, air injected, re-levelling) are not logged to the run ledger. waiting.ts still lists haemo-mon-zero-level, haemo-setup-manifold-check and haemo-mon-fast-flush under haemo-study-session-and-tips, although a probe shows they are now raised in the setup phase. The new MODEL PARAMETERS are not in facts S9. haemoTips.test.ts fails 2 tests; I confirmed both come from the as-*/lflg-* scenarios, not from this package.",
+      "severity": "minor",
+      "fix": "Owners of those files should do the following. In HaemoLab, pass study={study} dispatch={dispatch} to TracePanel, and make repeat() pass studySetup(study).preset ?? the original start. Add r.decide entries for setup-read-flush, manifold-inject and re-levelling (lessonIds pm-monitoring-transducers and hb-cardiac-catheterisation-setup). Remove the three now-reachable tips from WAITING_TIPS. List HAEMO_LINE, MP_CHEST_DEPTH_CM, MP_TABLE_MOVE_CM, MP_HAEMO_LEVEL_TOL_CM, MP_UNZEROED_OFFSET_MMHG, MP_KINK_RMM, MP_FLUSH_VISIBLE and the four manifold ports in docs/realism/facts/S9.md."
+     }
+    ],
+    "verdict": "Mostly built, with three major problems to fix before acceptance. The package's 4 test files pass (49/49) and `tsc -p tsconfig.app.json --noEmit` is clean. The 2 failures in haemoTips.test.ts come from the aortic-stenosis package, as I confirmed. transducer.ts changes are additive only; dynamic() and DEFAULT_LINE are unchanged. Every other src/ file changed since .started belongs to another package's file list (angio labels, hyperaemia/pwSession, engine/pharmacology/patient.test, schema.ts, Settings.tsx). Prepared studies record exactly what measure() gives, and the scoring for non-preset studies is unchanged. The five presets load as starts and keep the phase at 'setup' until the transducer is zeroed and level. The tips haemo-mon-zero-level and haemo-setup-manifold-check appear in tests, and raises carries 'pressure-damped' and 'air'. The practice index lists the presets under both lessons. The levelling (7.4 mmHg), overdamped-air and manifold critical-error criteria are met and properly tested. The three major problems: (1) the underdamped long-line preset cannot be told apart from the normal line (two oscillations either way, no systolic overshoot), so a learner who reads the strip as the module teaches is marked wrong; (2) in the table-move preset the table never moves if the catheter goes in before set-up is finished; (3) the V4 preset highlights the V4 landmark button on the live panel from the start. Minor problems: the set-up panel now shows on every haemo study; the records check can never recover once a faulty record is taken; the kink, clot and table-rail mount can't be reached; hard-coded monitor colours; allocations in the trace path; no default case in setupReducer. The out-of-scope items the builder reported are confirmed (HaemoLab repeat and ledger, waiting.ts, facts S9)."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 9,
+    "rejected": [
+     "Finding 10 (HaemoLab repeat/props, run-ledger decide entries, waiting.ts, facts S9) is outside this package's files. It is not rejected on the merits; it is reported in notes for the owners."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemoStudy.test.ts (40 passed)",
+     "npx vitest run src/ui/haemo/setupPanel.test.ts src/simulation/patient/transducer.flush.test.ts (13 passed)",
+     "npx vitest run src/ui/lab/haemoTips.test.ts src/ui/lab/haemoTips.setup.test.ts src/ui/haemo/panels.test.ts src/ui/haemo/valvePanel.test.ts src/simulation/patient/pressureTransducer.test.ts src/simulation/patient/patient.test.ts src/simulation/haemo/avCrossing.tips.test.ts (134 passed, 2 failed in haemoTips.test.ts; both failures existed before this fix and come from the as-*/lflg-* scenarios, as the reviewer confirmed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors in this package's files. One error exists in src/ui/angio/labels.test.ts(210): LabelledRun is missing 'files'. That file belongs to another package being edited at the same time and is unrelated to this one.",
+    "notes": "I applied 9 of the 10 findings. Finding 10 needs files outside this package.\n\n1. Long line (major). The lumped model cannot make a longer line ring on its own. With Poiseuille resistance, a longer line always adds damping, and the probes confirmed it. To fix this:\n   - `LineSpec` in transducer.ts gets an optional `dampingGain` field. Without it the default `MP_DAMPING_GAIN` applies, so `DEFAULT_LINE` and `dynamic()` are unchanged, and a test checks this.\n   - `HAEMO_LINE` gets `dampingGain` 5.8. It now runs at 25.7 Hz with \u03b6 0.60, and `dynamic().verdict` gives 'optimal' with 1 visible oscillation. That resolves the two conflicting verdicts.\n   - New `HAEMO_LONG_LINE`: 300 cm, `MP_LONG_LINE_RMM` 0.4, `MP_LONG_LINE_DAMPING_GAIN` 1. It runs at about 12 Hz with \u03b6 about 0.28 and 3 visible oscillations.\n   - Recorded overshoot: Ao systolic reads at least 2 mmHg high (about 3 in the probe, rounded) and PA systolic reads above true. PA overshoot is only about +1 mmHg because the PA waveform is smooth, so the reviewer's 'PA sys > true + 3' could not be met at a plausible line. I test PA sys > true and Ao sys \u2265 true + 2 instead.\n   - A kink keeps the base gain, so it stays overdamped.\n   - The 'optimal' answer label now reads 'One or two oscillations (normal)'.\n   - The flush strip has a 40 ms time grid (`FLUSH_GRID_S`, MODEL PARAMETER). A test checks that the long line's ringing period is more than 1.5 times the standard line's.\n\n2. Table move. It now happens at the first `rhc-advance` or `lhc` move after `setupComplete`, wherever the catheter is, through `withTableMove()`. Tested with the catheter inserted before set-up: `tableMoved` is true, the phase is 'setup', RA reads +7.4, and the table moves only once.\n\n3. V4 preset. It starts with `landmark: null` and the transducer still at V4 height, so nothing is highlighted. The debrief adds a line saying the colleague levelled the transducer at V4. A render test checks that the V4 button has no btn-accent.\n\n4. Records check. It now uses the new `finalRecordSound()`: every recorded chamber in every visited set is free of faults, and at least one chamber was recorded. `recordsFaulty` stays as a metric.\n\n5. Prepared studies. A study without a preset shows a collapsed `<details>` labelled 'Transducer and manifold: set up before the study'. Its controls render only when opened, or automatically in the debrief if a pressure was recorded through a fault. A test covers this.\n\n6. Mount control. New `setup-mount` action, with a pole / table-rail control in the Level section. A rail-mounted transducer stays level when the table moves, and the relevel check is then met. Tested. Kink and clot still have no preset. I kept their fix buttons, because hiding them would reveal ground truth.\n\n7. Colours. The flush strip sits in the `monitor` class, the trace uses `text-spo2` with `currentColor`, and the grid uses `text-ink-faint`. TracePanel reads the line colour from a hidden `text-spo2` swatch, with an rgb fallback for server rendering.\n\n8. Allocations:\n   - Added `Transducer.stepWith(dt, p, wn, zeta)`. `step()` now delegates to it with identical results, and a test compares the two.\n   - TracePanel caches each chain's dynamics after every sync.\n   - `lineReading` is memoised by a `lineKey`, which `lineDistortion` also uses.\n   - Each chamber's read-out is computed once per render.\n\n9. `setupReducer` now has `default: return st`. Tested.\n\nFinding 10 needs changes outside this package's files:\n- **HaemoLab.tsx:** pass `study` and `dispatch` to TracePanel, and make `repeat()` keep the set-up preset.\n- **Run-ledger decide entries:** log `setup-read-flush`, `manifold-inject`, re-levelling and the new `setup-mount`.\n- **waiting.ts:** remove `haemo-mon-zero-level`, `haemo-setup-manifold-check` and `haemo-mon-fast-flush` from WAITING_TIPS.\n- **docs/realism/facts/S9.md:** list these MODEL PARAMETERS: `HAEMO_LINE` (including `dampingGain` 5.8), `HAEMO_LONG_LINE`, `MP_LONG_LINE_RMM`, `MP_LONG_LINE_DAMPING_GAIN`, `LineSpec.dampingGain`, `FLUSH_GRID_S`, `MP_CHEST_DEPTH_CM`, `MP_TABLE_MOVE_CM`, `MP_HAEMO_LEVEL_TOL_CM`, `MP_UNZEROED_OFFSET_MMHG`, `MP_KINK_RMM`, `MP_FLUSH_VISIBLE` and the four manifold ports.\n- **Plan notes:** record kink and clot as future presets.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/SetupPanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/TracePanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/setupPanel.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.flush.test.ts\n\nsetup.launch.ts is unchanged."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-69) at http://localhost:5173 and launched each preset through useUiStore.openSim('haemo', {scenario, start, mode:'guided'}). I drove the presets with window.__lab.haemo.dispatch and read their state with state(), context(), events(), tips(), plus the DOM text. The page reloaded itself twice through full HMR reloads (other packages were editing files), so I ran each scenario as a single script. At the end I closed the tab and reset the viewport.",
+     "setup-v4-level (pah): the landmark starts unset, so no ground truth shows in the panel. With the catheter in RA the reading was a9 v7 m5 dia1 against a true a16 v14 m12 dia8, a 7 mmHg under-read on every component (7.4 before rounding). 'Check the level' printed 'The transducer sits above the mid-thoracic level.' Selecting mid-thoracic made the display equal to measure(). Opening the stopcock to air gave 0 and put the phase back to 'setup'; closing it returned the phase to right-heart. The record matched truth with faults [].",
+     "setup-table-move (normal): the start state is not zeroed with the landmark unset, and phase is 'setup'. After levelling and zeroing, the first insertion raised the table 10 cm and 'The table has been raised 10 cm since the study began.' appeared. RA then read mean 11 against a true 4 (+7.4, pole mount). The level check said 'below'. Re-levelling restored 4/4 and set relevelledAfterMove. After the diagnosis the debrief listed RA recorded a13 v12 m11 against true a6 v5 m4, marked 'not level', with the correct checklist ticks.",
+     "setup-overdamped-air: the line starts with 0.3 mL air and visible air in all 4 ports. PA displayed 16/14 (15) against a true 25/10 (15), so the mean was preserved. The events included 'pressure-damped'. The fast flush gave reading overdamped with 0 oscillations, a frozen strip was drawn, and 'What did the flush show?' appeared. After reading it and choosing Re-prime, a second flush read optimal with 1 oscillation. The display then equalled truth and the pressure-damped event cleared.",
+     "setup-underdamped-long-line: the panel shows 'Long extension line (300 cm)'. Ao displayed 123/75 (93) against a true 120/75 (93). The flush read underdamped with 3 oscillations, and a wrong reading was recorded as given optimal against expected underdamped. Replacing the extension with the standard line gave optimal with 1 oscillation and Ao 120/75.",
+     "setup-hidden-bubble: the bubble on port 2 is hidden (all ports say 'no air seen'), and the inject button is disabled until a catheter is in. Clicking the real 'Flush the catheter through the manifold' button with a catheter in set airInjected and raised the 'air' event. After the diagnosis the debrief showed 'Critical error: air was injected through the manifold.' scoreStudy returned passed false and criticalErrors 1. On a second run, 'Inspect the manifold' revealed 'air bubble' on port 2, 'Flush port' cleared it, and the inject that followed gave no air and no event.",
+     "Non-preset pah study: preset is null and the panel shows as a collapsed <details> titled 'Transducer and manifold: set up before the study (open to check or change)'. The PA record was 82/34 (51), exactly measure().",
+     "Tips: in the setup phase before a catheter, the live panel listed haemo-setup-manifold-check, haemo-mon-zero-level and haemo-mon-fast-flush. With the catheter in RA on the v4 preset (phase 'setup', phases ['right-heart']), tipsFor(ctx,20) contained both required tips, so the acceptance criterion is met. The live 5-tip panel did not show haemo-mon-zero-level (see problems).",
+     "Live canvas at 1440x900 (rAF ran 31 frames in 500 ms): a fast flush draws a square wave on the Ao trace that runs off the top of the scale, then the trace returns to the waveform. The flush strip renders with a 40 ms grid. The ringing after release is too small to see on the 0-140 mmHg live scale, so the frozen strip is where it can be read.",
+     "Flushed every preset in four states (no catheter, open to air, RA, Ao) and checked the strip path for NaN: none found.",
+     "Console: one error, '<path> attribute d: Expected number, \"M0.0,NaN...\"'. It came from my own invalid dispatch {type:'lhc', position:'aortic-root'} (valid values are 'Ao' and 'LV'), and the valid-state sweep did not reproduce it. No other errors or warnings."
+    ],
+    "problems": [
+     {
+      "where": "Live tip panel during set-up presets (ranking in src/content/lab/tips.ts tipsFor / tip definitions in src/content/manual/pci-manual/02-monitoring.ts). Outside this package's files.",
+      "problem": "The set-up tip this preset needs is crowded out once a catheter is in. In setup-v4-level with the catheter in RA, the context is phase 'setup' with phases ['right-heart'] while the transducer is still 10 cm high. The 5 visible tips are haemo-setup-manifold-check, then right-heart tips (haemo-bg-af-in-lab, haemo-v-wave-not-specific, haemo-wedge-oedema-risk, haemo-support-rhc-thresholds). haemo-mon-zero-level is 9th in tipsFor(ctx,20). In setup-overdamped-air the 'pressure-damped' event is raised, but no tip keys on it, so haemo-mon-fast-flush does not surface either. In setup-hidden-bubble the 'air' event changes nothing in the tip list. The acceptance test passes because it uses limit 20.",
+      "severity": "minor",
+      "fix": "Outside this package's files. Add events: [\"pressure-damped\"] to the haemo-mon-fast-flush `when`, and rank tips that match ctx.phase (the primary phase) above tips that only match ctx.phases. Alternatively, give haemo-mon-zero-level a higher priority so it sits in the top 5 whenever phase === 'setup'. Optionally key a haemo air-embolism tip on 'air'."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts setupChecks (rendered in SetupPanel.tsx SetupDebrief)",
+      "problem": "When no pressure was recorded, the check 'Every pressure in the final record taken with the transducer zeroed, level and a sound line' shows \u2717. The hidden-bubble run had dataCollected 0 and recordedWithSetupFault 0, so the debrief reports a set-up fault in records that do not exist.",
+      "severity": "minor",
+      "fix": "In setupChecks, when nothing was recorded, either omit the record-quality check or label it 'No pressures recorded' rather than failing it as a set-up fault. For example: ok = recordsFaulty === 0 && recorded.length > 0, with label text that names the empty case."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts reducer, 'lhc' action. Pre-existing leniency, seen through the dev hook only.",
+      "problem": "dispatch({type:'lhc', position:'aortic-root'}) is accepted. shownChambers then returns ['aortic-root'], and the next fast flush builds a flush strip from a NaN baseline, which logs a React error for an SVG path with NaN. The UI buttons cannot send this, so learners never hit it.",
+      "severity": "minor",
+      "fix": "Ignore unknown positions in the reducer (if (!['none','Ao','LV'].includes(a.position)) return st). Separately, flushStrip in SetupPanel.tsx can guard with Number.isFinite(baseline) ? baseline : 0."
+     }
+    ],
+    "consoleErrors": [
+     "Error: <path> attribute d: Expected number, \"M0.0,NaNL0.7,NaNL1.4,\u2026\". Caused by my invalid dev-hook dispatch {type:'lhc', position:'aortic-root'} followed by a fast flush. A sweep of every preset in valid states did not reproduce it."
+    ]
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 1 (set-up tips crowded out of the live top 5; 'pressure-damped' and 'air' not keyed by any tip): I confirmed it, but I did not change it because it is out of scope. The fix belongs in tip ranking in src/content/lab/tips.ts (tipsFor: rank tips that match ctx.phase above those that match only ctx.phases) and in the tip definitions in src/content/manual/pci-manual/02-monitoring.ts (add events: ['pressure-damped'] to haemo-mon-fast-flush, raise haemo-mon-zero-level when phase === 'setup', and optionally key an air-embolism tip on 'air'). Neither file is in this package's list. The package already raises both events and exports them through HAEMO_DYNAMIC_EVENTS, so only the tip side needs changing. Reported for whichever package owns tips.ts and 02-monitoring.ts."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemoStudy.test.ts src/ui/haemo/setupPanel.test.ts src/simulation/patient/transducer.flush.test.ts src/ui/lab/haemoTips.setup.test.ts (4 files, 61 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I applied 2 of the 3 findings. The third is outside this package's files.\n\n**Finding 2 (applied):** when nothing has been recorded, the debrief no longer reports a set-up fault in records that do not exist.\n- In `/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.ts`, `setupChecks` now uses a new exported helper, `recordedCount(st)`, which counts the pressures held in the visited sets.\n- If that count is 0, the 'records' check reads \"No pressures recorded, so the record could not be checked against the set-up\" and is still `ok: false`. Diagnosing without recording any pressure should not count as a met check, so the check count and `setupChecksMet` scoring stay as they were.\n- Otherwise the check keeps the original label and `finalRecordSound`.\n\n**Finding 3 (applied):** an unknown left-heart catheter position no longer reaches the flush strip.\n- In the same file, the 'lhc' reducer case now ignores any position other than 'none', 'Ao' or 'LV'.\n- In `/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/SetupPanel.tsx`, the flush-strip baseline now falls back to 0 when the displayed mean is not finite (`Number.isFinite`), so no NaN reaches the SVG path.\n\n**Tests added** in `/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.test.ts`:\n- One checks the empty-record label in the hidden-bubble preset and that the normal label returns after a recording.\n- One checks that `lhc` with 'aortic-root' returns the same state and that 'Ao' still works.\n\n**Finding 1 (not applied):** it is real, but the fix needs `src/content/lab/tips.ts` and `src/content/manual/pci-manual/02-monitoring.ts`, which are not in this package's list. Details are in the rejected list."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "A transducer 10 cm above the level under-reads RA by about 7.4 mmHg; zeroing after levelling removes it; a table move after zeroing with a pole transducer re-introduces it",
+      "met": true,
+      "evidence": "src/simulation/haemoStudy.test.ts:411 checks the setup-v4-level preset: heightAboveLevelCm is 10, setupOffsetMmHg is about -7.4, and recorded RA mean and a-wave are both about 7.4 mmHg below the true values. After level, stopcock to air, zero and stopcock to patient, recorded RA equals true RA. A table lowered 10 cm with the pole mount gives -7.4 again; raised gives +7.4; a table-rail mount stays true. Lines 462 and 487 cover the table-move preset raising the table at insertion and re-levelling. Passes."
+     },
+     {
+      "criterion": "Fast-flush verdicts: optimal for the default line, overdamped with 0.3 mL air, underdamped with a 300 cm line",
+      "met": true,
+      "evidence": "src/simulation/haemoStudy.test.ts:517 asserts lineReading is optimal for the default line, MP_PRESET_AIR_ML === 0.3 gives overdamped, HAEMO_LONG_LINE_CM === 300 gives underdamped, and kink or clot gives overdamped. Transducer.dynamic() on the default line is fn > 24 Hz, zeta 0.55-0.7, verdict optimal. Line 537 shows the long line ringing (more than 2 oscillations, fn < 24 Hz, systolic overshoot). transducer.flush.test.ts (5 tests) confirms dynamic() is unchanged for the diagnostic lab's DEFAULT_LINE, so the transducer.ts change is additive. All pass."
+     },
+     {
+      "criterion": "Injecting through an unflushed manifold raises air and is a critical error",
+      "met": true,
+      "evidence": "src/simulation/haemoStudy.test.ts:592: manifold-inject with a catheter in and the manifold unflushed sets airInjected and raises the 'air' event. scoreStudy with the correct diagnosis gives passed=false and criticalErrors=1. Flushing every port first gives no air. Line 610 covers the hidden-bubble preset (the bubble shows only on inspection; flushing clears it). Passes."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/haemo/setup.launch.ts under lessons pm-monitoring-transducers, hb-cardiac-catheterisation-setup",
+      "met": true,
+      "evidence": "src/ui/lab/haemoTips.setup.test.ts, test 'practiceIndex lists every preset in setup.launch.ts under pm-monitoring-transducers and hb-cardiac-catheterisation-setup', checks practiceForLesson for each of the 5 presets (scenario + start) under both lessons. The preceding test validates the launch with buildKnownLaunch with no problems, matches the starts to SETUP_PRESETS, and confirms the titles do not reveal the fault. src/ui/content/practiceIndex.test.ts also passes."
+     },
+     {
+      "criterion": "Tips: in a setup.launch.ts scenario at phase 'setup', tipsFor(ctx, 20) includes haemo-mon-zero-level and haemo-setup-manifold-check; every waiting.ts entry naming haemo-transducer-and-setup becomes satisfiable; reachability waiting count falls by their number",
+      "met": true,
+      "evidence": "src/ui/lab/haemoTips.setup.test.ts (6 tests, new file beside the event source src/ui/lab/haemoTips.ts) checks every preset at phase 'setup', including with the catheter already in RA, and finds both tips. Other tests there: pressure-damped and air are raised and carried by the lab's raises; no waiting.ts entry has raisedBy 'haemo-transducer-and-setup' (grep confirms the haemo set-up tips are waiting under haemo-study-session-and-tips), so the count condition is met with zero entries; the set-up tips' phase includes 'setup'. src/content/lab/reachability.test.ts passes."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/haemoStudy.test.ts src/simulation/patient/transducer.flush.test.ts src/ui/haemo/setupPanel.test.ts src/ui/lab/haemoTips.setup.test.ts -> 4 files, 61 tests passed",
+     "npx vitest run src/simulation/patient/pressureTransducer.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts src/ui/haemo/panels.test.ts -> passed",
+     "npx vitest run src/ui/lab/haemoTips.test.ts -> 2 failures, both caused by other packages and outside this package. (1) core.launch.ts does not declare the new library scenarios (lflg-true and others) that src/simulation/haemo.ts now has. (2) haemo-as-*/haemo-hocm-* tips appear in the new as-concordant-echo and as-discordant-cross scenarios, which the test's allow-list does not cover. Neither involves this package's files; they belong to the valve or aortic-stenosis package that added those scenarios."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors"
+   }
+  ]
+ }
+}

@@ -1,0 +1,1204 @@
+[
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/01-planning.ts",
+  "moduleId": "pm-planning",
+  "title": "Planning the case",
+  "stage": 3,
+  "topics": [
+   "pci-planning",
+   "dx-patient-prep",
+   "ts-consent",
+   "dec-lesion-classification"
+  ],
+  "brilakisSections": [
+   "1.1",
+   "1.7",
+   "2.1"
+  ],
+  "oxfordChapters": [
+   "1",
+   "2",
+   "8"
+  ],
+  "videoCount": 4
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/02-monitoring.ts",
+  "moduleId": "pm-monitoring",
+  "title": "Monitoring and running the room",
+  "stage": 2,
+  "topics": [
+   "ts-monitoring",
+   "hd-transducers",
+   "ts-equipment-position",
+   "ts-checklist-timeout",
+   "ts-team-roles",
+   "ts-crisis-leadership",
+   "ts-sterile-environment"
+  ],
+  "brilakisSections": [
+   "1.2",
+   "2.1",
+   "2.2",
+   "2.3",
+   "2.4",
+   "2.7",
+   "2.9",
+   "2.10",
+   "2.11",
+   "2.12",
+   "8.10"
+  ],
+  "oxfordChapters": [
+   "1",
+   "2",
+   "4"
+  ],
+  "videoCount": 2
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/03-antithrombotics.ts",
+  "moduleId": "pm-antithrombotics",
+  "title": "Anticoagulants and antiplatelet drugs",
+  "stage": 3,
+  "topics": [
+   "ph-heparin-act",
+   "ph-alt-anticoag",
+   "ph-oral-anticoag-patients",
+   "ph-oral-p2y12",
+   "ph-iv-antiplatelet"
+  ],
+  "brilakisSections": [
+   "1.3",
+   "2.8",
+   "3.4",
+   "3.5",
+   "4.1"
+  ],
+  "oxfordChapters": [
+   "3",
+   "8"
+  ],
+  "videoCount": 10
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/04-lab-drugs.ts",
+  "moduleId": "pm-lab-drugs",
+  "title": "Sedation, vasodilators, pressors, antiarrhythmics and contrast",
+  "stage": 2,
+  "topics": [
+   "ph-sedation",
+   "ph-vasodilators",
+   "ph-vasopressors",
+   "ph-antiarrhythmics",
+   "rc-contrast-media-allergy"
+  ],
+  "brilakisSections": [
+   "2.8",
+   "3.1",
+   "3.2",
+   "3.3",
+   "3.6",
+   "3.7"
+  ],
+  "oxfordChapters": [
+   "6",
+   "8",
+   "10"
+  ],
+  "videoCount": 6
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/05-access.ts",
+  "moduleId": "pm-access",
+  "title": "Arterial and venous access",
+  "stage": 2,
+  "topics": [
+   "acc-site-choice",
+   "acc-seldinger",
+   "acc-radial",
+   "acc-femoral",
+   "acc-alternative-arterial",
+   "acc-venous",
+   "acc-sheath-troubleshoot",
+   "acc-large-bore-preclose"
+  ],
+  "brilakisSections": [
+   "1.4",
+   "4.1",
+   "4.2",
+   "4.3",
+   "4.4",
+   "11.1",
+   "14.4"
+  ],
+  "oxfordChapters": [
+   "3"
+  ],
+  "videoCount": 14
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/06-to-the-root.ts",
+  "moduleId": "pm-to-the-root",
+  "title": "Set-up, catheter choice and reaching the aortic root",
+  "stage": 2,
+  "topics": [
+   "dx-table-setup",
+   "dx-catheter-selection",
+   "dx-advance-to-root",
+   "acc-radial-resistance",
+   "acc-femoral-resistance"
+  ],
+  "brilakisSections": [
+   "2.11",
+   "5.1",
+   "5.2",
+   "5.3",
+   "5.4",
+   "5.5"
+  ],
+  "oxfordChapters": [
+   "1",
+   "3",
+   "4",
+   "6"
+  ],
+  "videoCount": 15
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/07-engaging.ts",
+  "moduleId": "pm-engaging",
+  "title": "Engaging the coronary arteries",
+  "stage": 2,
+  "topics": [
+   "dx-engage-left",
+   "dx-engage-rca",
+   "dx-pressure-before-injection",
+   "dx-catheter-torque-kinking",
+   "dx-catheter-exchange",
+   "acc-radial-spasm"
+  ],
+  "brilakisSections": [
+   "1.5",
+   "2.3",
+   "5.6",
+   "5.7",
+   "5.8",
+   "6.1",
+   "6.5",
+   "6.7",
+   "29.2"
+  ],
+  "oxfordChapters": [
+   "4",
+   "6",
+   "8",
+   "10"
+  ],
+  "videoCount": 28
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/08-acquiring.ts",
+  "moduleId": "pm-acquiring",
+  "title": "Acquiring the angiogram",
+  "stage": 2,
+  "topics": [
+   "dx-test-injection-nitrate",
+   "dx-projections",
+   "dx-cine-acquisition",
+   "fnd-coronary-anatomy-dominance"
+  ],
+  "brilakisSections": [
+   "1.6",
+   "2.5",
+   "5.9",
+   "6.2",
+   "6.3",
+   "6.4",
+   "6.6",
+   "6.8"
+  ],
+  "oxfordChapters": [
+   "1",
+   "6"
+  ],
+  "videoCount": 4
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/09-interpreting.ts",
+  "moduleId": "pm-interpreting",
+  "title": "Interpreting the angiogram",
+  "stage": 2,
+  "topics": [
+   "dx-stenosis-grading",
+   "dx-timi-flow",
+   "dx-pitfalls",
+   "dx-lesion-morphology",
+   "dx-collaterals",
+   "dx-spasm",
+   "dx-coronary-anomalies"
+  ],
+  "brilakisSections": [
+   "5.7",
+   "6.3",
+   "6.8",
+   "9.2",
+   "9.8",
+   "21"
+  ],
+  "oxfordChapters": [
+   "6",
+   "7",
+   "8"
+  ],
+  "videoCount": 17
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/10-target.ts",
+  "moduleId": "pm-target",
+  "title": "Choosing what to treat, and when",
+  "stage": 3,
+  "topics": [
+   "dx-indications",
+   "dec-ccs-revasc",
+   "dec-timing-sequence",
+   "dec-heart-team",
+   "dec-acs-culprit",
+   "acs-nste-timing",
+   "dec-multivessel-stemi"
+  ],
+  "brilakisSections": [
+   "1.1",
+   "1.7",
+   "7.1",
+   "7.2",
+   "7.3",
+   "7.4",
+   "17",
+   "20"
+  ],
+  "oxfordChapters": [
+   "1",
+   "8"
+  ],
+  "videoCount": 33
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/11-wiring.ts",
+  "moduleId": "pm-wiring",
+  "title": "Guide and wire: getting to and across the lesion",
+  "stage": 3,
+  "topics": [
+   "pci-guide-selection",
+   "pci-guide-engagement",
+   "pci-wire-selection",
+   "pci-wire-shaping",
+   "pci-wire-loading",
+   "pci-wire-navigation",
+   "pci-wiring-tortuosity",
+   "pci-microcatheters"
+  ],
+  "brilakisSections": [
+   "1.8",
+   "5.1",
+   "5.5",
+   "5.7",
+   "5.8",
+   "8.1",
+   "8.2",
+   "8.3",
+   "8.4",
+   "8.5",
+   "8.6",
+   "8.7",
+   "8.8",
+   "8.9",
+   "30"
+  ],
+  "oxfordChapters": [
+   "4",
+   "8"
+  ],
+  "videoCount": 66
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/12-prep-and-stent.ts",
+  "moduleId": "pm-prep-and-stent",
+  "title": "Lesion preparation and stenting",
+  "stage": 3,
+  "topics": [
+   "pci-lesion-prep",
+   "pci-balloon-angioplasty",
+   "pci-device-delivery",
+   "pci-support-escalation",
+   "pci-when-to-stent",
+   "pci-stent-deployment",
+   "pci-postdilatation-result"
+  ],
+  "brilakisSections": [
+   "1.9",
+   "1.10",
+   "9.1",
+   "9.2",
+   "9.3",
+   "9.7",
+   "9.9",
+   "9.10",
+   "10.1",
+   "10.2",
+   "23.1"
+  ],
+  "oxfordChapters": [
+   "1",
+   "8"
+  ],
+  "videoCount": 24
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/13-closure.ts",
+  "moduleId": "pm-closure",
+  "title": "Closing the access site",
+  "stage": 2,
+  "topics": [
+   "acc-radial-haemostasis",
+   "acc-femoral-compression",
+   "acc-closure-eligibility",
+   "eq-closure-devices"
+  ],
+  "brilakisSections": [
+   "1.11",
+   "11.1",
+   "11.2",
+   "30"
+  ],
+  "oxfordChapters": [
+   "3"
+  ],
+  "videoCount": 3
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/14-physiology.ts",
+  "moduleId": "pm-physiology",
+  "title": "Coronary physiology",
+  "stage": 3,
+  "topics": [
+   "phy-indications",
+   "phy-ffr-nhpr",
+   "phy-pitfalls-pullback",
+   "phy-subsets",
+   "phy-angio-ct-derived",
+   "phy-microvascular"
+  ],
+  "brilakisSections": [
+   "1.12",
+   "12.1",
+   "12.2",
+   "12.3"
+  ],
+  "oxfordChapters": [
+   "1",
+   "5",
+   "8"
+  ],
+  "videoCount": 9
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/15-imaging.ts",
+  "moduleId": "pm-imaging",
+  "title": "Intravascular imaging",
+  "stage": 3,
+  "topics": [
+   "img-indications-modality",
+   "img-ivus",
+   "img-oct",
+   "img-pre-pci-planning",
+   "img-stent-optimisation",
+   "img-acs-culprit",
+   "img-coregistration",
+   "pi-ct-planning"
+  ],
+  "brilakisSections": [
+   "1.13",
+   "10.2",
+   "13.1",
+   "13.2",
+   "13.3",
+   "13.4",
+   "19",
+   "20",
+   "21.1",
+   "30"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 25
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/16-support-choice.ts",
+  "moduleId": "pm-support-choice",
+  "title": "Haemodynamic support: when and which device",
+  "stage": 4,
+  "topics": [
+   "mcs-device-choice",
+   "hd-shock-profiling",
+   "mcs-rv-support",
+   "mcs-tandemheart",
+   "acs-mechanical-cpr"
+  ],
+  "brilakisSections": [
+   "1.14",
+   "14.1",
+   "14.2",
+   "14.6",
+   "14.7",
+   "24.2",
+   "30"
+  ],
+  "oxfordChapters": [
+   "8",
+   "9"
+  ],
+  "videoCount": 15
+ },
+ {
+  "track": "pci-manual",
+  "file": "src/content/manual/pci-manual/17-support-devices.ts",
+  "moduleId": "pm-support-devices",
+  "title": "Inserting and running support devices",
+  "stage": 4,
+  "topics": [
+   "mcs-iabp-insertion",
+   "mcs-iabp-timing",
+   "mcs-impella-insertion",
+   "mcs-impella-management",
+   "mcs-ecmo-cannulation",
+   "mcs-ecmo-management"
+  ],
+  "brilakisSections": [
+   "14.3",
+   "14.4",
+   "14.5"
+  ],
+  "oxfordChapters": [
+   "9"
+  ],
+  "videoCount": 10
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/01-ostial.ts",
+  "moduleId": "cp-ostial",
+  "title": "Ostial lesions",
+  "stage": 4,
+  "topics": [
+   "cx-aorto-ostial",
+   "cx-branch-ostial"
+  ],
+  "brilakisSections": [
+   "15.1",
+   "15.2",
+   "30"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 23
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/02-bifurcation-provisional.ts",
+  "moduleId": "cp-bifurcation-provisional",
+  "title": "Bifurcations: assessment and provisional stenting",
+  "stage": 4,
+  "topics": [
+   "cx-bifurcation-assessment",
+   "cx-provisional",
+   "cx-pot",
+   "cx-jailed-wire",
+   "cx-kissing"
+  ],
+  "brilakisSections": [
+   "16.1",
+   "16.2"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 34
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/03-bifurcation-two-stent.ts",
+  "moduleId": "cp-bifurcation-two-stent",
+  "title": "Bifurcations: two-stent techniques",
+  "stage": 5,
+  "topics": [
+   "cx-dk-crush",
+   "cx-culotte",
+   "cx-tap",
+   "cx-reverse-mini-crush"
+  ],
+  "brilakisSections": [
+   "16.2"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 22
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/04-left-main.ts",
+  "moduleId": "cp-left-main",
+  "title": "Left main and high-risk PCI",
+  "stage": 5,
+  "topics": [
+   "cx-lm-assessment",
+   "cx-lm-pci",
+   "cx-chip"
+  ],
+  "brilakisSections": [
+   "14.1",
+   "17"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 44
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/05-prior-cabg.ts",
+  "moduleId": "cp-prior-cabg",
+  "title": "Patients with bypass grafts",
+  "stage": 4,
+  "topics": [
+   "dx-svg-angiography",
+   "dx-arterial-graft-angiography",
+   "cx-graft-pci",
+   "cx-embolic-protection"
+  ],
+  "brilakisSections": [
+   "9.6",
+   "18",
+   "30"
+  ],
+  "oxfordChapters": [
+   "7",
+   "8"
+  ],
+  "videoCount": 46
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/06-calcium.ts",
+  "moduleId": "cp-calcium",
+  "title": "Calcified lesions",
+  "stage": 4,
+  "topics": [
+   "cx-calcium-recognition",
+   "cx-calcium-algorithm",
+   "cx-ivl",
+   "cx-rota",
+   "cx-orbital",
+   "cx-laser",
+   "cx-rota-complications"
+  ],
+  "brilakisSections": [
+   "9.5",
+   "19",
+   "23.1",
+   "23.2",
+   "27",
+   "30"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 45
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/07-acs-thrombus.ts",
+  "moduleId": "cp-acs-thrombus",
+  "title": "Acute coronary syndromes and thrombus",
+  "stage": 3,
+  "topics": [
+   "fnd-ecg-stemi",
+   "acs-reperfusion-strategy",
+   "acs-primary-pci",
+   "cx-thrombus",
+   "cx-aspiration",
+   "acs-rv-posterior",
+   "acs-mechanical-complications",
+   "phy-minoca"
+  ],
+  "brilakisSections": [
+   "2.2",
+   "7.2",
+   "7.3",
+   "9.4",
+   "20",
+   "30"
+  ],
+  "oxfordChapters": [
+   "5",
+   "8"
+  ],
+  "videoCount": 45
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/08-complex-patients.ts",
+  "moduleId": "cp-complex-patients",
+  "title": "Cardiogenic shock, cardiac arrest and TAVI patients",
+  "stage": 5,
+  "topics": [
+   "acs-shock-pci",
+   "acs-cardiac-arrest",
+   "cx-tavr-pci"
+  ],
+  "brilakisSections": [
+   "14.5",
+   "24.1",
+   "24.2"
+  ],
+  "oxfordChapters": [
+   "5",
+   "8",
+   "9"
+  ],
+  "videoCount": 14
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/09-cto-strategy.ts",
+  "moduleId": "cp-cto-strategy",
+  "title": "Chronic total occlusions: selection and strategy",
+  "stage": 5,
+  "topics": [
+   "cto-selection",
+   "cto-angiogram",
+   "cto-hybrid",
+   "cto-cap-ambiguity"
+  ],
+  "brilakisSections": [
+   "21"
+  ],
+  "oxfordChapters": [
+   "7",
+   "8"
+  ],
+  "videoCount": 345
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/10-cto-antegrade.ts",
+  "moduleId": "cp-cto-antegrade",
+  "title": "Chronic total occlusions: antegrade crossing",
+  "stage": 5,
+  "topics": [
+   "cto-awe",
+   "cto-adr",
+   "cto-base"
+  ],
+  "brilakisSections": [
+   "21"
+  ],
+  "oxfordChapters": [],
+  "videoCount": 58
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/11-cto-retrograde.ts",
+  "moduleId": "cp-cto-retrograde",
+  "title": "Chronic total occlusions: retrograde crossing and CTO complications",
+  "stage": 5,
+  "topics": [
+   "cto-retro-septal",
+   "cto-retro-epicardial",
+   "cto-retro-svg",
+   "cto-reverse-cart",
+   "cto-complications"
+  ],
+  "brilakisSections": [
+   "18",
+   "21",
+   "26.5"
+  ],
+  "oxfordChapters": [],
+  "videoCount": 112
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/12-other-complex.ts",
+  "moduleId": "cp-other-complex",
+  "title": "SCAD, stent failure, vessel size and long lesions",
+  "stage": 4,
+  "topics": [
+   "cx-scad",
+   "cx-isr",
+   "cx-stent-thrombosis",
+   "cx-vessel-size-long"
+  ],
+  "brilakisSections": [
+   "22.1",
+   "22.2",
+   "22.3",
+   "22.4",
+   "30"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 35
+ },
+ {
+  "track": "complex-pci",
+  "file": "src/content/manual/complex-pci/13-uncrossable.ts",
+  "moduleId": "cp-uncrossable",
+  "title": "Balloon-uncrossable and balloon-undilatable lesions",
+  "stage": 4,
+  "topics": [
+   "cx-uncrossable",
+   "cx-undilatable",
+   "pci-inchworming",
+   "pci-power-techniques"
+  ],
+  "brilakisSections": [
+   "8.1",
+   "23.1",
+   "23.2",
+   "30"
+  ],
+  "oxfordChapters": [],
+  "videoCount": 32
+ },
+ {
+  "track": "complication-management",
+  "file": "src/content/manual/complication-management/01-principles-closure.ts",
+  "moduleId": "cm-principles-closure",
+  "title": "Principles, acute closure and dissection",
+  "stage": 4,
+  "topics": [
+   "comp-principles",
+   "ts-stopping",
+   "comp-acute-closure",
+   "comp-dissection",
+   "comp-aortocoronary",
+   "comp-side-branch",
+   "comp-periprocedural-mi"
+  ],
+  "brilakisSections": [
+   "2.9",
+   "16.2",
+   "21",
+   "25.1",
+   "25.2",
+   "25.3"
+  ],
+  "oxfordChapters": [
+   "10"
+  ],
+  "videoCount": 49
+ },
+ {
+  "track": "complication-management",
+  "file": "src/content/manual/complication-management/02-flow-embolism.ts",
+  "moduleId": "cm-flow-embolism",
+  "title": "No-reflow, embolism and stroke",
+  "stage": 4,
+  "topics": [
+   "comp-no-reflow",
+   "comp-embolisation",
+   "comp-air-embolism",
+   "comp-stroke",
+   "comp-oedema-cholesterol"
+  ],
+  "brilakisSections": [
+   "5.4",
+   "9.8",
+   "25.2"
+  ],
+  "oxfordChapters": [
+   "8",
+   "10"
+  ],
+  "videoCount": 10
+ },
+ {
+  "track": "complication-management",
+  "file": "src/content/manual/complication-management/03-perforation.ts",
+  "moduleId": "cm-perforation",
+  "title": "Perforation and tamponade",
+  "stage": 4,
+  "topics": [
+   "comp-perf-classification",
+   "comp-perf-first-minutes",
+   "comp-covered-stent",
+   "comp-distal-perf",
+   "comp-collateral-cabg-perf",
+   "hd-tamponade",
+   "comp-pericardiocentesis"
+  ],
+  "brilakisSections": [
+   "26.1",
+   "26.2",
+   "26.3",
+   "26.4",
+   "26.5",
+   "26.6",
+   "30"
+  ],
+  "oxfordChapters": [
+   "5",
+   "9",
+   "10"
+  ],
+  "videoCount": 34
+ },
+ {
+  "track": "complication-management",
+  "file": "src/content/manual/complication-management/04-equipment-loss.ts",
+  "moduleId": "cm-equipment-loss",
+  "title": "Equipment loss and entrapment",
+  "stage": 5,
+  "topics": [
+   "comp-stent-loss",
+   "comp-wire-entrapment",
+   "comp-balloon-microcath-entrapment",
+   "comp-snaring"
+  ],
+  "brilakisSections": [
+   "27.1",
+   "27.2",
+   "27.3",
+   "27.4",
+   "30"
+  ],
+  "oxfordChapters": [],
+  "videoCount": 31
+ },
+ {
+  "track": "complication-management",
+  "file": "src/content/manual/complication-management/05-patient-complications.ts",
+  "moduleId": "cm-patient-complications",
+  "title": "Hypotension, arrhythmia, radiation, kidneys and bleeding",
+  "stage": 3,
+  "topics": [
+   "comp-hypotension-vasovagal",
+   "comp-arrhythmia",
+   "rc-dose-excess",
+   "rc-contrast-volume",
+   "rc-caki-prevention",
+   "comp-major-bleeding"
+  ],
+  "brilakisSections": [
+   "2.2",
+   "2.6",
+   "3.4",
+   "3.7",
+   "28.1",
+   "28.2",
+   "28.3",
+   "29.1",
+   "30"
+  ],
+  "oxfordChapters": [
+   "1",
+   "3",
+   "9",
+   "10"
+  ],
+  "videoCount": 9
+ },
+ {
+  "track": "complication-management",
+  "file": "src/content/manual/complication-management/06-access-complications.ts",
+  "moduleId": "cm-access-complications",
+  "title": "Vascular access complications",
+  "stage": 3,
+  "topics": [
+   "comp-femoral-bleeding",
+   "comp-femoral-pseudoaneurysm",
+   "comp-limb-ischaemia",
+   "comp-radial",
+   "cx-large-bore-bailout"
+  ],
+  "brilakisSections": [
+   "14.1",
+   "29.1",
+   "29.2"
+  ],
+  "oxfordChapters": [
+   "10"
+  ],
+  "videoCount": 7
+ },
+ {
+  "track": "equipment",
+  "file": "src/content/manual/equipment/01-sheaths-guides.ts",
+  "moduleId": "eq-sheaths-guides",
+  "title": "Sheaths, guides and guide extensions",
+  "stage": 3,
+  "topics": [
+   "eq-sheaths",
+   "pci-guide-extension",
+   "pci-guide-shortening"
+  ],
+  "brilakisSections": [
+   "9.10",
+   "21",
+   "23.1",
+   "30"
+  ],
+  "oxfordChapters": [
+   "4",
+   "8"
+  ],
+  "videoCount": 7
+ },
+ {
+  "track": "equipment",
+  "file": "src/content/manual/equipment/02-balloons-stents-cart.ts",
+  "moduleId": "eq-balloons-stents-cart",
+  "title": "Balloons, stents and the complex PCI cart",
+  "stage": 3,
+  "topics": [
+   "pci-balloon-types",
+   "eq-stent-design",
+   "eq-complex-cart"
+  ],
+  "brilakisSections": [
+   "9.9",
+   "30"
+  ],
+  "oxfordChapters": [
+   "8"
+  ],
+  "videoCount": 5
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/01-lab-and-radiation.ts",
+  "moduleId": "hb-lab-and-radiation",
+  "title": "The lab, imaging equipment and radiation safety",
+  "stage": 1,
+  "topics": [
+   "fnd-background-history",
+   "dx-ct-vs-invasive",
+   "rc-dose-metrics",
+   "rc-dose-reduction",
+   "rc-operator-protection"
+  ],
+  "brilakisSections": [
+   "1.1",
+   "2.5",
+   "28.2",
+   "30"
+  ],
+  "oxfordChapters": [
+   "1",
+   "8"
+  ],
+  "videoCount": 5
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/02-the-operator.ts",
+  "moduleId": "hb-the-operator",
+  "title": "Becoming an operator",
+  "stage": 2,
+  "topics": [
+   "pro-independence",
+   "pro-mentorship-teaching",
+   "pro-career",
+   "pro-programme",
+   "pro-research-innovation"
+  ],
+  "brilakisSections": [
+   "21"
+  ],
+  "oxfordChapters": [
+   "2"
+  ],
+  "videoCount": 167
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/03-safe-practice.ts",
+  "moduleId": "hb-safe-practice",
+  "title": "Reflection, quality, the law and looking after yourself",
+  "stage": 2,
+  "topics": [
+   "pro-reflection-mm",
+   "pro-quality-audit",
+   "pro-medicolegal",
+   "pro-wellbeing",
+   "pro-mindset"
+  ],
+  "brilakisSections": [],
+  "oxfordChapters": [
+   "11"
+  ],
+  "videoCount": 24
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/04-cardiac-catheterisation.ts",
+  "moduleId": "hb-cardiac-catheterisation",
+  "title": "Right and left heart catheterisation",
+  "stage": 2,
+  "topics": [
+   "hd-rhc",
+   "hd-lhc",
+   "hd-cardiac-output",
+   "hd-resistance-ph",
+   "hd-shunts",
+   "dx-lv-aortography"
+  ],
+  "brilakisSections": [
+   "6.8"
+  ],
+  "oxfordChapters": [
+   "4",
+   "5"
+  ],
+  "videoCount": 21
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/05-specific-conditions.ts",
+  "moduleId": "hb-specific-conditions",
+  "title": "Valves, pericardium, cardiomyopathy and pulmonary embolism",
+  "stage": 3,
+  "topics": [
+   "hd-aortic-stenosis",
+   "hd-mitral",
+   "hd-ar-right-valves",
+   "hd-constriction-restriction",
+   "hd-hocm",
+   "dx-pulmonary-angiography"
+  ],
+  "brilakisSections": [],
+  "oxfordChapters": [
+   "5"
+  ],
+  "videoCount": 13
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/06-additional-procedures.ts",
+  "moduleId": "hb-additional-procedures",
+  "title": "Other procedures in the lab",
+  "stage": 3,
+  "topics": [
+   "oth-temporary-pacing",
+   "oth-emb",
+   "sh-balloon-valvuloplasty",
+   "sh-asa",
+   "sh-pfo-asd"
+  ],
+  "brilakisSections": [],
+  "oxfordChapters": [
+   "5",
+   "9"
+  ],
+  "videoCount": 0
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/07-tavi.ts",
+  "moduleId": "hb-tavi",
+  "title": "TAVI",
+  "stage": 5,
+  "topics": [
+   "sh-tavi-planning",
+   "sh-tavi-procedure",
+   "sh-tavi-complications",
+   "sh-pvl-pulmonary"
+  ],
+  "brilakisSections": [
+   "24.1"
+  ],
+  "oxfordChapters": [
+   "5"
+  ],
+  "videoCount": 4
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/08-mitral-tricuspid-laa.ts",
+  "moduleId": "hb-mitral-tricuspid-laa",
+  "title": "Mitral, tricuspid and left atrial appendage interventions",
+  "stage": 5,
+  "topics": [
+   "sh-transseptal-toe",
+   "sh-mitral-teer",
+   "sh-tricuspid",
+   "sh-laao"
+  ],
+  "brilakisSections": [],
+  "oxfordChapters": [
+   "5"
+  ],
+  "videoCount": 4
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/09-after-the-procedure.ts",
+  "moduleId": "hb-after-the-procedure",
+  "title": "After the procedure",
+  "stage": 2,
+  "topics": [
+   "post-reporting-handover",
+   "ph-dapt-hbr",
+   "post-monitoring",
+   "post-communication",
+   "post-discharge"
+  ],
+  "brilakisSections": [
+   "2.7",
+   "3.5",
+   "6.8"
+  ],
+  "oxfordChapters": [
+   "8",
+   "11"
+  ],
+  "videoCount": 9
+ },
+ {
+  "track": "cath-handbook",
+  "file": "src/content/manual/cath-handbook/10-background.ts",
+  "moduleId": "hb-background",
+  "title": "Background for the lab: anatomy, disease and beyond the coronaries",
+  "stage": 1,
+  "topics": [
+   "fnd-heart-fluoro-anatomy",
+   "fnd-atherosclerosis-mi",
+   "oth-general-cardiology",
+   "ref-peripheral"
+  ],
+  "brilakisSections": [],
+  "oxfordChapters": [],
+  "videoCount": 43
+ }
+]

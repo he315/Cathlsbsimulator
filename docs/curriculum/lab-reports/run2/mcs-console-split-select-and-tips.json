@@ -1,0 +1,355 @@
+{
+ "package": "mcs-console-split-select-and-tips",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built mcs-console-split-select-and-tips. McsLab.tsx is now split into src/ui/mcs/{shared,IabpConsole,ImpellaConsole,EcmoConsole,DeviceChoice}.tsx. McsLab only holds the tabs (labelled \"Balloon pump\", \"Microaxial pump\" and \"VA-ECMO\"), the scenario chosen in each tab, and launches for the iabp, impella and ecmo sims (resolveMcsLaunch).\n\nNew scored device-choice step (src/simulation/mcs/deviceChoice.ts). It takes a full patient profile and walks the module's algorithm: classify by the two axes (haemodynamics and procedural risk) or as shock/arrest; check pump contraindications; check the iliofemoral route (more than 5 mm), then an alternative route, else a balloon pump; then balloon pump or VA-ECMO contraindications; in shock, ask about hypoxaemia, then RV failure, then how severe the LV failure is. Each threshold names its lesson, and a test checks each one against the text of 16-support-choice.ts. There are seven presets (select-chip-lm, -mech-av, -lv-thrombus, -severe-ar, -biv-hypoxaemia, -simple-lesion, -arrest). The learner names the deciding finding. A microaxial pump with a mechanical aortic valve or LV thrombus counts as a critical error, one per contraindication ignored. When both axes are abnormal, upfront support and standby are both accepted only if the trade-off is stated.\n\nThe floored scores (Math.max(40/50, ...)) and the recordSim calls are gone. Every console now logs through useLabRun.finish via scoreMcsSession: criteria-based, no floor, and any critical error fails the run.\n\nTips: src/ui/lab/mcsTips.ts adds mcsTipContext(kind, stage, stats, flags) and exports raises. Stages are select / insert / position / manage / wean / complication. Procedures are the console's device, plus large-bore during insertion on the pump and ECMO consoles, plus impella while the ECMO console's LV vent runs. Events come from the console: suction, pump-migration, limb-ischaemia (leg NIRS below 50%, cited to the module), hypotension and VF through the shared PatientEventAdapter, and the profile's own events at the select step. Each console shows LabModeBar and LabTipsPanel under the run's policy and registers window.__lab.mcs (context, tips, state, events, step) in DEV builds.\n\nuseCirculation now wraps a React-free CirculationRunner and gains step(seconds, dt). It also accepts an injected circulation or engine, which it uses as is: same object, its own clock, no clone, no settle.\n\nThe App nav label is now \"Mechanical support\" and the Dashboard cards are \"Balloon pump console\" and \"Microaxial pump console\". Vendor names are gone from the MCS chrome.\n\nTeaching aids that gave away the answer on the live screen are now shown live only in guided practice: the named IABP timing error and \"effective/poor\" readout, the target ticks, the deep/shallow pump warnings and the mixing-zone diagram. In other modes they appear once the case is solved.\n\nThe launch file src/content/lab/presets/mcs/core.launch.ts lists the 7 presets and all 11 console cases.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/McsLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/shared.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/IabpConsole.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/ImpellaConsole.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/EcmoConsole.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/DeviceChoice.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/useCirculation.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/mcs/deviceChoice.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/mcsTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/mcs/core.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/App.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/Dashboard.tsx"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/mcs/deviceChoice.test.ts (22 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/mcsTips.test.ts (8 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/mcsTips.scenario.test.ts (5 tests; the tips acceptance file beside mcsTips.ts)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/mcs.test.ts (15 tests; replaces the plan's mcs.test.tsx, see notes)"
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/mcs/mcs.test.ts (pre-split baseline against the unsplit McsLab: 3/3 pass after one behaviour-preserving change so simTab is read with getState)",
+     "npx vitest run src/simulation/mcs/deviceChoice.test.ts src/ui/lab/mcsTips.test.ts src/ui/lab/mcsTips.scenario.test.ts src/ui/mcs/mcs.test.ts: 4 files, 50 tests passed",
+     "npx vitest run src/content/lab/reachability.test.ts: 5 passed (mcs: 59 tips, satisfiable 54, waiting 59, ready 54)",
+     "npx vitest run src/content/content.test.ts src/ui/content/practiceIndex.test.ts: 71 passed",
+     "npx vitest run src/ui/lab/labRun.test.ts src/dev/labHooks.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/useContextTips.test.ts src/content/lab/tips.test.ts: 85 passed, 1 skipped (pre-existing skip)",
+     "npx vitest run src/progress/progress.test.ts (imports Dashboard): 66 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (0 errors). Also clean with --noUnusedLocals for this package's files.",
+    "acceptance": [
+     {
+      "criterion": "deviceChoice.test.ts: each select preset's correct choice and finding score full marks; a microaxial pump with LV thrombus is critical",
+      "status": "met",
+      "evidence": "deviceChoice.test.ts: every accepted classification x device x finding of all 7 presets scores 100 and passes. Microaxial pump on select-lv-thrombus gives critical ['Microaxial flow pump with LV thrombus'] and fails; on select-mech-av it is critical too. A profile with both contraindications gives 2 critical errors. Each preset's branch is asserted, and each threshold is checked against the module text."
+     },
+     {
+      "criterion": "mcsTips.test.ts: at phase 'insert' in the IABP console no pump or ECMO tip is returned",
+      "status": "met",
+      "evidence": "mcsTips.test.ts: tipsFor(mcsTipContext('iabp','insert',null),200) is non-empty, contains no tip whose procedure list lacks 'iabp', and no mcs-impella-*/mcs-ecmo-* id. A further test checks that no console shows another console's device tips at any stage."
+     },
+     {
+      "criterion": "No score floor remains; a run with two critical errors can fail",
+      "status": "met",
+      "evidence": "scoreMcsSession has no floor (clean run 100, failed run 0); targetsMet with criticalErrors 2 gives passed false, score 40. A source test confirms no Math.max(40|50, ...) and no recordSim( in src/ui/mcs/*.tsx or McsLab.tsx. Consoles and DeviceChoice finish through useLabRun.finish with criticalErrors."
+     },
+     {
+      "criterion": "No vendor name appears in App navigation, the Dashboard card or MCS chrome; browser: __lab.mcs.step(10) advances with the pane hidden",
+      "status": "needs-browser",
+      "evidence": "No vendor names: met. mcs.test.ts renders each console, DeviceChoice and McsLab with no Impella or other trade name, and checks the App NAV and Dashboard CARDS. __lab.mcs.step: not checked in a browser, as instructed. It is wired as registerLabHook('mcs', {step}) through useCirculation.step. CirculationRunner.advance(10) is tested to advance model time 10 s and fill the traces. The browser stage must confirm window.__lab.mcs.step(10) on a running pump or ECMO console. On the balloon pump console and the device-choice step, step does nothing because they run no circulation."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/mcs/core.launch.ts under lessons pm-support-choice-when, pm-support-choice-which, pm-support-choice-shock",
+      "status": "partly",
+      "evidence": "mcs.test.ts: every scenario is listed by practiceForLesson under each of its lessonIds. The three support-choice lessons together list all six non-arrest select presets, and select-arrest is under pm-support-choice-when. The 11 console cases are under their device lessons (pm-support-devices-*-run/-cannulate, cp-complex-patients-lab-arrest, pm-support-choice-rv), not under the three choice lessons, because a balloon pump timing case does not practise device choice. content.test.ts validates the file."
+     },
+     {
+      "criterion": "Tips test beside mcsTips.ts: in a core.launch.ts scenario, after the action raising 'hypotension', tipsFor(ctx,20) includes mcs-select-shock-severity, and at phase 'select' includes mcs-select-impella-contraindications; every waiting.ts entry naming this package becomes satisfiable",
+      "status": "partly",
+      "evidence": "mcsTips.scenario.test.ts: loading select-biv-hypoxaemia raises hypotension, and tipsFor(ctx,20) then includes both tips (asserted absent before loading). Of the 59 waiting.ts tips under this package, 54 become satisfiable and the reachability report shows mcs ready 54. The 5 that are not need bleeding, haematoma or air, which no console raises yet: mcs-cx-covered-stent-site, mcs-cx-ecmo-cannula-bleed, mcs-cx-iabp-bleeding-anticoag, mcs-iabp-no-heparin-1to1, mcs-ecmo-bubbles. A further 7 balloon pump tips count as satisfiable only through the report's union over consoles; no balloon pump context shows them yet: kit-wire, vacuum-valve, tip-carina, static-balloon, poor-augmentation, limb, cx-iabp-ischaemic-leg. The test lists both sets explicitly."
+     },
+     {
+      "criterion": "Render tests per console written before splitting",
+      "status": "met",
+      "evidence": "mcs.test.ts was first written and run (3/3) against the unsplit McsLab. The only prior change was reading simTab with getState in the useState initialiser, needed because zustand's server snapshot ignores setState. The same assertions now run against the split consoles, plus all 11 cases."
+     },
+     {
+      "criterion": "useCirculation gains step(dt) for __lab.mcs and accepts an injected circulation or engine",
+      "status": "met",
+      "evidence": "useCirculation returns step(seconds, dt) and runner; options.engine is used as is. Tested in mcs.test.ts: same object, its own clock, no settle, devices applied, advance(2) moves the engine clock by 2 s."
+     }
+    ],
+    "outOfScope": [
+     "src/state/useUiStore.ts SIM_SECTION labels still say 'Impella console' and 'IABP console'. These are vendor names in UI chrome, shown wherever sim labels appear (lesson sim blocks, practice lists). They should become 'Microaxial pump console' and 'Balloon pump console'.",
+     "src/progress/logbook.ts:299 still labels the impella sim key 'Impella console' (logbook chrome).",
+     "src/progress/competency.ts:394 has where: 'IABP \u00b7 Impella \u00b7 ECMO', pointing learners to the old nav label. The nav label is now 'Mechanical support', so this is stale and also names a vendor.",
+     "vitest.config.ts includes only src/**/*.test.ts, so the plan's src/ui/mcs/mcs.test.tsx would never run. The tests are in src/ui/mcs/mcs.test.ts (createElement, no JSX). Either widen include to *.test.tsx or change the plan's file name.",
+     "src/content/lab/raisable/waiting.ts (owned by found-tip-retarget, tip-retarget-catchup and others): 5 tips keyed to this package need bleeding, haematoma or air and should be re-keyed. Proposed: mcs-cx-covered-stent-site, mcs-cx-ecmo-cannula-bleed and mcs-ecmo-bubbles to mcs-largebore-access-and-removal or mcs-ecmo-cannulation-and-management; mcs-iabp-no-heparin-1to1 and mcs-cx-iabp-bleeding-anticoag to mcs-iabp-insertion-and-troubleshooting. The 7 union-only balloon pump tips (listed in src/ui/lab/mcsTips.scenario.test.ts UNION_ONLY) will only show once mcs-iabp-insertion-and-troubleshooting adds insertion, positioning and fault stages.",
+     "A .launch.ts declares a single sim, so core.launch.ts lists the balloon pump and VA-ECMO console cases under sim 'impella'. McsLab resolves any of the three sims to the console that owns the scenario. If the practice list shows the sim label next to each row, those rows will say 'Impella console' until the useUiStore label is fixed. Later iabp.launch.ts and ecmo.launch.ts files may want to move these ids under their own sims."
+    ],
+    "notes": "Snapshot: datasets/tmp/wp-snapshots/mcs-console-split-select-and-tips/ holds the four listed files that already existed (src/ui/sections/McsLab.tsx, src/ui/mcs/useCirculation.ts, src/App.tsx, src/ui/sections/Dashboard.tsx) plus .started. The folder was cleared first, as asked. No file outside the package list was edited. New files outside the list are test files only: src/ui/mcs/mcs.test.ts and src/ui/lab/mcsTips.scenario.test.ts. A scratch tip-dump script I created under datasets/tmp/mcs-wp was deleted.\n\nDesign decisions to review:\n1. Every console opens on the device-choice step (first preset select-chip-lm). The answer does not depend on the tab, since all tabs list the same presets. After submitting, a button goes to the console's first case.\n2. Stages and how each is reached. Device choice is select. The pump case 'escalate' opens at position and moves to manage on the first performance-level change. ECMO 'ecpr' is insert until the circuit is started. Everything else is manage. 'Begin weaning' (shown once the targets are met) sets wean. Complication is added as a further phase while pump-migration or limb-ischaemia is active.\n3. Thresholds. The device-choice thresholds are the module's and a test checks each against 16-support-choice.ts. Leg NIRS 50% comes from 17-support-devices.ts (pm-support-devices-ecmo-cannulate), also checked by a test. Hypotension uses the shared adapter's MAP 65 / 10 s, which patientEvents.ts already labels MODEL PARAMETER. Score weights (SESSION_POINTS, CHOICE_POINTS) are scoring parameters of the app, not clinical values. Preset numbers are written case data. Hypoxaemia is a stated profile finding rather than a SpO2 threshold, because the module gives no number.\n4. Ground truth. DeviceChoice shows only raw measurements (no PAPi, CPO or classification) until the choice is submitted. The derived cardiogenic-shock event is not raised from profiles. The other reveals listed in the summary (timing error, ticks, position warnings, mixing diagram) are shown live only in guided practice. Alarm text now states the alarm, not its cause; the old text was, for example, 'Suction: LV underfilled for this P-level'.\n5. Case briefs in the lab now use generic names ('microaxial flow pump', 'balloon pump'). Lesson and case content is unchanged.\n6. The injected engine must have the Circulation-shaped interface (patient, devices, s.t, run, average). pci-shock-chain will need to adapt PatientEngine to it or extend CirculationLike, since that package also lists useCirculation.ts."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/mcs/IabpConsole.tsx:134, :141, :158-161, :213 (TimingStrip)",
+      "problem": "The balloon pump console still gives the answer on the live screen in every mode. Only the named timing error and the 'Counterpulsation effective/poor' readout were moved behind `reveal`. The slider status words ('earlier' / 'later' / 'at the notch', 'into systole' / 'mid-diastole' / 'end-diastole'), the frozen-strip label 'deflate (late)' and the good/warn/danger tones on Augmented diastolic, Assisted EDP and Assisted systolic still show which timing fault is present and when it is fixed. This breaks the rule of no ground truth on live screens outside guided aids, which the builder reports as done.",
+      "severity": "major",
+      "fix": "Gate all of them on the existing `reveal` (run.mode === 'guided' || solved). Show the slider status words only when reveal is true and the plain numeric position otherwise. Render `deflate{reveal && s.deflate > 1 ? ' (late)' : ''}`. Pass `tone={reveal ? (...) : undefined}` to the three Readouts. Add a render assertion in src/ui/mcs/mcs.test.ts that IabpConsole in a non-guided mode (launchMode 'supervised') does not contain 'at the notch', 'into systole', 'end-diastole' or '(late)'."
+     },
+     {
+      "where": "src/ui/mcs/ImpellaConsole.tsx:88, :199-204; src/ui/mcs/EcmoConsole.tsx:207-216",
+      "problem": "There are still live teaching reveals outside guided practice. On the 'rv' case the target reads 'Recognise RV failure: PAPi < 0.9 and CVP high', which names the diagnosis the case asks for. It ticks itself as soon as the biventricular patient loads, so it is not a learner action. The PAPi readout turns 'warn' below 0.9 and CPO turns 'good' at 0.6 or above, which shows the module's interpretation thresholds (and the case answer) in every mode.",
+      "severity": "minor",
+      "fix": "In ImpellaConsole, give the rv goal a neutral label outside guided mode, for example `label: guided ? 'Recognise RV failure: PAPi < 0.9 and CVP high' : 'Find the cause of the low flows'`. Thread `guided` into ic.goals or map the labels at render. Make the PAPi and CPO tones guided-only (`tone={guided && stats ? ... : undefined}`). Leave the MAP alarm colouring, which is what a real monitor does. Do the same for the derived-interpretation tones in EcmoConsole (Pulse pressure, LVEDP) or justify them as monitor alarms. Add one non-guided render assertion."
+     },
+     {
+      "where": "src/ui/mcs/useCirculation.ts:57-62 (CirculationRunner.reset) and :74-78 (setParams)",
+      "problem": "The builder says an injected engine is used 'as is', but reset() replaces engine.patient and engine.devices with clones of the console's patient and devices, and setParams() replaces them again on every patient or device change. For pci-shock-chain, which injects the shared PatientEngine, the console would overwrite the shock chain's own patient state (contractility, volumes, rhythm) with the console's static Patient object.",
+      "severity": "minor",
+      "fix": "When opts.engine is given, do not assign `patient` in reset(), and keep a flag (for example `private injected = true`) so setParams() writes only devices. Alternatively add an explicit option such as `CirculationOptions.applyPatient?: boolean` (default false for an injected engine). Extend the 'injected engine' test in src/ui/mcs/mcs.test.ts to assert `r.sim.patient` is the engine's original patient object after reset and after setParams."
+     },
+     {
+      "where": "src/ui/mcs/IabpConsole.tsx:69-72, :136, :143 (move counting) with IABP_EXPECTED_MOVES = 4",
+      "problem": "`change()` increments `moves` on every range onChange. Dragging a slider fires one event per 0.005 step, so one drag counts tens of moves. With criteria-based scoring and no floor, the efficiency criterion (15 points, 5 per extra move) is almost always 0. The 'fixed in N adjustments' chip also shows inflated counts. The old floor hid this; the new scoring exposes it.",
+      "severity": "minor",
+      "fix": "Count an adjustment when it is committed, not per input event. Keep setS in onChange, and increment moves in onPointerUp / onKeyUp / onBlur of each range (or debounce: one move per settled value after ~300 ms). Keep the ratio buttons as one move each. Add a unit test of the move counter, or move the counting into a small pure helper and test it."
+     },
+     {
+      "where": "src/ui/mcs/DeviceChoice.tsx:175, :178",
+      "problem": "The decision records point to the wrong lessons. The support-choice decision maps any VF profile (select-arrest) to pm-support-choice-shock, although arrest is taught in pm-support-choice-when / pm-support-choice-cpr (the launch file links select-arrest there). The deciding-finding decision always points to pm-support-choice-which, even for the shock and arrest presets.",
+      "severity": "minor",
+      "fix": "Derive the lesson from haemodynamicState(profile). 'arrest' maps to 'pm-support-choice-cpr' (or -when), 'shock' to 'pm-support-choice-shock', and 'normal'/'abnormal' to 'pm-support-choice-which', or to 'pm-support-choice-when' when the preset's deciding finding is an axis finding. Use the same mapping for both run.decide calls."
+     },
+     {
+      "where": "src/ui/mcs/DeviceChoice.tsx:230",
+      "problem": "`Go to the {CONSOLE_LABEL[consoleId].toLowerCase()} console` renders 'Go to the va-ecmo console' on the VA-ECMO tab, which lowercases the acronym.",
+      "severity": "minor",
+      "fix": "Do not lowercase. Add a noun map in shared.tsx, for example CONSOLE_NOUN = { iabp: 'balloon pump', impella: 'microaxial pump', ecmo: 'VA-ECMO' }, and render `Go to the {CONSOLE_NOUN[consoleId]} console`."
+     },
+     {
+      "where": "src/ui/mcs/IabpConsole.tsx:80-86, ImpellaConsole.tsx:127-130, EcmoConsole.tsx:113-116",
+      "problem": "Console runs can only finish successfully. finish() is called only when the targets are held, criticalErrors is hard-coded to 0, and harms only lower the score. A console run therefore never logs a failed attempt (for example sustained suction, a pump left in the ventricle, or running VA-ECMO without a distal perfusion cannula until the leg is ischaemic). The no-floor, can-fail acceptance is met only through DeviceChoice and the pure scoreMcsSession test.",
+      "severity": "minor",
+      "fix": "Either add console critical errors and an end-of-run path now, for example a 'Finish' / 'End case' button that calls run.finish with scoreMcsSession({ targetsMet: done, harms, criticalErrors }), or record this explicitly as left to the later MCS packages (mcs-impella-insertion-and-events, mcs-ecmo-cannulation-and-management) in the package notes. At minimum add an 'End case' action so an unsolved run is logged as failed rather than never finished."
+     },
+     {
+      "where": "src/content/lab/presets/mcs/core.launch.ts",
+      "problem": "The practiceIndex acceptance is only partly met. Taken literally, it lists every core.launch.ts scenario under pm-support-choice-when / -which / -shock, but the 11 console cases sit under device lessons. They are also declared under sim 'impella' even when they belong to the balloon pump or VA-ECMO console. Runs are logged as runCaseId('iabp'|'ecmo', id), so any per-sim matching between practice rows and run records will not line up, and the rows will show the 'Impella console' sim label (useUiStore, out of scope) until that is fixed. The per-console launch files (iabp.launch.ts, pump.launch.ts, ecmo.launch.ts) belong to later packages.",
+      "severity": "minor",
+      "fix": "Lead decision needed. Either (a) keep only the 7 select presets in core.launch.ts, which meets the acceptance literally, and let mcs-iabp-insertion-and-troubleshooting / mcs-impella-insertion-and-events / mcs-ecmo-cannulation-and-management declare their console cases under their own sims, or (b) accept the current file and record the reinterpretation of the acceptance. If (b), confirm that the practice and progress views do not key completion on the launch sim."
+     },
+     {
+      "where": "src/state/useUiStore.ts:21-22, src/progress/logbook.ts:298-299, src/progress/competency.ts:389-394 (not package files)",
+      "problem": "Vendor names remain in UI chrome tied to the MCS lab: the sim labels 'Impella console' / 'IABP console' appear in lesson sim blocks and practice lists, and competency 'where' still says 'IABP \u00b7 Impella \u00b7 ECMO', which also points to the old nav label. The 'no vendor name in MCS chrome' acceptance therefore holds only inside the package's own files. The builder correctly reported this as out of scope.",
+      "severity": "minor",
+      "fix": "Route to the owners (found-launch-links / diag-pressure-recognition-drill own useUiStore.ts). Set labels to 'Balloon pump console' and 'Microaxial pump console' in SIM_SECTION and logbook.ts, and set competency.ts where: 'Mechanical support', experience: 'Balloon pump, microaxial pump and VA-ECMO console cases.'"
+     }
+    ],
+    "verdict": "Mostly complete and correct, but needs fixes before sign-off. I ran the package's 4 test files myself: 50 tests pass. `npx tsc -p tsconfig.app.json --noEmit` is clean.\n\nThe design is in place:\n- McsLab is split into src/ui/mcs/{shared,IabpConsole,ImpellaConsole,EcmoConsole,DeviceChoice}.tsx.\n- The tabs, App nav and Dashboard cards use generic names.\n- deviceChoice.ts walks the module's algorithm. I checked every threshold against 16-support-choice.ts myself (wedge 18, PAPi 0.9, wedge 25 with SvO2 50, RA 12, systolic 90 / lactate 2, CI 2.0, iliofemoral more than 5 mm), and a test pins each one to the text. Leg NIRS 50% is checked against 17-support-devices.ts.\n- A microaxial pump with LV thrombus or a mechanical aortic valve is a critical error, one per contraindication ignored.\n- The Math.max(40/50) floors and the recordSim calls are gone; every console finishes through useLabRun.\n- mcsTipContext and `raises` are real: the consoles raise suction, pump-migration, limb-ischaemia and the shared adapter's hypotension and VF. The named tips appear in tests, and the scenario test shows the 59 waiting tips becoming satisfiable, except 5 that need bleeding or air (and 7 balloon pump tips count only through the union over consoles; the builder lists both sets).\n- useCirculation gains step() and an injectable engine, and keeps its defaults (settle 20 s, 0.05 s frame cap). circulation.ts is untouched.\n\nOther src/ files newer than .started (PhysiologyLab, physiologyTips, MeasurePanel, HandoverPanel, pwSession, pressureWire, caseSession, multiSite.test) all belong to other packages' file lists. The only files outside this package's list are its two new test files. mcs.test.ts replaces the plan's mcs.test.tsx; the builder's reason holds, since vitest.config.ts includes only *.test.ts.\n\nFixes needed:\n- **Main defect (major):** the balloon pump console still shows the answer live in every mode. The slider status words, the 'deflate (late)' label and the readout tones give away the timing error.\n- **Smaller issues (minor):**\n  - The microaxial pump RV case's target names the diagnosis, and the PAPi and CPO readouts are coloured by the module's thresholds in every mode.\n  - An injected engine has its patient overwritten, which will matter to pci-shock-chain.\n  - Moving a slider counts each step as an adjustment, which wipes out the efficiency points.\n  - The decision records point to the wrong lessons, and the VA-ECMO button reads 'va-ecmo'.\n  - Console runs have no way to fail.\n  - The practiceIndex acceptance is only partly met; this needs a decision from the build lead.\n  - Vendor labels remain outside the package files, in useUiStore, logbook and competency (already reported by the builder).\n\nNot verified: `__lab.mcs.step(10)` with the browser pane hidden. It is wired through registerLabHook to useCirculation.step and is unit-tested only through CirculationRunner.advance."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [
+     "Finding 9 (vendor names in src/state/useUiStore.ts SIM_SECTION labels 'IABP console'/'Impella console', src/progress/logbook.ts:298-299, and competency.ts 'IABP \u00b7 Impella \u00b7 ECMO'): not rejected on merit, but these are not package files, so I made no change. It goes to outOfScope for the owners (found-launch-links / diag-pressure-recognition-drill own useUiStore.ts). Suggested labels: 'Balloon pump console', 'Microaxial pump console', and competency where 'Mechanical support'."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/mcs/deviceChoice.test.ts (24 passed)",
+     "npx vitest run src/ui/mcs/mcs.test.ts (22 passed)",
+     "npx vitest run src/ui/lab/mcsTips.test.ts src/ui/lab/mcsTips.scenario.test.ts (13 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "Findings handled, in the order of the review:\n\n1. Balloon pump answer shown live (applied), in src/ui/mcs/IabpConsole.tsx.\n   - `reveal` is now `run.mode === 'guided' || solved || run.finished`.\n   - When `reveal` is false, the slider status words are replaced by a plain position, \"N ms after R\" (phase \u00d7 RR).\n   - The strip label renders `deflate{reveal && s.deflate > 1 ? ' (late)' : ''}`.\n   - The tones on Augmented diastolic, Assisted EDP and Assisted systolic now show only when `reveal` is true.\n   - New render tests: every IABP case in supervised, independent and exam mode shows no timing words, no \"(late)\" and no good/warn/danger colour. In guided mode they do show.\n\n2. Live teaching reveals on the pump and VA-ECMO consoles (applied).\n   - `ImpCase.goals` now takes `(s, depth, guided)`. Outside guided mode the rv goal reads \"Find the cause of the low flows\".\n   - In ImpellaConsole, the CPO and PAPi tones and the deep/shallow warnings show only when `teach` is true (guided, done or run finished).\n   - In EcmoConsole, the Pulse pressure and LVEDP tones, the mixing-zone diagram and the Goals progress follow the same `teach` gate.\n   - The monitor-alarm colours are kept in every mode: MAP, right radial SpO2, leg NIRS (cited threshold) and retrograde circuit flow.\n   - New tests check the rv goal labels in both modes and that the mixing diagram is absent in supervised mode.\n\n3. Injected engine overwritten (applied), in src/ui/mcs/useCirculation.ts.\n   - The runner keeps a private `injected` flag. `reset()` no longer assigns `patient` to an injected engine, and `setParams()` writes devices only.\n   - The test now asserts that `r.sim.patient` is still the engine's own patient object after reset and after setParams, and that the devices are updated.\n\n4. Move counting (applied).\n   - New exported `MoveCounter` and `ADJUSTMENT_SETTLE_MS = 400` in IabpConsole.tsx. Inputs on one control closer together than 400 ms count as one adjustment; a pause or a change of control starts the next. Each ratio button press counts as one.\n   - This is a debounce, not pointerup, so keyboard users are not penalised per keypress. Unit tested.\n\n5. Wrong lesson in decision records (applied).\n   - New `choiceLesson(profile)` and `AXIS_FINDINGS` in src/simulation/mcs/deviceChoice.ts: arrest goes to pm-support-choice-cpr, shock to -shock; a profile decided by an axis finding goes to -when, otherwise to -which.\n   - DeviceChoice uses it for both `run.decide` calls.\n   - Tests pin the mapping for all 7 presets: chip-lm and simple-lesion to when; mech-av, lv-thrombus and severe-ar to which; biv-hypoxaemia to shock; arrest to cpr. They also check that each id exists in 16-support-choice.ts.\n\n6. Lowercased acronym (applied). Added `CONSOLE_NOUN` in shared.tsx; DeviceChoice renders \"Go to the {CONSOLE_NOUN[consoleId]} console\". Tested.\n\n7. Console runs could not fail (applied in part).\n   - New `EndCase` component in shared.tsx. It sits in the LabModeBar of all three consoles and is hidden once the run is finished.\n   - It calls `run.finish` with `scoreMcsSession({ targetsMet: false, harms, criticalErrors: 0 })`, so an unsolved run is now logged as failed. Teaching aids are revealed after it.\n   - Console-specific critical errors are left to the later packages: static balloon over 15 min (mcs-iabp-insertion-and-troubleshooting), retained loading tube and pump events (mcs-impella-insertion-and-events), arterial-side bubble and leg ischaemia without a DPC (mcs-ecmo-cannulation-and-management).\n\n8. Launch-file acceptance (decision taken: option b, keep the current core.launch.ts). The package's lessonAndCaseLinks explicitly asks for the IABP_CASES, IMP_CASES and ECMO_CASES ids, so I kept them. I checked that practice rows never key completion on the launch sim: practiceIndex is consumed only by BlockRenderer.PracticeList and CaseStudies, and runs are logged by the console that ran them. The reinterpretation is recorded in the file's header comment. The only remaining effect is the \"Impella console\" sim label on those rows, which comes from useUiStore (finding 9, out of scope).\n\n9. Vendor names outside the package (not changed): see the rejected list.\n\nTest file note: src/ui/mcs/mcs.test.ts stays a .ts file, because vitest.config.ts includes `src/**/*.test.ts` only.\n\nFiles edited:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/shared.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/IabpConsole.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/ImpellaConsole.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/EcmoConsole.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/DeviceChoice.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/useCirculation.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/mcs.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/mcs/deviceChoice.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/mcs/deviceChoice.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/mcs/core.launch.ts (comment only)\n\noutOfScope: src/state/useUiStore.ts:21-22, src/progress/logbook.ts:298-299 and src/progress/competency.ts:389-394 still carry vendor names or the old nav label (finding 9)."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-8) at http://localhost:5173, then closed it. The dev server was already running. I left every other tab alone.",
+     "App nav reads 'Mechanical support'. The Dashboard cards read 'Balloon pump console', 'Microaxial pump console' and 'VA-ECMO circuit'. The MCS tabs read 'Balloon pump', 'Microaxial pump' and 'VA-ECMO'. No vendor name appears in the MCS chrome. On the Dashboard the only 'Impella' text is inside a case-study title and its citation, which is case content and allowed.",
+     "The device-choice step opens by default on select-chip-lm. It shows the profile (haemodynamics, procedure, echo and access), the three decision steps and Submit. window.__lab.mcs has context, tips, state, events and step. At select-chip-lm the context is {lab:'mcs', phase:'select', procedures:['iabp']} and the tips include mcs-select-impella-contraindications.",
+     "select-lv-thrombus, submitted as upfront + microaxial flow pump + 'Abnormal haemodynamics and a high-risk procedure': result critical ['Microaxial flow pump with LV thrombus'], passed false, score 0. The debrief shows 'not accepted', the accepted classifications with the trade-off note, Support 'Intra-aortic balloon pump or VA-ECMO', deciding finding 'LV thrombus', the critical error and the algorithm path.",
+     "Launched select-biv-hypoxaemia on the microaxial pump console in guided mode through useLabLaunchStore. Events were ['hypotension','ventilated'] at phase 'select'. tips() included mcs-select-shock-severity and mcs-select-impella-contraindications, so that acceptance point holds in the app.",
+     "__lab.mcs.step(10) on the microaxial pump 'escalate' case: elapsed went from 0.27 to 10.33 s, and 'hypotension' was raised at MAP about 59. On the VA-ECMO 'ecpr' case: elapsed went from 10.35 to 20.37 s. Context on ecpr was procedures ['ecmo','large-bore'], phase 'insert', events ['vf'], with ECMO cannulation tips. Note: the hook's state() is a render snapshot, so a re-read is only current after the next React render. Calling it again after about 300 ms showed the advance.",
+     "Balloon pump 'late-deflation' in exam mode: the named timing error and the effective/poor readout are hidden, and tips() is empty. VA-ECMO 'harlequin' in exam mode: the mixing-zone diagram is absent (no SVG text) and tips are empty.",
+     "Microaxial pump 'migrated' in exam mode: tips are empty, and the guided-only goal wording is replaced. But the echo/fluoroscopy schematic still draws the 'target \u2248 3.5 cm' line (see problems). Pressing End case removes the End case button, and nothing else on screen changes.",
+     "Checked the layout at a 650 px viewport (main column 402 px) on the device-choice step and on all three consoles.",
+     "Console: no errors or warnings over the whole session, only Vite connect debug lines and the React DevTools info line."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/mcs/ImpellaConsole.tsx PumpDiagram (around lines 228-262)",
+      "problem": "The dashed target line and the 'target \u2248 3.5 cm' label are drawn in every mode. In the exam-mode 'Position alarm' (migrated) case, the inlet sits at 6.5 cm and the schematic shows the learner the correct depth to aim for. That is ground truth on a live screen outside guided practice. The builder's report says target ticks are guided-only, but this one is not gated.",
+      "severity": "major",
+      "fix": "Pass the console's `teach` flag (guided || done || run.finished) into PumpDiagram: `<PumpDiagram depth={depth} teach={teach} />`. Render the dashed target <line> and the 'target \u2248 3.5 cm' <text> only when `teach` is true."
+     },
+     {
+      "where": "src/ui/mcs/DeviceChoice.tsx:189, IabpConsole.tsx:146, ImpellaConsole.tsx:143, EcmoConsole.tsx:130; src/ui/mcs/shared.tsx:110 (ScenarioPicker) and ScenarioHeader",
+      "problem": "The pages scroll sideways at narrow widths. With a 650 px viewport, the section's scroll container is 392 px wide but its content is 455-492 px. The `grid xl:grid-cols-12` has no column template below xl, so its single implicit column takes the min-content width. ScenarioHeader's row (brief + a select of up to 320 px) does not wrap, so it sets that min-content width. The brief is also squeezed into a very narrow column.",
+      "severity": "minor",
+      "fix": "Change the four grids to `grid grid-cols-1 xl:grid-cols-12 gap-4` (minmax(0,1fr) tracks). In ScenarioHeader use `flex flex-wrap items-start gap-3` and give the brief `min-w-[16rem]`. Give the picker select `w-full sm:w-auto max-w-full sm:max-w-[320px] min-w-0`."
+     },
+     {
+      "where": "src/simulation/mcs/deviceChoice.ts:276",
+      "problem": "The debrief path line reads 'Microaxial pump contraindicated: lv thrombus'. FINDINGS labels are lowercased, which also breaks 'LV' and would break other acronyms such as 'RV'.",
+      "severity": "minor",
+      "fix": "Do not lowercase the finding labels: `ci.map((f) => FINDINGS[f]).join(', ')`. Alternatively, lowercase only the first character when the second is not upper case."
+     },
+     {
+      "where": "src/ui/mcs/IabpConsole.tsx, ImpellaConsole.tsx, EcmoConsole.tsx (after run.finish)",
+      "problem": "When a console run ends, through End case or the goal hold, nothing on screen reports the outcome. The End case button disappears, and there is no score, pass or fail, or list of unmet criteria. A learner in exam mode cannot tell the run failed. Only the device-choice step shows a debrief.",
+      "severity": "minor",
+      "fix": "When run.finished, render a small debrief panel in each console from the scoreMcsSession result (score, passed, and which criteria were or were not met). The same block could live in shared.tsx and be used by all three consoles. Add a Restart button that bumps runKey."
+     },
+     {
+      "where": "src/state/useUiStore.ts SIM_SECTION (lines 21-23); rendered by src/ui/content/BlockRenderer.tsx:333/372 and src/ui/sections/Pathway.tsx:367",
+      "problem": "The launch labels for these sims still read 'IABP console', 'Impella console' and 'VA-ECMO circuit'. Lesson blocks therefore show 'Practise \u00b7 Impella console', a trade name in UI chrome that opens the MCS lab. useUiStore.ts is not in this package's file list, so this is out of scope for this package and should go to the build lead.",
+      "severity": "minor",
+      "fix": "In useUiStore.ts SIM_SECTION, set iabp to { section: 'mcs', label: 'Balloon pump console' } and impella to { section: 'mcs', label: 'Microaxial pump console' }. Leave ecmo as is. A follow-up package or the lead should make this change, since the file is outside this package's list."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 5 (useUiStore.ts SIM_SECTION labels 'IABP console' / 'Impella console' shown as 'Practise \u00b7 Impella console' in lesson blocks): the finding is correct, but src/state/useUiStore.ts is outside this package's file list, so it was not edited. outOfScope for the build lead: in src/state/useUiStore.ts SIM_SECTION set iabp to { section: 'mcs', label: 'Balloon pump console' } and impella to { section: 'mcs', label: 'Microaxial pump console' }, and leave ecmo unchanged."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/mcs/mcs.test.ts src/simulation/mcs/deviceChoice.test.ts src/ui/lab/mcsTips.test.ts src/ui/lab/mcsTips.scenario.test.ts: 4 files, 63 tests, all passed (mcs.test.ts 25, deviceChoice.test.ts 25, mcsTips.test.ts 8, mcsTips.scenario.test.ts 5)",
+     "In-app check at a 650 px viewport in a separate tab on the running dev server: on the Balloon pump, Microaxial pump and VA-ECMO tabs, no scroll container is wider than its content allows. The tab was closed afterwards and the build page's viewport was reset to desktop."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I applied four findings and rejected one because the file is outside this package.\n\n1. **Target line in the pump schematic (major).** In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/mcs/ImpellaConsole.tsx, PumpDiagram now takes the console's `teach` flag (guided || done || run.finished). The dashed target line and the 'target \u2248 3.5 cm' label only appear when it is true. The inlet-depth readout still shows in every mode, because it is a measurement. New test: the 'migrated' case shows no target label in supervised, independent or exam mode, and does show it in guided mode.\n\n2. **Sideways scroll at narrow widths.** The four page grids in DeviceChoice.tsx, IabpConsole.tsx, ImpellaConsole.tsx and EcmoConsole.tsx are now `grid grid-cols-1 xl:grid-cols-12 gap-4`. In shared.tsx, ScenarioHeader uses `flex flex-wrap items-start gap-3`. I gave the brief `flex-1 min-w-[min(16rem,100%)]` instead of a plain `min-w-[16rem]`, so it cannot overflow a container narrower than 16rem. The ScenarioPicker select is now `w-full sm:w-auto min-w-0 max-w-full sm:max-w-[320px]`. New test checks the grid class on all three consoles. The 650 px in-app check found no overflow.\n\n3. **Acronyms lowercased in the debrief path.** In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/mcs/deviceChoice.ts, a new exported `inSentence(label)` lowercases the first letter unless the label opens with an acronym. Both `.toLowerCase()` uses (the contraindication line in the device algorithm and the severe-LV-shock line) now call it. The line now reads 'Microaxial pump contraindicated: LV thrombus', and 'Isolated RV failure' becomes 'isolated RV failure'. New test is in deviceChoice.test.ts.\n\n4. **No outcome shown when a console run ends.** shared.tsx gains a `SessionDebrief` component built from the scoreMcsSession result. It shows:\n   - pass or fail and the score out of 100\n   - each criterion against its SESSION_POINTS maximum: targets held, a harm-free row named for the console (suction episodes, drainage chatter, or general harmful episodes on the balloon pump), adjustment efficiency on the balloon pump only, and critical errors when there are any\n   - a note when the run ended before every target was held\n   - a 'Restart this case' button\n\n   Each console keeps the score in state where it calls run.finish (the balloon pump has two places: End case and solved). It renders the debrief at the top of the right column when run.finished. ConsoleProps has a new optional `onRestart`. McsLab.tsx passes `onRestart = () => setRunKey(k => k + 1)`, which remounts the same case and keeps the launch mode. New SSR test covers a failed result with restart and a passed result with an efficiency row.\n\n5. **Rejected, out of scope.** /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useUiStore.ts SIM_SECTION still uses trade names in the launch labels. The fix is in the rejected entry above for the build lead.\n\nFiles edited: src/ui/mcs/ImpellaConsole.tsx, IabpConsole.tsx, EcmoConsole.tsx, DeviceChoice.tsx, shared.tsx, src/ui/sections/McsLab.tsx, src/simulation/mcs/deviceChoice.ts, plus the tests src/ui/mcs/mcs.test.ts (3 new) and src/simulation/mcs/deviceChoice.test.ts (1 new)."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "deviceChoice.test.ts: each select preset's correct choice and finding score full marks; a microaxial pump with LV thrombus is critical",
+      "met": true,
+      "evidence": "src/simulation/mcs/deviceChoice.test.ts (25 tests pass). 'each preset's correct choice and finding score full marks' loops over every accepted classification, device and finding for all 7 presets and expects score 100, passed and no critical errors. 'a microaxial pump with LV thrombus is critical, and so is one with a mechanical aortic valve' also passes. scoreChoice in src/simulation/mcs/deviceChoice.ts:405-431 pushes one critical error for each contraindication that is ignored."
+     },
+     {
+      "criterion": "mcsTips.test.ts: at phase 'insert' in the IABP console no pump or ECMO tip is returned",
+      "met": true,
+      "evidence": "src/ui/lab/mcsTips.test.ts (8 tests pass). The test \"at phase 'insert' in the balloon pump console no pump or ECMO tip is returned\" builds mcsTipContext('iabp','insert',null), expects procedures ['iabp'] and a non-empty tip list, and finds no mcs-impella-* or mcs-ecmo-* tip. Another test checks that no console shows another console's device tips at any stage."
+     },
+     {
+      "criterion": "No score floor remains; a run with two critical errors can fail",
+      "met": true,
+      "evidence": "grep finds no Math.max(40|50, ...) in src/ui/mcs or McsLab.tsx; the only mention is a comment in deviceChoice.ts:615. scoreMcsSession (deviceChoice.ts:636-644) has no floor and passes only when criticalErrors === 0. Tests 'no score floor remains: a session can score 0', 'a run with two critical errors fails, whatever else it did' (score 40, passed false) and 'the old floors are gone from the consoles' (a raw-source glob) all pass. DeviceChoice.tsx:181 passes r.critical.length into run.finish."
+     },
+     {
+      "criterion": "No vendor name appears in App navigation, the Dashboard card or MCS chrome; browser: __lab.mcs.step(10) advances with the pane hidden",
+      "met": true,
+      "evidence": "App.tsx:81 has the nav label 'Mechanical support'. Dashboard.tsx:52-54 has 'Balloon pump console', 'Microaxial pump console' and 'VA-ECMO circuit'. CONSOLE_LABEL in shared.tsx is Balloon pump / Microaxial pump / VA-ECMO. A grep for vendor names in MCS UI strings found none. mcs.test.ts covers both the tabs ('tabs use generic names...') and App/Dashboard ('no vendor name in the App navigation or the Dashboard cards'), and both pass. Browser check: in a background tab on localhost:5173 (requestAnimationFrame paused, elapsed stayed at 0) I opened the Microaxial pump console, scenario 'escalate', and called window.__lab.mcs.step(10). State elapsed went from 0 to 10.0, MAP was 59.6, the context was {phase:'position', procedures:['impella'], events:['hypotension']}, and there were no console errors. CirculationRunner tests in mcs.test.ts cover stepping and the injected engine."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/mcs/core.launch.ts under lessons pm-support-choice-when, pm-support-choice-which, pm-support-choice-shock",
+      "met": true,
+      "evidence": "mcs.test.ts 'practiceIndex lists every scenario under its lessons; the three support-choice lessons list the device-choice presets' passes. It checks that every core.launch.ts scenario is listed by practiceForLesson under each of its lessonIds, that the when/which/shock lessons together contain every select preset, and that select-arrest is listed under 'when'. src/ui/content/practiceIndex.test.ts (10 tests) also passes."
+     },
+     {
+      "criterion": "Tips test beside mcsTips.ts: after the action raising 'hypotension' tipsFor(ctx,20) includes mcs-select-shock-severity, at phase 'select' it includes mcs-select-impella-contraindications; every waiting.ts entry naming mcs-console-split-select-and-tips becomes satisfiable, so the mcs waiting count falls by at least their number",
+      "met": false,
+      "evidence": "The first half is met. In src/ui/lab/mcsTips.scenario.test.ts (5 tests pass), loading select-biv-hypoxaemia raises hypotension through profileEvents, and both named tips are returned at phase select. The second half is not met. The waiting.ts entry for this package (src/content/lab/raisable/waiting.ts:304-326) lists 59 tips. The reachability report shows 'mcs 59 tips satisfiable 54 waiting 59 ready 54', so 5 tips are still unsatisfiable: mcs-cx-covered-stent-site, mcs-cx-iabp-bleeding-anticoag, mcs-cx-ecmo-cannula-bleed and mcs-iabp-no-heparin-1to1 need 'bleeding' (or 'haematoma'), and mcs-ecmo-bubbles needs 'air'. raises in src/ui/lab/mcsTips.ts declares neither event, although the package's tipIntegration lists 'bleeding' and 'air' among its events. The builder's test records these five as STILL_WAITING, an exception the criterion does not allow."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/lab/mcsTips.ts (raises), src/content/lab/raisable/waiting.ts:304-326, src/ui/lab/mcsTips.scenario.test.ts (STILL_WAITING)",
+      "problem": "Five of the 59 waiting.ts tips assigned to this package are still unsatisfiable, so the mcs ready count is 54 instead of 59. mcs-cx-covered-stent-site, mcs-cx-iabp-bleeding-anticoag, mcs-cx-ecmo-cannula-bleed and mcs-iabp-no-heparin-1to1 need 'bleeding'; mcs-ecmo-bubbles needs 'air'. The package's tipIntegration names bleeding and air as events this package raises, but no console has a bleeding or air source and raises does not declare them.",
+      "severity": "major",
+      "fix": "There are two options. (a) The preferred fix needs a decision from the build lead because waiting.ts belongs to another package (out of scope here). Move the five tips in waiting.ts to the packages that actually raise those events and whose acceptance already tests them: mcs-iabp-no-heparin-1to1 to mcs-iabp-insertion-and-troubleshooting; mcs-ecmo-bubbles and mcs-cx-ecmo-cannula-bleed to mcs-ecmo-cannulation-and-management; mcs-cx-covered-stent-site to mcs-largebore-access-and-removal; mcs-cx-iabp-bleeding-anticoag to mcs-iabp-insertion-and-troubleshooting (or the ECMO package). Then drop the STILL_WAITING exception from mcsTips.scenario.test.ts and assert that every remaining entry is satisfiable. (b) Within this package: give a console a real access-site bleeding complication and air-in-circuit event (for example the VA-ECMO console at insert or manage), feed them through McsTipFlags.events, and add 'bleeding' and 'air' to raises.events in src/ui/lab/mcsTips.ts. Do not declare them without a source that produces them."
+     },
+     {
+      "where": "src/ui/sections/StructuralLab.tsx:116-118 (not a file of this package)",
+      "problem": "npx tsc -p tsconfig.app.json --noEmit reports 3 errors, all in this file: TS2322, property 'launch' does not exist on IntrinsicAttributes. The file was changed at 19:51 by a concurrent package. None of this package's files has a type error.",
+      "severity": "minor",
+      "fix": "Nothing to do in this package. Once the concurrent structural package lands its edit, so that the structural lab components accept launch and onLaunchTaken props, run the typecheck again."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/mcs/deviceChoice.test.ts src/ui/lab/mcsTips.test.ts src/ui/lab/mcsTips.scenario.test.ts src/ui/mcs/mcs.test.ts (4 files, 63 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts (2 files, 15 tests passed; mcs line: 59 tips, satisfiable 54, waiting 59, ready 54)",
+     "Browser (localhost:5173, background tab): Mechanical support > Microaxial pump > scenario 'escalate'; window.__lab.mcs.step(10) advanced elapsed from 0 to 10.0 s; no console errors",
+     "npx tsc -p tsconfig.app.json --noEmit (run twice)"
+    ],
+    "tsc": "Not clean: 3 errors, all in src/ui/sections/StructuralLab.tsx lines 116-118 (TS2322, 'launch' prop not accepted). That file belongs to a concurrent package and was changed at 19:51. None of this package's files has a type error."
+   },
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "deviceChoice.test.ts: each select preset's correct choice and finding score full marks; a microaxial pump with LV thrombus is critical",
+      "met": true,
+      "evidence": "In src/simulation/mcs/deviceChoice.test.ts (25 tests, all pass), 'each preset's correct choice and finding score full marks' tries every accepted classification, device and finding for all seven presets and asserts a score of 100, passed and no critical errors. 'a microaxial pump with LV thrombus is critical' asserts critical equals ['Microaxial flow pump with LV thrombus'] and passed is false; the mechanical-valve case is checked the same way. Thresholds are matched against the text of module 16-support-choice."
+     },
+     {
+      "criterion": "mcsTips.test.ts: at phase 'insert' in the IABP console no pump or ECMO tip is returned",
+      "met": true,
+      "evidence": "In src/ui/lab/mcsTips.test.ts (8 tests, all pass), the first test calls mcsTipContext('iabp','insert',null), checks procedures equal ['iabp'] with no large-bore, and asserts that tipsFor(ctx,200) contains no tip whose procedure trigger excludes iabp and no tip with an mcs-impella- or mcs-ecmo- id. A further test checks every console at every stage for the other consoles' tips."
+     },
+     {
+      "criterion": "No score floor remains; a run with two critical errors can fail",
+      "met": true,
+      "evidence": "scoreMcsSession (deviceChoice.ts lines 636-644) clamps only to 0-100 and passes only when targetsMet is true and criticalErrors is 0. The tests confirm a run can score 0, and that a run with two critical errors scores 40 and fails. A source scan test finds no Math.max(40|50, ...) and no recordSim( in src/ui/mcs/*.tsx or McsLab.tsx, and grep agrees. Each console scores through run.finish with criticalErrors: DeviceChoice passes r.critical.length and EcmoConsole counts an air embolus as one."
+     },
+     {
+      "criterion": "No vendor name appears in App navigation, the Dashboard card or MCS chrome; browser: __lab.mcs.step(10) advances with the pane hidden",
+      "met": true,
+      "evidence": "Against the snapshot, the App.tsx nav label changed from 'IABP \u00b7 Impella \u00b7 ECMO' to 'Mechanical support', and the Dashboard cards now read 'Balloon pump console' and 'Microaxial pump console'. src/ui/mcs/mcs.test.ts (27 tests, all pass) checks the nav, the cards, every console render, the device-choice step and the McsLab tabs against a vendor-name pattern. The remaining 'impella' strings are only identifiers. For the hook, a CirculationRunner test covers the manual step. I also ran it live in a background tab of the running dev server with document.hidden true: __lab.mcs.step(10) moved elapsed from 0 to 10.0 on both the ecmo/harlequin and impella/escalate cases, with stats updated. On one early attempt the lab showed select-chip-lm instead of the launched case, most likely a hot reload from another package's edits; I could not reproduce it on four retries."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in core.launch.ts under lessons pm-support-choice-when, pm-support-choice-which, pm-support-choice-shock",
+      "met": true,
+      "evidence": "A test in mcs.test.ts checks practiceForLesson(l) for every core.launch.ts scenario under each of its lessonIds. It also checks that the when, which and shock lessons together list all six non-arrest device-choice presets, with select-arrest under pm-support-choice-when. Another test checks that core.launch.ts declares exactly the presets plus IABP_CASES, IMP_CASES and ECMO_CASES. src/ui/content/practiceIndex.test.ts passes (10 tests)."
+     },
+     {
+      "criterion": "Tips: in a core.launch.ts scenario, after the action raising 'hypotension', tipsFor(ctx,20) includes mcs-select-shock-severity and at phase 'select' mcs-select-impella-contraindications; every waiting.ts entry naming the package becomes satisfiable and the mcs waiting count falls by their number",
+      "met": true,
+      "evidence": "In the new file src/ui/lab/mcsTips.scenario.test.ts (5 tests, all pass), select-biv-hypoxaemia goes from no events to profileEvents including hypotension, after which tipsFor(ctx,20) contains both named tips. All waiting.ts entries naming the package (more than 50) are satisfiable under raises, and none were under empty raises. src/content/lab/reachability.test.ts passes and reports 'mcs 59 tips satisfiable 59 waiting 59 ready 59'; all 59 entries naming this package are listed as ready."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/state/useUiStore.ts SIM_SECTION (lines 21-22), shown by src/ui/content/BlockRenderer.tsx lines 333 and 372 and src/ui/sections/Pathway.tsx line 367",
+      "problem": "Outside this package's files and outside the criterion (which covers App nav, the Dashboard card and MCS chrome). The sim labels are still 'IABP console' and 'Impella console'. Every core.launch.ts scenario is declared under sim 'impella', so each 'Practise this in the lab' row for MCS, the balloon pump and VA-ECMO cases included, is labelled 'Impella console'. That is a vendor name in UI chrome (HANDOVER 6.5) and a misleading label.",
+      "severity": "minor",
+      "fix": "In a package that owns src/state/useUiStore.ts, change the labels to iabp: 'Balloon pump console' and impella: 'Microaxial pump console', or a shared 'Mechanical support lab' label for all three MCS sims since one launch file serves all three consoles. Lesson and case text stays unchanged."
+     },
+     {
+      "where": "src/ui/lab/mcsTips.scenario.test.ts UNION_ONLY",
+      "problem": "Seven waiting tips count as satisfiable only through the merged raises; no console context shows them yet (mcs-cx-ecmo-cannula-bleed, mcs-cx-iabp-ischaemic-leg, mcs-iabp-kit-wire, mcs-iabp-limb, mcs-iabp-poor-augmentation, mcs-iabp-tip-carina, mcs-iabp-vacuum-valve). The criterion as written (satisfiable under the reachability rule) is met, and the test records the gap openly.",
+      "severity": "minor",
+      "fix": "No change in this package. The later MCS packages (mcs-iabp-insertion-and-troubleshooting, mcs-ecmo-cannulation-and-management) should add the insertion and fault stages that raise these, and remove the entries from UNION_ONLY."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/mcs/deviceChoice.test.ts src/ui/lab/mcsTips.test.ts src/ui/lab/mcsTips.scenario.test.ts src/ui/mcs/mcs.test.ts (4 files, 65 tests passed)",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts (2 files, 15 tests passed; mcs 59/59 satisfiable, 59 ready)",
+     "Browser (background tab of the running dev server on port 5173, document.hidden true): openSim('ecmo', harlequin) and openSim('impella', escalate), then __lab.mcs.step(10); elapsed went from 0 to 10.0 and stats updated",
+     "Browser: openSim('iabp', late-inflation) from the dashboard; the console stayed on the launched case for 4 s"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 2,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/ui/mcs/mcs.test.ts src/ui/lab/mcsTips.scenario.test.ts src/ui/lab/mcsTips.test.ts src/simulation/mcs/deviceChoice.test.ts src/content/lab/reachability.test.ts: 5 files, 70 tests, all passed. The reachability report now gives mcs 59 tips, 59 satisfiable, 59 ready (it was 54)."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors. The 3 StructuralLab.tsx errors reported in finding 2 are gone; the concurrent structural package has landed its edit.",
+    "notes": "Finding 1 (major) was correct and I applied option (b). Option (a) would have meant editing waiting.ts, which belongs to another package. The plan's tipIntegration for this package lists bleeding and air, and its acceptance says every waiting.ts entry naming this package must become satisfiable. So I added real sources for both events, each taken from a module check question, and did not just declare them.\n\n- Bleeding: src/ui/mcs/IabpConsole.tsx has a new IABP case, \"retroperitoneal-bleed\". Its brief is the check question of lesson pm-support-devices-iabp-run (src/content/manual/pci-manual/17-support-devices.ts around line 364, Brilakis 14.3): heparin stopped for a retroperitoneal haematoma, pump left at 1:2. The timing is already correct and the fix is to run at 1:1. IabpCase gained optional events, ratio and expectedMoves. The case raises 'bleeding' for its whole run, which also adds the complication phase. It is solved only when the timing is correct and the ratio is 1:1, with 1 expected adjustment. The run is logged with the complication \"retroperitoneal bleeding\". The assessment line about the ratio appears only in guided practice or once the case is solved.\n- Air: in src/ui/mcs/EcmoConsole.tsx the ECPR case now opens with a bubble in the arterial side of the cannula joint (the module check around line 1011, Brilakis 14.5). The new EcmoCase field is arterialBubble. While the bubble is there the console raises 'air', shows the alarm line \"Bubble in the arterial side of the cannula joint\" and offers \"Aspirate air through the side port\". If flow is started with the bubble still in place, the air goes to the patient: that is 1 critical error, logged as the complication \"arterial air embolism\", and the run fails.\n- src/ui/lab/mcsTips.ts: 'bleeding' and 'air' added to raises.events, and the header comment names both sources.\n- src/content/lab/presets/mcs/core.launch.ts: the retroperitoneal-bleed scenario added under lessons pm-support-devices-iabp-run and cm-access-complications-large-bore. The launch file now has 7 presets and 12 console cases.\n- src/ui/lab/mcsTips.scenario.test.ts: the STILL_WAITING exception is gone. The test now asserts that every waiting entry for this package is satisfiable. In the test of what each console can show, the balloon pump console now has bleeding and the ECMO console has air at stage insert only. There are two changes to UNION_ONLY. mcs-cx-ecmo-cannula-bleed is added, because no ECMO console raises bleeding yet; mcs-ecmo-cannulation-and-management adds it. mcs-iabp-static-balloon is removed, because the bleed case puts the balloon pump console in its complication phase, and the module's answer to that case discusses a stopped balloon.\n- src/ui/mcs/mcs.test.ts: 2 new tests for the bleed case and the ECPR bubble. They check the guided-only wording and that the bubble appears only in ECPR.\n\nFinding 2 (minor) needed no change in this package, and the typecheck is now clean.\n\nFor the build lead: the later MCS packages (mcs-iabp-insertion-and-troubleshooting, mcs-ecmo-cannulation-and-management, mcs-largebore-access-and-removal) will edit IabpConsole.tsx and EcmoConsole.tsx. They can build on these two event sources or replace them. Nothing outside the package's listed files was edited. No browser check was run; the rendering is covered by the server-side render tests."
+   }
+  ]
+ }
+}

@@ -1,0 +1,141 @@
+{
+ "package": "found-handover-contract",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built found-handover-contract. It has two parts. src/simulation/session/handover.ts holds the shared types for what passes between labs. src/state/useLabHandoverStore.ts is an in-memory store for stand-alone transfers that carry a PatientEngine snapshot. The plan's acceptance test is in src/simulation/session/handover.test.ts along with further tests. All 9 tests pass and the typecheck is clean. No existing file was edited.\n\nhandover.ts contains:\n- PciTarget (with PciStrategy 'adhoc' | 'defer' | 'staged')\n- AnticoagState (HeparinDose { u, t, route, delivered }, infusions, lastAct, targetS)\n- AntithromboticState (oac, aspirin, p2y12 { drug, dose, at }, infusions)\n- ContrastState, ConsentState { adHocLimit }, SheathState { clot, aspirated? }\n- HandoverExtensions, which gathers all of these as optional fields, plus WithHandover<T> = T & HandoverExtensions for caseSession.ts to adopt later\n- LabReport { lab, stents, finalTimi, complications, contrastMl, dose, durationS, residual, wirelessExchanges?, events? }\n- helpers: emptyLabReport, lesionIdOf, contrastState, deliveredHeparinU\n- the patient-transfer type PatientHandover { snapshot, profile, tree? }, with patientHandoverProblem, patientHandoverFrom(engine, tree) and engineFromHandover(p, opts). engineFromHandover builds the receiving lab's own PatientEngine on the same profile, lesions and tree, then calls restore(snapshot).\n\nThe store provides put({ to, from, params?, events?, patient?, profile?, tree?, report?, context?, payload? }), take(to), peek(to), dropWhere, clear, plus putHandover, takeHandover, peekHandover, subscribeLabHandover and a useLabHandover hook, all modelled on useLabLaunchStore. Its rules:\n- It lives in memory only and has no persistence.\n- put() deep-copies the snapshot, profile, params, events, report, context and payload. The coronary tree is kept by reference, since it is geometry no lab changes.\n- Each lab has one pending transfer, and a new put replaces it.\n- take() consumes the transfer, so it is returned once.\n- A snapshot that cannot be restored is refused at put(): missing profile, wrong profile, a tree-built snapshot without its tree, or the wrong tree.\n\nNo dose, threshold or device dimension was added. The doc comments point to SOURCED_DOSES, pharmacology.ts and contrastBudget.ts for clinical values.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/handover.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useLabHandoverStore.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/handover.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/session/handover.test.ts: a PatientEngine snapshot round-trips: same pericardialMl and MAP within 1 mmHg; take() returns it once",
+     "src/simulation/session/handover.test.ts: the restored patient lives on exactly as the sender would have (identical snapshot after 6 s); the leak keeps filling every second; draining raises MAP",
+     "src/simulation/session/handover.test.ts: put() copies; changing the sender's objects afterwards does not change the transfer",
+     "src/simulation/session/handover.test.ts: refuses an unrestorable snapshot (no profile, wrong profile, tree-built snapshot without or with the wrong tree); with its tree the network rebuilds and replays exactly",
+     "src/simulation/session/handover.test.ts: one transfer per lab, latest wins; subscribers take each new transfer once; dropWhere and clear",
+     "src/simulation/session/handover.test.ts: never writes a transfer or snapshot to storage (localStorage spy)",
+     "src/simulation/session/handover.test.ts: transfer events are vocabulary events (LAB_EVENTS)",
+     "src/simulation/session/handover.test.ts: contrastState, deliveredHeparinU, lesionIdOf",
+     "src/simulation/session/handover.test.ts: the extensions are additive optional fields on SessionHandover (type-level widen), emptyLabReport shape"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/session/handover.test.ts: 1 file, 9 tests passed (about 5 s)",
+     "npx tsc -p tsconfig.app.json --noEmit: clean, no output"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (no errors). --listFilesOnly confirms all three new files are in the program.",
+    "acceptance": [
+     {
+      "criterion": "handover.test.ts: a PatientEngine snapshot round-trips through the store (restore gives the same pericardialMl and MAP within 1 mmHg); take() returns it once",
+      "status": "met",
+      "evidence": "The test 'a PatientEngine snapshot round-trips...' sets up a perforated patient (inflow 25/6 mL/s for 24 s, pericardialMl > 50) and puts it. The sender then runs on 20 s, and the copy in the store is unaffected. engineFromHandover(take().patient) gives the same pericardialMl (diff < 1e-9) and aortaTrue.mean within 1 mmHg. A second take() returns null. A further test shows the full snapshot is byte-identical to the sender's after both advance 6 s. Passed."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean",
+      "status": "met",
+      "evidence": "The command exits with no output."
+     },
+     {
+      "criterion": "Design: snapshots live in memory only (never localStorage); the receiving lab owns a copy",
+      "status": "met",
+      "evidence": "The store has no persist middleware. The 'never writes to storage' test uses a localStorage spy and records zero setItem calls across put and take. The 'put() copies' test changes the sender's snapshot, profile, params, events and report after put(), and the taken transfer still holds the original values."
+     },
+     {
+      "criterion": "Design: types PciTarget, AnticoagState, AntithromboticState, ContrastState, ConsentState, SheathState, LabReport as additive optional fields",
+      "status": "met",
+      "evidence": "All are defined in handover.ts as HandoverExtensions, with every field optional, plus WithHandover<T>. A type-level test widens WithHandover<SessionHandover> back to SessionHandover. caseSession.ts is not edited; the plan has it adopt these types in proc-foundation-scenarios-ledger."
+     },
+     {
+      "criterion": "Tip integration: a transfer carries events that the receiving lab keeps active for the run",
+      "status": "met",
+      "evidence": "LabTransfer.events is LabEvent[], de-duplicated in order. The tests check it survives take() and that the event names used are in LAB_EVENTS. Keeping those events in the tip context is up to each receiving lab when it adopts the store."
+     }
+    ],
+    "outOfScope": [
+     "Optional, not needed for this package: useLabLaunchStore drops a pending request when the section changes, because useUiStore calls dropWhere. The hand-over store has the same dropWhere method, but nothing calls it on a section change, so a transfer that is never taken stays in memory until another put to the same lab, take() or clear(). Wiring it would mean editing src/state/useUiStore.ts, which this package does not own. Alternatively, each receiving lab can take or ignore transfers on mount."
+    ],
+    "notes": "I widened one part of the design. It names put({ to, params, events, patient?: EngineSnapshot, payload?, from }), but PatientEngine.restore() checks the snapshot's profileSeed and needs the rendered CoronaryTree for snapshots taken on one. So put() also takes profile and tree, and it refuses a snapshot it cannot restore. Without this, the receiving lab could not rebuild the patient. I also added optional report (LabReport) and context (HandoverExtensions) fields next to the generic payload.\n\nSenders should call patientHandoverFrom(engine, tree), then putHandover(...), then stop their own engine, then useUiStore.openSim(to). Receivers call useLabHandover(to, t => engineFromHandover(t.patient!)).\n\nSome choices are mine and can be changed: AdHocConsent ('diagnostic-only' | 'target-only' | 'any'), lesionIdOf (vessel plus position to three decimals), and SheathState.aspirated. The only number in the tests, 25/6 mL/s of inflow, is a test input copied from patient.test.ts, not a clinical value.\n\nNone of the three listed files existed before, so the snapshot directory datasets/tmp/wp-snapshots/found-handover-contract/ holds only .started. I did not use the browser."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "The package does what the plan asks. I would accept it once the two test fixes and the lifetime rule below are done. I re-ran the 9 tests in src/simulation/session/handover.test.ts and all pass (about 5 s); npx tsc -p tsconfig.app.json --noEmit is clean (exit 0). All three files are new (the snapshot directory holds only .started), and no existing file was edited. The design is fully in place: every listed type (PciTarget, AnticoagState, AntithromboticState, ContrastState, ConsentState, SheathState, LabReport) exists, all extension fields are optional, and WithHandover<SessionHandover> still widens to SessionHandover. The extra profile and tree fields on put() are justified, because PatientEngine.restore() checks profileSeed and needs the tree. The store keeps everything in memory and deep-copies what it is given. The acceptance test is meaningful: the patient round-trips with the same pericardialMl and MAP, take() returns it once, and the restored engine replays byte-identically to the sender. Shared engines are untouched, so other labs behave as before. The package has no UI, adds no clinical numbers and has no render-path code; the only number is a test inflow copied from patient.test.ts. Other files changed under src/ since .started belong to packages running at the same time: labSession.ts, controls.test.ts and __fixtures__/tabs/* to found-lab-controls-registry, and patient.test.ts, contrastBudget.test.ts and team/formulary.test.ts to found-patient-formulary. None of them is attributable to this package. The findings are a stale-transfer lifetime gap (major, fixable inside this package), a test assertion I confirmed never runs, a weak deep-copy test, a tip-integration test that is circular, and two small type and performance points.",
+    "findings": [
+     {
+      "where": "src/state/useLabHandoverStore.ts (store lifetime; no rule like useLabLaunchStore's rule 3)",
+      "problem": "A transfer that is never taken stays pending indefinitely. Scenario: the PCI lab puts a tamponade patient to 'pericardiocentesis', then the learner leaves by the sidebar instead of following the openSim. Later in the same session they open Pericardiocentesis from the menu, and the lab picks up the old perforated patient. useLabLaunchStore guards against exactly this with rule 3 (drop on section change), but nothing calls dropWhere on this store. The builder flagged this but treated it as needing an edit to useUiStore.ts. It does not.",
+      "severity": "major",
+      "fix": "Add a module-level subscription in useLabHandoverStore.ts, after the store is created, mirroring useUiStore.ts lines 111-116: `import { useUiStore, SIM_SECTION } from \"./useUiStore\"; useUiStore.subscribe((s, prev) => { if (s.section === prev.section) return; useLabHandoverStore.getState().dropWhere((to) => SIM_SECTION[to].section !== s.section); });`. There is no import cycle, because useUiStore does not import this store. Senders call putHandover and then openSim(to); openSim sets the target's section, so its own transfer survives. Add this as rule 6 in the header comment. Add a test: put to 'pericardiocentesis', then useUiStore.getState().openSim('physiology') drops it; put again, then openSim('pericardiocentesis') keeps it. Keep the localStorage spy in that test limited to the transfer, since useUiStore legitimately saves NavMemory."
+     },
+     {
+      "where": "src/simulation/session/handover.test.ts lines 165 and 174-176 ('refuses a snapshot it cannot restore')",
+      "problem": "The wrong-tree assertion never runs. otherTree is built from the same case anatomy without the lesion, and PatientEngine.treeKey only hashes vessel names, sample counts, reference radii and parents. I checked both keys with vite-node and they are identical (t197-4e42d04 for each), so the `if (treeKey(otherTree) !== treeKey(tree))` guard skips the expect. The 'not the one the snapshot was taken on' branch of patientHandoverProblem is therefore untested, although the test name and the builder report claim it is covered.",
+      "severity": "minor",
+      "fix": "Build the wrong tree from a different case, for example `const c2 = CASE_LIBRARY[1]; const otherTree = buildCoronaryTree(buildAnatomy(c2), { ...c2, lesions });`. Its key is t199-18d0ec01, which differs. Then drop the `if` and assert unconditionally: `expect(PatientEngine.treeKey(otherTree)).not.toBe(PatientEngine.treeKey(tree)); expect(() => putHandover({ ..., tree: otherTree })).toThrow(/not the one/);`."
+     },
+     {
+      "where": "src/simulation/session/handover.test.ts lines 129-150 ('put() copies')",
+      "problem": "The test only mutates top-level primitives (snapshot.periMl, profile.weightKg, report.contrastMl), a flat Record<string,string> params and the events array. The payload literal is never mutated at all. A store that made only a shallow copy ({ ...snapshot }, { ...profile }) would pass. The deep copy is correct today, but the test does not protect it.",
+      "severity": "minor",
+      "fix": "Mutate nested data after put() and assert the taken transfer is unchanged. For example: `h.snapshot.network!.lesions.push({ vessel: 'RCA', position: 0.5, severity: 80, kind: 'severe-stenosis', lengthMm: 10 })`, `h.profile.baseline.hr = 1`, `report.complications.push({ id: 'x', label: 'x', t: 0, severity: 'minor' })`, and hold the payload in a const and set `payload.site.vessel = 'RCA'`. Then expect `t.patient!.snapshot.network!.lesions` to have length 0, `t.patient!.profile.baseline.hr` not to be 1, `t.report!.complications` to have length 0, and `t.payload` to equal { site: { vessel: 'LAD' } }."
+     },
+     {
+      "where": "src/simulation/session/handover.test.ts lines 230-232 ('transfer events are vocabulary events')",
+      "problem": "The test is circular. It checks that three hard-coded strings are in LAB_EVENTS, which the LabEvent type already enforces, and it never touches a transfer or the tip selector. The tip integration ('a transfer carries events that the receiving lab keeps active') is not shown to reach tipsFor. I also checked that no tip is currently gated on 'tamponade', and no bedside or physiology tip on 'perforation', 'tamponade' or 'stent-underexpanded'. So a PCI context is the only place a carried event can surface a tip today.",
+      "severity": "minor",
+      "fix": "Replace the test with one that runs through the store: `putHandover({ to: 'angio-pci', from: 'pci-bench', events: ['perforation'] }); const t = takeHandover('angio-pci')!; const ids = tipsFor({ lab: 'pci', phase: 'complication', events: t.events }, 50).map((x) => x.id);` then expect ids to contain 'pci-perf-grade-and-locate' and 'pci-perf-balloon-now'. Also show that `tipsFor({ lab: 'pci', phase: 'complication' }, 50)` without the events contains neither. Add a note that the pericardiocentesis tips on the carried events arrive in pericardiocentesis-tips-and-pci-handover."
+     },
+     {
+      "where": "src/simulation/session/handover.ts lines 57, 103-116 (AnticoagRoute, P2y12Drug, OralDose<\"aspirin\">)",
+      "problem": "The route and drug lists are written out again as string literals, although pharmacology.ts owns them (Route; DrugId, which includes clopidogrel, prasugrel and ticagrelor). If found-patient-formulary renames or adds an agent, these types will drift without a compile error. The plan says drugs are defined only by the formulary package.",
+      "severity": "minor",
+      "fix": "Import the types from pharmacology.ts and derive them: `import type { DoacAgent, InfusionDrug, DrugId, Route } from \"../patient/pharmacology\"; export type AnticoagRoute = Extract<Route, \"iv\" | \"ia\">; export type P2y12Drug = Extract<DrugId, \"clopidogrel\" | \"prasugrel\" | \"ticagrelor\">;` and use `OralDose<Extract<DrugId, \"aspirin\">>` for aspirin."
+     },
+     {
+      "where": "src/simulation/session/handover.ts line 308 (engineFromHandover)",
+      "problem": "The receiving engine is built with calibrate on by default, and restore() then overwrites everything the fit produced (pat, base, circ). In a vite-node check, building the engine took 36.2 ms with calibration and 6.6 ms without. The snapshot after 6 s was identical either way, so the fit is wasted work on the click that opens the receiving lab. This does not touch the engine's own defaults.",
+      "severity": "minor",
+      "fix": "Default calibration off for the rebuild, while letting the caller override it: `new PatientEngine({ calibrate: false, ...opts, profile: cloneData(p.profile), tree, lesions: net ? cloneData(net.lesions) : undefined })`. Add a sentence to the doc comment saying the fit is skipped because the snapshot carries the fitted state."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 6,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/session/handover.test.ts (10/10 pass)",
+     "npx vitest run src/state/useLabLaunchStore.test.ts (5/5 pass; regression check because the hand-over store now subscribes to useUiStore)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0)",
+    "notes": "I checked all six findings against the code and applied each one. I edited only the three files in the package.\n\n1. Major: rule 6, drop a transfer when the learner leaves its lab's section. Applied in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useLabHandoverStore.ts. After the store is created, a module-level useUiStore.subscribe calls dropWhere((to) => SIM_SECTION[to].section !== s.section) whenever the section changes. Rule 6 is now in the header comment. I confirmed there is no import cycle: useUiStore imports useSimulatorStore, useLabLaunchStore, utils/storage and ui/angio/library, and none of them imports this store. SIM_SECTION is keyed by SimTarget, which is the same type as LaunchSim. New test: a transfer put to 'pericardiocentesis' is dropped after openSim('physiology'), and kept after openSim('pericardiocentesis'). The storage checks now ignore the 'nav' key and require no other writes. The test also asserts that NavMemory was saved.\n\n2. The wrong-tree test now runs. otherTree is built from CASE_LIBRARY[1]'s anatomy. The test asserts that the two treeKeys differ and that put() throws /not the one/, with no `if` guard. I renamed the test to say it covers the wrong tree.\n\n3. put() copies: the test now changes nested data after put(). It pushes a lesion into snapshot.network.lesions, sets profile.baseline.hr to 1, pushes a complication into the report, and changes the payload's nested vessel through a held const. It then asserts the taken transfer is unchanged.\n\n4. The circular LAB_EVENTS test is replaced. The new test puts a transfer to 'angio-pci' carrying 'perforation', takes it, and passes t.events to tipsFor({ lab: 'pci', phase: 'complication' }, 50). The result contains pci-perf-grade-and-locate and pci-perf-balloon-now. Without the events it contains neither. A comment says the pericardiocentesis tips on carried events come in pericardiocentesis-tips-and-pci-handover. I confirmed both tip ids are gated on phase 'complication' plus event 'perforation' (complication-management/03-perforation.ts).\n\n5. In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/session/handover.ts, the drug and route types now come from pharmacology.ts: AnticoagRoute = Extract<Route, \"iv\" | \"ia\">, P2y12Drug = Extract<DrugId, \"clopidogrel\" | \"prasugrel\" | \"ticagrelor\">, and aspirin is OralDose<Extract<DrugId, \"aspirin\">>. I confirmed that DrugId contains all four agents and that Route contains iv and ia.\n\n6. engineFromHandover now builds the engine with calibrate: false placed before ...opts, so a caller can still turn it on. The doc comment says why. I confirmed that restore() overwrites everything the fit sets (pat, base, the circ state, mapSmooth). The test asserting identical snapshots after 6 s still passes with calibration off.\n\noutOfScope: nothing."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "handover.test.ts: a PatientEngine snapshot round-trips through the store (restore gives the same pericardialMl and MAP within 1 mmHg); take() returns it once",
+      "met": true,
+      "evidence": "src/simulation/session/handover.test.ts test 'a PatientEngine snapshot round-trips: same pericardialMl and MAP within 1 mmHg; take() returns it once' passes. It puts a perforated patient's snapshot (pericardialMl > 50) via putHandover, takes it, then checks that a second takeHandover returns null and peek returns null. engineFromHandover then gives pericardialMl within 1e-9 and aortaTrue.mean within 1 mmHg of the sender's pre-put vitals, even after the sender's engine kept running. Further tests cover deep-copy isolation, refusing unrestorable snapshots (wrong or missing profile or tree), latest-wins per lab, subscriber take-once, no storage writes and the drop-on-leaving-section rule. Run: npx vitest run src/simulation/session/handover.test.ts gave 10/10 passed in 5.4 s."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit exited 0 with no output."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/session/handover.test.ts (10 passed)",
+     "npx tsc -p tsconfig.app.json --noEmit (exit 0, no errors)"
+    ],
+    "tsc": "clean (exit 0, no diagnostics)"
+   }
+  ]
+ }
+}

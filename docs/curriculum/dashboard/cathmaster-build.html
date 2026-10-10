@@ -1,0 +1,310 @@
+<title>CathMaster Curriculum Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --ground: #0e1013;
+  --surface: #15181c;
+  --raised: #1a1e23;
+  --line: #22262c;
+  --line-strong: #2e343c;
+  --ink: #eceef1;
+  --soft: #a6adb8;
+  --faint: #858d99;
+  --accent: #4f8ef7;
+  --accent-tint: #1b2230;
+  --done: #4cc38a;
+  --run: #4f8ef7;
+  --wait: #3a414a;
+  --warn: #e9b95a;
+  --bad: #e5534b;
+  --p1: #e5534b;
+  --p2: #e9b95a;
+  --p3: #5d6672;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --ground: #f5f6f8; --surface: #ffffff; --raised: #f0f2f5; --line: #e2e5ea; --line-strong: #cbd0d8;
+    --ink: #14171c; --soft: #4a525e; --faint: #66707c; --accent: #2f6bd8; --accent-tint: #e8effc;
+    --done: #1d7f52; --run: #2f6bd8; --wait: #cbd0d8; --warn: #9a6400; --bad: #c2362f; --p1: #c2362f; --p2: #b07a00; --p3: #9aa3ae;
+  }
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ground: #f5f6f8; --surface: #ffffff; --raised: #f0f2f5; --line: #e2e5ea; --line-strong: #cbd0d8;
+  --ink: #14171c; --soft: #4a525e; --faint: #66707c; --accent: #2f6bd8; --accent-tint: #e8effc;
+  --done: #1d7f52; --run: #2f6bd8; --wait: #cbd0d8; --warn: #9a6400; --bad: #c2362f; --p1: #c2362f; --p2: #b07a00; --p3: #9aa3ae;
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-inline: 20px; padding-block: 26px 56px; display: flex; flex-direction: column; gap: 22px; }
+.num, .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+h1, h2, h3 { margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 { font-size: 25px; font-weight: 600; }
+h2 { font-size: 15px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.eyebrow { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; }
+.small { font-size: 12.5px; color: var(--faint); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.pad { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; color: var(--soft); }
+.live { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--faint); }
+
+.overall { display: flex; flex-direction: column; gap: 8px; }
+.bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--raised); }
+.bar span { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12.5px; color: var(--soft); }
+.legend b { color: var(--ink); font-weight: 500; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.kpi { background: var(--surface); padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+.kpi .num { font-size: 24px; font-weight: 500; line-height: 1.15; }
+.kpi .lbl { font-size: 12.5px; color: var(--soft); }
+.kpi .sub { font-size: 12px; color: var(--faint); }
+
+.cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+
+.steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; min-width: 120px; }
+.steps span { height: 6px; border-radius: 3px; background: var(--wait); }
+.steps span.on { background: var(--done); }
+.steps span.now { background: var(--run); }
+.pipeline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; color: var(--soft); }
+.pipeline .chev { color: var(--faint); }
+
+.now-list { display: flex; flex-direction: column; }
+.now-row { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.now-row:first-child { border-top: 0; }
+.now-row .t { font-weight: 500; }
+.now-row .s { font-size: 12.5px; color: var(--faint); }
+
+.batches { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.batches li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); align-items: start; }
+.batches li:first-child { border-top: 0; }
+.bn { font-weight: 500; }
+.bw { font-size: 12.5px; color: var(--soft); }
+.bnote { font-size: 12px; color: var(--faint); }
+.chip { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 11px; font-size: 12px; white-space: nowrap; border: 1px solid var(--line-strong); color: var(--soft); }
+.chip.done { border-color: var(--done); color: var(--done); }
+.chip.running { border-color: var(--run); color: var(--run); }
+.chip.pending { color: var(--faint); }
+.chip.stalled { border-color: var(--warn); color: var(--warn); }
+.marker { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--wait); margin-top: 3px; }
+.marker.done { background: var(--done); border-color: var(--done); }
+.marker.running { border-color: var(--run); background: transparent; box-shadow: inset 0 0 0 3px var(--surface), inset 0 0 0 7px var(--run); }
+
+.track { display: flex; flex-direction: column; }
+.track-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; padding: 14px 18px 10px; border-bottom: 1px solid var(--line); }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-weight: 500; color: var(--faint); font-size: 12px; padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+td.mod { min-width: 220px; }
+td.mod .sub { font-size: 12px; color: var(--faint); }
+td.muted { color: var(--faint); }
+
+.labs { display: flex; flex-direction: column; gap: 7px; }
+.labrow { display: grid; grid-template-columns: 140px minmax(0, 1fr) 40px; gap: 10px; align-items: center; font-size: 13px; }
+.labrow .lb { color: var(--soft); }
+.labbar { display: flex; height: 12px; border-radius: 3px; overflow: hidden; background: var(--raised); }
+.labbar span { display: block; height: 100%; }
+@media (max-width: 520px) { .labrow { grid-template-columns: 110px minmax(0, 1fr) 34px; } }
+.machine { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; }
+.foot { color: var(--faint); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">CathMaster · the manual curriculum</span>
+    <h1>Curriculum build</h1>
+    <div class="status-line"><span id="activity"></span></div>
+    <span class="live" id="live"><span class="dot" id="livedot"></span><span id="updated"></span></span>
+  </header>
+
+  <section class="panel pad" aria-label="Overall progress">
+    <div class="overall">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px"><h2 id="overall-title"></h2><span class="small" id="overall-topics"></span></div>
+      <div class="bar" id="overall-bar" role="img"></div>
+      <div class="legend" id="overall-legend"></div>
+    </div>
+    <div class="pipeline" aria-label="What happens to every module">
+      <span>Every module:</span>
+      <span>written from the book pages</span><span class="chev">›</span>
+      <span>checked against the pages</span><span class="chev">+</span>
+      <span>checked by a clinical expert</span><span class="chev">›</span>
+      <span>fixed</span><span class="chev">›</span>
+      <span>rechecked and fixed again</span><span class="chev">›</span>
+      <span>done</span>
+    </div>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="What has been built"></section>
+
+  <div class="cols">
+    <section class="panel pad" aria-label="In progress">
+      <h2>In progress now</h2>
+      <div class="now-list" id="now"></div>
+    </section>
+    <section class="panel pad" aria-label="Plan">
+      <h2>The plan</h2>
+      <ol class="batches" id="batches"></ol>
+    </section>
+  </div>
+
+  <div id="tracks" style="display:flex;flex-direction:column;gap:16px"></div>
+
+  <div class="cols">
+    <section class="panel pad" aria-label="Lab requests">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px"><h2>What the labs still need</h2><span class="small" id="lab-total"></span></div>
+      <p class="small">Each module records the hands-on practice its topics need that the labs cannot give yet. These drive the lab build after the content.</p>
+      <div class="legend"><span><span class="dot" style="background:var(--p1)"></span> Priority 1</span><span><span class="dot" style="background:var(--p2)"></span> Priority 2</span><span><span class="dot" style="background:var(--p3)"></span> Priority 3</span></div>
+      <div class="labs" id="labs"></div>
+    </section>
+    <section class="panel pad" aria-label="Machine">
+      <h2>The machine</h2>
+      <div class="machine" id="machine"></div>
+      <p class="small">The build runs three modules at a time because this Mac stalls under heavy load. If an agent stops making progress, the batch resumes from where it was; finished work is never redone.</p>
+      <h2 style="margin-top:6px">Accuracy so far</h2>
+      <div id="accuracy" class="small" style="color:var(--soft)"></div>
+    </section>
+  </div>
+
+  <div class="foot">
+    <span id="dbnote"></span>
+    <a id="covlink" href="#" target="_blank" rel="noopener">Coverage map</a>
+  </div>
+</div>
+
+<script>
+const SNAPSHOT = {"updatedAt": "2026-10-10T22:04", "updatedLabel": "10 Oct 2026, 22:04", "activity": "Live refresh while the build runs", "load": [49.4, 51.7, 37.8], "cores": 10, "totals": {"modules": 48, "done": 48, "running": 0, "pending": 0, "topicsTaught": 247, "topics": 247, "lessons": 303, "quiz": 557, "cases": 91, "tips": 969, "refs": 397, "checks": 646, "videos": 750, "found": 2185, "fixed": 2432, "critical": 5, "major": 384, "academy": 157, "labRequests": 443, "labP1": 155}, "tracks": [{"id": "pci-manual", "title": "PCI step by step", "modules": [{"id": "pm-planning", "title": "Planning the case", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 6, "quiz": 12, "cases": 2, "tips": 20, "refs": 12, "checks": 12, "videos": 6, "found": 45, "major": 9, "critical": 0, "fixed": 47}, {"id": "pm-monitoring", "title": "Monitoring and running the room", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 8, "quiz": 12, "cases": 2, "tips": 23, "refs": 9, "checks": 16, "videos": 15, "found": 53, "major": 12, "critical": 0, "fixed": 54}, {"id": "pm-antithrombotics", "title": "Anticoagulants and antiplatelet drugs", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 11, "cases": 2, "tips": 20, "refs": 12, "checks": 13, "videos": 11, "found": 52, "major": 10, "critical": 1, "fixed": 51}, {"id": "pm-lab-drugs", "title": "Sedation, vasodilators, pressors, antiarrhythmics and contrast", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 7, "quiz": 12, "cases": 2, "tips": 17, "refs": 7, "checks": 14, "videos": 8, "found": 52, "major": 10, "critical": 1, "fixed": 54}, {"id": "pm-access", "title": "Arterial and venous access", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 8, "lessons": 10, "quiz": 12, "cases": 2, "tips": 27, "refs": 13, "checks": 20, "videos": 18, "found": 43, "major": 10, "critical": 0, "fixed": 47}, {"id": "pm-to-the-root", "title": "Set-up, catheter choice and reaching the aortic root", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 11, "cases": 2, "tips": 18, "refs": 4, "checks": 13, "videos": 17, "found": 42, "major": 5, "critical": 0, "fixed": 43}, {"id": "pm-engaging", "title": "Engaging the coronary arteries", "batch": "Pilot", "state": "done", "stage": "done", "step": 5, "topics": 6, "lessons": 8, "quiz": 12, "cases": 2, "tips": 22, "refs": 1, "checks": 16, "videos": 22, "found": 50, "major": 14, "critical": 0, "fixed": 56}, {"id": "pm-acquiring", "title": "Acquiring the angiogram", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 5, "quiz": 11, "cases": 2, "tips": 15, "refs": 0, "checks": 12, "videos": 10, "found": 39, "major": 6, "critical": 0, "fixed": 43}, {"id": "pm-interpreting", "title": "Interpreting the angiogram", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 7, "quiz": 12, "cases": 2, "tips": 15, "refs": 5, "checks": 15, "videos": 17, "found": 56, "major": 12, "critical": 0, "fixed": 58}, {"id": "pm-target", "title": "Choosing what to treat, and when", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 7, "quiz": 12, "cases": 2, "tips": 16, "refs": 10, "checks": 14, "videos": 25, "found": 49, "major": 13, "critical": 0, "fixed": 52}, {"id": "pm-wiring", "title": "Guide and wire: getting to and across the lesion", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 8, "lessons": 7, "quiz": 12, "cases": 2, "tips": 24, "refs": 0, "checks": 14, "videos": 26, "found": 41, "major": 4, "critical": 0, "fixed": 45}, {"id": "pm-prep-and-stent", "title": "Lesion preparation and stenting", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 8, "quiz": 12, "cases": 2, "tips": 31, "refs": 7, "checks": 17, "videos": 22, "found": 42, "major": 7, "critical": 0, "fixed": 44}, {"id": "pm-closure", "title": "Closing the access site", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 5, "quiz": 11, "cases": 2, "tips": 20, "refs": 11, "checks": 10, "videos": 9, "found": 39, "major": 6, "critical": 0, "fixed": 39}, {"id": "pm-physiology", "title": "Coronary physiology", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 6, "lessons": 8, "quiz": 12, "cases": 2, "tips": 24, "refs": 13, "checks": 16, "videos": 16, "found": 56, "major": 13, "critical": 0, "fixed": 57}, {"id": "pm-imaging", "title": "Intravascular imaging", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 8, "lessons": 7, "quiz": 11, "cases": 2, "tips": 27, "refs": 7, "checks": 15, "videos": 20, "found": 49, "major": 11, "critical": 0, "fixed": 52}, {"id": "pm-support-choice", "title": "Haemodynamic support: when and which device", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 6, "quiz": 11, "cases": 2, "tips": 15, "refs": 15, "checks": 11, "videos": 18, "found": 39, "major": 11, "critical": 1, "fixed": 43}, {"id": "pm-support-devices", "title": "Inserting and running support devices", "batch": "A", "state": "done", "stage": "done", "step": 5, "topics": 6, "lessons": 6, "quiz": 11, "cases": 2, "tips": 36, "refs": 13, "checks": 18, "videos": 10, "found": 57, "major": 10, "critical": 0, "fixed": 59}]}, {"id": "complex-pci", "title": "Complex lesions and patients", "modules": [{"id": "cp-ostial", "title": "Ostial lesions", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 2, "lessons": 8, "quiz": 12, "cases": 2, "tips": 32, "refs": 4, "checks": 17, "videos": 22, "found": 34, "major": 7, "critical": 0, "fixed": 71}, {"id": "cp-bifurcation-provisional", "title": "Bifurcations: assessment and provisional stenting", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 11, "cases": 2, "tips": 14, "refs": 10, "checks": 11, "videos": 13, "found": 38, "major": 4, "critical": 0, "fixed": 84}, {"id": "cp-bifurcation-two-stent", "title": "Bifurcations: two-stent techniques", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 5, "quiz": 12, "cases": 2, "tips": 24, "refs": 8, "checks": 11, "videos": 13, "found": 34, "major": 4, "critical": 0, "fixed": 79}, {"id": "cp-left-main", "title": "Left main and high-risk PCI", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 3, "lessons": 4, "quiz": 11, "cases": 2, "tips": 20, "refs": 8, "checks": 11, "videos": 14, "found": 33, "major": 4, "critical": 0, "fixed": 36}, {"id": "cp-prior-cabg", "title": "Patients with bypass grafts", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 6, "quiz": 12, "cases": 2, "tips": 33, "refs": 8, "checks": 15, "videos": 21, "found": 30, "major": 3, "critical": 0, "fixed": 35}, {"id": "cp-calcium", "title": "Calcified lesions", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 9, "quiz": 11, "cases": 2, "tips": 18, "refs": 16, "checks": 18, "videos": 26, "found": 39, "major": 5, "critical": 0, "fixed": 40}, {"id": "cp-acs-thrombus", "title": "Acute coronary syndromes and thrombus", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 8, "lessons": 8, "quiz": 12, "cases": 2, "tips": 23, "refs": 7, "checks": 16, "videos": 26, "found": 49, "major": 14, "critical": 0, "fixed": 51}, {"id": "cp-complex-patients", "title": "Cardiogenic shock, cardiac arrest and TAVI patients", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 3, "lessons": 6, "quiz": 12, "cases": 2, "tips": 23, "refs": 4, "checks": 13, "videos": 15, "found": 56, "major": 10, "critical": 0, "fixed": 56}, {"id": "cp-cto-strategy", "title": "Chronic total occlusions: selection and strategy", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 6, "quiz": 12, "cases": 1, "tips": 13, "refs": 9, "checks": 13, "videos": 19, "found": 55, "major": 8, "critical": 0, "fixed": 59}, {"id": "cp-cto-antegrade", "title": "Chronic total occlusions: antegrade crossing", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 3, "lessons": 6, "quiz": 11, "cases": 2, "tips": 16, "refs": 13, "checks": 12, "videos": 24, "found": 50, "major": 10, "critical": 0, "fixed": 55}, {"id": "cp-cto-retrograde", "title": "Chronic total occlusions: retrograde crossing and CTO complications", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 6, "quiz": 12, "cases": 2, "tips": 16, "refs": 22, "checks": 12, "videos": 24, "found": 49, "major": 7, "critical": 0, "fixed": 54}, {"id": "cp-other-complex", "title": "SCAD, stent failure, vessel size and long lesions", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 6, "quiz": 12, "cases": 2, "tips": 26, "refs": 10, "checks": 14, "videos": 18, "found": 49, "major": 8, "critical": 0, "fixed": 53}, {"id": "cp-uncrossable", "title": "Balloon-uncrossable and balloon-undilatable lesions", "batch": "B", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 6, "quiz": 12, "cases": 2, "tips": 21, "refs": 11, "checks": 12, "videos": 20, "found": 44, "major": 4, "critical": 0, "fixed": 50}]}, {"id": "complication-management", "title": "Complications: prevent, recognise, treat", "modules": [{"id": "cm-principles-closure", "title": "Principles, acute closure and dissection", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 7, "quiz": 11, "cases": 2, "tips": 20, "refs": 2, "checks": 14, "videos": 24, "found": 34, "major": 3, "critical": 0, "fixed": 34}, {"id": "cm-flow-embolism", "title": "No-reflow, embolism and stroke", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 12, "cases": 2, "tips": 16, "refs": 8, "checks": 10, "videos": 8, "found": 40, "major": 9, "critical": 0, "fixed": 41}, {"id": "cm-perforation", "title": "Perforation and tamponade", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 7, "lessons": 7, "quiz": 12, "cases": 2, "tips": 23, "refs": 3, "checks": 14, "videos": 21, "found": 36, "major": 2, "critical": 0, "fixed": 40}, {"id": "cm-equipment-loss", "title": "Equipment loss and entrapment", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 4, "quiz": 12, "cases": 2, "tips": 16, "refs": 4, "checks": 9, "videos": 16, "found": 36, "major": 3, "critical": 0, "fixed": 41}, {"id": "cm-patient-complications", "title": "Hypotension, arrhythmia, radiation, kidneys and bleeding", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 6, "lessons": 7, "quiz": 11, "cases": 2, "tips": 19, "refs": 7, "checks": 14, "videos": 15, "found": 54, "major": 11, "critical": 0, "fixed": 59}, {"id": "cm-access-complications", "title": "Vascular access complications", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 6, "quiz": 12, "cases": 2, "tips": 20, "refs": 8, "checks": 12, "videos": 11, "found": 45, "major": 8, "critical": 0, "fixed": 47}]}, {"id": "equipment", "title": "The equipment", "modules": [{"id": "eq-sheaths-guides", "title": "Sheaths, guides and guide extensions", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 3, "lessons": 5, "quiz": 11, "cases": 2, "tips": 21, "refs": 4, "checks": 10, "videos": 8, "found": 48, "major": 12, "critical": 1, "fixed": 46}, {"id": "eq-balloons-stents-cart", "title": "Balloons, stents and the complex PCI cart", "batch": "C", "state": "done", "stage": "done", "step": 5, "topics": 3, "lessons": 5, "quiz": 12, "cases": 2, "tips": 12, "refs": 9, "checks": 14, "videos": 7, "found": 36, "major": 6, "critical": 0, "fixed": 38}]}, {"id": "cath-handbook", "title": "The catheter laboratory handbook", "modules": [{"id": "hb-lab-and-radiation", "title": "The lab, imaging equipment and radiation safety", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 6, "quiz": 11, "cases": 1, "tips": 14, "refs": 9, "checks": 13, "videos": 6, "found": 51, "major": 5, "critical": 0, "fixed": 53}, {"id": "hb-the-operator", "title": "Becoming an operator", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 10, "cases": 1, "tips": 10, "refs": 7, "checks": 10, "videos": 13, "found": 44, "major": 9, "critical": 0, "fixed": 45}, {"id": "hb-safe-practice", "title": "Reflection, quality, the law and looking after yourself", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 12, "cases": 1, "tips": 10, "refs": 21, "checks": 10, "videos": 10, "found": 44, "major": 7, "critical": 0, "fixed": 49}, {"id": "hb-cardiac-catheterisation", "title": "Right and left heart catheterisation", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 6, "lessons": 8, "quiz": 12, "cases": 2, "tips": 28, "refs": 1, "checks": 16, "videos": 19, "found": 53, "major": 7, "critical": 0, "fixed": 53}, {"id": "hb-specific-conditions", "title": "Valves, pericardium, cardiomyopathy and pulmonary embolism", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 6, "lessons": 6, "quiz": 11, "cases": 2, "tips": 18, "refs": 5, "checks": 12, "videos": 15, "found": 54, "major": 10, "critical": 0, "fixed": 62}, {"id": "hb-additional-procedures", "title": "Other procedures in the lab", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 6, "quiz": 12, "cases": 2, "tips": 21, "refs": 15, "checks": 12, "videos": 7, "found": 42, "major": 10, "critical": 0, "fixed": 47}, {"id": "hb-tavi", "title": "TAVI", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 7, "quiz": 11, "cases": 2, "tips": 14, "refs": 10, "checks": 16, "videos": 10, "found": 50, "major": 9, "critical": 0, "fixed": 52}, {"id": "hb-mitral-tricuspid-laa", "title": "Mitral, tricuspid and left atrial appendage interventions", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 7, "quiz": 12, "cases": 2, "tips": 29, "refs": 11, "checks": 15, "videos": 9, "found": 54, "major": 6, "critical": 0, "fixed": 54}, {"id": "hb-after-the-procedure", "title": "After the procedure", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 5, "lessons": 5, "quiz": 12, "cases": 2, "tips": 17, "refs": 2, "checks": 11, "videos": 8, "found": 41, "major": 4, "critical": 1, "fixed": 44}, {"id": "hb-background", "title": "Background for the lab: anatomy, disease and beyond the coronaries", "batch": "D", "state": "done", "stage": "done", "step": 5, "topics": 4, "lessons": 6, "quiz": 12, "cases": 1, "tips": 12, "refs": 2, "checks": 13, "videos": 18, "found": 59, "major": 12, "critical": 0, "fixed": 60}]}], "labs": [{"lab": "PCI lab", "P1": 77, "P2": 72, "P3": 29}, {"lab": "Cath lab", "P1": 22, "P2": 34, "P3": 18}, {"lab": "Full procedure", "P1": 23, "P2": 25, "P3": 11}, {"lab": "PCI bench", "P1": 5, "P2": 12, "P3": 9}, {"lab": "Haemodynamics lab", "P1": 5, "P2": 10, "P3": 7}, {"lab": "Structural", "P1": 4, "P2": 9, "P3": 6}, {"lab": "Mechanical support", "P1": 1, "P2": 11, "P3": 6}, {"lab": "Pressure wire", "P1": 7, "P2": 8, "P3": 2}, {"lab": "Other", "P1": 4, "P2": 3, "P3": 4}, {"lab": "Real angiograms", "P1": 4, "P2": 5, "P3": 1}, {"lab": "Bedside", "P1": 3, "P2": 2, "P3": 4}], "batches": [{"name": "Pilot", "what": "Engaging the coronary arteries", "modules": 1, "state": "done", "when": "6\u20137 Oct", "note": "Pipeline calibrated: 50 issues found and fixed"}, {"name": "Batch A", "what": "PCI step by step", "modules": 16, "state": "done", "when": "7 Oct", "note": "754 issues found and fixed; 60 corrections to older Academy lessons"}, {"name": "Batch B", "what": "Complex lesions and patients", "modules": 13, "state": "done", "when": "7 Oct", "note": "Resumed once after the Mac overloaded; three modules re-checked in batch C"}, {"name": "Batch C", "what": "Complications and equipment, plus a full re-check of three complex-PCI modules", "modules": 8, "state": "done", "when": "7\u20138 Oct", "note": "Interrupted by a Mac restart and an app quit, resumed from cache; the ostial and bifurcation modules got their full double check (114 more issues fixed); 45 more Academy corrections"}, {"name": "Batch D", "what": "The catheter laboratory handbook", "modules": 10, "state": "done", "when": "8 Oct", "note": "492 issues found and fixed; 21 more Academy corrections. All 247 topics now taught"}, {"name": "Lab build", "what": "Hands-on practice from the lab requests", "modules": 0, "state": "running", "when": "8 Oct", "note": "159 work packages planned; 44 accepted after run 3. Run 1: 16 of 29 foundation packages (a network outage cut six short); run 2: repairs, retries and the core hands-on skills; run 3: 21 more accepted, 7 failed acceptance on cross-package items, which were repaired; run 4 (from 9 Oct evening): those 7 resumed, 7 repair packages for wiring between labs and the facts register, the rest of phase 2 and all of phase 3 (76 items). Live detail at http://localhost:5173/build.html"}, {"name": "Final checks", "what": "Every topic, every test, the app end to end", "modules": 0, "state": "pending", "when": "last", "note": ""}], "links": {"coverage": "https://claude.ai/artifact/RV7mBdM3QQ9UR4MheeoD5y"}};
+const $ = (s) => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) n.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return n;
+};
+const fmt = (n) => Number(n || 0).toLocaleString("en-GB");
+const STAGE_LABEL = { write: "Writing", source: "Checking", clinical: "Checking", fix: "Fixing", recheck: "Rechecking", fix2: "Final fixes", done: "Done", pending: "Waiting" };
+const STATE_LABEL = { done: "Done", running: "In progress", pending: "Waiting", stalled: "Stalled" };
+
+function stepper(step, state) {
+  const s = el("div", { class: "steps", role: "img", "aria-label": `${step} of 5 stages` });
+  for (let i = 1; i <= 5; i++) s.append(el("span", { class: i <= step - (state === "running" ? 1 : 0) ? "on" : i === step && state === "running" ? "now" : "" }));
+  return s;
+}
+
+function render(snap) {
+  const t = snap.totals;
+  $("#activity").textContent = snap.activity || "";
+  $("#updated").textContent = `Updated ${snap.updatedLabel}`;
+  $("#livedot").style.background = t.running > 0 ? "var(--run)" : "var(--done)";
+  $("#overall-title").textContent = `${t.done} of ${t.modules} modules finished`;
+  $("#overall-topics").textContent = `${t.topicsTaught} of ${t.topics} topics taught`;
+  const ob = $("#overall-bar"); ob.textContent = "";
+  ob.setAttribute("aria-label", `${t.done} done, ${t.running} in progress, ${t.pending} waiting`);
+  [["done", "--done"], ["running", "--run"], ["pending", "--wait"]].forEach(([k, v]) => ob.append(el("span", { style: `width:${(100 * t[k]) / t.modules}%;background:var(${v})` })));
+  const lg = $("#overall-legend"); lg.textContent = "";
+  lg.append(el("span", {}, el("span", { class: "dot", style: "background:var(--done)" }), " ", el("b", {}, t.done), " done"),
+            el("span", {}, el("span", { class: "dot", style: "background:var(--run)" }), " ", el("b", {}, t.running), " in progress"),
+            el("span", {}, el("span", { class: "dot", style: "background:var(--wait)" }), " ", el("b", {}, t.pending), " waiting"));
+
+  const k = $("#kpis"); k.textContent = "";
+  const kpi = (n, lbl, sub) => el("div", { class: "kpi" }, el("span", { class: "num" }, n), el("span", { class: "lbl" }, lbl), sub ? el("span", { class: "sub" }, sub) : null);
+  k.append(
+    kpi(`${t.topicsTaught}/${t.topics}`, "topics taught"),
+    kpi(fmt(t.lessons), "lessons", "in finished modules"),
+    kpi(fmt(t.checks), "inline questions", "inside the lessons"),
+    kpi(fmt(t.quiz), "quiz questions"),
+    kpi(fmt(t.cases), "branching cases"),
+    kpi(fmt(t.tips), "lab tips", "shown in the labs"),
+    kpi(fmt(t.refs), "new references", "each checked on PubMed"),
+    kpi(fmt(t.fixed), "issues fixed", "found by the two checkers"),
+    kpi(fmt(t.academy), "Academy corrections", "errors found in older lessons"),
+  );
+
+  const nowBox = $("#now"); nowBox.textContent = "";
+  const running = snap.tracks.flatMap((tr) => tr.modules.filter((m) => m.state === "running" || m.state === "stalled").map((m) => ({ ...m, track: tr.title })));
+  if (!running.length) nowBox.append(el("p", { class: "small" }, t.pending ? "Nothing running. The next batch starts when this one is reviewed." : "Everything is finished."));
+  running.forEach((m) => nowBox.append(el("div", { class: "now-row" },
+    el("div", {}, el("div", { class: "t" }, m.title), el("div", { class: "s" }, `${m.track} · ${STAGE_LABEL[m.stage] || m.stage}${m.found ? ` · ${m.found} issues found so far` : ""}`)),
+    stepper(m.step, m.state))));
+
+  const b = $("#batches"); b.textContent = "";
+  snap.batches.forEach((x) => b.append(el("li", {},
+    el("span", { class: `marker ${x.state}` }),
+    el("div", {}, el("div", { class: "bn" }, x.name, el("span", { class: "bw" }, ` · ${x.what}${x.modules ? ` · ${x.modules} module${x.modules > 1 ? "s" : ""}` : ""}`)), x.note ? el("div", { class: "bnote" }, x.note) : null),
+    el("span", { class: `chip ${x.state}` }, `${STATE_LABEL[x.state] || x.state}${x.when && x.state !== "pending" ? ` · ${x.when}` : ""}`))));
+
+  const tb = $("#tracks"); tb.textContent = "";
+  for (const tr of snap.tracks) {
+    const done = tr.modules.filter((m) => m.state === "done").length;
+    const lessons = tr.modules.reduce((a, m) => a + (m.lessons || 0), 0);
+    const sec = el("section", { class: "panel track", "aria-label": tr.title });
+    sec.append(el("div", { class: "track-head" }, el("h2", {}, tr.title), el("span", { class: "small" }, `${done} of ${tr.modules.length} modules done · ${lessons} lessons written`)));
+    const table = el("table", {},
+      el("thead", {}, el("tr", {}, el("th", {}, "Module"), el("th", {}, "Stage"), el("th", { class: "n" }, "Lessons"), el("th", { class: "n" }, "Questions"), el("th", { class: "n" }, "Cases"), el("th", { class: "n" }, "Lab tips"), el("th", { class: "n" }, "Issues fixed"))));
+    const body = el("tbody");
+    for (const m of tr.modules) {
+      const has = m.state !== "pending" && (m.lessons || m.quiz);
+      body.append(el("tr", {},
+        el("td", { class: "mod" }, el("div", {}, m.title), el("div", { class: "sub" }, `${m.topics} topic${m.topics > 1 ? "s" : ""} · batch ${m.batch}`)),
+        el("td", {}, el("div", { style: "display:flex;flex-direction:column;gap:4px;min-width:130px" }, stepper(m.step, m.state), el("span", { class: "small" }, m.state === "done" ? "Done" : m.state === "pending" ? "Waiting" : STAGE_LABEL[m.stage] || m.stage))),
+        el("td", { class: `n ${has ? "" : "muted"}` }, has ? m.lessons : "–"),
+        el("td", { class: `n ${has ? "" : "muted"}` }, has ? m.quiz : "–"),
+        el("td", { class: `n ${has ? "" : "muted"}` }, has ? m.cases : "–"),
+        el("td", { class: `n ${has ? "" : "muted"}` }, has ? m.tips : "–"),
+        el("td", { class: `n ${m.fixed ? "" : "muted"}` }, m.fixed ? m.fixed : "–")));
+    }
+    table.append(body);
+    sec.append(el("div", { class: "tablewrap" }, table));
+    tb.append(sec);
+  }
+
+  const lb = $("#labs"); lb.textContent = "";
+  const max = Math.max(...snap.labs.map((x) => x.P1 + x.P2 + x.P3), 1);
+  $("#lab-total").textContent = `${fmt(t.labRequests)} requests · ${fmt(t.labP1)} priority 1`;
+  snap.labs.forEach((x) => {
+    const n = x.P1 + x.P2 + x.P3;
+    const bar = el("div", { class: "labbar", role: "img", "aria-label": `${x.lab}: ${x.P1} priority 1, ${x.P2} priority 2, ${x.P3} priority 3` });
+    bar.style.width = `${Math.max(4, (100 * n) / max)}%`;
+    [["P1", "--p1"], ["P2", "--p2"], ["P3", "--p3"]].forEach(([p, v]) => x[p] && bar.append(el("span", { style: `width:${(100 * x[p]) / n}%;background:var(${v})` })));
+    lb.append(el("div", { class: "labrow" }, el("span", { class: "lb" }, x.lab), el("div", {}, bar), el("span", { class: "num small", style: "text-align:right" }, n)));
+  });
+
+  const mc = $("#machine"); mc.textContent = "";
+  const l1 = snap.load?.[0] ?? 0;
+  const tone = l1 > (snap.cores || 10) * 1.2 ? "var(--warn)" : "var(--done)";
+  mc.append(el("span", {}, el("span", { class: "num", style: `font-size:22px;color:${tone}` }, l1.toFixed(1)), el("span", { class: "small" }, ` load now on ${snap.cores} cores`)),
+            el("span", { class: "small" }, `5-minute ${snap.load?.[1]?.toFixed(1)} · 15-minute ${snap.load?.[2]?.toFixed(1)}`));
+  $("#accuracy").textContent = `${fmt(t.fixed)} issues fixed so far, ${t.critical} of them critical and at least ${t.major} major, each with the book page or PubMed record behind it. ${t.academy} errors found in the older Academy lessons were corrected. The copy check finds no reused book wording.`;
+  $("#covlink").href = snap.links?.coverage || "#";
+}
+
+render(SNAPSHOT);
+
+(async () => {
+  let db = null;
+  try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { db = null; }
+  const note = $("#dbnote");
+  if (!db) { note.textContent = "Showing the snapshot published with this page."; return; }
+  note.textContent = "Live: this page updates as the build runs.";
+  db.doc("dashboard/current").onSnapshot((d) => {
+    const v = d.exists ? d.data() : null;
+    if (v && v.totals && v.tracks) render(v);
+  }, () => { note.textContent = "Live updates paused. Reload the page to reconnect."; });
+})();
+</script>

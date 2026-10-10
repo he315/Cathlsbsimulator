@@ -1,0 +1,92 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A balloon-uncrossable variant of the calcified mid-RCA scenario (and of the mid-RCA CTO scenario after wire crossing): the workhorse wire is in the distal vessel but every balloon above a set crossing profile stops at the proximal edge of the lesion. Each step of Brilakis's five-line algorithm (Fig. 23.1) must be available as a device or action with its own effect on a hidden 'lesion resistance' and 'support' state: small balloons (1.0, 1.20, 1.25, 1.5 mm; 12 and 20–30 mm lengths; new or used), balloon wedge (inflate while pushing), balloon rotation with a turn counter, rewrap under vacuum, a 2.5–3.0 mm balloon inflated just proximal, grenadoplasty, guide extension, side-branch anchor, second wire, support wire, microcatheters by design, wire-cutting (single and seesaw), wire puncture, laser, rotational atherectomy after wire exchange, and (for the CTO variant) subintimal external crush and subintimal distal anchor.",
+    "learnerDoes": "Escalates in Brilakis's order, chooses the device for each line, and handles each correctly: long 1.0 mm balloon first; no more than two or three balloon rotations each way; grenadoplasty only with 1.0–1.5 mm balloons, aspirating as the indeflator falls; support built around the crossed wire rather than a guide exchange; microcatheter turned in bursts with a wire inside; laser over the existing wire with saline; atherectomy only after a microcatheter exchange or burying the microcatheter.",
+    "success": "A balloon crosses without loss of guide or wire position, ostial dissection or distal wire injury. Raise guide-backout when pushing force exceeds support; raise wire movement when the balloon is pushed and pulled repeatedly with a stiff or polymer-jacketed wire distally; binding of balloon to wire after more than three turns; proximal dissection or perforation if a balloon of 2.0 mm or more is ruptured; air embolism if a grenadoplasty balloon was not de-aired.",
+    "tips": [
+      "pci-unx-small-long-balloon",
+      "pci-unx-balloon-wedge",
+      "pci-unx-watch-distal-tip",
+      "pci-unx-grenadoplasty",
+      "pci-unx-keep-the-wire",
+      "pci-unx-microcatheter-turns",
+      "pci-unx-microcatheter-across",
+      "pci-unx-wire-cutting",
+      "pci-unx-bury-microcatheter",
+      "pci-unx-laser-contrast-stent-only",
+      "pci-unx-subintimal-confirm",
+      "pci-unx-combine"
+    ],
+    "lessonIds": [
+      "cp-uncrossable-first-line",
+      "cp-uncrossable-support-microcatheter",
+      "cp-uncrossable-ablation-subintimal",
+      "cp-uncrossable-extension-combined"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Guide extension delivery as a stepwise sequence in which each step sets a PCI-lab state: extension advanced to the guide tip, small balloon (usually 2.0 mm) positioned half in and half out of the extension tip, balloon inflated at low pressure (6–8 atm), deflated, extension advanced during deflation (one cycle in Fig. 30.28), with the cycle repeatable until the extension reaches the target (inchworming). Alternatives available for comparison: advancing the extension over the bare wire, guide extension balloon-assisted tracking (balloon at nominal pressure, both advanced together) and a distal anchor. Needs an extension object with a push rod, a proximal collar and a cylinder, and a pressure trace that damps when the extension wedges.",
+    "learnerDoes": "Delivers the extension by inchworming to just proximal of (or through) the lesion, keeps the collar inside the guide, lays the push rod under the towel, holds the push rod during a forceful injection, does not inject while the trace is damped, and passes a stent through the collar under fluoroscopy. If the trace damps, minimises the damping and confirms adequate antegrade flow and no vessel injury before continuing.",
+    "success": "The extension reaches the target without dissection. Advancing it over a bare wire through diseased proximal vessel raises the chance of dissection; injecting with a damped trace raises a hydraulic or aorto-coronary dissection; a forceful injection without holding the push rod ejects the extension; pushing a stent against resistance at the collar deforms it (shown on withdrawal).",
+    "tips": [
+      "pci-unx-inchworm",
+      "pci-unx-extension-collar",
+      "pci-unx-extension-stent-at-collar",
+      "pci-support-extension-wedge"
+    ],
+    "lessonIds": [
+      "cp-uncrossable-extension-combined"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A balloon-undilatable branch of the calcified mid-RCA scenario with two variants, de novo and in-stent (stent placed earlier in the same case), each following Brilakis's Fig. 23.7. Needed: an OCT or IVUS readout of calcium arc, thickness and length before treatment; a non-compliant balloon whose waist depends on lesion resistance; controls for balloon diameter (1:1, 0.5 mm under, oversized), length (short or long), pressure (up to and beyond rated burst pressure), inflation time and pressure cycling; two balloons side by side; buddy wires; scoring, nitinol-caged and cutting balloons (cutting balloon: usual 6–8 atm, ceiling 12 atm, slow inflation and slow full deflation before withdrawal); rotational and orbital atherectomy; laser with a saline or contrast setting; a very-high-pressure balloon; an intravascular lithotripsy balloon (current practice, see cp-calcium) that may fail to cross a tight lesion; and a rupture event whose response sequence is suction, balloon removal, guide aspiration, angiography and, if perforated, a new balloon at the site.",
+    "learnerDoes": "Decides de novo or in-stent; for de novo asks whether the lesion is likely to respond to a balloon (imaging) and whether atherectomy is suitable; uses conservative sizing, longer or cycled inflations, a shorter balloon and buddy wires; after a rupture applies suction, removes the balloon, aspirates the guide and takes an angiogram, inflating a new balloon at the site if it has perforated; removes sticky balloons under fluoroscopy; in a fresh stent uses laser (with contrast) before atherectomy and never orbital atherectomy; retests with a high-pressure balloon after every device; stents only after full expansion and covers all ballooned segments.",
+    "success": "Full balloon expansion confirmed on imaging before stenting. Oversizing or exceeding the rated pressure raises rupture and perforation risk; stenting with a waist produces an underexpanded stent; orbital atherectomy in the fresh stent causes entrapment; lasing with contrast in the native vessel causes dissection.",
+    "tips": [
+      "pci-unx-undilatable-first-question",
+      "pci-unx-hp-balloon-technique",
+      "pci-unx-rupture-look",
+      "pci-unx-sticky-balloon",
+      "pci-unx-laser-then-test",
+      "pci-unx-cabg-last",
+      "pci-unx-laser-contrast-stent-only"
+    ],
+    "lessonIds": [
+      "cp-uncrossable-undilatable-balloons",
+      "cp-uncrossable-undilatable-beyond"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "A balloon-undilatable lesion mode on the bench: lesion resistance set by calcium arc, thickness and length, with a non-compliant balloon that keeps a waist until the resistance is overcome. Controls for diameter relative to the reference (1:1, 0.5 mm under), length, inflation pressure against the balloon's rated burst pressure (rupture risk rising above 20 atm, as Brilakis 9.7.9 warns, and above the rating), inflation time (10 s to 60 s or more) and rapid pressure cycling, plus a very-high-pressure balloon option (usual 30–35 atm, capable of over 40 atm).",
+    "learnerDoes": "Chooses conservative sizing, holds or cycles inflations, shortens the balloon, and decides when the lesion is ready for a stent.",
+    "success": "Lesion expanded without exceeding the rated burst pressure of a standard balloon; the bench reports rupture risk when the rating is exceeded and perforation risk when oversized.",
+    "tips": [
+      "pci-unx-hp-balloon-technique",
+      "pci-unx-rupture-look"
+    ],
+    "lessonIds": [
+      "cp-uncrossable-undilatable-balloons"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Simultaneous support plus modification: the ability to keep a side-branch anchor balloon inflated (or a guide extension in place) while working a plaque modification microcatheter or the laser on the main wire. A check-understanding step once the microcatheter and the extension are both in the PCI lab, for the 'power microcatheter' and 'power guide extension' topic; the steps of those named techniques are not described in the manual edition used, and a PubMed search found no published description: the topic is video-only (video WzFQvVzboKY) and must be specified from a verified primary source before anything is built.",
+    "learnerDoes": "Recognises that the guide backs out whenever the device bites, and adds an anchor or extension at the same time as the modifying device instead of escalating one at a time.",
+    "success": "The device crosses with the combination after failing with either alone.",
+    "tips": [
+      "pci-unx-combine"
+    ],
+    "lessonIds": [
+      "cp-uncrossable-extension-combined"
+    ],
+    "priority": "P3"
+  }
+]

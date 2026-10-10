@@ -1,0 +1,271 @@
+{
+ "package": "haemo-aortic-stenosis-studies",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built haemo-aortic-stenosis-studies. My own test files pass: 97 tests across 6 files, and the typecheck is clean. Two existing assertions in src/ui/lab/haemoTips.test.ts now fail. That file belongs to the earlier haemo-study-session-and-tips package, so I did not edit it; the fix is listed under outOfScope. The plan adds scenarios in a second launch file, which collides with that older test whichever way they are added.\n\nWhat I built:\n- **Five new scenarios in src/simulation/haemo.ts, added at the end of HAEMO_SCENARIOS:** as-concordant-echo, as-discordant-cross, lflg-true, lflg-pseudo and lflg-no-reserve.\n- **New scenario fields:** an echo report with the cross-or-not answer kept for the debrief (`HaemoScenario.avStudy`), and the dobutamine stages (`HaemoScenario.modifiers`). The doses are 0, 5, 10, 15 and 20 micrograms/kg/min.\n- **applyModifier():** at each dose it sets the stage's heart rate, ejection period and aortic pressure, and sets the saturations so the Fick output is that stage's output. It then solves the LV systolic pressure so the mean gradient on the traces is the one that flow through the stage's valve opening produces.\n- **gorlinLive():** calls calc.gorlinAVA with the output, heart rate, ejection period and gradient at a stage. The original 15 scenarios' derive() values are unchanged.\n- **src/simulation/haemo/avCrossing.ts:** one pure reducer for the cross-or-not decision; the catheter choice (5 F AL1, JR4, pigtail) and wire choice (straight hydrophilic, standard J, stiff straight); an optional aortogram; and seeded, repeatable attempts at the valve. The rule `isUnnecessaryCrossing()` is written so the diagnostic lab's crossing exercise can reuse it.\n- **Monitoring the crossing:** forceful pushes are flagged. A 0\u2013100 manipulation score and a low/rising/high embolism-risk rating rise with time at the valve, force and valve passages. After a high-risk crossing a neurological event appears; the right answer is to stop and call the stroke team. After crossing with the AL1, the learner exchanges it for a pigtail over an exchange-length J wire.\n- **Gradient by method:** simultaneous (needs a second arterial catheter), femoral (a delayed, amplified copy of the aortic trace) or pullback (peak-to-peak, and it pulls the catheter back out of the LV).\n- **Dobutamine study:** baseline, raising the dose, stopping, recording a stage, and a results table where the learner enters stroke volume and valve area, graded from the recorded numbers. The study shows when a mean gradient of 40 mmHg or hypotension is reached. The CT calcium score is released after the infusion stops, with the sex-specific thresholds from the lesson. `avDecisions()` gives the scored decisions as ledger-ready records. The file also exports a `raises` declaration.\n- **src/ui/haemo/ValvePanel.tsx:** the report, the decision, the crossing controls and monitor, a schematic aortogram, the neurological event, the gradient recording, the dobutamine section with a live LV and aortic trace, the stage table, and a debrief after the diagnosis is submitted.\n- **What the live screen shows:** the operator's view (report, recorder numbers, attempts, time, forceful pushes). The manipulation score, the embolism risk, the verdicts and the live Gorlin area appear only in guided mode or after submission.\n- **Keeping the study in step:** the panel moves the catheter into the LV when the valve is crossed, back to the aortic root on a pullback, turns on the aortic channel for the second catheter, and raises or clears the hypotension event during dobutamine. It resets when the scenario is reloaded.\n- **src/ui/haemo/CatheterPanel.tsx:** in a valve-study scenario the LV button is disabled with a pointer to the crossing controls, and ValvePanel is shown beneath the catheter controls. It also takes optional `mode` and `onDecide` props. Other scenarios behave as before.\n- **src/content/lab/presets/haemo/aorticStenosis.launch.ts:** lists all five scenarios under the lesson hb-specific-conditions-as. The two crossing scenarios are also listed under hb-cardiac-catheterisation-lhc, and the three dobutamine scenarios under hd-valves-as-area.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo/avCrossing.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo/avCrossing.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/CatheterPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/ValvePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/haemo/aorticStenosis.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo/avCrossing.tips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/valvePanel.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/haemo.test.ts: new describe 'aortic valve studies (haemo-aortic-stenosis-studies)' (7 tests: crossing scenarios severe; LFLG baseline criteria; lflg-pseudo > 1.0 at peak; lflg-true <= 1.0 with gradient > 40; lflg-no-reserve SV rise < 20%; gorlinLive = calc.gorlinAVA of modified inputs and moves with flow; applyModifier pure and memoised)",
+     "src/simulation/haemo/avCrossing.test.ts (21 tests: unnecessary crossing in as-concordant-echo and the shared rule; no-cross decision; AL1 + straight hydrophilic vs pigtail + J attempts over 200 seeds and per seed; probability order; attempt preconditions; monitor flags, quality, embolism risk; neurological event and the stop answer; exchange to pigtail; gradient methods and pullback; LFLG responses, stop criteria, stage table grading, hypotension during dobutamine, CT calcium; launch file both ways, union with core.launch.ts, practice index under hb-specific-conditions-as)",
+     "src/simulation/haemo/avCrossing.tips.test.ts (6 tests: tips at 'valves' and 'left-heart' in aorticStenosis.launch.ts scenarios; haemo-as-* only with aortic-stenosis; hypotension during dobutamine reaches the tip context; raises vocabulary; waiting.ts entries naming the package are satisfiable)",
+     "src/ui/haemo/valvePanel.test.ts (5 render smoke tests: the panel appears only in a valve-study scenario; nothing revealed live; monitor score only in guided mode; stage table without live Gorlin or verdict outside guided mode; debrief after submission)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemo.test.ts src/simulation/haemo/avCrossing.test.ts src/simulation/haemo/avCrossing.tips.test.ts src/ui/haemo/valvePanel.test.ts src/ui/haemo/panels.test.ts src/simulation/haemoStudy.test.ts -> 6 files, 97 tests passed",
+     "npx vitest run src/content/lab/reachability.test.ts -> 5 passed",
+     "npx vitest run src/content/lab/tips.test.ts -> 31 passed, 1 skipped",
+     "npx vitest run src/content/content.test.ts -t launch -> 9 passed (launch-link validation including aorticStenosis.launch.ts)",
+     "npx vitest run src/ui/lab/haemoTips.test.ts -> 2 FAILED, the rest passed. The test 'core.launch.ts declares every scenario of the library and no other' fails because the five new scenarios are in aorticStenosis.launch.ts. The 'no ... HOCM tip appears in an unrelated scenario' test fails because its allowed lists for haemo-as-* and haemo-hocm-(pullback|post-ectopic) name only 'aortic-stenosis' and 'hocm' by id. Both come from that file's id-based assumptions, which the plan's second launch file makes untrue. File owned by haemo-study-session-and-tips; see outOfScope."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, test files included)",
+    "acceptance": [
+     {
+      "criterion": "Crossing in 'as-concordant-echo' is an unnecessary crossing",
+      "status": "met",
+      "evidence": "avCrossing.test.ts 'crossing in as-concordant-echo is an unnecessary crossing; in as-discordant-cross it is not': crossing with the AL1 gives unnecessaryCrossing() true and the debrief marks the cross decision and the valve passage wrong. The rule's truth table is tested, and declining to cross in that scenario is scored correct."
+     },
+     {
+      "criterion": "gorlinLive in 'lflg-pseudo' rises above 1.0 cm2 at peak dobutamine; in 'lflg-true' it stays at or below 1.0 while the gradient exceeds 40; 'lflg-no-reserve' stroke volume rises less than 20%",
+      "status": "met",
+      "evidence": "haemo.test.ts, three named tests. Measured: pseudo AVA 0.84 to 1.18 with gradient about 23; true AVA 0.76 to 0.79 with gradient 25.8 to 46.2; no-reserve SV +6% and MAP 63 at 20 micrograms/kg/min. A further test checks gorlinLive equals calc.gorlinAVA of the modified output, HR, SEP and gradient."
+     },
+     {
+      "criterion": "AL1 with a straight hydrophilic wire crosses in fewer attempts than a pigtail with a J wire; haemo-as-* tips appear only with aortic-stenosis",
+      "status": "met",
+      "evidence": "avCrossing.test.ts compares expectedAttempts and the mean attempts over 200 seeds (AL1 under 5), and checks the AL1 kit never needs more attempts on the same seed. avCrossing.tips.test.ts checks every haemo-as-* tip requires aortic-stenosis and none appears in any scenario or phase without that event. Caveat: haemoTips.test.ts's id-based version of this check now fails because it lists only 'aortic-stenosis' as an allowed scenario (see outOfScope)."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/haemo/aorticStenosis.launch.ts under lessons hb-specific-conditions-as",
+      "status": "met",
+      "evidence": "avCrossing.test.ts 'practiceIndex lists every scenario in aorticStenosis.launch.ts under lesson hb-specific-conditions-as' passes, with no build problems naming the file. content.test.ts launch validation passes."
+     },
+     {
+      "criterion": "Tips (new test file beside its event source): in a scenario from aorticStenosis.launch.ts, at phase 'valves' tipsFor(ctx, 20) includes haemo-as-cross-only-if-discordant, and at 'left-heart' it includes haemo-as-al1-straight-wire; every waiting.ts entry naming haemo-aortic-stenosis-studies becomes satisfiable, so the haemo waiting count falls by at least their number",
+      "status": "met",
+      "evidence": "avCrossing.tips.test.ts beside src/simulation/haemo/avCrossing.ts: both tips appear at those phases in as-discordant-cross and in all five scenarios. waiting.ts currently names this package in 0 waiting tips and 0 deferred retargets (the test prints this), so the 'falls by at least their number' part is met only because the number is zero. The four tips the lab request lists are satisfiable from the haemo lab's raises export."
+     },
+     {
+      "criterion": "derive() values unchanged for the original 15 scenarios; existing haemo study and panel behaviour preserved",
+      "status": "met",
+      "evidence": "The existing haemo.test.ts 'the fifteen original scenarios' tests and haemoStudy.test.ts (22 tests, including screen-reachable calculations, now also covering the 5 new scenarios) pass. panels.test.ts passes and the non-valve CatheterPanel still shows 'cross into LV'."
+     },
+     {
+      "criterion": "The lab works in the running app: echo report, decision, crossing, aortogram sketch, gradient methods, dobutamine trace and table, hypotension tip during dobutamine",
+      "status": "needs-browser",
+      "evidence": "Covered only by server-side render tests (valvePanel.test.ts) and reducer tests. The browser was not used, as instructed."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/lab/haemoTips.test.ts (owned by haemo-study-session-and-tips), two fixes needed. (1) Line ~198: compare the union of core.launch.ts and aorticStenosis.launch.ts scenario ids (or a glob of src/content/lab/presets/haemo/*.launch.ts) with HAEMO_SCENARIOS, and keep the title/starts loop over coreLaunch's scenarios only. (2) Line ~100 'families': add as-concordant-echo, as-discordant-cross, lflg-true, lflg-pseudo and lflg-no-reserve to the allowed lists of /^haemo-as-/ and /^haemo-hocm-(pullback|post-ectopic)/, or derive those lists from scenarios whose events include 'aortic-stenosis'. avCrossing.test.ts already asserts the corrected invariant (the two launch files together declare every scenario exactly once).",
+     "src/ui/sections/HaemoLab.tsx: pass mode={run.mode} and onDecide={(d) => run.decide(d)} to CatheterPanel. Until then the run ledger does not get the valve-study decisions, and guided-mode aids (live Gorlin area, monitor score, verdicts) appear only after the diagnosis is submitted. HaemoLab could also mount ValvePanel as its own panel instead of inside the trace panel's footer.",
+     "src/simulation/haemoStudy.ts: requiredCalcs() requires 'ava' for every scenario with the aortic-stenosis event, so as-concordant-echo (where the right answer is not to cross) loses calculation points. It should skip 'ava' when avStudy.crossingIndicated is false. dataChecklist() adds the 'Simultaneous LV + aortic pressure' item only for the id 'aortic-stenosis'; it should cover the new valve-study scenarios where crossing is indicated.",
+     "src/content/lab/reachability.test.ts: RAISE_MODULES does not glob src/simulation/haemo/*.ts, so avCrossing.ts's raises export is not read directly. The same names already reach the report through src/ui/lab/haemoTips.ts (low-flow-aortic-stenosis via the scenario events, hypotension via HAEMO_DYNAMIC_EVENTS). Add the glob if event sources are meant to be read wherever they live.",
+     "docs/realism/facts: MODEL PARAMETER entries are not yet recorded there; they are labelled in code only. They are: crossing probabilities and multipliers; seconds per attempt; embolic risk and manipulation-quality bands; femoral delay (0.06 s) and pulse amplification (1.12); the 10% tolerance on stroke volume in the stage table; and every pressure, saturation, stroke volume, valve opening, report value and calcium score of the five scenarios.",
+     "src/ui/haemo/TracePanel.tsx: the main recorder shows both the second arterial catheter and the sheath side-arm as the same central 'Ao' channel. The femoral distinction (delayed, amplified trace and its gradient) exists only in ValvePanel's dobutamine trace and recorded readings."
+    ],
+    "notes": "Decisions to review:\n- **One scenario library.** I added the five scenarios to HAEMO_SCENARIOS rather than a separate list. They then appear in the lab's scenario dropdown, their events reach haemoTips.raises (including low-flow-aortic-stenosis) and haemoStudy.test.ts covers them. A separate list would still break one haemoTips.test assertion (the practice-index count must equal HAEMO_SCENARIOS.length), and would hide the scenarios from the dropdown.\n- **Valve-study state lives in the panel.** haemoStudy.ts and HaemoLab.tsx were not in my file list, so the valve-study state is held in ValvePanel (React state over the pure avCrossing reducer). It is reset when the study goes back to a just-loaded state after work was done, or when the scenario changes (keyed). It drives the study only through the existing actions: lhc, art-line, raise and clear-event.\n\nSourcing:\n- The doses are 0/5/10/15/20 micrograms/kg/min. The module (hd-valves-as-area) says 'stepwise, for example 5, then 10, up to 20'; the 15 step is the plan's.\n- Stop criteria modelled: mean gradient of 40 mmHg or more (module), and hypotension at the lab's existing 65 mmHg MAP model threshold. Marked tachycardia, arrhythmia and symptoms are listed as text but not modelled, because the module gives no numbers.\n- Severity, flow-reserve and CT calcium thresholds are quoted from hb-specific-conditions-as and hd-valves-as-area, with sources in code.\n- Crossing success chances are model parameters that follow the lesson's order only (AL1 above JR4 above pigtail; straight hydrophilic above stiff above J; the aortogram helps). They are never shown.\n\nSimplifications:\n- The neurological event is deterministic: it fires when the valve is crossed with the embolism risk rated 'high'. It is not a random draw at a clinical rate.\n\nSnapshots are in datasets/tmp/wp-snapshots/haemo-aortic-stenosis-studies/ (haemo.ts, haemo.test.ts, CatheterPanel.tsx, plus .started). The other four listed files did not exist before."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/haemo/ValvePanel.tsx:232, 242 and 317 (notes defined in src/simulation/haemo/avCrossing.ts:46-55 and 124-128)",
+      "problem": "The catheter, wire and gradient-method buttons carry `title={c.note}`, `title={w.note}` and `title={m.note}` in every mode, so the answers to scored decisions show on the live screen. The tooltips say \"Oxford's catheter for a stenotic valve\" (AL1), \"Oxford's wire for crossing a stenotic valve\", \"the J will not enter a small orifice\", \"the true mean gradient\" (simultaneous) and \"less accurate\" (femoral). They give away av-crossing-kit and av-gradient-method outside guided mode. valvePanel.test.ts checks that '5 F AL1' renders but never checks that these hints are absent.",
+      "severity": "major",
+      "fix": "In ValvePanel, pass `reveal` to Crossing and Gradients and render `title={reveal ? c.note : undefined}` (the same for wires and for GRADIENT_METHODS). Alternatively, give the notes neutral, descriptive wording with no verdict. In valvePanel.test.ts, add to the supervised render: `expect(live).not.toMatch(/Oxford|true mean gradient|less accurate|will not enter/)`, and the reverse check for guided mode."
+     },
+     {
+      "where": "src/simulation/haemo.ts dobutamine stage rows of lflg-true and lflg-no-reserve; src/simulation/haemo/avCrossing.ts:526 and 605",
+      "problem": "In all three LFLG scenarios the stop criteria are first met only at the top dose. Measured: lflg-true has a mean gradient of 36.3 at 15 and 46.2 at 20; lflg-no-reserve has a MAP of 71 at 15 and 63 at 20; lflg-pseudo never meets one. 'Increase' is impossible at the top dose, so pastStop can never become true. The scored decision av-dobutamine-stop ('Stopping the infusion') is therefore always correct, and the module's stop rule is never tested in practice.",
+      "severity": "major",
+      "fix": "Move a stop criterion below the top dose. For lflg-no-reserve, change the 15 row to [15, 86, 0.28, 53, 0.81, 82, 48] and the 20 row to [20, 92, 0.27, 54, 0.82, 78, 46]. Checked with applyModifier/derive: MAP 63 at 15, MAP 61 at 20, SV rise still 6%. Optionally, for lflg-true, change the 15 row to [15, 80, 0.28, 64, 0.78, 116, 65]: gradient 42.7, area 0.78, SV +23%. Then update avCrossing.test.ts 'the study walks the stages' to stop at peakStageIndex(s). Add a test that one more 'increase' after the criterion makes av-dobutamine-stop incorrect. The haemo.test.ts acceptance assertions on the last stage still hold."
+     },
+     {
+      "where": "src/ui/lab/haemoTips.test.ts (owned by haemo-study-session-and-tips), about lines 96-110 and 198",
+      "problem": "Two existing assertions fail now (I re-ran it: 2 failed, 17 passed). (1) 'core.launch.ts declares every scenario of the library and no other' fails because the five new scenarios are declared in aorticStenosis.launch.ts. (2) The 'families' test fails with 135 problems because its allow-lists for /^haemo-as-/ and /^haemo-hocm-(pullback|post-ectopic)/ name the scenario ids 'aortic-stenosis' and 'hocm' only. The plan's second launch file makes this unavoidable, but the suite stays red until it is fixed.",
+      "severity": "major",
+      "fix": "The orchestrator should schedule an amendment, or let the owner fix it. (1) Compare the union of core.launch.ts and aorticStenosis.launch.ts scenario ids (or an import.meta.glob of src/content/lab/presets/haemo/*.launch.ts) with HAEMO_SCENARIOS, keeping the title/starts loop over coreLaunch only. (2) Derive the allowed ids for those two families from `HAEMO_SCENARIOS.filter(s => s.events?.includes('aortic-stenosis')).map(s => s.id)`, plus 'hocm' for the HOCM pullback family. avCrossing.test.ts already asserts that the two launch files together declare every scenario exactly once."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts:398 and 451-455 (outside the package's files; behaviour caused by the new scenarios)",
+      "problem": "In as-concordant-echo the correct answer is not to cross, so LV pressure is never recorded. requiredCalcs() still requires 'ava' because the scenario raises 'aortic-stenosis', so the learner who chooses correctly loses calculation points and gets a misleading debrief. dataChecklist() adds the 'Simultaneous LV + aortic pressure' item only for the id 'aortic-stenosis', so the new crossing scenarios do not ask for it.",
+      "severity": "major",
+      "fix": "Report it to the orchestrator for haemoStudy.ts's owner. In requiredCalcs, skip 'ava' when `s.avStudy && !s.avStudy.crossingIndicated`. In dataChecklist, use `(s.id === 'aortic-stenosis' || s.id === 'hocm' || s.avStudy?.crossingIndicated)` for the lvao item."
+     },
+     {
+      "where": "src/ui/sections/HaemoLab.tsx:193 (outside the package's files)",
+      "problem": "HaemoLab renders `<CatheterPanel study={study} dispatch={dispatch} disabled={locked} />` without `mode` or `onDecide`. In the running app the guided aids (manipulation score, embolic risk, live Gorlin area, stop-criterion notice, stage verdicts) therefore never appear live, even in guided mode. The valve-study decisions never reach the run ledger, so the attending debrief and progression miss them. The package's tests pass mode directly, so they do not catch this.",
+      "severity": "major",
+      "fix": "Amend HaemoLab.tsx, through its owner or a small follow-up: `<CatheterPanel study={study} dispatch={dispatch} disabled={locked} mode={run.mode} onDecide={(d) => run.decide(d)} />`. Then check in the browser through window.__lab that the score appears in guided mode only."
+     },
+     {
+      "where": "src/ui/haemo/ValvePanel.tsx:346-347; src/simulation/haemo/avCrossing.ts:140",
+      "problem": "The LiveTrace channel functions call `sample(x, 'LV', t, { respiration: false, pvc: false })`, and femoralPressure() does the same. A new options object is allocated for every sample point of every animation frame, in a render path. TracePanel hoists its opt object.",
+      "severity": "minor",
+      "fix": "Declare `const NO_RESP = { respiration: false, pvc: false } as const;` at module scope in avCrossing.ts (exported) and use it in femoralPressure, femoralGradient and the ValvePanel channel functions."
+     },
+     {
+      "where": "src/simulation/haemo/avCrossing.ts:415-432 (avStageScenario, currentStageLive, avStudyEvents)",
+      "problem": "After 'Stop the infusion', hypotension is cleared but the stage is not reset. The dobutamine trace and chips keep showing the peak-dose haemodynamics, for example MAP 63 in lflg-no-reserve, while the hypotension event is gone. The screen then contradicts the lab's tip context.",
+      "severity": "minor",
+      "fix": "Once infusionStopped, use the baseline: in avStageScenario and currentStageLive take `const idx = st.infusionStopped ? 0 : st.stage`. Keep the label chip as 'infusion stopped'. Record-stage is already guarded by the button, so also block it in the reducer when infusionStopped. Add a test that MAP returns to the baseline after the stop."
+     },
+     {
+      "where": "src/ui/haemo/ValvePanel.tsx:69 and 120",
+      "problem": "The panel seeds the crossing from seedOf(scenarioId), so every run of a scenario with the same kit crosses on the same attempt number. Repeat practice becomes memorisation of a fixed sequence, not a probability per attempt.",
+      "severity": "minor",
+      "fix": "Seed per run in the panel: `initialAvStudy(study.scenarioId, (Math.random() * 2 ** 32) >>> 0)`, or derive the seed from the run key. Keep the default seedOf() for the reducer tests."
+     },
+     {
+      "where": "src/simulation/haemo.ts as-discordant-cross avStudy.report; src/ui/haemo/ValvePanel.tsx:197-212",
+      "problem": "The CT calcium score shows twice. It is a report line ('CT valve calcium score: 1000 Agatston units.'), and ctInReport is true because the scenario has no modifiers, so the separate CT line renders as well.",
+      "severity": "minor",
+      "fix": "Remove the CT line from as-discordant-cross's report array and let the ctCalcium line render it. Alternatively, skip the separate line when ctInReport is true."
+     },
+     {
+      "where": "src/simulation/haemo.ts, the normalSats declaration (about line 713)",
+      "problem": "An accidental whitespace change on a line outside the package's additions: `const normalSats =(pa: number, ao = 0.98) =>`.",
+      "severity": "minor",
+      "fix": "Restore `const normalSats = (pa: number, ao = 0.98) =>` so that the diff against the snapshot contains only additions."
+     },
+     {
+      "where": "docs/realism/facts (not in the package's files); src/content/lab/reachability.test.ts:35-43",
+      "problem": "The MODEL PARAMETERS are labelled in code only and are not recorded in docs/realism/facts, as plan rule 2 asks. They are: crossing probabilities and multipliers, seconds per attempt, risk and quality bands, femoral delay 0.06 s and amplification 1.12, the 10% SV tolerance, and every value of the five scenarios. Separately, RAISE_MODULES does not glob src/simulation/haemo/*.ts, so avCrossing.ts's `raises` export is never read. The same names do reach the report through src/ui/lab/haemoTips.ts.",
+      "severity": "minor",
+      "fix": "Have the orchestrator queue a facts entry listing these parameters with their file and line. Add \"../../simulation/haemo/*.ts\" to the RAISE_MODULES glob, through that file's owner, or drop the separate raises export and rely on haemoTips.ts."
+     }
+    ],
+    "verdict": "Not ready to close: 2 major fixes are needed in the package's own files and 3 major issues sit in files outside its list. Most of the design is built and the core numbers check out. I re-ran the 6 package test files (97 passed) and the typecheck (clean). Five other changed files under src/ belong to diag-lv-aorta-render, which also has a snapshot.\n\nWhat checks out:\n- **Valve areas and gradients:** at peak dobutamine the Gorlin area is 1.18 cm\u00b2 in lflg-pseudo; in lflg-true it is 0.79 cm\u00b2 with a gradient of 46 mmHg. The original 15 scenarios give the same derive() values as before.\n- **Sources:** the thresholds and doses I checked in the module text match: the CT calcium cut-offs, flow reserve, SVI 35, Omran's 22%/3%, and the AL1 kit.\n- **Tests and tips:** the tests are meaningful, and the tips are reachable at 'left-heart' and 'valves'.\n\nMajor, in the package's own files:\n1. **The answer shows on the live screen.** The catheter, wire and gradient-method buttons have tooltips that give away two scored decisions in every mode, for example \"Oxford's catheter for a stenotic valve\" and \"the true mean gradient\".\n2. **The 'stop the infusion' decision can never be marked wrong.** In every low-flow scenario the stop criteria are met only at the top dose, where the dose cannot be raised further.\n\nMajor, in files the package does not own:\n3. **src/ui/lab/haemoTips.test.ts fails.** Two assertions are red, as the builder reported.\n4. **as-concordant-echo penalises the right answer.** A learner who correctly does not cross still loses the valve-area calculation points (haemoStudy.ts requiredCalcs).\n5. **Guided aids and the run ledger are not connected.** HaemoLab.tsx does not pass mode or onDecide, so in the running app the guided aids never appear live and the valve-study decisions never reach the ledger.\n\nMinor:\n- New objects are allocated on every animation frame for the trace.\n- The trace stays at the peak dose after the infusion is stopped.\n- Every run of a scenario uses the same seed, so the crossing comes on the same attempt each time.\n- The CT score appears twice in as-discordant-cross.\n- There is a stray whitespace change on the normalSats line.\n- The model parameters are not yet recorded in docs/realism/facts.\n\nThe browser acceptance check is still open."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 7,
+    "rejected": [
+     "Finding 3 (src/ui/lab/haemoTips.test.ts, two failing assertions): not rejected on the merits, but the file belongs to haemo-study-session-and-tips and is outside this package. I re-ran it and it still has exactly the 2 known failures. The owner needs to (1) compare the union of core.launch.ts and aorticStenosis.launch.ts (or an import.meta.glob of presets/haemo/*.launch.ts) with HAEMO_SCENARIOS, and (2) derive the allowed ids for /^haemo-as-/ from HAEMO_SCENARIOS.filter(s => s.events?.includes('aortic-stenosis')), plus 'hocm' for the HOCM pullback family.",
+     "Finding 4 (src/simulation/haemoStudy.ts requiredCalcs/dataChecklist): out of scope, owned by another package. Needed change: in requiredCalcs, skip 'ava' when s.avStudy && !s.avStudy.crossingIndicated; in dataChecklist, add the lvao item when s.avStudy?.crossingIndicated.",
+     "Finding 5 (src/ui/sections/HaemoLab.tsx does not pass mode/onDecide to CatheterPanel): out of scope. Needed change: <CatheterPanel ... mode={run.mode} onDecide={(d) => run.decide(d)} />, then check in the browser that the monitor score appears in guided mode only.",
+     "Finding 11 (MODEL PARAMETERS missing from docs/realism/facts; RAISE_MODULES glob in src/content/lab/reachability.test.ts omits src/simulation/haemo/*.ts): both files are outside the package. A facts entry should list the crossing probabilities and multipliers (avCrossing.ts CROSS_P_*), ATTEMPT_SECONDS, the risk and quality bands, FEMORAL_DELAY_S 0.06 and FEMORAL_PULSE_AMPLIFICATION 1.12, STAGE_SV_REL_TOLERANCE 0.1, and the five scenarios' values in haemo.ts, including the revised dobutamine rows. The raises export is kept because avCrossing.tips.test.ts checks it against haemoTips.ts."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemo.test.ts src/simulation/haemo/avCrossing.test.ts src/simulation/haemo/avCrossing.tips.test.ts src/ui/haemo/valvePanel.test.ts -> 4 files, 68 tests passed",
+     "npx vitest run src/ui/haemo/panels.test.ts src/simulation/haemoStudy.test.ts -> 30 passed",
+     "npx vitest run src/ui/lab/haemoTips.test.ts -> 2 failed / 17 passed: the same two known out-of-scope failures (finding 3), nothing new"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "notes": "I applied 7 findings and handed 4 back as out of scope (3, 4, 5 and 11). All edits were in package files.\n\n1. **Tooltips gave away scored answers.** The catheter, wire and gradient-method tooltips now show only when `reveal` is true (guided mode or after submission). Gradients now receives `reveal`. valvePanel.test.ts checks that the supervised render does not match /Oxford|true mean gradient|less accurate|will not enter/, and that the guided render shows the notes.\n\n2. **The stop decision could never be scored wrong.** I changed the dobutamine rows in haemo.ts as the review proposed:\n   - lflg-true 15 row: [15, 80, 0.28, 64, 0.78, 116, 65]. Mean gradient 42.7, area 0.78, SV +23%.\n   - lflg-no-reserve 15 row: [15, 86, 0.28, 53, 0.81, 82, 48]. MAP 63.\n   - lflg-no-reserve 20 row: [20, 92, 0.27, 54, 0.82, 78, 46]. MAP 61, SV still +6%.\n   - Checked with vite-node: the stop criterion is now met at index 3 (15 micrograms/kg/min) in both scenarios. lflg-pseudo meets none and runs to the top dose, as intended.\n   - The lflg-no-reserve key finding now names 15 micrograms/kg/min instead of the top dose.\n   - avCrossing.test.ts now walks lflg-true to peakStageIndex. It asserts that the peak comes before the top dose for true and no-reserve, and at the top dose for pseudo. A new check shows that one more 'increase' after the criterion sets pastStop and scores av-dobutamine-stop as incorrect. The hypotension test now raises the event at 15, not before.\n\n6. **Trace options were allocated per sample.** `NO_RESP` is now exported from avCrossing.ts and used in femoralPressure, femoralGradient and the ValvePanel trace channels.\n\n7. **The screen kept showing peak-dose values after the stop.** A new `liveStageIndex()` returns the baseline once the infusion is stopped. avStageScenario, currentStageLive and the stage tag of record-gradient use it, and the reducer refuses record-stage after the stop. In the panel, the chip reads 'Infusion stopped: back to baseline' and the 'Record this stage' button is disabled. A new test checks that MAP returns to the baseline, record-stage does nothing, and a later gradient is tagged as baseline (stage 0).\n\n8. **Every run crossed on the same attempt.** The panel now seeds each run with `runSeed()` (Math.random), both on mount and when the scenario is reloaded. The reducer tests still use the default `seedOf()`.\n\n9. **The CT calcium score showed twice.** I removed the CT line from as-discordant-cross's report, so only the ctCalcium line renders it. valvePanel.test.ts checks it appears once.\n\n10. **Whitespace.** `const normalSats = (pa` is restored.\n\nFor the orchestrator: the out-of-scope items in `rejected` need their owners. Finding 5 (HaemoLab.tsx) matters most: until it is fixed, guided aids never show live and the valve decisions never reach the run ledger in the real app.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo/avCrossing.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo/avCrossing.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/ValvePanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/valvePanel.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-63) at http://localhost:5173, went to the Haemodynamics lab and closed the tab at the end. No other tab was touched and no screenshot was taken, because the tab was not fronted. window.__lab.haemo was present. The scenario list shows all five new scenarios (21 to 25) with titles that do not give the answer away.",
+     "as-concordant-echo: the echo report and referral render, and so does the 'Cross the aortic valve?' choice. With the pigtail in the aortic root, the catheter panel's LV button is disabled with the title 'Cross the valve with the aortic valve controls below'. Probe stays disabled until a catheter and a wire are chosen. The aortogram sketch renders. With the 5 F AL1 and straight hydrophilic wire the wire crossed on the first controlled probe. 'Follow with the catheter' set study.lhc to LV, the exchange to a pigtail worked, and the pullback recorded a peak-to-peak gradient of 86 mmHg and moved lhc back to Ao. After the diagnosis was submitted the debrief showed 'Unnecessary crossing'. It marked the cross decision and the valve passage wrong, the kit right, and the pullback-first gradient wrong. The reveal chips (manipulation quality 100, embolic risk low) appeared only after submission.",
+     "as-discordant-cross, high-risk path (pigtail with a J wire): 21 forceful pushes before the wire crossed (attempts 21, 210 s, forceful pushes 21, plus the buckling flag). Advancing the catheter raised the neurological event, and every crossing, aortogram and gradient control was then locked. 'Stop manipulation, call the stroke team' showed the halted notice. The CT calcium score (1000 AU, woman) is shown in the report.",
+     "as-discordant-cross, controlled path (AL1 with the straight hydrophilic wire): crossed in 3 attempts. Ticking 'second arterial catheter' turned study.artLine on. Simultaneous recording gave a mean of 49 mmHg and the side-arm recording 57 mmHg. Tip context phase was 'valves' and the tips included haemo-as-cross-only-if-discordant and haemo-as-slow-rise-not-damping. With the AL1 at the root in as-concordant-echo, at phase 'left-heart', the tips included haemo-as-al1-straight-wire.",
+     "lflg-pseudo: the right heart catheter was advanced to the PA, the valve crossed and the second catheter placed. Baseline and stages 5 to 20 were recorded, and the stage table filled with HR, output, SEP and gradient: output 3.62 to 5.83 L/min, gradient 21 to 23 mmHg, HR 70 to 83, SEP 0.30 to 0.28 s. From these the SV rises 36% and the peak Gorlin area is about 1.18 cm2. The learner's SV and AVA entries were stored. After submission they were graded \u2713, and \u2717 with the reference 1.18 shown for a wrong area. Stopping the infusion returned the traces to baseline. The CT request is disabled until the infusion stops and then shows 1100 AU (man). The debrief gave the pseudo-severe dobutamine response.",
+     "lflg-no-reserve: hypotension was raised into study.raised and the tip context at the 15 microgram stage (MAP 63) and stayed at 20 (MAP 61, SV +6%). The tips then included haemo-hypotension-pattern. Stopping the infusion cleared the event. The debrief scored 'Dose raised after a stop criterion' as wrong. 'Repeat this study' reset the valve study and the haemo study (decision row back, no attempts, lhc none, raised empty).",
+     "lflg-true with the sheath side-arm as the only aortic reference: the trace channel switched to 'Fem'. At 20 micrograms/kg/min the mean gradient read 55 mmHg (LV to side-arm), with HR 82, output 5.46 L/min and SEP 0.28 s.",
+     "Non-valve scenario 'aortic-stenosis': no valve panel is shown, the 'cross into LV' button is enabled, and it sets lhc to LV, as before.",
+     "Console: no errors or warnings during the whole session (only Vite connect and React DevTools info)."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/HaemoLab.tsx line 193 (not in this package's file list)",
+      "problem": "HaemoLab renders <CatheterPanel study={study} dispatch={dispatch} disabled={locked} /> without the new mode and onDecide props. In the running app with the 'Guided practice' chip showing, the guided aids never appeared before submission: the manipulation-quality and embolic-risk chips, the live Gorlin area, the 'Stop criterion met' notice, the stage-entry \u2713/\u2717 marks and the kit and method tooltips. None of the avDecisions records (cross decision, unnecessary crossing, kit, manipulation, gradient method, stage table, infusion stop, neuro event) reach the run's ledger, so they are missing from scoring and analytics. The builder did not list this in outOfScope.",
+      "severity": "major",
+      "fix": "In HaemoLab.tsx pass both props: <CatheterPanel study={study} dispatch={dispatch} disabled={locked} mode={run.mode} onDecide={(d) => runRef.current.decide(d)} />. AvDecision is Omit<DecisionRecord,'t'>, the same shape the existing r.decide calls use. Because HaemoLab.tsx is outside this package's file list, give it to the owner of haemo-study-session-and-tips or a follow-up package."
+     },
+     {
+      "where": "src/simulation/haemo/avCrossing.ts CT_CALCIUM_TEXT.unlikely (line 211)",
+      "problem": "For a score below the lower threshold the guided and debrief text reads 'below the threshold at which severe stenosis becomes unlikely'. That suggests severe stenosis becomes unlikely only above the threshold, the opposite of the module (below 1600 AU in men or 800 in women, severe stenosis becomes unlikely). It was seen for lflg-pseudo, 1100 AU, man.",
+      "severity": "minor",
+      "fix": "Change it to unlikely: \"below the threshold: severe stenosis unlikely\"."
+     },
+     {
+      "where": "src/simulation/haemo.ts, the avStudy.why text of the lflg-* scenarios (seen in the debrief)",
+      "problem": "The learner-facing debrief shows a raw lesson id: 'the alternative the Academy lesson hd-valves-as-area gives'.",
+      "severity": "minor",
+      "fix": "Name the lesson by its title (for example 'the Academy lesson on aortic valve area') or render it as a lesson link, instead of the id hd-valves-as-area."
+     },
+     {
+      "where": "src/ui/haemo/ValvePanel.tsx, the Dobutamine footnote",
+      "problem": "The footnote reads 'SV = output \u00f7 HR' under a column headed 'SV (mL)' while output is shown in L/min, so following it literally gives litres (0.05), not 52 mL.",
+      "severity": "minor",
+      "fix": "Write 'SV (mL) = output (L/min) \u00d7 1000 \u00f7 HR'."
+     },
+     {
+      "where": "src/ui/haemo/ValvePanel.tsx lines 64-65",
+      "problem": "A stray doc comment ('A study just loaded: ...') sits above the runSeed comment and documents nothing; it belongs to isFresh.",
+      "severity": "minor",
+      "fix": "Move the 'A study just loaded' comment down to sit directly above const isFresh."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 4,
+    "rejected": [
+     "Finding 1 (HaemoLab.tsx does not pass mode and onDecide to CatheterPanel): confirmed, but not applied here. At src/ui/sections/HaemoLab.tsx line 193 the call is still <CatheterPanel study={study} dispatch={dispatch} disabled={locked} />. That file is outside this package's file list, so it is reported out of scope rather than edited. The fix for its owner (haemo-study-session-and-tips) or a follow-up package is to change that line to <CatheterPanel study={study} dispatch={dispatch} disabled={locked} mode={run.mode} onDecide={(d) => runRef.current.decide(d)} />. runRef is already defined at line 78 and run.mode is already used at line 144. Until this lands, guided aids in valve studies do not appear before submission and avDecisions never reach the ledger."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemo.test.ts src/simulation/haemo/avCrossing.test.ts src/simulation/haemo/avCrossing.tips.test.ts src/ui/haemo/valvePanel.test.ts (4 files, 68 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "I applied four of the five findings; the fifth needs a file outside this package.\n\nApplied:\n1. /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo/avCrossing.ts: the CT_CALCIUM_TEXT.unlikely text now reads \"below the threshold: severe stenosis unlikely\". This matches the module text in src/content/manual/cath-handbook/05-specific-conditions.ts line 250.\n2. /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo.ts: the avStudy.why text of the three lflg-* scenarios no longer shows the raw id hd-valves-as-area. It now names the lesson by its title from src/content/tracks/haemodynamics.ts: \"the Academy lesson on aortic valve area, low-flow low-gradient stenosis and dobutamine\". The id is still in code comments only.\n3. /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/ValvePanel.tsx: the dobutamine footnote now reads \"SV (mL) = output (L/min) \u00d7 1000 \u00f7 HR.\"\n4. ValvePanel.tsx: the \"A study just loaded\" doc comment now sits directly above const isFresh, and the runSeed comment sits directly above runSeed.\n\nNot applied: finding 1, the HaemoLab.tsx props. It is confirmed, but the file belongs to another package; the details and the one-line fix are under rejected. The builder had already reported that two assertions in src/ui/lab/haemoTips.test.ts fail. That file also belongs to haemo-study-session-and-tips, and I did not touch or rerun it."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "Crossing in 'as-concordant-echo' is an unnecessary crossing",
+      "met": true,
+      "evidence": "src/simulation/haemo/avCrossing.test.ts 'cross or not' tests pass. Crossing and advancing in as-concordant-echo gives unnecessaryCrossing(st) === true, av-cross-decision is marked incorrect with the expected answer 'Do not cross: coronary angiography only', and av-unnecessary-crossing is marked incorrect. as-discordant-cross is not counted as unnecessary. The shared isUnnecessaryCrossing(indicated, passed) rule is tested on its own."
+     },
+     {
+      "criterion": "gorlinLive in 'lflg-pseudo' rises above 1.0 cm2 at peak dobutamine; in 'lflg-true' it stays at or below 1.0 while the gradient exceeds 40; 'lflg-no-reserve' stroke volume rises less than 20%",
+      "met": true,
+      "evidence": "src/simulation/haemo.test.ts 'aortic valve studies' block passes. In lflg-pseudo the peak AVA is above 1.0. In lflg-true the peak AVA is at or below 1.0 with a mean gradient above 40, and every stage stays at or below 1.0. In lflg-no-reserve the stroke volume ratio minus 1 is below 0.2. The modifiers are staged doses [0,5,10,15,20], and gorlinLive is checked against calc.gorlinAVA of the modified CO, HR, SEP and gradient."
+     },
+     {
+      "criterion": "AL1 with a straight hydrophilic wire crosses in fewer attempts than a pigtail with a J wire; haemo-as-* tips appear only with aortic-stenosis",
+      "met": true,
+      "evidence": "avCrossing.test.ts 'the crossing' passes: expectedAttempts(AL1, straight-hydrophilic) < expectedAttempts(pigtail, standard-j), the seeded mean over 200 runs is lower, and for each of 50 seeds the AL1 never needs more attempts. The crossing probabilities are labelled MODEL PARAMETER in avCrossing.ts. avCrossing.tips.test.ts 'haemo-as-* tips appear only with aortic-stenosis' passes: every haemo-as-* tip requires aortic-stenosis, no scenario or phase shows one without that event, and hocm and normal show none."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/haemo/aorticStenosis.launch.ts under lessons hb-specific-conditions-as",
+      "met": true,
+      "evidence": "avCrossing.test.ts 'launch metadata and the practice index' passes. practiceForLesson('hb-specific-conditions-as') contains all 5 scenarios with source aorticStenosis.launch.ts, and the index records no problems for that file. The launch file matches the avStudy scenarios one for one, and the haemo launch files together cover every scenario exactly once."
+     },
+     {
+      "criterion": "Tips test beside the event source: at phase 'valves' tipsFor(ctx,20) includes haemo-as-cross-only-if-discordant, at 'left-heart' haemo-as-al1-straight-wire; waiting.ts entries naming the package become satisfiable",
+      "met": true,
+      "evidence": "The new test file src/simulation/haemo/avCrossing.tips.test.ts passes (6 tests). For as-discordant-cross and every scenario in aorticStenosis.launch.ts, the valves phase includes haemo-as-cross-only-if-discordant and the left-heart phase includes haemo-as-al1-straight-wire. The raises export uses the shared vocabulary and is carried by haemoTips raises. The waiting.ts check passes, but waiting.ts names this package nowhere (logged: 0 waiting tips, 0 deferred retargets), so the clause 'falls by at least their number' holds only because there is nothing to count. The haemo-as-* tips sit under haemo-study-session-and-tips in waiting.ts, and the test asserts they are all satisfiable from the haemo raises."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/haemo/avCrossing.tips.test.ts src/simulation/haemo/avCrossing.test.ts src/simulation/haemo.test.ts src/ui/haemo/valvePanel.test.ts (4 files, 68 tests, all passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ]
+ }
+}

@@ -1,0 +1,197 @@
+[
+  {
+    "lab": "procedure",
+    "what": "Sedation as an order with a patient response. Add midazolam and fentanyl (and diazepam) orders in small titrated doses, with the patient engine responding: comfort and heart rate improve, and an over-sedation event (hypopnoea, apnoeic pauses, falling saturation) when the dose is too high for the patient's age, weight, lung disease or sleep apnoea. Add flumazenil and naloxone orders that reverse in steps (flumazenil 0.2 mg over 15 s, repeat to 1 mg; naloxone 0.1–0.2 mg every 2–3 min), oxygen, and an 'intubate/call anaesthetist' order for severe depression. Also an agitation event (an under-sedated anxious patient who moves and becomes tachycardic, raising radial spasm risk). Include a desaturation from early pulmonary oedema or probe artefact so that sedation is not always the answer.",
+    "learnerDoes": "Titrates sedation to comfort, watches saturation, recognises over-sedation, distinguishes it from oedema or artefact, and reverses the right drug in small steps.",
+    "success": "Comfort achieved without saturation below the patient's safe threshold; over-sedation reversed with the correct agent and stepwise doses; no reversal given for an artefact or oedema desaturation.",
+    "tips": [
+      "diag-sedation-titrate"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-sedation"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Intracoronary nitroglycerin as a dosed order tied to the pressure and a PDE-5 history. The patient chart carries a PDE-5 inhibitor and the time of the last dose (sildenafil, vardenafil or avanafil within 24 h; tadalafil within 48 h), RV infarction, hypovolaemia or obstructive HCM in some patients. The nitrate order asks for a dose (50, 100, 200 µg or other) and the engine applies the effect after 1–2 minutes; a contraindicated or oversized dose causes hypotension that responds to stopping, saline, time and a vasopressor (phenylephrine or noradrenaline).",
+    "learnerDoes": "Asks about PDE-5 inhibitors, reads the systolic pressure, chooses 200/100/50 µg or none, waits 1–2 minutes before acquiring, and manages nitrate hypotension.",
+    "success": "No nitrate given within a PDE-5 window or in RV infarction, hypovolaemia or HCM; dose matches the systolic band; acquisition after the delay; nitrate hypotension corrected with saline and, if severe, a vasopressor.",
+    "tips": [
+      "diag-nitrate-dose-by-pressure",
+      "diag-planning-pde5-nitrate"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-nitrates"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Spasm, no-reflow and hyperaemia states that each need a specific vasodilator. (1) Wire-induced spasm in the RCA scenario that responds to IC nitroglycerin 100–300 µg (repeated if needed) or an IC calcium channel blocker, which Brilakis lists as parallel treatments. (2) A no-reflow state after stenting (thrombotic LCx STEMI scenario or a new SVG scenario) in which drug given into the guide refluxes without effect and drug given through a microcatheter or over-the-wire balloon placed distally restores flow over time; nitrate has no effect; repeated contrast injections worsen ischaemia; drug-induced hypotension needs support. Agents: nicardipine, nitroprusside, verapamil, adenosine, at the manuals' doses, with intracoronary adrenaline for refractory cases.",
+    "learnerDoes": "Gives nitrate for spasm; for no-reflow chooses a microvascular agent, positions a microcatheter distally and delivers it there, avoids repeated contrast, and supports the pressure.",
+    "success": "Spasm relieved with nitrate; no-reflow treated with a distally delivered microvascular vasodilator; no nitrate-only or guide-only treatment of established no-reflow; contrast injections limited.",
+    "tips": [
+      "pci-wire-spasm-nitrate",
+      "pci-no-reflow-distal-vasodilator",
+      "pci-svg-intragraft-vasodilator"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-nitrates",
+      "pm-lab-drugs-microvascular"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A degenerated saphenous vein graft PCI scenario with embolic protection and prophylactic intragraft vasodilator: the learner can deploy an embolic protection filter beyond the lesion when a landing zone exists (not possible for distal anastomotic lesions) and give nicardipine 100–300 µg intragraft before and after stenting; each lowers the probability or severity of slow flow. If slow or no flow develops with the filter in place, aspiration through the guide followed by filter retrieval restores flow when the filter is full of debris. Routine GP IIb/IIIa inhibitor is available but carries harm in this setting. Intragraft adenosine through a microcatheter in a graft to the RCA counts as an RCA injection (no more than 100 µg per bolus).",
+    "learnerDoes": "Deploys a protection filter where feasible, pretreats with intragraft nicardipine, avoids routine GP IIb/IIIa inhibitor, aspirates and retrieves the filter if flow slows, repeats the vasodilator distally, and keeps adenosine boluses at or below 100 µg in an RCA graft.",
+    "success": "Filter used when a landing zone exists; vasodilator given before and after the stent; no routine GP IIb/IIIa inhibitor; slow flow managed by aspiration and filter retrieval then distal vasodilator; final TIMI 3 flow.",
+    "tips": [
+      "pci-svg-intragraft-vasodilator",
+      "pci-no-reflow-distal-vasodilator"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-microvascular"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Adenosine dose and rhythm effects. Intracoronary adenosine dose entry by vessel (RCA 50–100 µg, left main 100–200 µg, graft 100–200 µg; IV 140 µg/kg/min) with injection speed. Doses above 100 µg in the RCA or a dominant circumflex, or fast injection, can trigger transient complete heart block, adenosine-induced AF, or a pause followed by torsades/VF. Add 'ask the patient to cough', 'wait', transient CPR, temporary pacing, DC cardioversion and defibrillation orders, and a 'flush the guide' step after IC boluses.",
+    "learnerDoes": "Chooses the vessel-appropriate dose, injects slowly, flushes the guide, and manages heart block by coughing and waiting, AF by cardioversion or drugs, and VF by defibrillation.",
+    "success": "Hyperaemia achieved with doses inside the vessel limits; heart block managed without inappropriate drugs; VF defibrillated at once.",
+    "tips": [
+      "pci-adenosine-rca-dose",
+      "pci-adenosine-block-cough-wait"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-microvascular"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Bradycardia prevention before RCA atherectomy in the calcified mid-RCA scenario: options of aminophylline 250–300 mg IV over 10 min (or 20–40 mg IC), atropine 0.5–1.0 mg IV, a temporary pacing wire, or short test runs; without one of these, burr runs cause bradycardia or heart block. A vasodilator before atherectomy unless the patient is hypotensive.",
+    "learnerDoes": "Chooses and gives a bradycardia-prevention strategy and a pre-atherectomy vasodilator, then performs runs.",
+    "success": "No unprotected high-grade block during RCA atherectomy; vasodilator given unless hypotensive.",
+    "tips": [
+      "pci-adenosine-block-cough-wait",
+      "pci-no-reflow-distal-vasodilator"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-microvascular"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "procedure",
+    "what": "Vasopressor and inotrope infusions driven by the patient engine, alongside the bolus drugs. Hypotension events of three mechanisms: hypovolaemia (bleeding, fasting), cardiac failure (ischaemia, a guide holding the aortic valve open, tamponade, arrhythmia) and vasodilation (vasovagal, anaphylaxis, nitrate after PDE-5, verapamil). Orders: saline, blood, phenylephrine (bolus and infusion), noradrenaline, vasopressin, dopamine, adrenaline, dobutamine, at the manual's doses, given centrally where possible. Responses differ by mechanism (pressors fail to fix bleeding or tamponade for long; inotropes worsen obstructive HCM). Rising doses raise arrhythmia risk and rebound hypertension when the cause is corrected; offer an escalation to mechanical support. Add a right heart catheter order that returns the filling pressure and cardiac output pattern for each mechanism (low/low hypovolaemia; high/low cardiac failure, low filling in RV failure; low/high vasodilation). Dobutamine dosing should accept the ESC 2021 range (2–20 µg/kg/min) and penalise starting high.",
+    "learnerDoes": "Confirms the hypotension is real, names the mechanism, treats the cause, and bridges with the right drug at the right dose, escalating to mechanical support rather than ever-higher doses.",
+    "success": "Cause identified and treated; drug matched to mechanism (phenylephrine in HCM, noradrenaline in cardiogenic shock, adrenaline in anaphylaxis); no inotrope in obstructive HCM; infusions reduced when the cause resolves.",
+    "tips": [
+      "pci-hypotension-match-pressor",
+      "pci-mon-false-hypotension",
+      "mcs-pressor-escalation-limit"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-pressors"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A left main PCI scenario in which hypotension during equipment delivery deteriorates quickly unless noradrenaline is started early, with defibrillator pads as a pre-case checklist item.",
+    "learnerDoes": "Places pads before the case, starts noradrenaline early when the pressure falls, and continues the PCI or escalates to support.",
+    "success": "Pads on before starting; vasopressor started within a short window of the first fall in pressure; no collapse.",
+    "tips": [
+      "pci-left-main-early-noradrenaline"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-pressors"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Antiarrhythmic orders and a ventricular tachycardia event in the diagnostic lab. Add events: VF (conus injection, plugged vessel, contrast that cannot clear), sustained monomorphic VT during LV catheterisation, AF during right heart catheterisation (stable and unstable variants), SVT, injection bradycardia, vasovagal bradycardia with hypotension, and Mobitz II/complete block. Add orders: defibrillation, synchronised cardioversion with energy choice and sedation, amiodarone (150 mg over 10 min; 300 mg push; 1 mg/min infusion), lidocaine (50 mg over 2 min, to 200 mg), IV metoprolol, flecainide, adenosine 6–18 mg IV, IV verapamil 5–10 mg, heparin for AF, atropine (0.5–1 mg; total 3 mg), isoprenaline, overdrive and temporary pacing. Patient chart can include a long QT, pre-excitation or high-grade block that makes amiodarone harmful, and poor LV function that makes verapamil harmful. (A new LAB_EVENTS entry such as 'vt' or 'tachyarrhythmia' would let tips trigger on VT, AF and SVT.) The ESC 2022 approach should also be available and rewarded: synchronised cardioversion under sedation as first-line treatment of tolerated sustained monomorphic VT when the sedation risk is low.",
+    "learnerDoes": "Recognises each rhythm, removes the catheter trigger, and chooses shock, drug or pacing according to stability and the patient's contraindications.",
+    "success": "VF shocked without delay; VT treated by stability; no amiodarone with long QT, pre-excited AF or unpaced high-grade block; no verapamil with poor LV; Mobitz II/complete block paced rather than treated with repeated atropine.",
+    "tips": [
+      "diag-vf-shock-then-amiodarone",
+      "diag-bradycardia-atropine-or-pace",
+      "pci-mon-vf-roles"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-antiarrhythmics"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pacing",
+    "what": "Overdrive pacing of stable monomorphic VT: pace 15–20 bpm above the VT rate at high output (5–10 V), show capture as a change in QRS morphology and a rise of the monitored rate to the paced rate, stop abruptly after 5–10 s of capture, with a risk of acceleration to VF requiring immediate defibrillation, then background pacing at 90–110 bpm.",
+    "learnerDoes": "Positions the RV wire, sets rate and output, delivers a burst, recognises capture and termination or acceleration, and responds.",
+    "success": "VT terminated with correct settings, or acceleration defibrillated immediately.",
+    "tips": [
+      "diag-vf-shock-then-amiodarone"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-antiarrhythmics"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Contrast agent choice and running totals. Let the learner choose an agent class (ionic monomer, ionic dimer, non-ionic low-osmolar, iso-osmolar) with effects in the engine: injection resistance and slower filling with viscous agents through 4–5 Fr catheters, heat and discomfort and a larger haemodynamic load (rising LVEDP, hypotension) with hyperosmolar agents, transient bradycardia and QRS widening after injections. Show a running contrast total against both ceilings (Oxford 5–7 mL/kg; Brilakis 3.7 × GFR) and raise high-contrast-volume when the stricter ceiling nears.",
+    "learnerDoes": "Chooses an agent suited to the patient's ventricle, valves and kidneys, and finishes within the stricter ceiling.",
+    "success": "Non-ionic agent in severe LV, coronary or valve disease and in renal impairment; total within the stricter ceiling.",
+    "tips": [
+      "diag-contrast-ceiling-two-rules"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-contrast-media"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "procedure",
+    "what": "An anaphylaxis event during the full procedure, treated through the order set. Within minutes of the first injection in an at-risk patient (asthma, atopy, previous reaction): pruritus, flushing, hives, angio-oedema, wheeze, tachycardia and hypotension. Orders: stop contrast, call for help, IM adrenaline 0.5 mg (1 mg/mL), oxygen, crystalloid bolus 500–1000 mL, nebulised salbutamol, posture, repeat IM at 5 minutes, low-dose adrenaline infusion with an anaesthetist after two failed doses, tryptase samples at the right times, allergy referral and recording the agent. Wrong orders have consequences: IV 1 mg adrenaline with a pulse causes severe hypertension and VT; antihistamine and steroid first delays recovery; atropine worsens tachycardia; more contrast worsens the reaction; an excessive infusion causes tachyarrhythmia that settles when the rate is reduced. Include a vasovagal look-alike (bradycardia first, no skin or airway signs) so that the learner must discriminate. Add a late, pre-arrest variant in which anaphylaxis presents with bradycardia but with skin and airway signs, so that heart rate alone cannot be used to call it vagal; large-volume fluid (balanced crystalloid, up to 3–5 L) and, in arrest, prolonged CPR should be available.",
+    "learnerDoes": "Discriminates anaphylaxis from a vasovagal reaction, gives IM adrenaline at once, supports with oxygen and fluid, repeats at 5 minutes, escalates to an infusion with help, and completes the follow-up tasks.",
+    "success": "IM adrenaline within a short time of recognition; no IV arrest dose with a pulse; repeat or infusion as the response requires; tryptase timed correctly; agent recorded and allergy referral made.",
+    "tips": [
+      "diag-anaphylaxis-im-adrenaline",
+      "diag-reaction-or-vagal",
+      "pci-anaphylaxis-im-adrenaline"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-contrast-reactions"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An opioid–antiplatelet interaction in the LCx STEMI scenario: if the learner gives an opioid after the oral P2Y12 load, platelet inhibition is delayed and thrombus is more likely during stenting unless an IV antiplatelet agent covers the gap.",
+    "learnerDoes": "Avoids unnecessary opioid in STEMI, or covers a delayed oral load with cangrelor or a GP IIb/IIIa inhibitor.",
+    "success": "No thrombotic complication from an unprotected window after opioid use.",
+    "tips": [
+      "pci-opioid-delays-p2y12"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-sedation"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A coronary spasm event distinct from ostial catheter-tip spasm: a new LAB_EVENTS entry such as 'coronary-spasm' raised when wires or devices straighten the vessel and provoke spasm during PCI, so that the nitrate tip can fire then. Today only 'ostial-spasm' exists (a diagnostic event), so pci-wire-spasm-nitrate may never fire for wire-induced spasm.",
+    "learnerDoes": "Recognises spasm from instrumentation, gives intracoronary nitroglycerin 100–300 µg (repeated if needed) or an intracoronary calcium channel blocker, and uses IVUS or OCT if it does not resolve.",
+    "success": "Spasm relieved without stenting a pseudolesion; no nitrate given for true no-reflow.",
+    "tips": [
+      "pci-wire-spasm-nitrate"
+    ],
+    "lessonIds": [
+      "pm-lab-drugs-nitrates"
+    ],
+    "priority": "P2"
+  }
+]

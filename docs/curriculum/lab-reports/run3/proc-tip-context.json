@@ -1,0 +1,45 @@
+{
+ "package": "proc-tip-context",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "caseTips.test.ts: a session advanced to a femoral sheath yields access step 'sheath' and route 'femoral'; a radial session at the wrist never yields a femoral-only tip",
+      "met": true,
+      "evidence": "src/ui/access/caseTips.test.ts 'a femoral session reports puncture, wire and sheath in turn, with route femoral' asserts accessStep() == {step:'sheath', site:'femoral', route:'femoral'} after insertSheath('6') and the access context {lab:'access', phase:'sheath', phases:['femoral'], route:'femoral'}. 'a radial session never yields a femoral-only tip, at any step or workspace' and 'a radial case with an arm perforation shows no femoral sheath or groin tip' pass. caseTips.ts fitsSite() drops tips whose site phase is not the route's site. All pass."
+     },
+     {
+      "criterion": "A context { lab:'access', phase:'closure', route:'radial' } returns access-radial-remove-now, access-radial-band-inflation and access-radial-patency-check within the default limit",
+      "met": true,
+      "evidence": "caseTips.test.ts 'closure by route' calls tipsFor(ctx) with the default limit and asserts all three ids, plus no femoral-only tip. 'at a radial closure in the case the panel shows the three radial technique tips' checks the same through caseTipContexts and selectCaseTips. Both pass."
+     },
+     {
+      "criterion": "mcs-largebore-limb-check is not returned unless limb-ischaemia is active",
+      "met": true,
+      "evidence": "caseTips.test.ts 'mcs-largebore-limb-check is not returned unless limb-ischaemia is active' checks every workspace without the event, then an MCS large-bore context: absent without events, present with s.activeEvents() containing limb-ischaemia. Passes. As the build lead noted, the access cold-leg tips moved to access-cx-endovascular-control; caseTips.reach.test.ts checks that they are no longer in this package's group."
+     },
+     {
+      "criterion": "browser: __caseSession.tips() in guided mode at the femoral puncture lists access-femoral-scan-bifurcation; in exam mode the panel is empty",
+      "met": true,
+      "evidence": "Checked in a separate tab on the running dev server (localhost:5173, Full procedure). newCase({access:'femoral', mode:'guided'}) then the access workspace: __caseSession.tips() returned step {step:'puncture', site:'femoral', route:'femoral'}, visible true and 9 ids including access-femoral-scan-bifurcation and access-needle-flashback-check. With mode 'exam': visible false and ids []. The page showed no Tips panel or tip text. The unit test 'in guided practice at the femoral puncture the panel lists access-femoral-scan-bifurcation' and the visibility test cover the same logic. The dev hook is at ProcedureLab.tsx lines 103-112. CaseTipsPanel is mounted under HaemoMonitor at line 293 with onAskHelp."
+     },
+     {
+      "criterion": "Tips reach test: at phase 'puncture', tipsFor(ctx, 20) includes access-needle-flashback-check and access-central-vein-no-blood; every waiting.ts entry naming proc-tip-context becomes satisfiable, and the access lab's reachability waiting count falls by at least that number",
+      "met": true,
+      "evidence": "src/ui/access/caseTips.reach.test.ts passes. tipsFor(caseCtx, 20) at the radial puncture includes access-needle-flashback-check. The same step and events with route 'jugular' include access-central-vein-no-blood; the full case has no jugular site, and that tip waits on access-venous in waiting.ts, not on this package. Every one of the 85 tips in the proc-tip-context group is satisfiable from raises. Logged count: access tips satisfiable went from 5 to 85 of 89, and after - before >= the number of fresh tips."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/access/caseTips.test.ts src/ui/access/caseTips.reach.test.ts (2 files, 25 tests passed, 12.6 s)",
+     "npx tsc -p tsconfig.app.json --noEmit (exit 0, no output)",
+     "Browser on localhost:5173 Full procedure: window.__caseSession.tips() for a guided femoral case at the puncture (ids include access-femoral-scan-bifurcation) and an exam femoral case (visible false, ids [], no Tips panel rendered)"
+    ],
+    "tsc": "clean: npx tsc -p tsconfig.app.json --noEmit exited 0 with no errors"
+   }
+  ]
+ }
+}

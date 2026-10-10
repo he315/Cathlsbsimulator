@@ -1,0 +1,1982 @@
+
+ RUN  v2.1.9 /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator
+
+ ✓ src/input/input.test.ts (78 tests) 25ms
+ ✓ src/simulation/haemoStudy.test.ts (42 tests) 527ms
+(node:72725) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/render/xray/lvGram.test.ts (30 tests) 302ms
+(node:72723) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/render/xray/xray.test.ts (49 tests) 1636ms
+   ✓ coronary tree > a chronic occlusion gets collaterals from the other coronary; an acute one does not 305ms
+ ✓ src/content/lab/tips.test.ts (32 tests | 1 skipped) 32ms
+stdout | src/content/content.test.ts > answer-length cue > an always-pick-the-longest strategy scores close to chance
+always-longest 17.0% vs chance 23.1% over 1099 items
+
+stdout | src/content/content.test.ts > case branching > at least 30% of case steps branch to different consequences
+475 of 1304 case steps branch (36.4%)
+
+(node:72707) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/mentor/mentor.test.ts > deterministic replay > replays a scripted case with an identical event sequence and the tip pose within 0.1 mm
+[S11] scripted replay: 29 host events identical, worst tip error 6.4e-3 mm over 233 frames
+
+stdout | src/mentor/mentor.test.ts > deterministic replay > seeks to any time and reproduces the recorded state; seek cost on a 10-minute case is bounded
+[S11] 10-min record: 6002 frames, 61 snapshots, 600 kB; worst seek 1.4 ms (591 steps), worst tip error 7.7e-3 mm
+
+stdout | src/mentor/mentor.test.ts > view coverage > works on the real coronary tree with SYNTAX labels
+[S11] coverage on the real tree: 15 segments x 6 views in 10.3 ms; seen 5,6,7,8,9,10,11,12a,12b,13
+
+stdout | src/mentor/mentor.test.ts > review fixes: shared parameters, live foreshortening, benchmarks, recording index > segmentForeshortening gives the live value the foreshortened-view rule reads
+[S11] segmentForeshortening on the real tree (segment 7): 3.0 µs per call
+
+(node:72706) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/mentor/mentor.test.ts (59 tests) 1880ms
+   ✓ procedural skill cards > every diagnostic card with a start class resolves on the case Review launches it on, for any seed 732ms
+   ✓ mentor UI components > render with real data and never show a score during the case 387ms
+stdout | src/mentor/mentor.test.ts > per-frame cost > attending step and recorder sampling are cheap enough for every frame
+[S11] attending step 0.9 µs, recorder sample 0.23 µs
+
+(node:72728) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72711) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > unstratified base rates would reward guessing
+base rates: right dominant 77.3%, LCA 71.8%, CADICA run with no or <20% lesion 46.3%, borderline views 34.7%
+
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > borderline acceptance raises the constant-answer baseline above chance, and the report says so
+view drill with borderline acceptance: best constant answer above chance in 20 of 20 sets
+
+stdout | src/render/xray/segments/segments.test.ts > union integral against ray marching > random vessel trees (chains with taper, bends and branches): geometry exact, concentration attribution small
+union vs ray marching (constant concentration): 194 rays, median 0.000 %, p95 0.002 %, p99 0.098 %, worst 0.141 %
+union vs ray marching (drifting concentration): 194 rays, median 0.000 %, p95 0.063 %, p99 1.863 %, worst 2.040 %
+
+(node:72739) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > occlusion and collaterals: positives and negatives come from the same image set and artefact stratum
+occlusion: 216 positives, 72 negatives, matched pairs 13 {"dominance-main|artefact=true":11,"dominance-main|artefact=false":2}
+collaterals: 691 positives, 214 negatives, matched pairs 41 {"dominance-main|artefact=true":31,"dominance-main|artefact=false":10}
+
+stdout | src/content/content.test.ts > real-angiogram drills on the local library > locate frames with several boxes in different grade bins are graded against the box hit
+locate keyframes with more than one box: 103 of 269; with boxes in different grade bins: 70
+
+ ✓ src/content/content.test.ts (61 tests) 3556ms
+   ✓ real-angiogram drills on the local library > artery: sets are stratified and a constant answerer scores chance with kappa 0 339ms
+   ✓ real-angiogram drills on the local library > the plan drill is labelled unstratified and its constant baseline is reported 570ms
+   ✓ real-angiogram drills on the local library > occlusion and collaterals: positives and negatives come from the same image set and artefact stratum 397ms
+(node:72744) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/render/xray/lesionMorphology.test.ts (20 tests) 3797ms
+   ✓ eccentric lumens: the %DS depends on the view > an eccentric lesion (0.6) gives projected %DS differing by at least 15 points between orthogonal views; a concentric one by under 2 569ms
+   ✓ spasm relaxes with the engine's nitrate effect > a spasm lesion's rendered severity falls as the engine's GTN effect rises 547ms
+   ✓ chronic total occlusion and the collateral channels > the CTO recipient reaches half its peak opacity later than the donor and only after more than 2 s 1197ms
+ ✓ src/render/xray/thorax.test.ts (38 tests) 2541ms
+   ✓ thorax shapes > consumes the heart-shape stream's fitted primitives by name without duplicates or limit overflow 344ms
+   ✓ thorax genome > across 8 seeds the water-equivalent path through the chest varies with habitus and no two thoraces match 504ms
+   ✓ segment geometry > vessel segments stay within the budget in every habitus 374ms
+   ✓ C1 anatomy refit (wave 2) > projects the epicardial vessels over the heart shadow in every reference view 669ms
+ ✓ src/ui/sim/drugs.test.ts (28 tests) 5514ms
+   ✓ the patient's response > GTN 200 µg IC lowers the systolic pressure within 90 s; with a PDE-5 inhibitor 4 h earlier the fall is larger; phenylephrine reverses it 1661ms
+   ✓ the patient's response > a patient on the chart's IV nitrate infusion starts on it at its steady state, and the bolus response is blunted 893ms
+   ✓ the vasodilator event > IA verapamil raises vasodilator-given for 300 s of lab time 927ms
+ ✓ src/simulation/access/access.test.ts (30 tests) 2028ms
+ ✓ src/simulation/tavi.test.ts (51 tests) 165ms
+ ✓ src/simulation/pericardiocentesis.test.ts (46 tests) 2797ms
+   ✓ the PCI patient on its engine (hand-over) > the stand-in's leak settles short of the engine's collapse: below 150 mL with MAP >= 35 at 10 minutes; draining 40 mL raises MAP by 15 or more 1025ms
+   ✓ the PCI patient on its engine (hand-over) > the engine patient's signs follow one severity: tamponade on the engine's MAP brings the echo signs with it 1214ms
+ ✓ src/progress/progress.test.ts (66 tests) 15269ms
+   ✓ screens render with a populated profile (server-side smoke test) > renders every progression screen without throwing 15065ms
+stdout | src/render/xray/segments/segments.test.ts > real coronary tree > random rays through the tree: union geometry against ray marching (median, p95, p99, worst)
+real tree, random rays: 773 rays, median 0.000 %, p95 0.149 %, p99 0.420 %, worst 0.473 %; over 1 %: 0 joint partition, 0 through unresolved overlaps (excluded); batch.unresolvedOverlaps 0
+
+stdout | src/render/xray/segments/segments.test.ts > real coronary tree > branch origins: three rays through the first segments of every branch match ray marching (p99 under 2 %)
+real tree, branch origins: 582 rays, median 0.000 %, p95 0.161 %, p99 0.338 %, worst 0.459 % (D1-twig2)
+
+stdout | src/render/xray/segments/segments.test.ts > tile binning > bins 30,000 segments within the CPU budget (time relative to a minimal reference loop)
+binSegments: 30253 segments, 153020 entries, median 3.41 ms, reference loop 0.68 ms, ratio 5.0
+
+ ✓ src/render/xray/segments/segments.test.ts (34 tests) 20816ms
+   ✓ round cone interval (closed form) > matches brute-force membership on random cones and rays (interval length within 0.5 %) 1252ms
+   ✓ union integral against ray marching > random vessel trees (chains with taper, bends and branches): geometry exact, concentration attribution small 4145ms
+   ✓ union integral against ray marching > bifurcation origin: no dark dot (at most the larger chord + 1 %), and no gap 959ms
+   ✓ real coronary tree > random rays through the tree: union geometry against ray marching (median, p95, p99, worst) 5416ms
+   ✓ real coronary tree > branch origins: three rays through the first segments of every branch match ray marching (p99 under 2 %) 3308ms
+   ✓ hollow shells, ellipses and the laminar profile > elliptical (flattened) sections match brute force 1050ms
+   ✓ tile binning > brute force: no pixel is missing a segment that contributes to it 1383ms
+   ✓ end-on chains > a chain seen end-on (rays along its length) is integrated without double counting 387ms
+   ✓ host slots > an extension list removes every host it names 369ms
+   ✓ vessel families > children that run into each other away from their origins are counted once 2098ms
+ ✓ src/physics/rod.test.ts (24 tests) 8441ms
+   ✓ torque transmission > a released wound catheter turns its hub back (spin-back) and unloads 631ms
+   ✓ lumens and contact > a catheter pushed up from the femoral artery reaches the root without leaving the lumen 588ms
+   ✓ lumens and contact > the sinuses accept a pigtail: the loop sits in the root above the closed valve 364ms
+   ✓ radial route and breathing > a radial universal catheter over a J wire reaches the root from the right radial artery 1063ms
+   ✓ nested rods and exchange > exchange over an exchange-length wire left in the root: the new catheter tracks the wire 3868ms
+ ✓ src/simulation/dose.test.ts (44 tests) 685ms
+(node:72787) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/mentor/registries.test.ts (17 tests) 665ms
+   ✓ decision ledger and tips in the debrief > buildDebrief carries the decisions and the tips shown (record events and lab ids, each once) 349ms
+stdout | src/simulation/team/team.test.ts > determinism and the debrief > costs little per frame
+[C4] Team.advance per 60 Hz frame: 0.3 µs
+
+ ✓ src/simulation/team/team.test.ts (32 tests) 4128ms
+   ✓ closed-loop orders > the ACT result comes when the sample has clotted, and matches the engine 1589ms
+   ✓ the conscious patient > complains of chest pain during an LAD occlusion, rates it on request, and says when it eases 347ms
+ ✓ src/simulation/bench/platforms.test.ts (29 tests) 55ms
+ ✓ src/simulation/transseptal.test.ts (30 tests) 42ms
+ ✓ src/simulation/bench/bifurcation.test.ts (33 tests) 43ms
+ ✓ src/simulation/pci/pwSession.hyperaemia.test.ts (23 tests) 74ms
+(node:72797) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/mentor/report.test.ts (20 tests) 34ms
+ ✓ src/simulation/pacing.inlab.test.ts (15 tests) 32ms
+(node:72803) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72805) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/sim/pressureSession.test.ts (23 tests) 2898ms
+   ✓ the store's pressure follows the engine's tip state > diag-damping-causes: the JL4 seated on the ostial left main lesion damps the trace; the store's class, its deep-damping event and score follow the engine 400ms
+   ✓ transducer faults, true hypotension and aortic stenosis > true hypotension with the tip free raises hypotension; the physiologist calls out a displayed systolic below 90 once per episode 345ms
+stdout | src/simulation/anatomy.test.ts > physics > AL1 with the aimed Amplatz procedure (amplatzTo, 45 corrections towards the ostium a sinus injection shows) engages the anomalous RCA from the left sinus in at least 2 of 5 starts; JR4 turned either way in fewer
+anomalous RCA from the left sinus: AL1 (amplatzTo, 45 corrections) 4/5, JR4 clockwise 1/5, JR4 anticlockwise 1/5
+
+ ✓ src/simulation/anatomy.test.ts (26 tests) 25473ms
+   ✓ each new variant builds a tree whose LCx, RCA or LM origin is on the stated sinus > anomalous-lcx-from-rca: the circumflex leaves the proximal RCA, which arises in the right sinus 436ms
+   ✓ each new variant builds a tree whose LCx, RCA or LM origin is on the stated sinus > conus-separate-ostium: the conus has its own ostium beside the RCA's, closer than usual 350ms
+   ✓ combinations > separate ostia give way to an anomalous left main or circumflex in the analytic model and the render tree alike 476ms
+   ✓ flow and fill follow the origin > regionSupply assigns the lateral wall to the RCA injection for anomalous-lcx-right-sinus 659ms
+   ✓ flow and fill follow the origin > a left injection fills no circumflex vessel of an anomalous circumflex and a right injection fills them all 789ms
+   ✓ flow and fill follow the origin > on a selective RCA run the circumflex from the right sinus outlines faintly (SINUS_FED.share); from the proximal RCA it fills like the RCA 571ms
+   ✓ physics > the render tree's ostia are the classifier's: the anomalous ostia are lumens the rod can enter 541ms
+   ✓ physics > AL1 with the aimed Amplatz procedure (amplatzTo, 45 corrections towards the ostium a sinus injection shows) engages the anomalous RCA from the left sinus in at least 2 of 5 starts; JR4 turned either way in fewer 14145ms
+   ✓ the case generator > every variant builds a finite tree at several seeds, with its own catheters suggested 5799ms
+ ✓ src/ui/access/caseTips.test.ts (22 tests) 21313ms
+   ✓ access step, site and route > a femoral session reports puncture, wire and sheath in turn, with route femoral; the step ends once the sheath is flushed 1067ms
+   ✓ access step, site and route > after closure the access workspace reports the closure at the site 1215ms
+   ✓ access step, site and route > in guided practice at the femoral puncture the panel lists access-femoral-scan-bifurcation and access-needle-flashback-check 728ms
+   ✓ access step, site and route > a radial session never yields a femoral-only tip, at any step or workspace 887ms
+   ✓ access step, site and route > a radial case with an arm perforation shows no femoral sheath or groin tip at the table or chart 991ms
+   ✓ access step, site and route > at the femoral puncture of an acute coronary syndrome with a patient event, access-femoral-scan-bifurcation keeps its place 795ms
+   ✓ closure by route > at a radial closure in the case the panel shows the three radial technique tips 1053ms
+   ✓ events > mcs-largebore-limb-check is not returned unless limb-ischaemia is active; the access limb-ischaemia tips follow the event 2096ms
+   ✓ events > a flashback that stops (the needle through the back wall) raises no-flashback, which lapses with the hold; a needle short of the artery raises nothing 865ms
+   ✓ events > a needle in the femoral vein raises venous-flashback, which brings up access-femoral-vein-redirect at the femoral puncture 818ms
+   ✓ events > a sheath placed in the femoral vein raises venous-flashback when its side arm is aspirated 1057ms
+   ✓ events > radial spasm raises radial-spasm only when felt on a move, not from the model level while the wire is still 1015ms
+   ✓ events > contrast reported by the diagnostic lab on return counts towards high-contrast-volume 859ms
+   ✓ events > a forced hydrophilic wire in the arm raises perforation and bleeding and opens the complication context 952ms
+   ✓ events > patient events reach the phase-less contexts: hypotension held for the adapter's hold brings up pci-mon-false-hypotension 895ms
+   ✓ visibility, recording and raises > guided shows tips at once; supervised after asking the attending; exam never; the tips shown are recorded for the debrief 767ms
+   ✓ visibility, recording and raises > the tips shown are in the case summary 1112ms
+   ✓ visibility, recording and raises > tips of a context with a phase are listed before those of the phase-less patient contexts; the members are those the scores select 739ms
+   ✓ visibility, recording and raises > raises declares every event, phase and route the contexts can report 3398ms
+(node:72819) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/render/xray/realism.test.ts > anatomy gates (plan measurementTargets; owner S3b) > records the LAD and LCx climb over their first 20 mm (plan: at most the bifurcation + 3 mm)
+proximal climb above the LM bifurcation (mm, world y head-wards): LAD 0.0, LCx 0.0 (plan target <= 3)
+
+stdout | src/render/xray/realism.test.ts > anatomy gates (plan measurementTargets; owner S3b) > records the LM bifurcation Finet ratio (Finet 2008: Dm = 0.678 (Dd1 + Dd2), mean of 173 bifurcations)
+LM bifurcation: Finet ratio 0.610 (literature mean 0.678; no spread in the abstract, so not asserted), Murray cube ratio 1.10
+
+stdout | src/render/xray/realism.test.ts > anatomy gates (plan measurementTargets; owner S3b) > checks the capture's mm per px against the library's 6F scale (0.3077 mm per 512-px analysis px)
+capture: 0.1867 mm per canvas px at the iso-centre = 0.2802 mm per 512-px analysis px (library 6F scale 0.3077)
+
+stdout | src/render/xray/realism.test.ts
+realism gap gates (report only; REALISM_STRICT=1 asserts the bands):
+  GAP   LAD mid cross-vessel range                      11.35  band 15.94-31.2  (S3a)
+  GAP   LAD mid largest step                             4.46  band 6.25-10.71  (S3a)
+  GAP   RCA mid cross-vessel range                      74.71  band 27.81-45.55  (S3a)
+  GAP   RCA mid largest step                            28.12  band 10.22-14.24  (S3a)
+  pass  catheter tip cross range (shaft target)         19.03  band 10.36-30.83  (S7)
+  pass  first appearance (10%) frame                     7.00  band 1-11.2  (S5/S10)
+  pass  rise 10-90% (frames)                            17.00  band 11.6-32.2  (S5)
+  pass  end-of-run level (fraction of peak)              0.32  band 0.071-0.8534  (S5)
+  pass  contrast arrival, 30% of rise (s)                0.60  band 0.4-1.06  (S5/S10)
+  pass  contrast present in the first frame (0/1)        0.00  band 0-0  (S5/S10)
+  pass  LAD landmark displacement P10-P90 (mm)           9.48  band 3.9446-15.483  (S3a)
+  pass  LAD landmark speed, median (mm/s)               19.69  band 9.96-26.34  (S3a)
+  pass  RCA landmark displacement P10-P90 (mm)           9.62  band 9.4215-29.3477  (S3a)
+  pass  RCA landmark speed, median (mm/s)               20.59  band 16.9892-87.1569  (S3a)
+
+ ✓ src/render/xray/realism.test.ts (49 tests | 14 skipped) 1948ms
+   ✓ capture invariants > is deterministic: the same spec gives identical scenes and noise seeds 428ms
+ ✓ src/simulation/pci/equipment.test.ts (25 tests) 70ms
+ ✓ src/simulation/pci/scenarios/scenarios.test.ts (17 tests) 1100ms
+   ✓ PCI scenario registry > every registry entry builds a coronary tree and pciGeom finds every lesion with startMm < endMm 836ms
+ ✓ src/render/xray/deviceTubes.test.ts (19 tests) 3011ms
+   ✓ deviceTubes: IABP > an IABP tip 2 cm below the carina yields a tube whose radio-opaque tip is at that height 913ms
+   ✓ deviceTubes: the other devices > the thorax-fixed landmarks stay inside the matching anatomy shapes of the thorax 409ms
+   ✓ deviceTubes: renderer inputs > every device gives valid tubes (two or more finite points, positive radii, finite channels) in every case and breathing state 1151ms
+ ✓ src/simulation/haemo/avCrossing.test.ts (22 tests) 191ms
+ ✓ src/simulation/haemo.test.ts (35 tests) 227ms
+ ✓ src/simulation/pacing.test.ts (33 tests) 40ms
+(node:72858) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/angio/labels.test.ts (27 tests) 19ms
+ ✓ src/content/lab/retarget.test.ts (24 tests) 76ms
+ ✓ src/simulation/patient/patient.test.ts (90 tests) 48090ms
+   ✓ 12-lead ECG > LAD occlusion gives ST elevation in the anterior leads; RCA occlusion in the inferior leads 358ms
+   ✓ pharmacology > intracoronary adenosine produces transient AV block, at about the sourced complete-block rate 21020ms
+   ✓ pharmacology > IC GTN reverses catheter-tip spasm 312ms
+   ✓ pharmacology > a vasopressor raises and GTN lowers blood pressure; atropine reverses a vagal bradycardia 628ms
+   ✓ arrhythmias and arrest management > charge, clear and shock restore circulation; the delay worsens the outcome 441ms
+   ✓ arrhythmias and arrest management > injection into the conus branch carries a far higher VF risk than a normal injection 2522ms
+   ✓ review corrections > stable angina patients are quiet at rest: no ST shift, no STEMI criteria, no chest pain (24 seeds, 120 s) 5184ms
+   ✓ review corrections > STEMI patients arrive with elevation in the culprit territory only, and no ischaemia elsewhere 1647ms
+   ✓ review corrections > restores a snapshot across a change of coronary network (rewind after stenting) 485ms
+   ✓ formulary: pressors and inotropes by mechanism > noradrenaline raises MAP more in a vasodilated profile than during ongoing bleeding 726ms
+   ✓ formulary: pressors and inotropes by mechanism > dobutamine lowers MAP in the obstructive HCM profile and phenylephrine raises it 760ms
+   ✓ formulary: pressors and inotropes by mechanism > IV adrenaline 1 mg with a pulse gives severe hypertension or VT 828ms
+   ✓ formulary: pressors and inotropes by mechanism > IV adrenaline 1 mg given during an arrest does not count as 'with a pulse' after return of circulation 715ms
+   ✓ formulary: pressors and inotropes by mechanism > furosemide venodilates within minutes and then diureses 363ms
+   ✓ formulary: pressors and inotropes by mechanism > rightHeart() gives low filling with low output in bleeding and low filling with high output in vasodilation 455ms
+   ✓ formulary: sedation, reversal and oxygen > oxygen raises SpO2 under the same respiratory depression 1206ms
+   ✓ formulary: interactions > GTN after a PDE-5 inhibitor drops MAP more than without, and the interaction is flagged 510ms
+   ✓ formulary: interactions > amiodarone with a long QT leads to VF in some seeds and not all, by bolus or infusion 5523ms
+   ✓ formulary: antithrombotics > nitroprusside given IC lowers MAP less than the same dose IV, and dilates the microcirculation 316ms
+ ✓ src/render/xray/anatomy.test.ts (48 tests) 45657ms
+   ✓ coronary morphology > every branch belongs to its parent's injection side, for every variant and dominance 1621ms
+   ✓ coronary morphology > first diagonal and first marginal: near-ostial diameters as Divia Paul 2018, and not systematically smaller than the next 4869ms
+   ✓ coronary morphology > branch density: mid-tree transect crossings above the wave-1 5/5/5, towards the library 8/7/4 1409ms
+   ✓ coronary morphology > no generator artefacts: no branch re-enters its parent, no lumen runs through another one of its tree 853ms
+   ✓ coronary morphology > epicardial courses stay above the myocardium outside a flagged bridge, and every genome bridge is flagged 6121ms
+   ✓ coronary morphology > named branches keep their reach: the PDA runs down the posterior groove, D1 and OM1 are not cut short 6645ms
+   ✓ variants as geometry > a shepherd's crook RCA loops upwards before entering the groove 361ms
+   ✓ variants as geometry > a tortuous RCA is more tortuous 316ms
+   ✓ variants as geometry > anomalous origins move the ostia and change the course 353ms
+   ✓ case library > every library case builds a finite tree within adult dimensions 22151ms
+ ✓ src/simulation/pci/pwSession.test.ts (20 tests) 113ms
+(node:72864) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72870) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/diagnosticContext.test.ts (24 tests) 1014ms
+   ✓ the session's event log holds on lab time > an event raised with holdS 60 is active at 59 s and gone at 61 s of lab time (the session, stepped) 554ms
+ ✓ src/ui/mcs/mcs.test.ts (27 tests) 121ms
+ ✓ src/simulation/bench/measure.test.ts (21 tests) 61ms
+(node:72873) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/audio/audio.test.ts > pulse tone > each sinus R wave gets exactly one beep, within 20 ms of the R wave on the audio clock (60 s, jittered frames)
+[C4] sinus: 86 R waves, worst beep-to-R-wave offset 1.43 ms, late beeps 0
+
+stdout | src/audio/audio.test.ts > pulse tone > each af R wave gets exactly one beep, within 20 ms of the R wave on the audio clock (60 s, jittered frames)
+[C4] af: 53 R waves, worst beep-to-R-wave offset 1.44 ms, late beeps 0
+
+stdout | src/audio/audio.test.ts > devices and voices > costs little per frame (JavaScript side)
+[C4] LabAudio.frame: 0.6 µs per frame (fake context, Node)
+
+ ✓ src/audio/audio.test.ts (16 tests) 900ms
+ ✓ src/simulation/session/planning.test.ts (31 tests) 30150ms
+   ✓ the record: one planted problem per patient > in a session the record reads the chart's own anticoagulant line, and still holds one problem 480ms
+   ✓ the record: one planted problem per patient > each planning scenario plants its own problem and no other, and the chart states it 603ms
+   ✓ consequences come from the patient > 'pde5-24h' with GTN drops true MAP more than the same dose without the flag 2004ms
+   ✓ consequences come from the patient > 'doac-recent' missed: the time-out scores it and the debrief links pm-planning-assessment; the residual DOAC raises the ACT 777ms
+   ✓ consequences come from the patient > a wrong action is scored against the planted problem, a right one after the time-out is late 6464ms
+   ✓ consequences come from the patient > closure-device-90d: the plug groin punctured is scored, and no closure device is used in it 1361ms
+   ✓ consequences come from the patient > closure-device-90d opened past the chart: the team's puncture of the plug groin is not scored, but the closure device is still refused there 1396ms
+   ✓ consequences come from the patient > other access chosen for the plug: a radial case is not scored against the groin 888ms
+   ✓ consequences come from the patient > contrast allergy: premedication gives Oxford's regimen an hour ahead, and the anti-allergic effect is on board 6235ms
+   ✓ consequence paths > pde5-24h: nitroglycerin inside the window is scored 991ms
+   ✓ consequence paths > dialysis-fistula: a puncture in the fistula arm is scored 961ms
+   ✓ consequence paths > surgery-planned: handing over to PCI is scored against stent candidacy 1142ms
+   ✓ consequence paths > pregnancy-test: fluoroscopy before a test is scored 945ms
+   ✓ consequence paths > warfarin-inr-unchecked: checking the INR gives today's value, and the residual warfarin raises the ACT 531ms
+   ✓ consequence paths > dnacpr-unsuspended: clarifying resuscitation status suspends the order and scores the problem found 518ms
+   ✓ Oxford's pre-puncture checklist > placeNeedle in supervised mode is blocked while SpO2 is unconfirmed 939ms
+   ✓ Oxford's pre-puncture checklist > guided mode does not block, and the first puncture scores the checklist; a confirmation without the table state is recorded 903ms
+   ✓ Oxford's pre-puncture checklist > SpO2 at 96% or less on air is refused; a case opened past 'access' had its checklist done by the team 938ms
+   ✓ Oxford's pre-puncture checklist > a second click on a refused needle does not repeat the stop line 745ms
+   ✓ links, lessons and tips > every problem's lesson and tips resolve, and every decision the module writes names resolving lessons and tips 737ms
+ ✓ src/ui/lab/studyReport.tips.test.ts (12 tests) 1145ms
+   ✓ finish-step tips > opening the report sets phase 'finish'; an empty lateral wall in an anomalous circumflex case raises anomalous-origin, and the drawer's contexts show diag-anomalous-origin-image-first and diag-interp-anomalous-cx-search 332ms
+   ✓ the report screen > the lab shows the report over the live monitor once 'Finish study' is pressed, in every mode 373ms
+stdout | src/ui/lab/physiologyTips.test.ts > reachability of the pressure-wire tips from the lab's raises (acceptance) > every waiting.ts entry naming physiology-engine-unify-and-setup becomes satisfiable, so the pci waiting count falls by at least their number
+pci tips still waiting: 483 -> 452 with the physiology lab's raises (of 483 listed)
+
+ ✓ src/ui/lab/physiologyTips.test.ts (15 tests) 31ms
+ ✓ src/ui/lab/structuralTips.transseptal.test.ts (15 tests) 45ms
+ ✓ src/simulation/physiology.leftMain.test.ts (19 tests) 194ms
+ ✓ src/simulation/session/handover.test.ts (10 tests) 1474ms
+   ✓ lab hand-over store > a PatientEngine snapshot round-trips: same pericardialMl and MAP within 1 mmHg; take() returns it once 304ms
+   ✓ lab hand-over store > refuses a snapshot it cannot restore: no profile, the wrong profile, or a tree-built snapshot without its tree or with the wrong one 680ms
+ ✓ src/simulation/pci/ivus.test.ts (30 tests) 680ms
+stdout | src/ui/lab/haemoTips.test.ts > reachability of the haemodynamic tips from the lab's raises > every waiting.ts entry naming haemo-study-session-and-tips becomes satisfiable, so the haemo waiting count falls by at least their number
+haemo tips still waiting: 45 -> 7 (of 45 listed); satisfiable haemo tips: 38 of 45
+
+ ❯ src/ui/lab/haemoTips.test.ts (14 tests | 2 failed) 200ms
+   × scenario events keep condition tips in their own scenario > no pulmonary embolism, constriction, tricuspid, pulmonary valve or HOCM tip appears in an unrelated scenario 96ms
+     → expected [ …(135) ] to deeply equal []
+   × launch metadata and the practice index > core.launch.ts declares every scenario of the library and no other; shock presets start before or after PCI 1ms
+     → expected [ 'acute-ar', 'acute-mr', …(18) ] to deeply equal [ 'acute-ar', 'acute-mr', …(23) ]
+ ✓ src/ui/lab/pacingTips.scenario.test.ts (11 tests) 22ms
+ ✓ src/simulation/mcs/deviceChoice.test.ts (25 tests) 42ms
+ ✓ src/simulation/angioPci.test.ts (14 tests) 2864ms
+   ✓ angiographic PCI > every scenario has a reachable lesion with a sensible reference diameter 817ms
+   ✓ angiographic PCI > with the patient engine: balloon inflation in the LAD gives anterior ST elevation and ischaemia that resolve after deflation 913ms
+   ✓ angiographic PCI > with the patient engine: a free perforation fills the pericardium and the pressure falls; balloon tamponade stops the leak 1039ms
+(node:72910) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72912) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/diagnosticScenarios/scenarios.test.ts (14 tests) 615ms
+   ✓ one patient from one seed > a scenario with chart eGFR 30 seeds an engine whose vitals().contrast.crclMlMin matches 301ms
+stdout | src/ui/lab/physiologyTips.hyperaemia.test.ts > reachability (acceptance) > every waiting.ts entry naming physiology-hyperaemia-and-adenosine becomes satisfiable, so the pci waiting count falls by at least their number; the request tips are satisfiable
+physiology-hyperaemia-and-adenosine: 0 waiting.ts tips name this package; pci tips still waiting 483 -> 449 with the physiology lab's raises
+
+ ✓ src/ui/lab/physiologyTips.hyperaemia.test.ts (8 tests) 1014ms
+   ✓ named presets show their tips at the moment they apply (acceptance) > without a forced hazard, the engine's own dose-scaled AV block brings the same tip on some seeds after 200 µg into the RCA 554ms
+(node:72914) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/physics/physicsDevices.test.ts (18 tests) 43472ms
+   ✓ rod mechanics: Judkins left from the femoral route > the JL4 procedure reaches selective-lm in at least 3 of 5 starts at beginner difficulty 7364ms
+   ✓ rod mechanics: Judkins left from the femoral route > the JL4 procedure reaches selective-lm in at least 3 of 5 starts at advanced difficulty 6778ms
+   ✓ rod mechanics: a Judkins right driven into the conus > JR4 driven into the conus gives a damped or ventricularised tip trace and engagement.conus (still heart) 9502ms
+   ✓ rod mechanics: a Judkins right driven into the conus > with the heart moving (the lab's default), the conus latch holds engagement.conus and the obstructed trace while the tip stays in the branch 10190ms
+   ✓ rod mechanics: exchange over the wire > an exchange JL4 to JR4 over the J wire keeps the wire tip above the valve plane throughout and loads the JR4 over it 2724ms
+   ✓ rod mechanics: exchange from the lab's default start after the scripted seat > the J wire put back on its own never reaches the valve plane in the 'out' phase (default start, engage then settle and ease back) 4987ms
+   ✓ rod mechanics: the default rule, the setting and the fallback > falls back with a banner when the solver fails, and the store returns to the analytic model at the catheter's natural seat 1186ms
+   ✓ rod mechanics: the default rule, the setting and the fallback > a hand command reaches the solver and moves the catheter; difficulty does not reach it 338ms
+(node:72931) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/ui/lab/physiologyTips.leftMain.test.ts > reachability (acceptance) > every waiting.ts entry naming this package becomes satisfiable, so the pci waiting count falls by at least their number
+waiting.ts entries naming physiology-left-main-and-ostial: 0; pci tips still waiting: 452 -> 449 with the left main presets' events
+
+ ✓ src/ui/lab/physiologyTips.leftMain.test.ts (12 tests | 1 skipped) 33ms
+ ✓ src/ui/pci/PciLabSession.test.ts (20 tests) 9348ms
+   ✓ pedal-gated imaging and dose (headless) > 5 s of pedal fluoroscopy raises the fluoroscopy time by about 5 s 782ms
+   ✓ a repeated case starts afresh > contrast 0, a new patient engine and fresh syringes 310ms
+   ✓ the core scenarios can be completed headlessly through the session > lad-focal in guided mode 608ms
+   ✓ the core scenarios can be completed headlessly through the session > lad-focal in independent mode 548ms
+   ✓ the core scenarios can be completed headlessly through the session > rca-calcified in guided mode 1257ms
+   ✓ the core scenarios can be completed headlessly through the session > rca-calcified in independent mode 734ms
+   ✓ the core scenarios can be completed headlessly through the session > lcx-stemi in guided mode 944ms
+   ✓ the core scenarios can be completed headlessly through the session > lcx-stemi in independent mode 577ms
+   ✓ the core scenarios can be completed headlessly through the session > rca-cto in guided mode 1097ms
+   ✓ the core scenarios can be completed headlessly through the session > rca-cto in independent mode 755ms
+   ✓ pulse rates > 3.75 p/s is selectable and the dose rate follows the pulse rate 348ms
+(node:72939) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/labRun.test.ts (18 tests) 116ms
+(node:72937) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/injection.test.ts (20 tests) 19ms
+ ✓ src/ui/lab/lab.test.ts (12 tests) 937ms
+   ✓ lab render: no ground truth on the screens > renders the full lab in every mode without the engagement state, coach text, scores or meters 601ms
+(node:72946) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/engagement.test.ts (15 tests) 29ms
+ ✓ src/ui/lab/benchTips.bifurcation.test.ts (10 tests) 24ms
+ ✓ src/simulation/teer.test.ts (30 tests) 10ms
+ ✓ src/simulation/pci/coronaryWire.test.ts (13 tests) 962ms
+stdout | src/content/lab/reachability.test.ts > lab tip reachability > every tip is satisfiable by some lab's raises or listed in waiting.ts; prints the counts per lab
+lab tip reachability (from 23 raises declarations)
+pci          553 tips  satisfiable  299  waiting  553  ready  269
+diagnostic   154 tips  satisfiable  143  waiting  154  ready  143
+haemo         45 tips  satisfiable   39  waiting   45  ready   39
+bedside       14 tips  satisfiable   14  waiting   14  ready   13
+structural    55 tips  satisfiable   44  waiting   55  ready   44
+access        89 tips  satisfiable   85  waiting   89  ready   85
+mcs           59 tips  satisfiable   59  waiting   59  ready   59
+ready (names now raised; tip-retarget-catchup or content-links-backfill-p2 applies or removes them):
+  pci-rad-read-the-ct-first (waiting, pci-tip-context)
+  diag-rad-c-arm-clear (waiting, diag-tip-context)
+  diag-rad-grainy-image-flatten (waiting, diag-tip-context)
+  diag-rad-pregnancy-check (waiting, diag-tip-context)
+  diag-rad-read-the-dose-panel (waiting, diag-tip-context)
+  diag-rad-pedal-discipline (waiting, diag-tip-context)
+  diag-rad-fluoro-rate-default (waiting, diag-tip-context)
+  diag-rad-low-magnification (waiting, diag-tip-context)
+  pci-rad-shallow-working-view (waiting, pci-tip-context)
+  pci-rad-collimate-check-edges (waiting, pci-tip-context)
+  diag-rad-lead-check (waiting, diag-tip-context)
+  diag-rad-shield-low-close (waiting, diag-tip-context)
+  diag-rad-step-back-for-cine (waiting, diag-tip-context)
+  pci-operator-know-your-level (waiting, pci-tip-context)
+  pci-operator-help-early (waiting, pci-tip-context)
+  pci-operator-check-the-device (waiting, pci-tip-context)
+  pci-operator-log-the-case (waiting, pci-tip-context)
+  pci-operator-one-target (waiting, pci-tip-context)
+  diag-operator-review-the-runs (waiting, diag-tip-context)
+  pci-operator-debrief-after-complication (waiting, pci-tip-context)
+  diag-operator-moderate-lesion-measure (waiting, diag-tip-context)
+  pci-safe-capture-the-facts (waiting, pci-tip-context)
+  pci-safe-count-every-attempt (waiting, pci-tip-context)
+  pci-safe-scribe-the-timeline (waiting, pci-tip-context)
+  pci-safe-state-check (waiting, pci-tip-context)
+  diag-safe-ergonomic-setup (waiting, diag-tip-context)
+  pci-safe-pause-after-major-event (waiting, pci-tip-context)
+  pci-safe-name-what-could-go-wrong (waiting, pci-tip-context)
+  pci-safe-control-the-controllable (waiting, pci-tip-context)
+  haemo-setup-manifold-check (waiting, haemo-study-session-and-tips)
+  haemo-rhc-flush-and-watch (waiting, haemo-study-session-and-tips)
+  haemo-rhc-apex-to-pa (waiting, haemo-study-session-and-tips)
+  haemo-rhc-wedge-inspiration (waiting, haemo-study-session-and-tips)
+  haemo-lhc-u-loop (waiting, haemo-study-session-and-tips)
+  haemo-lhc-difficult-valve (waiting, haemo-rhc-manoeuvre)
+  haemo-lhc-stenotic-valve (waiting, haemo-study-session-and-tips)
+  haemo-lhc-lvedp-point (waiting, haemo-study-session-and-tips)
+  haemo-co-say-how (waiting, haemo-study-session-and-tips)
+  haemo-co-index-it (waiting, haemo-study-session-and-tips)
+  haemo-pvr-right-pressures (waiting, haemo-study-session-and-tips)
+  haemo-hypotension-pattern (waiting, haemo-study-session-and-tips)
+  haemo-shunt-mixed-venous (waiting, haemo-study-session-and-tips)
+  haemo-shunt-asd-cross (waiting, haemo-study-session-and-tips)
+  haemo-shunt-vsd-simultaneous (waiting, haemo-study-session-and-tips)
+  diag-lv-gram-mid-cavity (waiting, diag-tip-context)
+  diag-lv-gram-injector (waiting, diag-tip-context)
+  diag-lv-gram-test-injection (waiting, diag-tip-context)
+  diag-lv-gram-clean-cycle (waiting, diag-tip-context)
+  diag-lv-gram-views (waiting, diag-tip-context)
+  diag-lv-pullback-over-wire (waiting, diag-tip-context)
+  diag-aortogram-setup (waiting, diag-tip-context)
+  diag-aortogram-anomalous-origin (waiting, diag-tip-context)
+  haemo-as-cross-only-if-discordant (waiting, haemo-study-session-and-tips)
+  haemo-as-al1-straight-wire (waiting, haemo-study-session-and-tips)
+  haemo-as-simultaneous-gradient (waiting, haemo-study-session-and-tips)
+  haemo-ms-wedge-lv-ten-beats (waiting, haemo-study-session-and-tips)
+  diag-lvgram-catheter-induced-mr (waiting, diag-tip-context)
+  diag-aortogram-ar-grading (waiting, diag-tip-context)
+  haemo-constriction-simultaneous-lv-rv (waiting, haemo-study-session-and-tips)
+  haemo-constriction-check-ventilation (waiting, haemo-study-session-and-tips)
+  haemo-hocm-pullback-second-catheter (waiting, haemo-study-session-and-tips)
+  haemo-hocm-provoke-valsalva-gtn (waiting, haemo-study-session-and-tips)
+  haemo-hocm-post-ectopic-aorta (waiting, haemo-study-session-and-tips)
+  haemo-hocm-hypotension-phenylephrine (waiting, haemo-study-session-and-tips)
+  haemo-pe-venous-access-clot (waiting, haemo-study-session-and-tips)
+  haemo-pe-pa-pressure-limit (waiting, haemo-study-session-and-tips)
+  haemo-pulmonary-angiography-protocol (waiting, haemo-study-session-and-tips)
+  bed-pace-sheath-up-femoral (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-steer-to-apex (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-atrial-loop (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-sock-shape (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-coronary-sinus (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-threshold-margin (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-demand-sensitivity (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-skin-loop (retarget, pacing-in-lab-scenarios-and-tips)
+  bed-pace-external-bridge (retarget, pacing-in-lab-scenarios-and-tips)
+  haemo-asa-pacing-first (waiting, haemo-study-session-and-tips)
+  structural-tavi-futility-check (waiting, structural-tips-and-tavi-course)
+  structural-tavi-plan-second-valve (waiting, structural-tips-and-tavi-course)
+  structural-tavi-no-nitrate-before-ct (waiting, structural-tips-and-tavi-course)
+  structural-tavi-annulus-double-oblique (waiting, structural-tips-and-tavi-course)
+  structural-tavi-access-min-lumen (waiting, structural-tips-and-tavi-course)
+  structural-tavi-guided-puncture (waiting, structural-tips-and-tavi-course)
+  structural-tavi-protection-wire (waiting, structural-tips-and-tavi-course)
+  structural-tavi-cross-valve (waiting, structural-tips-and-tavi-course)
+  structural-tavi-lv-wire-pacing (waiting, structural-tips-and-tavi-course)
+  structural-tavi-pacing-wire-decision (waiting, structural-tips-and-tavi-course)
+  structural-tavi-hypotension-coronary (waiting, structural-tips-and-tavi-course)
+  structural-tavi-snorkel-limits (waiting, structural-tips-and-tavi-course)
+  structural-tavi-pvr-mechanism (waiting, structural-tips-and-tavi-course)
+  structural-tavi-vtc-viv (waiting, structural-tips-and-tavi-course)
+  structural-ts-both-groins-low (waiting, structural-tips-and-tavi-course)
+  structural-ts-pacing-lead-wire (waiting, structural-tips-and-tavi-course)
+  structural-ts-pulldown-orient (waiting, structural-tips-and-tavi-course)
+  structural-ts-two-movements (waiting, structural-tips-and-tavi-course)
+  structural-ts-four-confirmations (waiting, structural-tips-and-tavi-course)
+  structural-ts-heparin-after-crossing (waiting, structural-transseptal-hands-on)
+  structural-ts-air-hub-low (waiting, structural-transseptal-hands-on)
+  structural-ts-resistant-wire-first (waiting, structural-tips-and-tavi-course)
+  structural-ts-aortic-puncture-hold (waiting, structural-tips-and-tavi-course)
+  structural-ts-vagal-st (waiting, structural-tips-and-tavi-course)
+  structural-ts-posterior-delayed-tamponade (waiting, structural-tips-and-tavi-course)
+  structural-teer-area-budget (waiting, structural-tips-and-tavi-course)
+  structural-teer-height-coaptation (waiting, structural-tips-and-tavi-course)
+  structural-teer-gantry-arms (waiting, structural-tips-and-tavi-course)
+  structural-teer-steer-views (waiting, structural-tips-and-tavi-course)
+  structural-teer-planimetry (waiting, structural-tips-and-tavi-course)
+  structural-teer-la-vwave (waiting, structural-tips-and-tavi-course)
+  structural-teer-second-device (waiting, structural-tips-and-tavi-course)
+  structural-laao-fill-before-sizing (waiting, structural-tips-and-tavi-course)
+  structural-laao-largest-measurement (waiting, structural-tips-and-tavi-course)
+  structural-laao-puncture-from-ct (waiting, structural-tips-and-tavi-course)
+  structural-laao-pigtail-leads (waiting, structural-tips-and-tavi-course)
+  structural-laao-plug-unsheathe (waiting, structural-tips-and-tavi-course)
+  structural-laao-plug-pass (waiting, structural-tips-and-tavi-course)
+  structural-laao-disc-ball-push (waiting, structural-tips-and-tavi-course)
+  structural-laao-disc-criteria (waiting, structural-tips-and-tavi-course)
+  structural-laao-anchors-in-sheath (waiting, structural-tips-and-tavi-course)
+  structural-laao-drt-anticoagulate (waiting, structural-tips-and-tavi-course)
+  diag-post-ward-handover (waiting, diag-tip-context)
+  pci-post-report-stents (waiting, pci-tip-context)
+  diag-post-radiation-record (waiting, diag-tip-context)
+  pci-post-ecg-bifurcation (waiting, pci-tip-context)
+  access-post-pulses-start-end (waiting, proc-tip-context)
+  access-post-radial-obs (waiting, proc-tip-context)
+  access-post-femoral-mobilise (waiting, proc-tip-context)
+  pci-post-chest-pain-ward (waiting, pci-tip-context)
+  pci-post-contrast-kidney (waiting, pci-tip-context)
+  pci-post-dapt-plan (waiting, pci-tip-context)
+  pci-post-oac-clopidogrel (waiting, pci-tip-context)
+  diag-post-sedated-results (waiting, diag-tip-context)
+  pci-post-complication-candour (waiting, pci-tip-context)
+  diag-bg-wall-to-territory (waiting, diag-tip-context)
+  diag-bg-name-view-first (waiting, diag-tip-context)
+  diag-bg-depth-second-view (waiting, diag-tip-context)
+  pci-bg-lipid-embolisation-forecast (waiting, pci-tip-context)
+  diag-bg-secondary-mi-question (waiting, diag-tip-context)
+  diag-bg-minoca-working (waiting, diag-tip-context)
+  diag-bg-contrast-heart-failure (waiting, diag-tip-context)
+  haemo-bg-af-in-lab (waiting, haemo-study-session-and-tips)
+  pci-bg-surgery-adherence (waiting, pci-tip-context)
+  access-bg-pulses-both-groins (waiting, proc-tip-context)
+  access-bg-axillofemoral (waiting, proc-tip-context)
+  access-bg-aaa-thrombus (waiting, proc-tip-context)
+  diag-aorto-ostial-views (waiting, diag-tip-context)
+  pci-bif-guide-size (waiting, pci-tip-context)
+  pci-bif-wire-both-branches (waiting, pci-tip-context)
+  pci-bif-no-sb-predilation (waiting, pci-tip-context)
+  pci-bif-atherectomy-two-wires (waiting, pci-tip-context)
+  pci-bif-mv-stent-size (waiting, pci-tip-context)
+  pci-bif-jail-wire-prep (waiting, pci-tip-context)
+  pci-bif-pot-size-position (waiting, pci-tip-context)
+  pci-twostent-guide-size (waiting, pci-tip-context)
+  pci-twostent-prepare-both (waiting, pci-tip-context)
+  pci-twostent-workhorse-wires (waiting, pci-tip-context)
+  pci-twostent-atherectomy-two-wires (waiting, pci-tip-context)
+  pci-sks-emergency-only (waiting, pci-tip-context)
+  pci-lm-ivus-for-ostium (waiting, pci-tip-context)
+  diag-lm-damping-causes (waiting, diag-tip-context)
+  diag-lm-short-injections (waiting, diag-tip-context)
+  pci-lm-no-side-hole-guide (waiting, pci-tip-context)
+  pci-lm-injections-dominance (waiting, pci-tip-context)
+  pci-lm-brief-inflations (waiting, pci-tip-context)
+  pci-lm-hypotension-inflation (waiting, pci-tip-context)
+  pci-lm-stent-expansion-limit (waiting, pci-tip-context)
+  pci-lm-dissection-bailout (waiting, pci-tip-context)
+  pci-lm-distal-strategy (waiting, pci-tip-context)
+  pci-lm-no-routine-kissing (waiting, pci-tip-context)
+  pci-lm-trifurcation (waiting, pci-tip-context)
+  pci-chip-three-domains (waiting, pci-tip-context)
+  pci-lm-support-triggers (waiting, pci-tip-context)
+  diag-graft-op-note-first (waiting, diag-tip-context)
+  diag-graft-radial-convert (waiting, diag-tip-context)
+  diag-svg-jr4-after-rca (waiting, diag-tip-context)
+  diag-svg-right-graft-lao (waiting, diag-tip-context)
+  diag-svg-left-sweep (waiting, diag-tip-context)
+  diag-svg-damped (waiting, diag-tip-context)
+  diag-svg-views (waiting, diag-tip-context)
+  diag-svg-long-run (waiting, diag-tip-context)
+  diag-ima-subclavian-first (waiting, diag-tip-context)
+  diag-lima-engage (waiting, diag-tip-context)
+  diag-ima-tortuous (waiting, diag-tip-context)
+  diag-ima-gentle-injection (waiting, diag-tip-context)
+  diag-lima-views (waiting, diag-tip-context)
+  diag-lima-not-engaged (waiting, diag-tip-context)
+  diag-rima-engage (waiting, diag-tip-context)
+  diag-radial-graft-spasm (waiting, diag-tip-context)
+  pci-cabg-perforation-act-now (waiting, pci-tip-context)
+  pci-graft-native-or-graft (waiting, pci-tip-context)
+  pci-graft-route-reach (waiting, pci-tip-context)
+  pci-ima-anastomosis-balloon (waiting, pci-tip-context)
+  pci-svg-direct-stent-size (waiting, pci-tip-context)
+  pci-epd-feasibility (waiting, pci-tip-context)
+  pci-epd-slow-flow (waiting, pci-tip-context)
+  pci-calc-imaging-decides (waiting, pci-tip-context)
+  pci-calc-no-stent-until-expanded (waiting, pci-tip-context)
+  pci-calc-bradycardia-plan (waiting, pci-tip-context)
+  pci-calc-balloon-boost (waiting, pci-tip-context)
+  pci-calc-cutting-slow (waiting, pci-tip-context)
+  pci-calc-postdilate (waiting, pci-tip-context)
+  pci-calc-ivl-crossing (waiting, pci-tip-context)
+  pci-calc-laser-underexpanded-stent (waiting, pci-tip-context)
+  diag-stemi-predict-artery (waiting, diag-tip-context)
+  pci-stemi-reperfusion-rhythm (waiting, pci-tip-context)
+  pci-stemi-after-lysis (waiting, pci-tip-context)
+  diag-stemi-radial-convert (waiting, diag-tip-context)
+  pci-acs-restore-flow (waiting, pci-tip-context)
+  access-stemi-femoral-sheath (waiting, proc-tip-context)
+  pci-aspiration-no-return (waiting, pci-tip-context)
+  pci-rca-av-block (waiting, pci-tip-context)
+  diag-rv-infarct-no-nitrate (waiting, diag-tip-context)
+  mcs-rv-failure-numbers (waiting, mcs-console-split-select-and-tips)
+  haemo-post-mi-shunt-run (waiting, haemo-study-session-and-tips)
+  haemo-v-wave-not-specific (waiting, haemo-study-session-and-tips)
+  diag-lv-gram-post-mi-shock (waiting, diag-tip-context)
+  diag-minoca-lv-gram (waiting, diag-tip-context)
+  pci-shock-one-call-team (waiting, pci-tip-context)
+  access-shock-femoral-and-vein (waiting, proc-tip-context)
+  haemo-shock-measure-first (waiting, haemo-study-session-and-tips)
+  mcs-shock-support-before-pci (waiting, mcs-console-split-select-and-tips)
+  pci-shock-each-true-culprit (waiting, pci-tip-context)
+  diag-ohca-ecg-sorts (waiting, diag-acs-scenarios)
+  access-arrest-radial-spasm (waiting, proc-tip-context)
+  pci-arrest-defib-settings (waiting, pci-tip-context)
+  pci-arrest-adenosine-cough (waiting, pci-tip-context)
+  diag-vf-catheter-cause (waiting, diag-tip-context)
+  pci-arrest-tamponade-drain (waiting, pci-tip-context)
+  mcs-ecpr-check-before-cannulating (waiting, mcs-console-split-select-and-tips)
+  mcs-ecpr-cannulate-under-cpr (waiting, mcs-console-split-select-and-tips)
+  haemo-as-slow-rise-not-damping (waiting, haemo-study-session-and-tips)
+  structural-tavi-iliofemoral-run (waiting, structural-tips-and-tavi-course)
+  structural-tavr-plan-reaccess (waiting, structural-tips-and-tavi-course)
+  diag-tavr-left-catheter (waiting, diag-tip-context)
+  diag-tavr-rca-wide-sinus (waiting, diag-tip-context)
+  pci-tavr-wire-then-rail (waiting, pci-tip-context)
+  diag-cto-strategy-defer-adhoc (waiting, diag-lesion-morphologies)
+  diag-ocx-scad-setup (waiting, diag-scenario-registry)
+  diag-ocx-scad-no-deep-seat (waiting, diag-scenario-registry)
+  pci-ocx-imh-distal-first (waiting, pci-tip-context)
+  pci-ocx-small-vessel-nitrate (waiting, pci-bench-imaging-unify)
+  pci-ocx-small-vessel-prep (waiting, pci-bench-imaging-unify)
+  pci-ocx-large-vessel-ivus (waiting, pci-bench-imaging-unify)
+  pci-ocx-stent-expansion-limit (waiting, pci-bench-imaging-unify)
+  pci-ocx-long-pullback (waiting, pci-bench-imaging-unify)
+  pci-ocx-long-image-measure (waiting, pci-bench-imaging-unify)
+  pci-ocx-long-distal-first (waiting, pci-bench-imaging-unify)
+  pci-unx-laser-contrast-stent-only (waiting, pci-tip-context)
+  pci-unx-undilatable-first-question (waiting, pci-tip-context)
+  pci-unx-hp-balloon-technique (waiting, pci-tip-context)
+  pci-unx-rupture-look (waiting, pci-tip-context)
+  pci-unx-sticky-balloon (waiting, pci-tip-context)
+  pci-unx-laser-then-test (waiting, pci-tip-context)
+  pci-unx-cabg-last (waiting, pci-tip-context)
+  pci-principles-explain-unexpected (waiting, pci-tip-context)
+  pci-principles-support-standby (waiting, pci-tip-context)
+  pci-stop-checkpoint (waiting, pci-tip-context)
+  pci-stop-after-complication (waiting, pci-tip-context)
+  pci-closure-name-cause (waiting, pci-tip-context)
+  pci-closure-balloon-hides-distal (waiting, pci-tip-context)
+  pci-closure-collapse-support (waiting, pci-tip-context)
+  pci-dissection-stop-selective (waiting, pci-tip-context)
+  pci-dissection-deliver-stent (waiting, pci-tip-context)
+  pci-dissection-workhorse-test (waiting, pci-tip-context)
+  pci-dissection-leave-small (waiting, pci-tip-context)
+  diag-dissection-diagnostic-catheter (waiting, diag-tip-context)
+  pci-lm-dissection-decide (waiting, pci-tip-context)
+  pci-aortocoronary-after (waiting, pci-tip-context)
+  pci-sb-predict (waiting, pci-tip-context)
+  pci-pmi-document (waiting, pci-tip-context)
+  diag-stemi-during-cath (waiting, diag-tip-context)
+  pci-noreflow-dissection-or-embolism (waiting, pci-tip-context)
+  pci-noreflow-hold-contrast (waiting, pci-tip-context)
+  pci-noreflow-pick-agent (waiting, pci-flow-closure)
+  pci-noreflow-low-pressure-support (waiting, pci-tip-context)
+  diag-air-small-bubble (waiting, diag-tip-context)
+  diag-exchange-over-wire (waiting, diag-tip-context)
+  diag-finish-neuro-check (waiting, diag-tip-context)
+  diag-lvedp-before-lv-gram (waiting, diag-tip-context)
+  haemo-wedge-oedema-risk (waiting, haemo-study-session-and-tips)
+  diag-oedema-on-table (waiting, diag-tip-context)
+  pci-perf-grade-and-locate (waiting, pci-tip-context)
+  pci-perf-size-and-pressure (waiting, pci-tip-context)
+  pci-perf-balloon-now (waiting, pci-tip-context)
+  pci-perf-support-and-call (waiting, pci-tip-context)
+  pci-perf-hypotension-tamponade (waiting, pci-tip-context)
+  diag-lv-gram-tamponade (waiting, diag-tip-context)
+  access-vasovagal-or-tamponade (waiting, proc-tip-context)
+  bed-peri-set-up (waiting, pericardiocentesis-tips-and-pci-handover)
+  bed-peri-confirm-wire (waiting, pericardiocentesis-tips-and-pci-handover)
+  bed-peri-after-pci (waiting, pericardiocentesis-tips-and-pci-handover)
+  bed-peri-drain-stays (waiting, pericardiocentesis-tips-and-pci-handover)
+  pci-hypo-amplatz-valve (waiting, pci-tip-context)
+  diag-hypo-amplatz-valve (waiting, diag-tip-context)
+  pci-hypo-rhc-when-unclear (waiting, pci-tip-context)
+  diag-hypo-after-vasodilator (waiting, diag-tip-context)
+  diag-vagal-sequence (waiting, diag-tip-context)
+  access-vagal-prevention (waiting, proc-tip-context)
+  pci-arrhythmia-ecg-baseline (waiting, pci-tip-context)
+  pci-rad-dose-callouts (waiting, pci-tip-context)
+  pci-rad-prior-skin-injury (waiting, pci-tip-context)
+  pci-contrast-budget-ckd (waiting, pci-tip-context)
+  pci-contrast-sparing-tactics (waiting, pci-tip-context)
+  diag-caki-prepare (waiting, diag-tip-context)
+  pci-caki-after-case (waiting, pci-tip-context)
+  pci-bleed-bladder-screen (waiting, pci-tip-context)
+  access-bleed-endovascular-control (waiting, proc-tip-context)
+  access-cx-groin-haematoma-press (waiting, proc-tip-context)
+  access-cx-iliac-wire-fluoro (waiting, proc-tip-context)
+  access-cx-rp-in-lab (waiting, proc-tip-context)
+  access-cx-iliofemoral-balloon-first (waiting, proc-tip-context)
+  access-cx-small-branch-embolise (waiting, proc-tip-context)
+  access-cx-psa-size-and-neck (waiting, proc-tip-context)
+  access-cx-arterial-sheath-first (waiting, proc-tip-context)
+  access-cx-radial-band-proximal (waiting, proc-tip-context)
+  access-cx-forearm-haematoma-grade (waiting, proc-tip-context)
+  access-cx-radial-perforation-cover (waiting, proc-tip-context)
+  access-cx-radial-loop-bat (waiting, proc-tip-context)
+  access-cx-compartment-call (waiting, proc-tip-context)
+  mcs-cx-iabp-ischaemic-leg (waiting, mcs-console-split-select-and-tips)
+  mcs-cx-crossover-balloon-before-removal (waiting, mcs-console-split-select-and-tips)
+  mcs-cx-largebore-bleed-balloon (waiting, mcs-console-split-select-and-tips)
+  mcs-cx-covered-stent-site (waiting, mcs-console-split-select-and-tips)
+  mcs-cx-iabp-bleeding-anticoag (waiting, mcs-console-split-select-and-tips)
+  mcs-cx-ecmo-cannula-bleed (waiting, mcs-console-split-select-and-tips)
+  access-sheath-plan-size (waiting, proc-tip-context)
+  access-sheath-ooze-upsize (waiting, proc-tip-context)
+  access-sheath-femoral-length-tip (waiting, proc-tip-context)
+  access-sheath-radial-long-caution (waiting, proc-tip-context)
+  access-sheath-sheathless-option (waiting, proc-tip-context)
+  access-sheath-sheathless-spasm (waiting, proc-tip-context)
+  mcs-pump-sheath-guide-reach (waiting, mcs-console-split-select-and-tips)
+  pci-gx-atherectomy-plan (waiting, pci-tip-context)
+  pci-guide-reach-distal-target (waiting, pci-tip-context)
+  pci-eqb-know-the-chart (waiting, pci-tip-context)
+  pci-eqb-postdil-which-balloon (waiting, pci-tip-context)
+  pci-eqb-scoring-or-cutting (waiting, pci-tip-context)
+  pci-eqb-very-high-pressure (waiting, pci-tip-context)
+  pci-eqb-thin-strut-visibility (waiting, pci-tip-context)
+  pci-eqb-cart-check (waiting, pci-tip-context)
+  pci-eqb-cart-covered-fit (waiting, pci-tip-context)
+  pci-eqb-cart-restock (waiting, pci-tip-context)
+  pci-planning-fourteen-steps (waiting, pci-tip-context)
+  pci-planning-old-films (waiting, pci-tip-context)
+  access-planning-site-history (waiting, proc-tip-context)
+  pci-planning-imaging-restenosis (waiting, pci-tip-context)
+  pci-planning-adenosine-history (waiting, pci-tip-context)
+  access-planning-closure-infection (waiting, proc-tip-context)
+  pci-planning-guide-size (waiting, pci-tip-context)
+  pci-planning-left-main (waiting, pci-tip-context)
+  pci-planning-contrast-ceiling (waiting, pci-tip-context)
+  pci-planning-bailout-kit (waiting, pci-tip-context)
+  diag-planning-check-in (waiting, diag-tip-context)
+  pci-planning-stent-candidacy (waiting, pci-tip-context)
+  access-planning-hostile-groin (waiting, proc-tip-context)
+  diag-planning-pde5-nitrate (waiting, diag-tip-context)
+  diag-planning-contrast-allergy (waiting, diag-tip-context)
+  access-planning-anticoagulated (waiting, proc-tip-context)
+  diag-planning-ad-hoc-consent (waiting, diag-tip-context)
+  diag-planning-resuscitation-status (waiting, diag-tip-context)
+  pci-planning-classify-lesion (waiting, pci-tip-context)
+  pci-mon-baseline (waiting, pci-tip-context)
+  pci-mon-st-change (waiting, pci-tip-context)
+  access-mon-pulses-site (waiting, proc-tip-context)
+  pci-mon-false-hypotension (waiting, pci-tip-context)
+  pci-mon-pulsus-paradoxus (waiting, pci-tip-context)
+  haemo-mon-zero-level (waiting, haemo-study-session-and-tips)
+  haemo-mon-fast-flush (waiting, haemo-study-session-and-tips)
+  pci-mon-aortic-line-physiology (waiting, pci-tip-context)
+  pci-mon-watch-both-ends (waiting, pci-tip-context)
+  pci-mon-check-guide-after-removal (waiting, pci-tip-context)
+  pci-mon-keep-wire-in-crisis (waiting, pci-tip-context)
+  pci-mon-time-out (waiting, pci-tip-context)
+  pci-mon-sign-out (waiting, pci-tip-context)
+  pci-mon-act-warning (waiting, pci-tip-context)
+  diag-mon-store-loop (waiting, diag-tip-context)
+  pci-mon-vf-roles (waiting, pci-tip-context)
+  pci-mon-closed-loop (waiting, pci-tip-context)
+  pci-mon-fatigue-defer (waiting, pci-tip-context)
+  pci-mon-sterile-cockpit (waiting, pci-tip-context)
+  pci-mon-wipe-wire (waiting, pci-tip-context)
+  pci-act-device-targets (waiting, pci-tip-context)
+  pci-low-act-redose (waiting, pci-tip-context)
+  pci-protamine-only-after-equipment-out (waiting, pci-tip-context)
+  access-radial-heparin-timing (waiting, proc-tip-context)
+  diag-delay-heparin-tortuous-arm (waiting, diag-tip-context)
+  access-femoral-sheath-act (waiting, proc-tip-context)
+  pci-fondaparinux-add-heparin (waiting, pci-tip-context)
+  pci-hit-use-bivalirudin (waiting, pci-tip-context)
+  access-anticoagulated-go-radial (waiting, proc-tip-context)
+  access-crossover-anticoagulated-care (waiting, proc-tip-context)
+  pci-check-oral-loading (waiting, pci-tip-context)
+  pci-gpi-cangrelor-bailout (waiting, pci-tip-context)
+  pci-perforation-stop-iv-antiplatelet (waiting, pci-tip-context)
+  pci-cangrelor-to-oral (waiting, pci-tip-context)
+  pci-svg-no-routine-gpi (waiting, pci-tip-context)
+  diag-sedation-titrate (waiting, diag-tip-context)
+  pci-opioid-delays-p2y12 (waiting, pci-tip-context)
+  diag-nitrate-dose-by-pressure (waiting, diag-tip-context)
+  pci-no-reflow-distal-vasodilator (waiting, pci-tip-context)
+  pci-svg-intragraft-vasodilator (waiting, pci-tip-context)
+  pci-adenosine-rca-dose (waiting, pci-tip-context)
+  pci-adenosine-block-cough-wait (waiting, pci-tip-context)
+  pci-hypotension-match-pressor (waiting, pci-tip-context)
+  pci-left-main-early-noradrenaline (waiting, pci-tip-context)
+  mcs-pressor-escalation-limit (waiting, mcs-console-split-select-and-tips)
+  diag-vf-shock-then-amiodarone (waiting, diag-tip-context)
+  diag-bradycardia-atropine-or-pace (waiting, diag-tip-context)
+  diag-contrast-ceiling-two-rules (waiting, diag-tip-context)
+  diag-reaction-or-vagal (waiting, diag-tip-context)
+  diag-anaphylaxis-im-adrenaline (waiting, diag-lab-drugs)
+  pci-anaphylaxis-im-adrenaline (waiting, pci-tip-context)
+  access-site-five-steps (waiting, proc-tip-context)
+  access-cabg-left-radial (waiting, proc-tip-context)
+  access-complex-pci-femoral (waiting, proc-tip-context)
+  access-needle-flashback-check (waiting, proc-tip-context)
+  access-wire-never-push (waiting, proc-tip-context)
+  access-sheath-two-syringes (waiting, proc-tip-context)
+  access-femoral-head-marker (waiting, proc-tip-context)
+  access-femoral-scan-bifurcation (waiting, proc-tip-context)
+  access-femoral-deep-move-caudal (waiting, proc-tip-context)
+  access-femoral-vein-redirect (waiting, proc-tip-context)
+  access-femoral-screen-micro-wire (waiting, proc-tip-context)
+  access-femoral-repuncture-wrong-height (waiting, proc-tip-context)
+  access-femoral-sheath-angiogram (waiting, proc-tip-context)
+  access-radial-one-ml-local (waiting, proc-tip-context)
+  access-radial-puncture-spasm (waiting, proc-tip-context)
+  access-radial-wire-resists (waiting, proc-tip-context)
+  access-radial-thin-sheath-vasodilator (waiting, proc-tip-context)
+  access-distal-radial-angle (waiting, proc-tip-context)
+  access-artery-vein-same-groin (waiting, proc-tip-context)
+  access-dilator-will-not-pass (waiting, proc-tip-context)
+  access-no-waveform-sheath (waiting, proc-tip-context)
+  mcs-largebore-angiogram-first (waiting, mcs-console-split-select-and-tips)
+  mcs-preclose-two-sutures (waiting, mcs-console-split-select-and-tips)
+  mcs-largebore-limb-angiogram (waiting, mcs-console-split-select-and-tips)
+  mcs-largebore-limb-check (waiting, mcs-console-split-select-and-tips)
+  mcs-largebore-removal-sutures (waiting, mcs-console-split-select-and-tips)
+  diag-root-manifold-ready (waiting, diag-tip-context)
+  diag-root-air-in-line (waiting, diag-tip-context)
+  access-root-sheath-aspirate-flush (waiting, proc-tip-context)
+  diag-root-prep-outside (waiting, diag-tip-context)
+  access-root-no-hydrophilic-through-needle (waiting, proc-tip-context)
+  diag-root-match-curve-to-route (waiting, diag-tip-context)
+  diag-root-previous-catheters (waiting, diag-tip-context)
+  diag-root-wire-leads (waiting, diag-tip-context)
+  diag-root-wire-out-of-ventricle (waiting, diag-tip-context)
+  diag-root-backbleed-guide (waiting, diag-tip-context)
+  diag-root-resistance-transduce-image (waiting, diag-tip-context)
+  diag-root-balloon-assisted-tracking (waiting, diag-route-wire-led-radial)
+  diag-root-descending-aorta-breath (waiting, diag-tip-context)
+  diag-root-lusoria-change-artery (waiting, diag-tip-context)
+  access-root-femoral-no-waveform (waiting, proc-tip-context)
+  access-root-iliac-long-sheath (waiting, proc-tip-context)
+  access-root-aneurysm-suspect (waiting, proc-tip-context)
+  diag-aspirate-before-engaging (waiting, diag-tip-context)
+  diag-test-puff-then-recheck (waiting, diag-tip-context)
+  diag-damped-stepwise (waiting, diag-tip-context)
+  diag-ventricularised-stay-out (waiting, diag-tip-context)
+  diag-jl-femoral-wire-loop (waiting, diag-tip-context)
+  diag-tig-left-anticlockwise (waiting, diag-tip-context)
+  diag-short-lm-size-up (waiting, diag-tip-context)
+  diag-jr-two-hand-torque (waiting, diag-tip-context)
+  diag-rca-dive-back-out (waiting, diag-tip-context)
+  diag-conus-withdraw (waiting, diag-tip-context)
+  diag-shepherds-crook-shapes (waiting, diag-tip-context)
+  diag-engage-fail-ladder (waiting, diag-tip-context)
+  diag-dilated-root-sizing (waiting, diag-tip-context)
+  diag-ostial-spasm-withdraw-nitrate (waiting, diag-spasm-states)
+  diag-anomalous-origin-image-first (waiting, diag-anatomy-variants)
+  diag-small-root-shorter-jl (waiting, diag-tip-context)
+  diag-radial-exchange-long-wire (waiting, diag-tip-context)
+  pci-trap-then-backbleed (waiting, pci-tip-context)
+  diag-radial-spasm-release (waiting, diag-spasm-states)
+  access-radial-spasm-no-traction (waiting, proc-tip-context)
+  diag-acq-read-test-puff (waiting, diag-tip-context)
+  diag-acq-spasm-repeat-view (waiting, diag-spasm-states)
+  diag-acq-table-up-detector-down (waiting, diag-tip-context)
+  diag-acq-high-dose-adjust (waiting, diag-tip-context)
+  diag-acq-frame-then-pedal (waiting, diag-tip-context)
+  diag-acq-breath-hold (waiting, diag-tip-context)
+  diag-acq-catheter-backs-out (waiting, diag-tip-context)
+  diag-acq-complete-view-set (waiting, diag-tip-context)
+  diag-acq-ostium-views (waiting, diag-tip-context)
+  pci-acq-target-orthogonal-views (waiting, pci-tip-context)
+  pci-acq-fluoro-save-inflations (waiting, pci-tip-context)
+  diag-acq-small-rca-small-volume (waiting, diag-tip-context)
+  diag-acq-dominance-follow-pda (waiting, diag-tip-context)
+  diag-acq-missing-territory (waiting, diag-tip-context)
+  diag-interp-orthogonal-worst-view (waiting, diag-tip-context)
+  pci-interp-qca-calibrate (waiting, pci-tip-context)
+  pci-interp-grade-flow (waiting, pci-tip-context)
+  pci-interp-lost-distal-vessel (waiting, pci-tip-context)
+  diag-interp-ostium-from-outside (waiting, diag-tip-context)
+  pci-interp-thrombus-grade (waiting, pci-tip-context)
+  pci-interp-calcium-look-first (waiting, pci-tip-context)
+  pci-interp-dissection-nhlbi (waiting, pci-tip-context)
+  diag-interp-collateral-long-run (waiting, diag-lesion-morphologies)
+  diag-interp-nitrate-before-fixed (waiting, diag-tip-context)
+  diag-interp-anomalous-cx-search (waiting, diag-anatomy-variants)
+  diag-interp-every-territory (waiting, diag-tip-context)
+  diag-review-previous-films (waiting, diag-tip-context)
+  pci-plan-name-the-goal (waiting, pci-tip-context)
+  diag-stop-for-heart-team (waiting, diag-tip-context)
+  diag-ad-hoc-pause (waiting, diag-tip-context)
+  pci-stage-on-dose (waiting, pci-tip-context)
+  pci-serial-distal-first (waiting, pci-tip-context)
+  pci-lm-branches-and-rca-first (waiting, pci-tip-context)
+  pci-stage-after-complication (waiting, pci-tip-context)
+  diag-stemi-engagement-order (waiting, diag-tip-context)
+  diag-culprit-not-obvious (waiting, diag-tip-context)
+  pci-no-physiology-in-culprit (waiting, pci-tip-context)
+  pci-oct-unclear-culprit (waiting, pci-tip-context)
+  pci-acs-culprit-first (waiting, pci-tip-context)
+  pci-shock-culprit-only (waiting, pci-tip-context)
+  pci-stemi-nonculprit-plan (waiting, pci-tip-context)
+  pci-guide-left-extra-support (waiting, pci-tip-context)
+  pci-guide-rca-support (waiting, pci-tip-context)
+  pci-wire-expect-two-bring-microcatheter (waiting, pci-tip-context)
+  pci-wire-not-crossing-ladder (waiting, pci-tip-context)
+  pci-prep-wire-check-before-balloon (waiting, pci-tip-context)
+  pci-prep-clear-the-guide (waiting, pci-tip-context)
+  pci-balloon-size-and-length (waiting, pci-tip-context)
+  pci-balloon-prep-visible (waiting, pci-tip-context)
+  pci-balloon-open-the-valve (waiting, pci-tip-context)
+  pci-balloon-inflation-numbers (waiting, pci-tip-context)
+  pci-balloon-rupture-suction (waiting, pci-tip-context)
+  pci-balloon-watermelon (waiting, pci-tip-context)
+  pci-balloon-waist-stop (waiting, pci-tip-context)
+  pci-balloon-withdraw-deflated (waiting, pci-tip-context)
+  pci-delivery-marker-then-screen (waiting, pci-tip-context)
+  pci-stent-not-into-no-reflow (waiting, pci-tip-context)
+  pci-stent-check-dapt-and-surgery (waiting, pci-tip-context)
+  pci-stent-size-distal (waiting, pci-tip-context)
+  pci-stent-cover-injured-segment (waiting, pci-tip-context)
+  pci-stent-cardiac-motion (waiting, pci-tip-context)
+  pci-stent-hold-the-inflation (waiting, pci-tip-context)
+  pci-optimise-nc-postdilate (waiting, pci-tip-context)
+  pci-optimise-show-the-stent (waiting, pci-tip-context)
+  pci-optimise-edge-dissection (waiting, pci-tip-context)
+  pci-optimise-final-views (waiting, pci-tip-context)
+  access-closure-sheath-stays (waiting, proc-tip-context)
+  access-closure-device-criteria (waiting, proc-tip-context)
+  access-closure-high-stick (waiting, proc-tip-context)
+  access-closure-reprep-skin (waiting, proc-tip-context)
+  access-compression-prepare (waiting, proc-tip-context)
+  access-compression-hands-above (waiting, proc-tip-context)
+  access-compression-bleeding (waiting, proc-tip-context)
+  access-compression-vasovagal (waiting, proc-tip-context)
+  access-closure-hypotension-retroperitoneal (waiting, proc-tip-context)
+  access-plug-locator-drip (waiting, proc-tip-context)
+  access-plug-no-tamp-before-resistance (waiting, proc-tip-context)
+  access-plug-size-to-sheath (waiting, proc-tip-context)
+  access-suture-45-foot (waiting, proc-tip-context)
+  access-suture-keep-wire (waiting, proc-tip-context)
+  access-suture-loose-second-device (waiting, proc-tip-context)
+  access-radial-remove-now (waiting, proc-tip-context)
+  access-radial-band-inflation (waiting, proc-tip-context)
+  access-radial-patency-check (waiting, proc-tip-context)
+  access-radial-band-bleeding (waiting, proc-tip-context)
+  pci-phys-decide-before-measuring (waiting, pci-tip-context)
+  pci-phys-zero-outside (waiting, pci-tip-context)
+  pci-phys-equalise-at-tip (waiting, pci-tip-context)
+  pci-phys-equalise-fail (waiting, pci-tip-context)
+  pci-phys-wire-wrong-branch (waiting, pci-tip-context)
+  pci-phys-cross-distal (waiting, pci-tip-context)
+  pci-phys-ic-adenosine-flush (waiting, pci-tip-context)
+  pci-phys-iv-hyperaemia-signs (waiting, pci-tip-context)
+  pci-phys-no-hyperaemia (waiting, pci-tip-context)
+  pci-phys-damped-guide (waiting, pci-tip-context)
+  pci-phys-drift-check (waiting, pci-tip-context)
+  pci-phys-serial-biggest-step (waiting, pci-tip-context)
+  pci-phys-diffuse-no-step (waiting, pci-tip-context)
+  pci-phys-ostial-disengage (waiting, pci-tip-context)
+  pci-phys-left-main-both-branches (waiting, pci-tip-context)
+  pci-phys-svg-avoid (waiting, pci-tip-context)
+  pci-phys-discordance (waiting, pci-tip-context)
+  pci-phys-post-pci-pullback (waiting, pci-tip-context)
+  diag-phys-qfr-acquisition (waiting, diag-tip-context)
+  pci-phys-thermodilution-boluses (waiting, pci-tip-context)
+  pci-img-choose-by-goal (waiting, pci-tip-context)
+  pci-img-ivus-contrast-saver (waiting, pci-tip-context)
+  pci-img-nitrate-first (waiting, pci-tip-context)
+  pci-img-ivus-clear-view (waiting, pci-tip-context)
+  pci-img-cannot-cross (waiting, pci-tip-context)
+  pci-img-ivus-jumps (waiting, pci-tip-context)
+  pci-img-oct-guide-size (waiting, pci-tip-context)
+  pci-img-oct-marker (waiting, pci-tip-context)
+  pci-img-oct-purge-calibrate (waiting, pci-tip-context)
+  pci-img-oct-flush-rates (waiting, pci-tip-context)
+  pci-img-oct-hold-catheter (waiting, pci-tip-context)
+  pci-img-oct-no-pullback (waiting, pci-tip-context)
+  pci-img-lm-threshold (waiting, pci-tip-context)
+  pci-img-calcium-score (waiting, pci-tip-context)
+  pci-img-image-after-modification (waiting, pci-tip-context)
+  pci-img-landing-zone (waiting, pci-tip-context)
+  pci-img-size-distal-reference (waiting, pci-tip-context)
+  pci-img-underexpansion-fix (waiting, pci-tip-context)
+  pci-img-malapposition (waiting, pci-tip-context)
+  pci-img-edge-dissection (waiting, pci-tip-context)
+  pci-img-lm-both-branches (waiting, pci-tip-context)
+  pci-img-coreg-landing (waiting, pci-tip-context)
+  pci-support-plan-two-axes (waiting, pci-tip-context)
+  pci-support-standby-sheath (waiting, pci-tip-context)
+  haemo-support-rhc-thresholds (waiting, haemo-study-session-and-tips)
+  pci-support-swan-stays (waiting, pci-tip-context)
+  mcs-select-impella-contraindications (waiting, mcs-console-split-select-and-tips)
+  haemo-support-cpo-papi (waiting, haemo-study-session-and-tips)
+  mcs-select-hypoxaemia-ecmo (waiting, mcs-console-split-select-and-tips)
+  mcs-select-shock-severity (waiting, mcs-console-split-select-and-tips)
+  mcs-manage-post-pci-escalation (waiting, mcs-console-split-select-and-tips)
+  pci-support-ffr-in-shock (waiting, pci-tip-context)
+  mcs-select-biventricular (waiting, mcs-console-split-select-and-tips)
+  mcs-wean-criteria (waiting, mcs-console-split-select-and-tips)
+  pci-arrest-mechanical-cpr (waiting, pci-tip-context)
+  pci-arrest-oblique-views (waiting, pci-tip-context)
+  pci-arrest-no-rosc-ecmo (waiting, pci-tip-context)
+  mcs-iabp-size-height (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-vacuum-valve (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-kit-wire (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-tip-carina (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-transfer (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-remove-together (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-read-1to2 (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-poor-augmentation (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-no-heparin-1to1 (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-static-balloon (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-irregular-rhythm (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-wean-ratio (waiting, mcs-console-split-select-and-tips)
+  mcs-iabp-limb (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-cross-pigtail (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-loading-lumen (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-brisk-advance (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-iliac-resistance (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-start-check (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-hold-pump (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-ventricular-waveform (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-suction (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-pulled-back (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-stopped (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-haemolysis-position (waiting, mcs-console-split-select-and-tips)
+  mcs-impella-peel-outside (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-groins (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-antegrade-sheath (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-leg-rescue (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-venous-wire-svc (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-arterial-cannula (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-wet-connection (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-bubbles (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-loaded-lv (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-vent-choice (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-right-radial (waiting, mcs-console-split-select-and-tips)
+  mcs-ecmo-wean-trial (waiting, mcs-console-split-select-and-tips)
+
+ ✓ src/content/lab/reachability.test.ts (5 tests) 11ms
+ ✓ src/simulation/complications/complications.test.ts (10 tests) 16ms
+ ❯ src/ui/lab/structuralTips.test.ts (12 tests | 1 failed) 583ms
+   ✓ the TAVI course's events > structural-tavi-hypotension-coronary returns only while taviCourse reports MAP below 65 after pacing 527ms
+   × raises > uses the shared vocabulary and declares the procedures, phases and course events 14ms
+     → expected [ 'hypotension', 'st-elevation', …(5) ] to deeply equal [ 'hypotension', 'st-elevation', …(2) ]
+(node:72967) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ src/ui/lab/structuralTips.scenario.test.ts (11 tests | 1 failed) 122ms
+   × tips in a scenario > raises no more than this package builds: the structural tips waiting on later packages stay unsatisfiable 6ms
+     → structural-ts-heparin-after-crossing: expected true to be false // Object.is equality
+(node:72984) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/benchTips.scenario.test.ts (12 tests) 21ms
+ ❯ src/simulation/session/scenarios.test.ts (24 tests | 1 failed) 37986ms
+   ✓ autopilot > fastForward(session, 'closure') on a radial-right seed leaves a sheath in, the catheter out, heparin given and closureDone() false 1339ms
+   ✓ autopilot > fastForward(session, 'closure') on a femoral seed leaves a sheath in, the catheter out, heparin given and closureDone() false 1343ms
+   ✓ autopilot > the autopilot leaves no complication on left and right radial cases at 'closure' 4550ms
+   ✓ autopilot > each stage is reached in turn and the autopilot never goes back 1072ms
+   ✓ autopilot > fastForward to 'recovery' closes the site cleanly on both routes 9570ms
+   ✓ autopilot > a scenario start runs the autopilot inside newCaseSession 927ms
+   ✓ autopilot > a case opened at 'closure' holds none of the autopilot's decisions 1465ms
+   ✓ autopilot > the stepped build pauses between steps, reaches the stage with an empty ledger, and stops when cancelled 1962ms
+   ✓ autopilot > a session whose start cannot be reached is disposed before the error is rethrown 759ms
+   ✓ scenarios > scripted events fire at their hooks, including a time after a hook; scenario delayed events present in recovery 6569ms
+   ✓ session modules > a module is attached, ticked, told of hooks, reached with mod(id) and its events merged 996ms
+   × decision ledger > session.decide() records appear in finish().decisions, with the scored steps of a clean case 1973ms
+     → expected false to be true // Object.is equality
+   ✓ decision ledger > a femoral sheath pulled without heparin needs no ACT 3068ms
+   ✓ decision ledger > a step done wrongly once stays wrong when it is repeated cleanly 989ms
+   ✓ decision ledger > the hand-over carries the found-handover-contract extensions 1149ms
+(node:72996) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/pci/scenarios/launch.test.ts (10 tests) 19ms
+(node:72991) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/patientEvents.test.ts (19 tests) 245ms
+ ✓ src/dev/xrayCapture.test.ts (9 tests) 1095ms
+   ✓ realism baseline: PCI device scenes drawn through pciDevices > the scene holds exactly the scorecard scene plus the tubes pciDevices draws for the stage 325ms
+ ✓ src/simulation/laao.test.ts (27 tests) 26ms
+(node:73008) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/sim/modules/drugs.test.ts (6 tests) 910ms
+   ✓ diag-nitrate-dose-by-pressure raises what its tips need > after the action that raises 'ostial-spasm' (a JR seated deep in the small RCA ventricularises it), tipsFor(ctx, 20) includes diag-acq-spasm-repeat-view and diag-ostial-spasm-withdraw-nitrate 479ms
+   ✓ diag-nitrate-dose-by-pressure raises what its tips need > diag-pde5-patient holds pde5-recent from the first frame (the chart's tadalafil, inside its 48 h window) 341ms
+stdout | src/ui/sim/modules/drugs.test.ts > reachability > every waiting.ts entry naming diag-lab-drugs is satisfiable; prints the diagnostic lab's waiting count before and after this package
+diagnostic tips listed in waiting.ts and still not satisfiable: 14 -> 12 (now satisfiable: diag-ostial-spasm-withdraw-nitrate, diag-acq-spasm-repeat-view)
+
+(node:73012) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/diagnosticScenarios/launch.test.ts (8 tests) 17ms
+(node:73016) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ src/ui/lab/controls/controls.test.ts (11 tests | 2 failed) 851ms
+   × table-side controls for the diagnostic session > shows the same four sections as before, in the same order, with the same controls 353ms
+     → expected [ 'pci-devices', 'carm', …(4) ] to deeply equal [ 'carm', 'imaging', 'table', …(1) ]
+   × the tab registry > a file under tabs/ adds a tab without editing any other file 37ms
+     → expected [ 'pci-devices', 'carm', …(7) ] to deeply equal [ 'carm', 'imaging', 'fixture', …(4) ]
+(node:73020) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/session/caseSession.test.ts (14 tests) 18262ms
+   ✓ case session: arrival, time-out and puncture > each step takes time on the session clock 1023ms
+   ✓ case session: arrival, time-out and puncture > a front-wall puncture with pulsatile flashback lets the wire advance freely 948ms
+   ✓ case session: arrival, time-out and puncture > a back-wall puncture loses the flashback, the wire meets resistance and the patient reports pain 1048ms
+   ✓ case session: arrival, time-out and puncture > forcing a wire from a bevel half in the wall makes it subintimal 1023ms
+   ✓ case session: navigation, exchanges and handover > radial route reaches the root on fluoroscopy; blind advancing is challenged 1043ms
+   ✓ case session: navigation, exchanges and handover > skipping the line flush leaves air in the line and raises the air-embolism hazard 1089ms
+   ✓ case session: navigation, exchanges and handover > pulling the wire without back-bleeding and flushing without aspirating sends air into the coronary 1183ms
+   ✓ case session: navigation, exchanges and handover > not zeroing or levelling gives offset pressures; zeroing and levelling removes the offset 1110ms
+   ✓ case session: navigation, exchanges and handover > diagnostic angiography continues into ad hoc PCI with the same access, heparin, contrast and dose 1191ms
+   ✓ case session: closure and delayed complications > closure is required to finish; patent haemostasis is documented with the pleth 1565ms
+   ✓ case session: closure and delayed complications > a femoral sheath pulled early with a short, misplaced compression presents a delayed bleed in recovery 5760ms
+   ✓ case session: closure and delayed complications > the handover note is graded against the case 1022ms
+ ✓ src/simulation/patient/hypotensionCauses.test.ts (12 tests) 8461ms
+   ✓ causes on the engine give their signatures > bleeding: the RA, the filling, the output and the pressure fall with the blood lost; control stops it 1067ms
+   ✓ causes on the engine give their signatures > fasting: the filling, the output and the pressure fall without any blood loss 640ms
+   ✓ causes on the engine give their signatures > ischaemia in an impaired ventricle: high wedge and low output 777ms
+   ✓ causes on the engine give their signatures > tamponade: the RA rises, the output and the pressure fall; the drain takes the blood out 980ms
+   ✓ causes on the engine give their signatures > drug vasodilation: a high output and a low pressure that wears off with the drug 3460ms
+   ✓ drug rules > makeObstructiveHcm: on a built engine, dobutamine then lowers the pressure and phenylephrine raises it 1266ms
+ ✓ src/ui/sim/modules/lesions.test.ts (5 tests) 969ms
+   ✓ diag-cto-contralateral-collaterals raises what its tips need > after the action that raises 'total-occlusion' (the first run of the occluded right coronary), tipsFor(ctx, 20) includes diag-cto-strategy-defer-adhoc and diag-interp-collateral-long-run 363ms
+   ✓ diag-cto-contralateral-collaterals raises what its tips need > diag-two-candidate-culprits: the left run raises thrombus and total-occlusion, the right run (the chronic occlusion) total-occlusion and cto; diag-scad-types holds scad-suspected from the start 510ms
+stdout | src/ui/sim/modules/lesions.test.ts > reachability > every waiting.ts entry naming diag-lesion-morphologies is satisfiable, so the diagnostic lab's waiting count falls by at least their number
+diagnostic tips listed in waiting.ts and still not satisfiable: 14 -> 12
+
+(node:73025) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/bench/BifurcationPanel.test.ts (10 tests) 170ms
+ ✓ src/ui/bench/PlanForm.test.ts (8 tests) 55ms
+(node:73026) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/session/femoralPuncture.test.ts (16 tests) 37418ms
+   ✓ femoral puncture scenarios open ready to puncture > every femoral scenario opens at 'access' on a femoral artery site with nothing marked, and the autopilot reaches 'sheath-in' cleanly 12513ms
+   ✓ the micro-wire on screening > 'fem-micro-wire-iea' raises wire-misdirected; insertSheath before withdrawal is a critical stop 984ms
+   ✓ the micro-wire on screening > a sheath tried with the needle still in over a misplaced micro-wire is refused without a critical error 968ms
+   ✓ the micro-wire on screening > the LCIA and down-the-leg scripts raise wire-misdirected on screening; the standard groin does not 3089ms
+   ✓ the micro-wire on screening > a micro-wire pushed on into a small branch stops: wire-resistance is raised 1179ms
+   ✓ the micro-wire on screening > 'fem-entry-below-head' opens with the wire in below the head: screening raises wrong-height; redone, the entry is scored as expected 1244ms
+   ✓ the micro-wire on screening > 'fem-entry-below-head': the scripted pass is not the learner's, so their own repeat puncture is scored on the head marker 1278ms
+   ✓ the micro-wire on screening > the redone entry's debrief names the half of the femoral head it went in over 1370ms
+   ✓ the micro-wire on screening > a sheath over the wrong-height entry is scored as not expected 911ms
+   ✓ blood at the hub > a CFV puncture gives a venous flashback and event venous-flashback 1098ms
+   ✓ blood at the hub > 'fem-plugged-needle' gives no flash until 'flush needle' 1026ms
+   ✓ blood at the hub > the standard groin's needle is not plugged 847ms
+   ✓ the femoral head marker and the deep artery > the mark is scored at the first skin pass: on the lower edge of the head, off it, or not made 2252ms
+   ✓ the femoral head marker and the deep artery > a mark made without an AP image of the marker at that position is not credited 4046ms
+   ✓ the femoral head marker and the deep artery > deep preset: about 45 degrees with the skin entry moved down the leg, or about 70 degrees, is as expected; 55 degrees is not 4558ms
+(node:73031) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73035) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73032) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/angio/labels.tips.test.ts (9 tests) 516ms
+   ✓ angio-expert-label-drills tips > the timi scenario (simulated runs while unlabelled): after its first answer the reveal shows pci-interp-grade-flow 385ms
+ ✓ src/ui/bedside/PacingLab.test.ts (8 tests) 1289ms
+   ✓ pacing launches > a link names a scenario, a variant and a mode; unknown names are dropped; a held-out variant always runs as an exam 1198ms
+ ✓ src/simulation/session/hypotension.test.ts (24 tests) 70533ms
+   ✓ confirm it is real > 'hypo-false-transducer' scores a pressor before levelling wrong 1282ms
+   ✓ confirm it is real > a check made before the module's episode opens still counts (a cuff at the start of 'hypo-arrhythmia') 1137ms
+   ✓ confirm it is real > a wrong first pressor stays wrong when a later episode's pressor is given after a check 1556ms
+   ✓ confirm it is real > levelling first is scored right, and the trace then reads the patient's own pressure 1130ms
+   ✓ the right heart read-out > in 'hypo-bleeding' shows a low RA and a low output; in 'hypo-ischaemia' a high wedge and a low output 3396ms
+   ✓ drugs against the mechanism > dobutamine started at 20 µg/kg/min is scored as starting high; a low start is right 1575ms
+   ✓ drugs against the mechanism > in 'hypo-hcm' an inotrope worsens the pressure and phenylephrine is correct 4689ms
+   ✓ drugs against the mechanism > an inotrope started with no check of the line is named as an inotrope in the debrief 1662ms
+   ✓ drugs against the mechanism > in 'hypo-hcm' phenylephrine started after a stopped inotrope still lifts the pressure within 5 minutes 2883ms
+   ✓ drugs against the mechanism > 'hypo-bleeding': a vasopressor first is wrong and does not hold the pressure; control and volume do 5679ms
+   ✓ escalation and doses > rising noradrenaline in ischaemic shock brings the question; mechanical support is right 1543ms
+   ✓ escalation and doses > mechanical support is not the answer for tamponade or heart block: the cause is drained or paced 2525ms
+   ✓ escalation and doses > in 'hypo-ischaemia' choosing support treats the cause; the clock never scores it untreated 3160ms
+   ✓ escalation and doses > a pressor left up once the cause is fixed gives rebound hypertension, scored unless it is reduced 5570ms
+   ✓ escalation and doses > a dose above its range brings non-sustained runs of VT in time, recurring while it stays high and stopping once it is back in range 2194ms
+   ✓ escalation and doses > a run of VT in complete heart block leaves the block in place when it ends 1808ms
+   ✓ escalation and doses > a pump shows its mL/h from the strength, and the engine gets the rate in its own unit 2418ms
+   ✓ pulmonary oedema > 'oedema-lvedp-high' with a 1 L bolus drops SpO2 below 92; nitrate at SBP 95 is wrong 1603ms
+   ✓ pulmonary oedema > oxygen, sitting up and furosemide within five minutes are scored as the first steps, and the saturation holds better than untreated 6738ms
+   ✓ a random case is unchanged > a random case with a low LVEF is scored on the oedema regimen but never against a cause 2556ms
+   ✓ a random case is unchanged > the same seed gives the same patient with and without the module 3328ms
+   ✓ practice links > every scenario opens with its cause running and the learner in charge 12097ms
+ ✓ src/simulation/pciBench.test.ts (16 tests) 24ms
+stdout | src/ui/sim/modules/anatomy.tips.test.ts > reachability > every waiting.ts entry naming diag-anatomy-variants is satisfiable, so the diagnostic lab's waiting count falls by at least their number
+diagnostic tips listed in waiting.ts and still not satisfiable: 14 -> 12
+
+ ✓ src/ui/sim/modules/anatomy.tips.test.ts (8 tests) 2379ms
+   ✓ the anomalous-origin scenarios raise what their tips need > diag-anomalous-cx-retroaortic: after the first (left) injection, tipsFor(ctx, 20) includes diag-anomalous-origin-image-first and, with the circumflex in question, diag-interp-anomalous-cx-search 393ms
+   ✓ the anomalous-origin scenarios raise what their tips need > each anomalous-origin scenario raises the event at a root injection, and the other anatomy scenarios do not 1766ms
+stdout | src/ui/sim/modules/script.test.ts > reachability > every waiting.ts entry naming diag-scenario-registry is satisfiable, so the diagnostic lab's waiting count falls by at least their number
+diagnostic tips listed in waiting.ts and still not satisfiable: 21 -> 12
+
+ ✓ src/ui/sim/modules/script.test.ts (8 tests) 1384ms
+   ✓ scenarios from core.launch.ts raise what their tips need > diag-ohca-post-rosc: after the action that raises 'st-elevation', tipsFor(ctx, 20) includes diag-ohca-ecg-sorts 480ms
+   ✓ scenarios from core.launch.ts raise what their tips need > diag-contrast-sensitive: after its first action, tipsFor(ctx, 20) includes diag-bg-contrast-heart-failure 316ms
+ ✓ src/simulation/physiology.test.ts (16 tests) 144ms
+ ✓ src/simulation/patient/pressureTransducer.test.ts (9 tests) 706ms
+(node:73039) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73048) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73045) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | src/ui/haemo/panels.test.ts > haemodynamics lab launch > launchStudy reads events from the comma-separated string and tolerates an array
+haemo launch: unknown event name(s) ignored: not-an-event
+
+ ✓ src/ui/haemo/panels.test.ts (8 tests) 70ms
+(node:73055) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/content/practiceIndex.test.ts (10 tests) 150ms
+ ✓ src/ui/lab/useContextTips.test.ts (7 tests) 95ms
+ ✓ src/ui/haemo/setupPanel.test.ts (8 tests) 38ms
+ ✓ src/ui/lab/diagnosticTips.test.ts (6 tests) 1448ms
+   ✓ named scenarios raise what their tips need > post-arrest: after the culprit occlusion raises st-elevation, tipsFor(ctx, 20) includes diag-ohca-ecg-sorts at setup 640ms
+   ✓ named scenarios raise what their tips need > prior CABG: at phase 'setup' tipsFor(ctx, 20) includes diag-graft-op-note-first, and the vein graft tips when it is sought 313ms
+   ✓ named scenarios raise what their tips need > VF raised into the session's log shows diag-vf-shock-then-amiodarone in the guided drawer; 61 s of lab time clears it 456ms
+stdout | src/ui/lab/diagnosticTips.test.ts > reachability of the diagnostic tips from the lab's raises > satisfiable diagnostic tips rise from the unconditional ones (no raises export before this package) to every tip whose names the lab raises
+diagnostic tips satisfiable in the diagnostic lab: 1 -> 142 of 154; borrowed tips: 23
+
+ ✓ src/simulation/procedure.test.ts (12 tests) 40ms
+ ✓ src/ui/sections/PhysiologyLab.test.ts (9 tests) 2044ms
+   ✓ the physiology rig on the model clock > a slow seeded resting rate is kept above the bradycardia threshold, so the event (and its adenosine tip) waits for adenosine 619ms
+(node:73065) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/simulation/haemo/avCrossing.tips.test.ts > what this package raises > every waiting.ts entry naming haemo-aortic-stenosis-studies is satisfiable from the haemo lab's raises
+waiting.ts entries naming haemo-aortic-stenosis-studies: 0 waiting tips, 0 deferred retargets
+
+ ✓ src/simulation/haemo/avCrossing.tips.test.ts (6 tests) 116ms
+ ✓ src/ui/lab/integration.test.ts (9 tests) 1344ms
+   ✓ team and sound in the diagnostic lab (C4) > every lab session has a team on the same patient engine, silent until a gesture unlocks the sound 344ms
+   ✓ team and sound in the diagnostic lab (C4) > a drug order is read back, confirmed, given to the lab's patient and recorded 359ms
+ ❯ src/types/caseModel.test.ts (7 tests | 2 failed) 41ms
+   × shared case model types > 200 random cases contain none of the new variants 7ms
+     → expected [ 'gen|rand|case-model-53', …(2) ] to deeply equal []
+   × shared case model types > 200 random cases equal their pre-change JSON for the fixed seed set 7ms
+     → expected '0f432a5c52d7e9650be61f2f09411b0662847…' to be 'f5737a38ccc388cbbbd9aab6be5d1093b29bb…' // Object.is equality
+ ✓ src/simulation/pci/facade.test.ts (8 tests) 10ms
+ ✓ src/simulation/session/femoralPuncture.tips.test.ts (6 tests) 3947ms
+   ✓ femoral puncture tips in the full case > in scenario fem-normal, at phase 'femoral', tipsFor(ctx, 20) includes access-femoral-head-marker and access-femoral-scan-bifurcation 961ms
+   ✓ femoral puncture tips in the full case > every tip of the two lab requests is brought up by the case at the step it belongs to 2981ms
+ ✓ src/simulation/session/multiSite.tips.test.ts (8 tests) 5972ms
+   ✓ tips at each site of the crossover case > at phase 'closure' the femoral site gives access-femoral-sheath-act; at phase 'femoral' access-crossover-anticoagulated-care 1742ms
+   ✓ tips at each site of the crossover case > the case panel shows the crossover tip at the groin before the femoral puncture 1104ms
+   ✓ tips at each site of the crossover case > before the crossover the radial site's closure brings up no femoral-only sheath tip; each site's closure reports its own route 1646ms
+   ✓ tips at each site of the crossover case > the ledger's crossover decision names a tip and a lesson that resolve 1476ms
+ ✓ src/simulation/session/closureFemoral.tips.test.ts (8 tests) 10687ms
+   ✓ femoral closure tips in the full case > in scenario closure-fem-standard, after the action that raises 'bradycardia', tipsFor(ctx, 20) includes access-compression-vasovagal and access-vasovagal-or-tamponade 1716ms
+   ✓ femoral closure tips in the full case > at the closure workspace of a femoral case the closure tips come up; a high ACT and blood under the fingers bring up their own 6834ms
+   ✓ femoral closure tips in the full case > the tamponade look-alike's hypotension brings up the hypotension tips at the closure 2130ms
+(node:73094) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/ui/access/caseTips.reach.test.ts > access tips reachable in the full case > every waiting.ts entry naming proc-tip-context becomes satisfiable, and the cold-leg tips wait on access-cx-endovascular-control
+access tips satisfiable: 5 -> 85 of 89; waiting on proc-tip-context: 85, now ready 85
+
+ ✓ src/ui/access/caseTips.reach.test.ts (3 tests) 978ms
+   ✓ access tips reachable in the full case > at phase 'puncture' tipsFor(ctx, 20) includes access-needle-flashback-check, and access-central-vein-no-blood once the hub shows no blood at a neck vein 975ms
+ ✓ src/simulation/session/upsizing.tips.test.ts (6 tests) 6825ms
+   ✓ upsizing tips in the full case > in scenario fem-upsizing, after the action that raises 'pressure-damped', tipsFor(ctx, 20) includes access-no-waveform-sheath, and at phase 'sheath' it includes access-sheath-two-syringes 1477ms
+   ✓ upsizing tips in the full case > a subintimal sheath's damped side arm brings up the no-waveform tip at once 1130ms
+   ✓ upsizing tips in the full case > each request tip is brought up by the case at the step it belongs to 2078ms
+   ✓ upsizing tips in the full case > the upsizing itself raises wire-resistance: the 0.035 inch wire kinking at the skin, and the wire stopping at a subintimal sheath's tip 2138ms
+ ✓ src/simulation/pci/pressureWire.test.ts (6 tests) 377ms
+   ✓ pressure wire on the patient's anatomy > FFR, resting Pd/Pa and the wave-free ratio fall with lesion severity on the rendered LAD 307ms
+(node:73100) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73107) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/benchTips.platforms.test.ts (10 tests) 12ms
+ ✓ src/ui/bench/StentPanel.test.ts (8 tests) 29ms
+ ✓ src/ui/lab/mcsTips.scenario.test.ts (5 tests) 13ms
+ ✓ src/simulation/patient/contrastBudget.test.ts (9 tests) 174ms
+ ✓ src/simulation/session/multiSite.test.ts (19 tests) 75451ms
+   ✓ several access sites in one case > after a radial sheath, addSite('femoral','right') allows a second puncture; finish() refuses until both sites are closed 10760ms
+   ✓ several access sites in one case > addSite is refused before the planned site is punctured and while a catheter is in 935ms
+   ✓ the left groin > a crossover to the left groin opens the left groin: its own anatomy, a left wire route, and the wire reaches the root 1631ms
+   ✓ crossover in an anticoagulated patient > the crossover scenario opens with heparin given and the radial wire stopped in the arm 997ms
+   ✓ crossover in an anticoagulated patient > a heparinised crossover puncture without an ultrasound image of the artery records a failed decision 1381ms
+   ✓ crossover in an anticoagulated patient > the crossover is as expected only with the artery imaged on ultrasound and the groin screened on fluoroscopy 4342ms
+   ✓ crossover in an anticoagulated patient > the ultrasound image counts only with the probe on the skin and the target vessel in the image 990ms
+   ✓ crossover in an anticoagulated patient > no crossover decision is scored when the patient is not anticoagulated 1351ms
+   ✓ closure and delayed events at each site > each site schedules its own delayed events, a scenario's once, and each is presented once 27775ms
+   ✓ closure and delayed events at each site > a femoral vein sheath is a site of its own: dark blood is expected, no catheter goes through it, and it closes by pressure 1889ms
+   ✓ closure and delayed events at each site > the handover note lists every site and line and is graded on them 12591ms
+   ✓ site state after review (access-multi-site fixes) > a femoral closure under way keeps its site: the switch is refused, and the closure lands on the site it started at 3057ms
+   ✓ site state after review (access-multi-site fixes) > a site added after closure and never used leaves the handover truth on the site that had the sheath 1608ms
+   ✓ site state after review (access-multi-site fixes) > the planned-site rule applies to the planned site only: a further site can be added before an added one is punctured 960ms
+   ✓ site state after review (access-multi-site fixes) > an arterial sheath at a femoral vein site is a misplaced sheath, not the venous closure 2319ms
+   ✓ site state after review (access-multi-site fixes) > a venous site's closure is recorded as a closure event for that site 1817ms
+   ✓ site state after review (access-multi-site fixes) > once the target vessel has been imaged, the per-frame report returns without redoing the geometry 996ms
+ ✓ src/ui/haemo/valvePanel.test.ts (5 tests) 82ms
+(node:73118) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/input/views.test.ts > cost > input frame and table render stay well inside a 66 ms frame budget
+[S8 cost] input frame 0.0038 ms, table render (SSR) 0.981 ms
+
+ ✓ src/input/views.test.ts (8 tests) 125ms
+(node:73117) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/benchTips.test.ts (8 tests) 13ms
+ ✓ src/ui/angio/simFlowDrill.test.ts (7 tests) 611ms
+   ✓ simulated-run TIMI and frame-count drill > runs at the flowScale values for TIMI 0, 1, 2 and 3 are graded by the engine as the grade they were made for 507ms
+ ✓ src/simulation/session/emergencies.test.ts (26 tests) 116268ms
+   ✓ anaphylaxis order set > anaphylaxis-asthmatic: IM adrenaline 0.5 mg within 2 min restores MAP above 65 sooner than chlorphenamine and hydrocortisone first 5199ms
+   ✓ anaphylaxis order set > wrong orders have consequences: IV 1 mg with a pulse is critical and hypertensive; more contrast deepens the reaction; atropine adds to the tachycardia 6910ms
+   ✓ anaphylaxis order set > an excessive infusion gives a tachyarrhythmia that settles when the rate is reduced; the infusion after two doses with help is right 1863ms
+   ✓ anaphylaxis order set > an excessive infusion's tachyarrhythmia settles when the pump is stopped outright, and not while the rate goes back up 2777ms
+   ✓ anaphylaxis order set > the fluid record shows the running total, and the nurse reports it once it reaches the lower end of 3-5 L 1166ms
+   ✓ anaphylaxis order set > anaphylaxis-prearrest-brady: a slow rate with skin signs; atropine alone is scored wrong 1265ms
+   ✓ anaphylaxis order set > tryptase outside the windows is wrong; inside them it is right 9986ms
+   ✓ vasovagal look-alikes > vagal-mimic: HR falls before MAP, without itch or flushing; atropine restores HR 2045ms
+   ✓ vasovagal look-alikes > vagal-mimic in the running app: a faint that passes inside the compression's time-lapse is reported as numbers, never scored as untreated 2977ms
+   ✓ vasovagal look-alikes > a faint the learner meets at the wall clock is scored from when they could act 1595ms
+   ✓ vasovagal look-alikes > a faint that does not recover a few minutes after its treatment: the nurse reports the numbers and a look for a mimic is scored 1596ms
+   ✓ vasovagal look-alikes > vagal-no-local gives a vagal event more often over a seed set than with local anaesthetic and saline 50733ms
+   ✓ vasovagal look-alikes > removal without saline, and a femoral local below the range, are scored 3429ms
+   ✓ vasovagal look-alikes > tamponade-mimic: a fast-rate hypotension that atropine does not fix; atropine first is wrong, the echo shows the effusion 1873ms
+   ✓ engine defaults and random cases > random-case reaction incidence is unchanged: the course changes no draw, and the module forces nothing 3083ms
+   ✓ engine defaults and random cases > a random case's sheath removal is as before: no removal draw and no removal scoring unless a scenario arms the drill 5682ms
+   ✓ what the learner sees and the numbers stay physiological > a pericardial bleed of 0.5 mL/s for 20 min ends in a falling, bounded pressure, never a rising one 2283ms
+   ✓ what the learner sees and the numbers stay physiological > tamponade-mimic: the bleed stops at its volume and the pressure stays low and bounded through the compression 3490ms
+   ✓ what the learner sees and the numbers stay physiological > the signs reach the log as the patient's words and the nurse's observations, never as a diagnosis 5732ms
+   ✓ what the learner sees and the numbers stay physiological > the first coronary run of the anaphylaxis scenarios is on the contrast total and in the record 2396ms
+ ✓ src/simulation/access/closurePlan.test.ts (7 tests) 17597ms
+   ✓ the closure scenarios' anatomy > closurePlan rejects a collagen plug for 'closure-fem-high-stick' and any device for 'closure-fem-below-bif' and 'closure-fem-small-artery' 7359ms
+   ✓ the closure scenarios' anatomy > the other presets: a branch takes no device, heavy calcium no suture device, an old plug is a caution, a staged PCI keeps the sheath, the standard groin takes either 7206ms
+   ✓ the closure scenarios' anatomy > in the session: the answers and the choice go to the ledger; a device below the bifurcation is recorded wrong; a sheath kept for a staged PCI closes the site with the sheath in 3026ms
+(node:73125) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/haemoTips.setup.test.ts (6 tests) 12ms
+ ✓ src/ui/lab/bedsideTips.scenario.test.ts (5 tests) 8ms
+(node:73143) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/physics/physicsDevices.tips.test.ts (5 tests) 10351ms
+   ✓ diag-rod-physics tips in scenario diag-lm-fold-over-j-wire > after the JR4 is driven into the conus ('conus-selective'), tipsFor(ctx, 20) includes diag-conus-withdraw 2341ms
+   ✓ diag-rod-physics tips in scenario diag-lm-fold-over-j-wire > after the JR4 is held at the right sinus without engaging for longer than ENGAGE_FAIL_S ('engage-fail'), tipsFor(ctx, 20) includes diag-shepherds-crook-shapes 4609ms
+   ✓ diag-rod-physics tips in scenario diag-lm-fold-over-j-wire > a right catheter pushed on until it folds onto the valve, twice within a minute, raises 'engage-fail' (repeated prolapse) 1172ms
+   ✓ diag-rod-physics tips in scenario diag-lm-fold-over-j-wire > the context takes the rod's reading: a seated Judkins left reads as engage-left in the left main 2226ms
+(node:73151) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/session/modules/hypotension.tips.test.ts (5 tests) 6281ms
+   ✓ hypotension tips > hypo-bleeding: once the pressure falls and 'hypotension' is raised, tipsFor(ctx, 20) includes pci-hypotension-match-pressor and pci-mon-false-hypotension 2351ms
+   ✓ hypotension tips > oedema-lvedp-high: the oedema after a bolus brings up diag-oedema-on-table in the diagnostic context; the right heart numbers open haemo-wedge-oedema-risk 1821ms
+   ✓ hypotension tips > every ledger record this module writes names tips that exist 2101ms
+ ✓ src/state/useLabLaunchStore.test.ts (5 tests) 106ms
+ ✓ src/ui/access/siteSelector.test.ts (5 tests) 5975ms
+   ✓ the site selector > is absent in a one-site case, and switches the ultrasound view between wrist and groin 1209ms
+   ✓ the site selector > appears on the fluoroscopy and closure views once there are two sites, and the closure view names the site still to close 1105ms
+   ✓ the site selector > the access picker offers every site not yet in use once the planned site is punctured 1396ms
+   ✓ the site selector > the guided fluoroscopy readout shows the wire only while it is in: not the last radial depth at a new groin 1169ms
+   ✓ the site selector > the handover asks for every site and line only when the case used more than one site 1094ms
+ ✓ src/simulation/team/formulary.test.ts (5 tests) 472ms
+stderr | src/dev/labHooks.test.ts > registerLabHookOn > keeps the hooks when a lab assigns its own object to __lab, without shadowing its properties
+[labHooks] window.__lab already has "step", so the lab hook of that name is not added there; use window.__labHooks["step"].
+
+ ✓ src/dev/labHooks.test.ts (10 tests) 8ms
+ ✓ src/simulation/pci/equipment.tips.test.ts (3 tests) 323ms
+   ✓ device catalogue tips in the calcified RCA scenario > a non-compliant balloon that stalls at a tight calcified lesion makes pci-eqb-standard-first reachable at lesion-prep 315ms
+ ✓ src/simulation/access/upsizing.test.ts (33 tests) 119352ms
+   ✓ upsizing in the full case > every upsizing scenario opens at its start state with nothing scored, and the autopilot plays it to recovery cleanly 79164ms
+   ✓ upsizing in the full case > the start states are reached in supervised mode too (the team confirms its own checklist) 3703ms
+   ✓ upsizing in the full case > Skin nick with the sheath in is refused; needle-dilator-0.035-sheath succeeds 1044ms
+   ✓ upsizing in the full case > a sheath straight over the 0.018 inch wire goes in but is scored; a dilator over a misplaced micro-wire is a critical stop 1927ms
+   ✓ upsizing in the full case > the dilator and the 0.035 inch wire are drawn on the groin at their own length and course 946ms
+   ✓ the wire through the needle > a hydrophilic wire chosen with the needle in is cautioned and scored; pulled back through the needle it shears 1855ms
+   ✓ sheath preparation > Flush before aspirate is wrong; skipping aspiration sets catheter lumen clot and aspirate() later finds clot 959ms
+   ✓ sheath preparation > aspirate and discard, then a second syringe, is as expected; the same syringe is not 1588ms
+   ✓ sheath preparation > before the next catheter the sheath is aspirated again; the PCI hand-over reports the sheath's clot 1402ms
+   ✓ resistance during upsizing > 'fem-subintimal-sheath' shows a damped side-arm trace and a puff through it is a critical error; 'fem-poor-track' blocks the sheath until nick-and-spread 4238ms
+   ✓ resistance during upsizing > forcing a stopped dilator is a ledger failure; the listed fixes let it pass 3389ms
+   ✓ the femoral angiogram > In AP the projected SFA and PFA overlap; in RAO 25 they separate 954ms
+   ✓ the femoral angiogram > the angiogram fills the inferior epigastric artery, and calcium shows without contrast 1841ms
+   ✓ the femoral angiogram > scored on the view, magnification, volume, wire and waveform; the returned line names nothing of what it shows 1105ms
+   ✓ the femoral angiogram > the report is graded against the anatomy: a high stick above the inferior epigastric, an entry at a high bifurcation 2288ms
+   ✓ review fixes > a push after a fix that did not work is met again, not forced; a further push with no fix in between is forcing 1166ms
+   ✓ review fixes > scar: the nick is enlarged over the stopped dilator, and that lets the dilator pass 1117ms
+   ✓ review fixes > a poorly prepared track: exchange through a dilator to a stiff 0.035 inch wire also lets the sheath in, and a stiff wire chosen first removes it 1088ms
+   ✓ review fixes > a kinking wire is felt on the wire too: wire-resistance is raised beside dilator-resistance 1034ms
+   ✓ review fixes > a subintimal sheath stops the wire at its tip: no catheter goes through it, and the attending does not name it 1255ms
+   ✓ review fixes > an angiogram taken without a stated view (another screen) is not scored on a view left from before 1300ms
+   ✓ in-app verification fixes > aspirating alone logs the blood without claiming a flush; the one-step flush still says flushed 1998ms
+   ✓ in-app verification fixes > a damped side arm reads as numbers; the words 'damped, no arterial waveform' only in guided mode; the reading is kept on the sheath 2631ms
+   ✓ in-app verification fixes > an angiogram after a damped side arm records the waveform as damped, not as unchecked 1351ms
+(node:73173) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/pci/PciLabSession.tips.test.ts (5 tests) 1247ms
+   ✓ PCI lab tips from the session > a long case past the air kerma follow-up level raises 'high-radiation-dose' after the first action and shows the operator-dose tip 846ms
+   ✓ PCI lab tips from the session > the case brief puts the tips at phase 'plan', where the shallow working view tip applies 322ms
+(node:73175) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/lab/benchTips.measure.test.ts (9 tests) 14ms
+ ❯ src/ui/lab/bedsideTips.test.ts (6 tests | 1 failed) 16ms
+   × pericardioTipContext > raises uses the shared vocabulary and covers what the context can report 6ms
+     → expected [ Array(3) ] to deeply equal [ 'pericardiocentesis' ]
+ ✓ src/ui/lab/mcsTips.test.ts (8 tests) 51ms
+ ✓ src/simulation/session/ledgerTips.test.ts (5 tests) 11ms
+ ✓ src/ui/access/orders/Infusions.test.ts (5 tests) 11106ms
+   ✓ infusion and low-pressure section > never names the cause or the verdict on the live screen; the right heart read-out is numbers 2417ms
+   ✓ infusion and low-pressure section > shows the drug's range only where hints are free, and the escalation question once the team asks it 3319ms
+   ✓ infusion and low-pressure section > shows the right heart tips under the numbers in guided practice, and none in an exam 3246ms
+   ✓ infusion and low-pressure section > mechanical support hands the patient, with the infusions, to the chosen console and opens it 2006ms
+ ✓ src/ui/imaging/imaging.test.ts (5 tests) 25ms
+(node:73199) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/physics/types.test.ts (7 tests) 9ms
+ ✓ src/simulation/circulation.test.ts (13 tests) 562ms
+(node:73202) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/physiology/MeasurePanel.hyperaemia.test.ts (5 tests) 22ms
+ ✓ src/simulation/diagnosticScenarios/lesions.test.ts (5 tests) 1575ms
+   ✓ every scenario draws its morphology > eccentric, taper, branch, CTO channels, SCAD, spasm and thrombus each reach the tree 1567ms
+ ✓ src/simulation/access/compression.test.ts (13 tests) 84107ms
+   ✓ hands-on compression in the full case > Hand compression at ACT 240 s is wrong and after waiting to 170 s correct 16254ms
+   ✓ hands-on compression in the full case > protamine before the catheter is out is refused; 80 mg is capped at 50 mg and scored wrong 8192ms
+   ✓ hands-on compression in the full case > dragging the fingers changes the position error the debrief shows; pressing too low bleeds into the groin and raises bleeding and haematoma 18274ms
+   ✓ hands-on compression in the full case > lifting before the puncture holds bleeds again; the timer follows the rule chosen (Brilakis 12 min for 6 Fr, Oxford about 8) 16388ms
+   ✓ hands-on compression in the full case > the preparation, the pressure, the groin, the foot pulses and the dressing are scored; occlusive pressure takes the foot pulses away 17009ms
+   ✓ hands-on compression in the full case > 'compression-vagal' gives HR below 50 before MAP below 65, restored by atropine and fluid with pressure kept 4157ms
+   ✓ hands-on compression in the full case > the emergency drills' removal scoring sees the hands-on pull as a manual compression 1733ms
+   ✓ hands-on compression in the full case > 'compression-tamponade-mimic' gives HR above 100 with hypotension and an effusion on echo 2095ms
+(node:73206) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73204) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/session/modules/emergencies.tips.test.ts (3 tests) 3368ms
+   ✓ emergencies tips > anaphylaxis-asthmatic: after the first injection raises 'contrast-reaction', tipsFor(ctx, 20) includes diag-anaphylaxis-im-adrenaline and diag-reaction-or-vagal 1701ms
+   ✓ emergencies tips > vagal-mimic: at sheath removal the access closure context brings up access-vasovagal-or-tamponade and access-vagal-prevention 1665ms
+stdout | src/content/manual.test.ts > manual curriculum > covers the coverage-map topics (all of them when MANUAL_COMPLETE=1)
+manual curriculum: 247 of 247 topics taught
+
+ ✓ src/content/manual.test.ts (6 tests) 26ms
+ ✓ src/simulation/pressure.test.ts (6 tests) 16ms
+ ✓ src/ui/bedside/PericardioLab.test.ts (4 tests) 1377ms
+   ✓ pericardiocentesis launches > a link names a scenario, a mode and events; unknown names are dropped 901ms
+ ✓ src/ui/lab/eventLog.test.ts (10 tests) 6ms
+ ✓ src/ui/pci/pciDevicesRender.test.ts (3 tests) 647ms
+   ✓ PCI device drawing after the move to the render registry > the baseline device scenes and a complication state draw what they drew before the move 645ms
+ ✓ src/state/store.test.ts (6 tests) 20ms
+ ✓ src/simulation/contrast.test.ts (9 tests) 7ms
+ ✓ src/simulation/imaging/qca.test.ts (5 tests) 421ms
+   ✓ trainee QCA > calibration on a 6 Fr catheter gives errors within published QCA bounds (Keane 1995) 374ms
+ ✓ src/simulation/srs.test.ts (9 tests) 40ms
+ ✓ src/physics/client.test.ts (4 tests) 2156ms
+   ✓ physics client (in-thread) > with config "auto" the host benches at init and reports a validated configuration 1877ms
+ ✓ src/simulation/pci/indeflator.test.ts (5 tests) 9ms
+ ✓ src/simulation/pci/guide.test.ts (5 tests) 565ms
+   ✓ guide support and device delivery > a stiff stent through a calcified RCA backs a poorly seated Judkins right out; an extra-backup (Amplatz) guide holds 327ms
+(node:73226) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/imaging/carm.test.ts (7 tests) 5ms
+ ❯ src/ui/lab/controls/pciDevicesTab.test.ts (4 tests | 1 failed) 687ms
+   × the PCI lab's table-side controls > the Devices tab is registered for the PCI lab only, first in its strip 426ms
+     → expected [ 'carm', 'imaging', 'table', …(2) ] to deeply equal [ 'carm', 'imaging', 'table', …(1) ]
+(node:73237) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73244) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/team/team-ui.test.ts (4 tests) 70ms
+ ✓ src/simulation/pci/stentGeometry.test.ts (5 tests) 5ms
+ ✓ src/ui/sim/sessionModules.test.ts (4 tests) 436ms
+   ✓ the session runs its modules > attaches, steps, tells of injections, merges events into the tip context and detaches on dispose 432ms
+ ✓ src/simulation/scoring.test.ts (7 tests) 4ms
+ ✓ src/ui/physiology/VesselStrip.test.ts (4 tests) 9ms
+ ✓ src/simulation/projection.test.ts (6 tests) 5ms
+ ✓ src/mentor/ledger.test.ts (5 tests) 5ms
+ ✓ src/simulation/calc.test.ts (9 tests) 5ms
+ ✓ src/physics/bench.test.ts (4 tests) 2269ms
+   ✓ auto configuration from measured costs > autoConfig measures configurations finest first on the app's geometry, stops at the first within the margin, and returns a validated one 2263ms
+(node:73260) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/state/progressRunFields.test.ts (3 tests) 76ms
+ ✓ src/simulation/caseGenerator.test.ts (9 tests) 22ms
+ ✓ src/simulation/session/modules/planning.tips.test.ts (4 tests) 3236ms
+   ✓ planning tips > pde5-24h: after the nitroglycerin that raises 'hypotension', tipsFor(ctx, 20) includes diag-planning-pde5-nitrate 1758ms
+   ✓ planning tips > the case events follow the record once the item that states them is read 1370ms
+ ✓ src/simulation/pci/scenarios/tips.test.ts (3 tests) 6ms
+ ✓ src/simulation/patient/transducer.flush.test.ts (5 tests) 23ms
+ ✓ src/simulation/ecg.test.ts (5 tests) 5ms
+ ✓ src/mentor/bridgePedal.test.ts (1 test) 23ms
+ ✓ src/ui/lab/LabLayout.test.ts (3 tests) 9ms
+ ✓ src/simulation/iabp.test.ts (6 tests) 8ms
+(node:73278) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/patient/lvWall.test.ts (2 tests) 480ms
+   ✓ PatientEngine.lvWallState (diag-lv-aorta-render) > an LAD occlusion makes the anterior and apical walls akinetic on the ventriculogram; an RCA occlusion the inferior wall 362ms
+ ✓ src/simulation/pci/guide.catalogue.test.ts (4 tests) 3ms
+ ✓ src/ui/sections/Settings.test.ts (2 tests) 16ms
+(node:73281) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73283) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/simulation/pci/lesionAssessment.test.ts (5 tests) 274ms
+ ✓ src/utils/random.test.ts (7 tests) 28ms
+ ✓ src/ui/angio/labels.practice.test.ts (2 tests) 5ms
+ ✓ src/simulation/imaging/collimation.test.ts (2 tests) 51ms
+ ✓ src/physics/amplatz.test.ts (5 tests) 26305ms
+   ✓ prolapse rule with the preformed shape > an Amplatz hook seated in the left sinus, tip up, is not called prolapsed (the wave-1 rule called it prolapsed every time) 2537ms
+   ✓ prolapse rule with the preformed shape > a Judkins right pushed on in the left sinus still folds far beyond its free shape and is called prolapsed 1836ms
+   ✓ prolapse rule with the current Amplatz curves (catalogue AL1 and AL2) > an AL1 (normal root) and an AL2 (dilated root) pushed 48 mm past seating are never called prolapsed, their fold staying at least 15 degrees below the threshold 7830ms
+   ✓ prolapse rule with the current Amplatz curves (catalogue AL1 and AL2) > a genuine Amplatz prolapse is still caught: pushed 120 mm, the AL1 and the AL2 loop on the valve and are called prolapsed in most starts, each call with a fold beyond the threshold 8873ms
+   ✓ withdrawal of an engaged catheter > an engaged Amplatz left 1 stays in the left main, no more than 1 mm shallower, when pulled back 4 mm 5227ms
+ ✓ src/simulation/clock/clock.test.ts (4 tests) 4ms
+ ✓ src/ui/pci/PciTableStrip.test.ts (3 tests) 1059ms
+   ✓ the PCI table strip's event line > shows no procedure event text in independent mode 769ms
+(node:73297) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/ui/pci/consoles/consoles.test.ts (2 tests) 4ms
+ ✓ src/simulation/angio.test.ts (3 tests) 246ms
+ ✓ src/ui/access/orders/Emergency.test.ts (2 tests) 1849ms
+   ✓ emergency order section > never names the reaction on the live screen, during anaphylaxis or at a faint 1725ms
+ ✓ src/render/xray/lvGram.tips.test.ts (2 tests) 3ms
+ ↓ src/content/track.check.test.ts (1 test | 1 skipped)
+stdout | src/content/cases/published.check.test.ts > published cases > validate, are unique and carry a real source URL
+20 published cases
+
+ ✓ src/content/cases/published.check.test.ts (1 test) 4ms
+(node:73159) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/state/useProcedureStore.test.ts (7 tests) 17143ms
+   ✓ full-case store > a scenario at 'closure' opens on the Closure workspace with a sheath in, after a 'preparing' state 1504ms
+   ✓ full-case store > session.decide() records appear in finish().decisions and in the logbook row; a part-played case never passes 1823ms
+   ✓ full-case store > logCase copies the decisions into the run and writes one row 13514ms
+ ✓ src/physics/calibration/calibration.test.ts (7 tests) 61758ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > Judkins right 4 engaged in the RCA: median shape error at most 1.5 mm over the distal 60 mm 5824ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > Judkins left family engaged in the left main, with the aortic root tilted as the silhouettes call for (FITTED_ORIENTATION, not yet applied by the renderer): median shape error at most 2.5 mm over the distal 60 mm, and the tilt explains most of the mismatch 10297ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > the app's current state: with the vertical root the renderer draws, the Judkins left family is NOT within 2 mm (median 3.74 mm, 14% of runs within 2 mm); only the Judkins right 4 is 16640ms
+   ✓ engaged Judkins shapes against the real silhouettes (live anatomy with the arch branches) > the fitted root orientation holds on held-out patients: fitted on one half of the patients and scored on the other (two folds), the left median stays at most 3.0 mm and at least 0.7 mm better than the vertical root 28827ms
+ ✓ src/simulation/session/closureFemoral.test.ts (6 tests) 54881ms
+   ✓ femoral closure: the wait, the ACT and the choice > wait-then-compress: the panel's wait lets the ACT fall; act-high clears on a reading below 180 s; compression then scores the ACT correct 11101ms
+   ✓ femoral closure: the wait, the ACT and the choice > act-high clears when the sheath comes out under the fingers, and when the sheath is kept sutured 13976ms
+   ✓ femoral closure: the wait, the ACT and the choice > act-high follows the learner's rule: a reading between 180 and 200 s holds it under Brilakis, not under Oxford 8100ms
+   ✓ femoral closure: the wait, the ACT and the choice > the attending says no ACT the learner has not measured: without a reading it says none was measured 5731ms
+   ✓ femoral closure: the wait, the ACT and the choice > the closure choice is graded on the ACT measured, not the engine's: a reading of 245 s makes waiting correct 8952ms
+   ✓ the session's vasodilation beside other writers > lowering the pressure keeps another writer's larger value, and its end does not wipe a cause still running 7020ms
+ ✓ src/physics/manoeuvres.live-1.4.test.ts (11 tests) 56335ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 2211ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 641ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 9745ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > over-torque winds up the shaft and releases it as whip 327ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1432ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 4594ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 3379ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 2781ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 11513ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 3148ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.4, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 16563ms
+ ✓ src/physics/manoeuvres.live-1.2.test.ts (11 tests) 60793ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 2662ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 690ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 11015ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > over-torque winds up the shaft and releases it as whip 385ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1761ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 4611ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 3267ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 3154ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 12030ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 2950ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 18267ms
+ ✓ src/physics/manoeuvres.test.ts (12 tests) 66309ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 3303ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 661ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 14509ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > over-torque winds up the shaft and releases it as whip 617ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1661ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 5474ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2706ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 3685ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 15857ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 3993ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > dilated root on the frozen fixture (known gap, regenerate the fixture when the root is re-oriented): a JL5 in the dilated root engages within 3 of 12 starts of a JL4 in a normal root 11673ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > pushing on an engaged JR4 advances it further into the RCA without leaving it or reaching the ventricle 2167ms
+ ✓ src/physics/manoeuvres.live-1.0.test.ts (11 tests) 68670ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 3065ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 1170ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 16523ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > over-torque winds up the shaft and releases it as whip 680ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1661ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 6055ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2683ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 3680ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 12920ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 4598ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 15633ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/types/caseModel.test.ts > shared case model types > 200 random cases contain none of the new variants
+AssertionError: expected [ 'gen|rand|case-model-53', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "gen|rand|case-model-53",
++   "gen|rand|case-model-94",
++   "gen|rand|case-model-123",
++ ]
+
+ ❯ src/types/caseModel.test.ts:103:58
+    101|     const cases = randomCases();
+    102|     expect(cases).toHaveLength(200);
+    103|     expect(cases.filter(hasNewVariant).map((c) => c.id)).toEqual([]);
+       |                                                          ^
+    104|   });
+    105| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/types/caseModel.test.ts > shared case model types > 200 random cases equal their pre-change JSON for the fixed seed set
+AssertionError: expected '0f432a5c52d7e9650be61f2f09411b0662847…' to be 'f5737a38ccc388cbbbd9aab6be5d1093b29bb…' // Object.is equality
+
+Expected: "f5737a38ccc388cbbbd9aab6be5d1093b29bbc8d6d3726c9efdf57ff651bb653"
+Received: "0f432a5c52d7e9650be61f2f09411b0662847b80a384478283e9533d12750702"
+
+ ❯ src/types/caseModel.test.ts:110:30
+    108|     expect(await sha(cases[0])).toBe(PRE_CHANGE.first);
+    109|     expect(await sha(cases[199])).toBe(PRE_CHANGE.last);
+    110|     expect(await sha(cases)).toBe(PRE_CHANGE.random200);
+       |                              ^
+    111|   });
+    112| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/simulation/session/scenarios.test.ts > decision ledger > session.decide() records appear in finish().decisions, with the scored steps of a clean case
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/simulation/session/scenarios.test.ts:320:84
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/ui/lab/bedsideTips.test.ts > pericardioTipContext > raises uses the shared vocabulary and covers what the context can report
+AssertionError: expected [ Array(3) ] to deeply equal [ 'pericardiocentesis' ]
+
+- Expected
++ Received
+
+  Array [
+    "pericardiocentesis",
++   "pacing",
++   "tcp",
+  ]
+
+ ❯ src/ui/lab/bedsideTips.test.ts:85:31
+     83|       for (const x of c.procedures ?? []) expect(raises.procedures).to…
+     84|     }
+     85|     expect(raises.procedures).toEqual(["pericardiocentesis"]);
+       |                               ^
+     86|   });
+     87| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/ui/lab/haemoTips.test.ts > scenario events keep condition tips in their own scenario > no pulmonary embolism, constriction, tricuspid, pulmonary valve or HOCM tip appears in an unrelated scenario
+AssertionError: expected [ …(135) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "as-concordant-echo left-heart Ao: haemo-hocm-pullback-second-catheter",
++   "as-concordant-echo left-heart Ao: haemo-hocm-post-ectopic-aorta",
++   "as-concordant-echo left-heart Ao: haemo-as-al1-straight-wire",
++   "as-concordant-echo left-heart LV: haemo-hocm-pullback-second-catheter",
++   "as-concordant-echo left-heart LV: haemo-hocm-post-ectopic-aorta",
++   "as-concordant-echo left-heart LV: haemo-as-al1-straight-wire",
++   "as-concordant-echo LV + wedge: haemo-hocm-pullback-second-catheter",
++   "as-concordant-echo LV + wedge: haemo-hocm-post-ectopic-aorta",
++   "as-concordant-echo LV + wedge: haemo-as-cross-only-if-discordant",
++   "as-concordant-echo LV + wedge: haemo-as-slow-rise-not-damping",
++   "as-concordant-echo LV + wedge: haemo-as-simultaneous-gradient",
++   "as-concordant-echo LV + wedge: haemo-as-al1-straight-wire",
++   "as-concordant-echo left-heart Ao+art: haemo-hocm-pullback-second-catheter",
++   "as-concordant-echo left-heart Ao+art: haemo-hocm-post-ectopic-aorta",
++   "as-concordant-echo left-heart Ao+art: haemo-as-al1-straight-wire",
++   "as-concordant-echo left-heart LV+art: haemo-hocm-pullback-second-catheter",
++   "as-concordant-echo left-heart LV+art: haemo-hocm-post-ectopic-aorta",
++   "as-concordant-echo left-heart LV+art: haemo-as-cross-only-if-discordant",
++   "as-concordant-echo left-heart LV+art: haemo-as-slow-rise-not-damping",
++   "as-concordant-echo left-heart LV+art: haemo-as-simultaneous-gradient",
++   "as-concordant-echo left-heart LV+art: haemo-as-al1-straight-wire",
++   "as-concordant-echo LV + wedge+art: haemo-hocm-pullback-second-catheter",
++   "as-concordant-echo LV + wedge+art: haemo-hocm-post-ectopic-aorta",
++   "as-concordant-echo LV + wedge+art: haemo-as-cross-only-if-discordant",
++   "as-concordant-echo LV + wedge+art: haemo-as-slow-rise-not-damping",
++   "as-concordant-echo LV + wedge+art: haemo-as-simultaneous-gradient",
++   "as-concordant-echo LV + wedge+art: haemo-as-al1-straight-wire",
++   "as-discordant-cross left-heart Ao: haemo-hocm-pullback-second-catheter",
++   "as-discordant-cross left-heart Ao: haemo-hocm-post-ectopic-aorta",
++   "as-discordant-cross left-heart Ao: haemo-as-al1-straight-wire",
++   "as-discordant-cross left-heart LV: haemo-hocm-pullback-second-catheter",
++   "as-discordant-cross left-heart LV: haemo-hocm-post-ectopic-aorta",
++   "as-discordant-cross left-heart LV: haemo-as-al1-straight-wire",
++   "as-discordant-cross LV + wedge: haemo-hocm-pullback-second-catheter",
++   "as-discordant-cross LV + wedge: haemo-hocm-post-ectopic-aorta",
++   "as-discordant-cross LV + wedge: haemo-as-cross-only-if-discordant",
++   "as-discordant-cross LV + wedge: haemo-as-slow-rise-not-damping",
++   "as-discordant-cross LV + wedge: haemo-as-simultaneous-gradient",
++   "as-discordant-cross LV + wedge: haemo-as-al1-straight-wire",
++   "as-discordant-cross left-heart Ao+art: haemo-hocm-pullback-second-catheter",
++   "as-discordant-cross left-heart Ao+art: haemo-hocm-post-ectopic-aorta",
++   "as-discordant-cross left-heart Ao+art: haemo-as-al1-straight-wire",
++   "as-discordant-cross left-heart LV+art: haemo-hocm-pullback-second-catheter",
++   "as-discordant-cross left-heart LV+art: haemo-hocm-post-ectopic-aorta",
++   "as-discordant-cross left-heart LV+art: haemo-as-cross-only-if-discordant",
++   "as-discordant-cross left-heart LV+art: haemo-as-slow-rise-not-damping",
++   "as-discordant-cross left-heart LV+art: haemo-as-simultaneous-gradient",
++   "as-discordant-cross left-heart LV+art: haemo-as-al1-straight-wire",
++   "as-discordant-cross LV + wedge+art: haemo-hocm-pullback-second-catheter",
++   "as-discordant-cross LV + wedge+art: haemo-hocm-post-ectopic-aorta",
++   "as-discordant-cross LV + wedge+art: haemo-as-cross-only-if-discordant",
++   "as-discordant-cross LV + wedge+art: haemo-as-slow-rise-not-damping",
++   "as-discordant-cross LV + wedge+art: haemo-as-simultaneous-gradient",
++   "as-discordant-cross LV + wedge+art: haemo-as-al1-straight-wire",
++   "lflg-true left-heart Ao: haemo-hocm-pullback-second-catheter",
++   "lflg-true left-heart Ao: haemo-hocm-post-ectopic-aorta",
++   "lflg-true left-heart Ao: haemo-as-al1-straight-wire",
++   "lflg-true left-heart LV: haemo-hocm-pullback-second-catheter",
++   "lflg-true left-heart LV: haemo-hocm-post-ectopic-aorta",
++   "lflg-true left-heart LV: haemo-as-al1-straight-wire",
++   "lflg-true LV + wedge: haemo-hocm-pullback-second-catheter",
++   "lflg-true LV + wedge: haemo-hocm-post-ectopic-aorta",
++   "lflg-true LV + wedge: haemo-as-cross-only-if-discordant",
++   "lflg-true LV + wedge: haemo-as-slow-rise-not-damping",
++   "lflg-true LV + wedge: haemo-as-simultaneous-gradient",
++   "lflg-true LV + wedge: haemo-as-al1-straight-wire",
++   "lflg-true left-heart Ao+art: haemo-hocm-pullback-second-catheter",
++   "lflg-true left-heart Ao+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-true left-heart Ao+art: haemo-as-al1-straight-wire",
++   "lflg-true left-heart LV+art: haemo-hocm-pullback-second-catheter",
++   "lflg-true left-heart LV+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-true left-heart LV+art: haemo-as-cross-only-if-discordant",
++   "lflg-true left-heart LV+art: haemo-as-slow-rise-not-damping",
++   "lflg-true left-heart LV+art: haemo-as-simultaneous-gradient",
++   "lflg-true left-heart LV+art: haemo-as-al1-straight-wire",
++   "lflg-true LV + wedge+art: haemo-hocm-pullback-second-catheter",
++   "lflg-true LV + wedge+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-true LV + wedge+art: haemo-as-cross-only-if-discordant",
++   "lflg-true LV + wedge+art: haemo-as-slow-rise-not-damping",
++   "lflg-true LV + wedge+art: haemo-as-simultaneous-gradient",
++   "lflg-true LV + wedge+art: haemo-as-al1-straight-wire",
++   "lflg-pseudo left-heart Ao: haemo-hocm-pullback-second-catheter",
++   "lflg-pseudo left-heart Ao: haemo-hocm-post-ectopic-aorta",
++   "lflg-pseudo left-heart Ao: haemo-as-al1-straight-wire",
++   "lflg-pseudo left-heart LV: haemo-hocm-pullback-second-catheter",
++   "lflg-pseudo left-heart LV: haemo-hocm-post-ectopic-aorta",
++   "lflg-pseudo left-heart LV: haemo-as-al1-straight-wire",
++   "lflg-pseudo LV + wedge: haemo-hocm-pullback-second-catheter",
++   "lflg-pseudo LV + wedge: haemo-hocm-post-ectopic-aorta",
++   "lflg-pseudo LV + wedge: haemo-as-cross-only-if-discordant",
++   "lflg-pseudo LV + wedge: haemo-as-slow-rise-not-damping",
++   "lflg-pseudo LV + wedge: haemo-as-simultaneous-gradient",
++   "lflg-pseudo LV + wedge: haemo-as-al1-straight-wire",
++   "lflg-pseudo left-heart Ao+art: haemo-hocm-pullback-second-catheter",
++   "lflg-pseudo left-heart Ao+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-pseudo left-heart Ao+art: haemo-as-al1-straight-wire",
++   "lflg-pseudo left-heart LV+art: haemo-hocm-pullback-second-catheter",
++   "lflg-pseudo left-heart LV+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-pseudo left-heart LV+art: haemo-as-cross-only-if-discordant",
++   "lflg-pseudo left-heart LV+art: haemo-as-slow-rise-not-damping",
++   "lflg-pseudo left-heart LV+art: haemo-as-simultaneous-gradient",
++   "lflg-pseudo left-heart LV+art: haemo-as-al1-straight-wire",
++   "lflg-pseudo LV + wedge+art: haemo-hocm-pullback-second-catheter",
++   "lflg-pseudo LV + wedge+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-pseudo LV + wedge+art: haemo-as-cross-only-if-discordant",
++   "lflg-pseudo LV + wedge+art: haemo-as-slow-rise-not-damping",
++   "lflg-pseudo LV + wedge+art: haemo-as-simultaneous-gradient",
++   "lflg-pseudo LV + wedge+art: haemo-as-al1-straight-wire",
++   "lflg-no-reserve left-heart Ao: haemo-hocm-pullback-second-catheter",
++   "lflg-no-reserve left-heart Ao: haemo-hocm-post-ectopic-aorta",
++   "lflg-no-reserve left-heart Ao: haemo-as-al1-straight-wire",
++   "lflg-no-reserve left-heart LV: haemo-hocm-pullback-second-catheter",
++   "lflg-no-reserve left-heart LV: haemo-hocm-post-ectopic-aorta",
++   "lflg-no-reserve left-heart LV: haemo-as-al1-straight-wire",
++   "lflg-no-reserve LV + wedge: haemo-hocm-pullback-second-catheter",
++   "lflg-no-reserve LV + wedge: haemo-hocm-post-ectopic-aorta",
++   "lflg-no-reserve LV + wedge: haemo-as-cross-only-if-discordant",
++   "lflg-no-reserve LV + wedge: haemo-as-slow-rise-not-damping",
++   "lflg-no-reserve LV + wedge: haemo-as-simultaneous-gradient",
++   "lflg-no-reserve LV + wedge: haemo-as-al1-straight-wire",
++   "lflg-no-reserve left-heart Ao+art: haemo-hocm-pullback-second-catheter",
++   "lflg-no-reserve left-heart Ao+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-no-reserve left-heart Ao+art: haemo-as-al1-straight-wire",
++   "lflg-no-reserve left-heart LV+art: haemo-hocm-pullback-second-catheter",
++   "lflg-no-reserve left-heart LV+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-no-reserve left-heart LV+art: haemo-as-cross-only-if-discordant",
++   "lflg-no-reserve left-heart LV+art: haemo-as-slow-rise-not-damping",
++   "lflg-no-reserve left-heart LV+art: haemo-as-simultaneous-gradient",
++   "lflg-no-reserve left-heart LV+art: haemo-as-al1-straight-wire",
++   "lflg-no-reserve LV + wedge+art: haemo-hocm-pullback-second-catheter",
++   "lflg-no-reserve LV + wedge+art: haemo-hocm-post-ectopic-aorta",
++   "lflg-no-reserve LV + wedge+art: haemo-as-cross-only-if-discordant",
++   "lflg-no-reserve LV + wedge+art: haemo-as-slow-rise-not-damping",
++   "lflg-no-reserve LV + wedge+art: haemo-as-simultaneous-gradient",
++   "lflg-no-reserve LV + wedge+art: haemo-as-al1-straight-wire",
++ ]
+
+ ❯ src/ui/lab/haemoTips.test.ts:112:22
+    110|         for (const id of ids(haemoTipContext(st), 100))
+    111|           for (const [re, allowed] of families) if (re.test(id) && !al…
+    112|     expect(problems).toEqual([]);
+       |                      ^
+    113|   });
+    114| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/ui/lab/haemoTips.test.ts > launch metadata and the practice index > core.launch.ts declares every scenario of the library and no other; shock presets start before or after PCI
+AssertionError: expected [ 'acute-ar', 'acute-mr', …(18) ] to deeply equal [ 'acute-ar', 'acute-mr', …(23) ]
+
+- Expected
++ Received
+
+  Array [
+    "acute-ar",
+    "acute-mr",
+    "aortic-stenosis",
+-   "as-concordant-echo",
+-   "as-discordant-cross",
+    "asd",
+    "chip-elective",
+    "constriction",
+    "hocm",
+    "ipcph",
+-   "lflg-no-reserve",
+-   "lflg-pseudo",
+-   "lflg-true",
+    "lv-shock",
+    "mitral-stenosis",
+    "normal",
+    "pah",
+    "pe-high-risk",
+    "restriction",
+    "rv-infarct",
+    "shock-biv",
+    "shock-lv",
+    "shock-rv",
+    "tamponade",
+    "vsr",
+  ]
+
+ ❯ src/ui/lab/haemoTips.test.ts:200:59
+    198|   it("core.launch.ts declares every scenario of the library and no oth…
+    199|     expect(coreLaunch.sim).toBe("haemo");
+    200|     expect(coreLaunch.scenarios?.map((s) => s.id).sort()).toEqual(HAEM…
+       |                                                           ^
+    201|     for (const s of HAEMO_SCENARIOS) {
+    202|       const decl = coreLaunch.scenarios!.find((x) => x.id === s.id)!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/ui/lab/structuralTips.scenario.test.ts > tips in a scenario > raises no more than this package builds: the structural tips waiting on later packages stay unsatisfiable
+AssertionError: structural-ts-heparin-after-crossing: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/ui/lab/structuralTips.scenario.test.ts:177:96
+    175|     const later = WAITING_TIPS.filter((g) => g.lab === "structural" &&…
+    176|     expect(later.length).toBeGreaterThan(5);
+    177|     for (const id of later) expect(satisfiable(TIP_BY_ID[id], TIP_BY_I…
+       |                                                                                                ^
+    178|     // every structural tip is either this package's or waits on a lat…
+    179|     const listed = new Set(WAITING_TIPS.flatMap((g) => g.tips));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  src/ui/lab/structuralTips.test.ts > raises > uses the shared vocabulary and declares the procedures, phases and course events
+AssertionError: expected [ 'hypotension', 'st-elevation', …(5) ] to deeply equal [ 'hypotension', 'st-elevation', …(2) ]
+
+- Expected
++ Received
+
+  Array [
+    "hypotension",
+    "st-elevation",
+    "bradycardia",
+    "av-block",
++   "low-act",
++   "air",
++   "tamponade",
+  ]
+
+ ❯ src/ui/lab/structuralTips.test.ts:197:27
+    195|     for (const e of raises.events) expect(LAB_EVENTS as readonly strin…
+    196|     for (const p of raises.procedures ?? []) expect(LAB_PROCEDURES as …
+    197|     expect(raises.events).toEqual([...TAVI_COURSE_EVENTS]);
+       |                           ^
+    198|     expect(raises.procedures).toEqual(expect.arrayContaining(["tavi", …
+    199|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  src/ui/lab/controls/controls.test.ts > table-side controls for the diagnostic session > shows the same four sections as before, in the same order, with the same controls
+AssertionError: expected [ 'pci-devices', 'carm', …(4) ] to deeply equal [ 'carm', 'imaging', 'table', …(1) ]
+
+- Expected
++ Received
+
+  Array [
++   "pci-devices",
+    "carm",
+    "imaging",
+    "table",
+    "patient",
++   "drugs",
+  ]
+
+ ❯ src/ui/lab/controls/controls.test.ts:39:43
+     37| describe("table-side controls for the diagnostic session", () => {
+     38|   it("shows the same four sections as before, in the same order, with …
+     39|     expect(CONTROL_TABS.map((t) => t.id)).toEqual(["carm", "imaging", …
+       |                                           ^
+     40|     const carm = render();
+     41|     expect(stripLabels(carm)).toEqual(["C-arm and table", "Imaging", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  src/ui/lab/controls/controls.test.ts > the tab registry > a file under tabs/ adds a tab without editing any other file
+AssertionError: expected [ 'pci-devices', 'carm', …(7) ] to deeply equal [ 'carm', 'imaging', 'fixture', …(4) ]
+
+- Expected
++ Received
+
+  Array [
++   "pci-devices",
+    "carm",
+    "imaging",
+    "fixture",
+    "table",
+    "patient",
++   "drugs",
+    "fixture-pci",
+    "fixture-not-exam",
+  ]
+
+ ❯ src/ui/lab/controls/controls.test.ts:92:43
+     90|   it("a file under tabs/ adds a tab without editing any other file", (…
+     91|     // the fixture set is the real tabs folder plus fixture files, col…
+     92|     expect(withFixtures.map((t) => t.id)).toEqual(["carm", "imaging", …
+       |                                           ^
+     93|     const html = render({ tabs: withFixtures });
+     94|     expect(stripLabels(html)).toEqual(["C-arm and table", "Imaging", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  src/ui/lab/controls/pciDevicesTab.test.ts > the PCI lab's table-side controls > the Devices tab is registered for the PCI lab only, first in its strip
+AssertionError: expected [ 'carm', 'imaging', 'table', …(2) ] to deeply equal [ 'carm', 'imaging', 'table', …(1) ]
+
+- Expected
++ Received
+
+  Array [
+    "carm",
+    "imaging",
+    "table",
+    "patient",
++   "drugs",
+  ]
+
+ ❯ src/ui/lab/controls/pciDevicesTab.test.ts:48:18
+     46|     // the diagnostic strip is unchanged
+     47|     const diag = CONTROL_TABS.filter((t) => t.labs.includes("diagnosti…
+     48|     expect(diag).toEqual(["carm", "imaging", "table", "patient"]);
+       |                  ^
+     49|   });
+     50| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+ Test Files  8 failed | 191 passed | 1 skipped (200)
+      Tests  11 failed | 2876 passed | 17 skipped (2904)
+   Start at  17:47:28
+   Duration  216.83s (transform 16.47s, setup 0ms, collect 152.07s, tests 1423.02s, environment 31ms, prepare 13.59s)
+
+exit 1

@@ -1,0 +1,254 @@
+{
+ "package": "haemo-study-session-and-tips",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built haemo-study-session-and-tips. The haemodynamics lab now runs as a study session. The new pure reducer src/simulation/haemoStudy.ts tracks catheter positions and the right-heart catheter type (balloon-tipped, or a pigtail that reaches the PA but cannot wedge). It also holds the recordings for each measurement set, the learner's calculation entries, the shock decision and any raised events, and it works out the phase, events, data checklist and score.\n\nThe learner now works out CO, CI, SVR, PVR, TPG, Qp:Qs, CPO, PAPi and both Gorlin valve areas and types them in. Each entry is graded against derive(): CPO within 0.02 W, PAPi within 0.1, Qp:Qs within 0.1, SVR within 10%; the other bands are labelled MODEL PARAMETER. The formula appears after an entry, or on request in guided mode. Reference values appear only in the debrief.\n\nChanges to haemo.ts:\n- HaemoScenario gains `events` (the condition studied, in the shared tip vocabulary) and optional `sets {pre, post}`, applied through withSet().\n- The 15 original scenarios keep their order and derive() values, plus an events list.\n- Five teaching scenarios are added: pe-high-risk, shock-lv, shock-rv, shock-biv and chip-elective. Their values are labelled MODEL PARAMETER and set clearly on one side of the module thresholds.\n- After PCI: shock-lv post reads as the wean row, shock-biv post as the right-sided support row, shock-rv post as the 'right-sided support if RV dysfunction is suspected' row.\n\nThe decision table (CPO 0.6 W / PAPi 0.9) is quoted from lessons pm-support-choice-rv and pm-support-choice-shock.\n\nsrc/ui/lab/haemoTips.ts holds haemoTipContext(study) and the `raises` export:\n- Phases: setup, right-heart (RA to wedge), left-heart, valves (simultaneous LV+Ao or LV+wedge in a valve study), shunts (during a saturation run), calculations (panel open).\n- Events: the scenario's own, events passed in a launch, and hypotension when a mean arterial pressure below 65 mmHg is on screen or recorded.\n- Catheter is reported as PIG for a pigtail; pressure as lv or aortic for the left-heart pigtail.\n\nHaemoLab.tsx is split into CatheterPanel, TracePanel (with RecordedPressures), OximetryPanel, CalcPanel and DiagnosisPanel. The lab now:\n- runs through useLabRun (decisions go to the ledger; one logbook row on submission instead of recordSim);\n- shows LabModeBar and LabTipsPanel through useContextTips;\n- accepts launches through useLabLaunch('haemo') with scenario, start (pre or post), mode and events;\n- registers window.__lab.haemo in DEV builds with context, tips, state, events and a dispatch.\n\ncore.launch.ts declares all 20 scenarios under their lessons and cases, with pre and post starts for the shock presets and two extra links that open straight at the after-PCI decision.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemo.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/HaemoLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/CatheterPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/OximetryPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/CalcPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/DiagnosisPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/TracePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/haemoTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/haemoTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/haemo/core.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/panels.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/haemo.test.ts (extended): derive() for the 15 original scenarios compared against values recorded before any edit (26 fields each, relative tolerance 1e-9); the originals stay first and in order and have no sets; the new scenarios sit on the intended side of each threshold (PE PA systolic below 60 and MAP below 65; shock pre and post CPO/PAPi rows; chip wedge above 25 with SvO2 below 50%); scenario events come from the vocabulary",
+     "src/simulation/haemoStudy.test.ts (new, 18 tests): phase follows the catheters (setup, RA/RV/PA/PCWP all right-heart, left-heart, both catheters, valves, shunts, calculations, a pigtail cannot wedge); events (scenario events, launch and raised events, hypotension only once the arterial pressure is seen); CPO 0.01 W off accepted and 0.05 W off rejected; PAPi, Qp:Qs and SVR tolerances; no entry before its inputs exist; entries graded against the current set; decision table rows; shock-biv post goes to the right-sided row; the decision is taken only after PCI; start 'post'; checklist unchanged; full shock study scores 100 and passes, a wrong decision fails",
+     "src/ui/lab/haemoTips.test.ts (new, 14 tests): raises vocabulary and phases; the hypotension threshold equals PATIENT_EVENT_THRESHOLDS; context phase follows RA to PCWP; for every scenario and phase no tip whose requires names another scenario's event; no PE, constriction, tricuspid, pulmonary-valve or HOCM tip in an unrelated scenario; PE: haemo-pe-venous-access-clot at setup, haemo-pe-pa-pressure-limit at right-heart, the angiography protocol only with a pigtail; AS, MS, HOCM, constriction and shock tips at their phases; guided, supervised and exam visibility; all 38 waiting.ts entries naming this package satisfiable (haemo still-waiting 45 to 7); remaining waiting tips belong to later haemo packages; core.launch.ts ids and titles match the library; practice index lists every scenario under its lessons and cases, including -as, -mitral, -ar-right and -pe",
+     "src/ui/haemo/panels.test.ts (new, 6 tests): server-render smoke test for CatheterPanel, TracePanel with RecordedPressures, OximetryPanel (step-up only when interpreting), CalcPanel (closed by default, entry and formula, no reference value on the live screen, decision table after PCI), DiagnosisPanel (debrief with reference values only after submission) and the whole HaemoLab"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/haemo.test.ts src/simulation/haemoStudy.test.ts src/ui/lab/haemoTips.test.ts src/ui/haemo/panels.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts -> 6 files, 81 tests passed",
+     "npx vitest run src/content/lab/tips.test.ts src/ui/lab/labRun.test.ts src/ui/lab/useContextTips.test.ts -> all passed (run with reachability and practiceIndex; practiceIndex then failed, see notes, and passed after the rename)",
+     "npx vitest run src/state/useLabLaunchStore.test.ts -> 5 passed",
+     "npx vitest run src/content/content.test.ts -> 53 passed, 6 failed; the same 6 fail with my core.launch.ts moved away; the test that matters here ('existing content and every .launch.ts validate') passes with it in place"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0)",
+    "acceptance": [
+     {
+      "criterion": "haemoTips.test.ts: for every scenario and phase, no tip whose requires names another scenario's event is returned",
+      "status": "met",
+      "evidence": "haemoTips.test.ts drives all 20 scenarios (pre and post sets for the shock presets) through setup, every RHC position, pigtail in PA, Ao, LV, LV+wedge, shunts and calculations, with and without the arterial line, checking tipsFor(ctx,100). No problems found. A second test checks the PE, constriction, tricuspid, pulmonary-valve and HOCM tip families by name."
+     },
+     {
+      "criterion": "CPO 0.01 W off is accepted and 0.05 W off rejected; the shock-biv post set routes to the right-sided or biventricular row",
+      "status": "met",
+      "evidence": "haemoStudy.test.ts 'CPO 0.01 W off is accepted and 0.05 W off rejected' (reducer 'enter' graded against studyTruth). shockRow on derive(withSet(shock-biv,'post')) (CPO 0.47, PAPi 0.53) returns SHOCK_TABLE[1], 'Consider right-sided support (with a left-sided device: biventricular support)'; expectedDecision is 'right-sided'."
+     },
+     {
+      "criterion": "derive() values are unchanged for the 15 scenarios",
+      "status": "met",
+      "evidence": "haemo.test.ts compares 26 derive() fields for each of the 15 original scenarios with values recorded from the unmodified haemo.ts before any edit (relative 1e-9). The snapshot is in datasets/tmp/wp-snapshots/haemo-study-session-and-tips/src/simulation/haemo.ts."
+     },
+     {
+      "criterion": "browser: __lab.haemo.context() phase follows the catheter RA to PCWP",
+      "status": "needs-browser",
+      "evidence": "Not checked in a browser, as instructed. HaemoLab registers registerLabHook('haemo', {context, tips, state, events, dispatch}). haemoTips.test.ts checks that haemoTipContext (what context() returns) gives right-heart at RA, RV, PA and PCWP and setup before insertion. In the browser, __lab.haemo.dispatch({type:'rhc-advance'}) moves the catheter without clicking."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/haemo/core.launch.ts under lessons hb-specific-conditions-as, hb-specific-conditions-mitral, hb-specific-conditions-ar-right",
+      "status": "met",
+      "evidence": "haemoTips.test.ts uses PRACTICE_INDEX (the runtime glob) to check every core.launch.ts scenario under each of its lessons and cases. It also checks aortic-stenosis under -as, mitral-stenosis under -mitral, acute-ar under -ar-right, pe-high-risk under -pe, and the shock-biv after-PCI link under pm-support-choice-rv. content.test's 'every .launch.ts validates' passes, so all lesson and case ids exist."
+     },
+     {
+      "criterion": "Tips: in a scenario from core.launch.ts, at phase 'setup', tipsFor(ctx, 20) includes haemo-pe-venous-access-clot, and at phase 'right-heart' it includes haemo-pe-pa-pressure-limit; every waiting.ts entry naming haemo-study-session-and-tips becomes satisfiable, so the reachability waiting count for the haemo lab falls by at least their number",
+      "status": "met",
+      "evidence": "haemoTips.test.ts uses scenario pe-high-risk (declared in core.launch.ts) and checks setup and right-heart. All 38 waiting.ts tips naming this package are satisfiable from `raises`; the haemo still-waiting count falls from 45 to 7 (38). reachability.test.ts passes and now reports 39 of 45 haemo tips satisfiable and 39 ready. The entries stay listed in waiting.ts, because only tip-retarget-catchup edits that file."
+     },
+     {
+      "criterion": "Design: HaemoLab split into five panels, behaviour-preserving, with a render smoke test per panel; runs through useLabRun; __lab.haemo",
+      "status": "partly",
+      "evidence": "The split, the per-panel render tests (panels.test.ts), useLabRun, useContextTips with LabTipsPanel and LabModeBar, useLabLaunch and the DEV hook are done. The visible behaviour changes on purpose: (1) calculations are entered by the learner instead of displayed; (2) the oximetry step-up reading shows only in guided mode or the debrief; (3) controls lock after the diagnosis is submitted; (4) the score is now diagnosis 50, data 25, calculations 25 (MODEL PARAMETER) instead of 60/40; (5) RA/PAWP and DPG are no longer displayed. The trace, recorder read-outs, recorded-pressures table and checklist are unchanged."
+     }
+    ],
+    "outOfScope": [
+     "src/content/content.test.ts (owned by found-launch-links): 6 'lab launch links' tests fail before and after this package. They validate a one-lesson track against every real .launch.ts, so any launch file with real lessonIds (including the PCI core.launch.ts) gives 'unknown lesson' errors. Fix: build `known` from the fixture alone in those tests, or pass the full TRACKS.",
+     "src/ui/content/practiceIndex.test.ts and src/state/useLabLaunchStore.test.ts use 'pe-massive' as a stand-in for an undeclared haemo scenario, and practiceIndex.test.ts expects 'Opens at pe-massive' (the id shown when the scenario is not declared). So I named my PE scenario 'pe-high-risk'. haemo-events-and-special-studies plans presets pe-massive-high and pe-massive-normal; if any package declares 'pe-massive' itself, that fixture must change.",
+     "docs/realism/facts: the new scenario landmarks (pe-high-risk, shock-lv, shock-rv, shock-biv, chip-elective), the grading tolerances not taken from the request (CO, CI and PVR bands, TPG 2 mmHg, valve area 0.1 cm\u00b2) and the 50/25/25 score weights are labelled MODEL PARAMETER in code comments only. Facts entries need adding by whoever owns that folder.",
+     "Request pm-support-choice#1 lists tip mcs-manage-post-pci-escalation. It is an mcs-lab tip with no alsoIn for haemo, so the haemo lab cannot show it. Showing it needs an alsoIn edit in src/content/manual/pci-manual/16-support-choice.ts (module files are edited only by the retarget and content-links packages).",
+     "lessonAndCaseLinks says post-PCI escalation cases link 'through CaseStudy.practice'. That means editing module case files, so I put caseIds (pm-support-choice-case-shock, pm-support-choice-case-chip) in core.launch.ts instead; the practice index lists them under those cases."
+    ],
+    "notes": "Snapshot: datasets/tmp/wp-snapshots/haemo-study-session-and-tips/ holds the three listed files that existed (haemo.ts, haemo.test.ts, HaemoLab.tsx) plus .started. The other listed files are new. The extra file src/ui/haemo/panels.test.ts is a new test file. Other src files newer than .started (pci/equipment*, session/caseSession.ts, access/caseTips*, ProcedureLab.tsx) belong to packages running in parallel; I did not touch them.\n\nWhat is real and what is only formally reachable:\n- Hypotension uses the patient-event threshold (MAP below 65). None of the 15 original scenarios has a MAP below 65 (lowest is lv-shock at 67). So hypotension tips appear only in pe-high-risk and the shock presets, and only once the arterial pressure is on screen or recorded.\n- haemo-hocm-hypotension-phenylephrine and haemo-post-mi-shunt-run pass the reachability check because the lab raises hypotension, hocm and the shunts phase. In practice the HOCM scenario is never hypotensive until the GTN provocation in haemo-valve-and-myocardial-studies, and vsr has a MAP of 69.\n- haemo-asa-pacing-first and haemo-bg-af-in-lab trigger on phase alone, so they appear in every left-heart or right-heart study. They are not in request #9's list, so I left their triggers alone.\n\nScenario events are tip context only (never shown on the live screen; the DEV-only events row shows them). Because each event names the condition being studied, a tip about it appearing (guided mode, or after asking for help) can point to the diagnosis; the request asks for exactly this design.\n\nI changed launch titles to the scenarios' own neutral titles (checked by a test) so the practice list does not give the diagnosis away. A launch's `events` string goes into the study unvalidated; unknown names simply match no tip.\n\nClinical sources: CPO and PAPi formulas, the 0.6 W and 0.9 thresholds and the decision table come from pm-support-choice-shock and pm-support-choice-rv; wedge above 25 with SvO2 below 50% from pm-support-choice-when; the PE PA-systolic limit and venous-access teaching from hb-specific-conditions-pe. No dose or device dimension was added."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Changes needed: two major issues. Most of the package is sound. derive() is unchanged for the 15 original scenarios, and the reducer, phases, events and tip gating are correct. The shock presets land on the intended decision-table rows. Launch metadata and the practice index are correct, and HaemoLab runs through useLabRun, useContextTips and useLabLaunch. I ran the 4 package test files (66 passed), plus practiceIndex, reachability and useLabLaunchStore (all passed); `tsc -p tsconfig.app.json --noEmit` is clean. I checked the browser criterion myself in a new tab on the running dev server: `__lab.haemo.context()` went setup, then right-heart at RA, RV, PA and PCWP, then back to setup on withdrawal. It is met. Shared engines (calc.ts, tips.ts, useLabTips, labRun) are untouched. The other src files newer than `.started` (diagnosticScenarios/index.ts, pci/equipment*, session/caseSession.ts, access/caseTips*, CaseTipsPanel.tsx, ProcedureLab.tsx) belong to other packages. The clinical statements I spot-checked are sourced from the module text: the decision table, the CPO 0.6 W and PAPi 0.9 thresholds, the wedge above 18 and above 25 mmHg with SvO2 below 50%, the PE limit of PA systolic 60 mmHg, and CTPA per the 2019 ESC guideline. The two major problems: Qp:Qs cannot be graded correctly in the shunt scenarios, and every entry gets a live accepted or rejected verdict in every mode.",
+    "findings": [
+     {
+      "where": "src/simulation/haemoStudy.ts referenceValue() 'qpqs' case (line ~139), with src/ui/haemo/OximetryPanel.tsx and SAT_SITES",
+      "problem": "Qp:Qs is graded against derive().qpqs. That value uses the hidden pulmonary venous saturation s.sats.pv (asd 0.98, vsr 0.97), but the oximetry run never offers a PV sample. The formula shown to the learner says 'PvO\u2082 = SaO\u2082 if there is no right-to-left shunt'. A learner who follows it exactly gets asd (0.97\u22120.715)/(0.97\u22120.86) = 2.32 against a reference of 2.125 (off by 0.19), and vsr (0.94\u22120.56)/(0.94\u22120.81) = 2.92 against 2.375 (off by 0.55). Both are outside the 0.1 tolerance. requiredCalcs() makes qpqs a scored calculation in every shunt scenario, so a correct method always fails, and the panel tells the learner they are wrong. The same hidden pv also feeds Qp in the PVR reference.",
+      "severity": "major",
+      "fix": "Make the reference match what the learner can measure, without changing derive(). In haemoStudy.ts, add a study-level reference for qpqs (and Qp for pvr) that uses the PV saturation only once it has been sampled: `qpQs(s.sats.Ao, mixedVenousSat(s), rec.sats.PV ?? s.sats.Ao, s.sats.PA)`. Then do one of two things. Option (a): add a 'PV' sample site for scenarios that define sats.pv (the atrial shunt can be crossed; see the haemo-shunt-asd-cross tip). Option (b): grade with PvO\u2082 = SaO\u2082 and state that in the debrief. Use the same value in DiagnosisPanel's 'ref' column, and in the HaemoLab ledger 'expected' (both call referenceValue(studyTruth(...))). Add a test that asd and vsr accept the value computed from the displayed saturations."
+     },
+     {
+      "where": "src/ui/haemo/CalcPanel.tsx CalcRow, the entry verdict block (the 'accepted' / 'outside tolerance, check the inputs and try again' line)",
+      "problem": "Every entry gets an immediate correct or incorrect verdict in all modes, including supervised, independent and exam. panels.test.ts checks this in supervised mode ('outside tolerance'). This is a live score on a lab screen. The learner can also re-enter until a value is accepted, which works out the ground truth (CO, PVR, Qp:Qs and so on) before the diagnosis is submitted. LAB_BUILD_PLAN rules: no ground truth on live screens outside guided aids; no live scores on any lab screen. Only firstAccepted counts for the score, but the verdict still gives the answer away.",
+      "severity": "major",
+      "fix": "Pass the run's mode (or labScreens visibility) to CalcRow. Show the accepted or outside-tolerance verdict only when mode === 'guided'. In other modes show '<value> <unit> entered', and keep the verdict and the reference for DiagnosisPanel's debrief, which already shows them. Optionally lock re-entry outside guided mode, or keep re-entry with no feedback. Update panels.test.ts: supervised and exam renders must not contain 'accepted' or 'outside tolerance', and guided renders still do."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts SHOCK_TABLE[1].action (line ~189)",
+      "problem": "The table is presented as quoted from the module ('From pm-support-choice-rv ...'), but row 2 adds '(with a left-sided device: biventricular support)'. The module table at src/content/manual/pci-manual/16-support-choice.ts line 785 says only 'Consider right-sided support'. The quoted text does not match its source.",
+      "severity": "minor",
+      "fix": "Use the module wording exactly: 'Consider right-sided support'. Move the biventricular gloss to the shock-biv explanation or keyFindings, which already says it, or attribute it separately from the quoted table."
+     },
+     {
+      "where": "src/simulation/haemoStudy.ts CALCS 'pvr' (need: 'PA and wedge pressures, CO')",
+      "problem": "The formula divides by Qp, but the 'need' text and calcAvailable ask for CO. In shunt scenarios Qp is about 2 \u00d7 CO, and there is no Qp entry or prompt. A learner who uses the systemic CO gets roughly half the reference PVR and is rejected (asd 2.45 against 1.15 WU).",
+      "severity": "minor",
+      "fix": "Change need to 'PA and wedge pressures, pulmonary flow (Qp; equal to CO without a shunt)'. Optionally show 'Qp' in the formula line as 'Qp = VO\u2082 \u00f7 [13.6 \u00d7 Hb \u00d7 (PvO\u2082 \u2212 PaO\u2082)]', consistent with the qpqs fix."
+     },
+     {
+      "where": "src/ui/haemo/CalcPanel.tsx and haemoStudy.ts calcAvailable('ava')",
+      "problem": "The original HaemoLab warned 'Gorlin assumes a fixed orifice: not valid for dynamic LVOT obstruction' for pvcResponse === 'hocm'. The split dropped this. In the HOCM scenario an aortic valve area can now be entered and is graded 'accepted', which rewards an invalid calculation. The plan asked for a behaviour-preserving split.",
+      "severity": "minor",
+      "fix": "Restore the HOCM caveat. In inputsNote (or CalcRow), when studyScenario(study).pvcResponse === 'hocm' and key === 'ava', append 'Gorlin assumes a fixed orifice: not valid for dynamic LVOT obstruction'. Better still, make calcAvailable('ava') return false for HOCM, with that sentence as the need text."
+     },
+     {
+      "where": "src/simulation/haemoStudy.test.ts (missing test)",
+      "problem": "The grading tests feed referenceValue(studyTruth(...)) \u00b1 delta back in, so they never check that a learner can reach a value within tolerance from what the screen shows. A test of that kind would have caught the Qp:Qs defect.",
+      "severity": "minor",
+      "fix": "Add a test. For every scenario and set, run a full study (all positions recorded, full saturation run, LV+Ao and LV+wedge where relevant). Then compute each required calculation from what is displayed only: measure() values, saturations rounded to whole per cent, BSA to 2 dp, the recorder's rounded mean gradient, and SEP/DFP to 2 dp from recorderTimings. Use the formulas in CALCS[].formula, and assert withinTolerance() for each."
+     },
+     {
+      "where": "src/ui/sections/HaemoLab.tsx launchStudy() events parsing (lines 53-56)",
+      "problem": "Launch events are cast to LabEvent without validation. A misspelt or superseded name ('af', 'pe') goes silently into the context and matches nothing, which hides authoring errors.",
+      "severity": "minor",
+      "fix": "Filter against the vocabulary: `.filter((e): e is LabEvent => (LAB_EVENTS as readonly string[]).includes(e))`. In DEV, also console.warn any dropped names."
+     },
+     {
+      "where": "src/ui/haemo/TracePanel.tsx channels fn (carried over unchanged from the original)",
+      "problem": "`fn: (t) => sample(s, c, t, { respiration: resp, pvc })` creates an options object on every sample call, and LiveTrace calls fn every frame. This is a small per-frame allocation in a render path. It is not a regression from the snapshot.",
+      "severity": "minor",
+      "fix": "Hoist `const opt = { respiration: resp, pvc };` above `channels` and use `fn: (t) => sample(s, c, t, opt)`."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/simulation/haemoStudy.test.ts src/ui/haemo/panels.test.ts src/simulation/haemo.test.ts src/ui/lab/haemoTips.test.ts (4 files, 71 tests passed)",
+     "npx vitest run src/ui/haemo/panels.test.ts (7 passed, after adding the shunt debrief check)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I checked all eight findings against the code and the plan. All were correct and all are fixed. derive() is unchanged: the haemo.test.ts snapshot of the 15 original scenarios still passes.\n\n1. Qp:Qs (major), in src/simulation/haemoStudy.ts. The numbers in the finding are right: for the ASD, a learner who follows the shown formula gets 2.32 against a reference of 2.125. I took option (b). A new gradedTruth(s) starts from derive() and recomputes Qp, Qp:Qs and PVR with PvO\u2082 = SaO\u2082, because the oximetry run has no pulmonary venous sample. studyTruth() now returns gradedTruth(), so the reducer and the HaemoLab ledger 'expected' grade against it. DiagnosisPanel's 'ref' column uses it too. For the ASD and VSR, the debrief adds a note that PvO\u2082 was taken as SaO\u2082. The note also gives the model's own Qp:Qs and PVR from derive(), using the hidden pulmonary venous value. The Qp:Qs formula text now says the pulmonary veins are not sampled.\n\n2. Live verdict (major), in CalcPanel.tsx. CalcRow takes a new showVerdict prop, true only when the mode is guided. In supervised, independent and exam modes an entry reads '<value> <unit> entered', in neutral colour. Re-entry is still allowed, with no feedback, and only the first entry counts for the score. In panels.test.ts, supervised, independent and exam renders contain neither 'accepted' nor 'outside tolerance'; guided renders still show both.\n\n3. Decision table, row 2. The action now reads exactly as the module does: 'Consider right-sided support'. The shock-biv explanation already carries the biventricular point. A test now checks all four action strings against the module wording.\n\n4. PVR inputs. The 'need' text now asks for pulmonary flow (Qp), equal to CO without a shunt. The formula line shows how Qp is calculated with PvO\u2082 = SaO\u2082. calcAvailable('pvr') now also requires the PA saturation. A test checks that the systemic CO gives a PVR that is not accepted in the ASD.\n\n5. HOCM caveat restored. A new calcBlocked(st, key) returns GORLIN_HOCM_NOTE ('Gorlin assumes a fixed orifice: not valid for dynamic LVOT obstruction') for 'ava' when pvcResponse is 'hocm'. calcAvailable then returns false, and CalcRow shows that sentence instead of 'needs \u2026'. Tests are in haemoStudy.test.ts and panels.test.ts.\n\n6. Reachability test, in haemoStudy.test.ts. It runs a full study (every right-heart position, LV with wedge and aorta, the full saturation run) for every scenario and set. Each calculation is worked out only from what the screen shows: rounded measures, whole-per-cent saturations, BSA to 2 dp, the recorder's whole-mmHg gradient and SEP/DFP to 2 dp. The test asserts withinTolerance() and acceptance at the first entry, first for every required calculation and then for every available one.\n   - Every required calculation passed.\n   - The wider test found four optional mitral valve areas outside the 0.1 tolerance, in aortic-stenosis, constriction, pe-high-risk and shock-biv post. Their gradients were 3 to 4 mmHg, and rounding them to whole mmHg moved the area by up to about 0.12 cm\u00b2.\n   - I fixed that in gradedTruth(): both Gorlin areas now use the recorder's displayed gradient (whole mmHg) and SEP or DFP (2 dp). Where derive() gives no area, neither does this. The recorder's stored gradient uses the same rounding helper.\n\n7. Launch events, in HaemoLab.tsx. Names are now filtered against LAB_EVENTS. In DEV builds, any dropped names are reported with console.warn. The DEV check reads import.meta.env the same way src/dev/labHooks.ts does.\n\n8. TracePanel.tsx. The sample options object is now built once per render rather than inside the per-sample function.\n\nFiles edited:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/haemoStudy.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/CalcPanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/DiagnosisPanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/TracePanel.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/HaemoLab.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/panels.test.ts (the package's own test file)\n\nNothing outside the package needed changing."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-23) at http://localhost:5173, went to Haemodynamics lab. window.__lab.haemo exposes context, tips, state, events and dispatch.",
+     "Acceptance check (browser) on scenario 'normal': at rhc -1 the phase was setup. rhc-advance gave RA, RV, PA and PCWP (readouts 'RA a6 v5 m4', 'RV 25/5', 'PA 25/10 (15)', 'PCWP a10 v12 m8'), all phase right-heart. rhc-withdraw back to -1 returned to setup. MET.",
+     "pe-high-risk (guided): the setup tips included haemo-pe-venous-access-clot and the right-heart tips included haemo-pe-pa-pressure-limit. Switching to the pigtail catheter stopped advance at PA (rhc 2) with catheter 'PIG' in the context. Pigtail in LV gave left-heart with pressure 'lv'. Turning the arterial line on (Ao 78/50, mean 63) added the dynamic 'hypotension' event. Opening the calculations panel gave phase calculations.",
+     "aortic-stenosis: Ao gave left-heart/aortic, LV gave left-heart/lv, LV plus arterial line gave valves. mitral-stenosis: LV plus wedge gave valves. asd and normal: a saturation sample gave shunts. constriction: left-heart with the constriction tips.",
+     "shock-biv post set: recorded all chambers, the arterial line and sats. Reference values read through studyTruth: CPO 0.469 W, PAPi 0.529. shockRow gave 'Consider right-sided support' (expected 'right-sided').",
+     "Entered CPO through the UI: 0.48 (0.011 W off) showed 'accepted'; 0.52 (0.051 W off) showed 'outside tolerance ... \u00b7 2 entries'. PAPi 0.53 was accepted. The formula (MAP \u00d7 CO \u00f7 451) appeared after entry. The decision table and source line rendered. Clicking 'Consider right-sided support' and then the diagnosis gave a debrief with the reference values (ref 0.47 W, ref 0.53) and 'Decision: ... The table reads CPO 0.47 W and PAPi 0.53 as: Consider right-sided support.' Controls locked afterwards (18 disabled buttons).",
+     "Launch via useUiStore.openSim('haemo', {scenario:'shock-lv', start:'pre', mode:'independent', events:'hypotension,bogus-x'}): opened shock-lv, set pre, raised ['hypotension'], mode bar 'Independent practice'. The unknown event gave a console warning. In independent mode no tips were shown, a calc entry showed only '0.1 W entered' (no verdict, no 'Show the formula') and the oximetry step-up line was hidden.",
+     "'PCI done: take the after-PCI set' moved to set post. Entries were cleared ('0 entered') and the recorded pressures were empty for the new set.",
+     "practiceIndex at runtime: aortic-stenosis was listed under hb-specific-conditions-as, mitral-stenosis under -mitral, acute-ar under -ar-right and pe-high-risk under -pe. pm-support-choice-rv lists shock-rv, shock-biv and shock-biv start post ('\u00b7 After PCI'). Launching that post item opened shock-biv at the After PCI set in Guided practice.",
+     "Submitting a diagnosis moved the sidebar 'logged' counter from 6 to 7 (one logbook row per submission through useLabRun).",
+     "Console: no errors during the session. The only warning was the expected 'haemo launch: unknown event name(s) ignored: bogus-x'. Closed tab-23."
+    ],
+    "problems": [
+     {
+      "where": "src/content/manual/cath-handbook/04-cardiac-catheterisation.ts (tip haemo-lhc-stenotic-valve), 06-additional-procedures.ts (haemo-asa-pacing-first), 04-cardiac-catheterisation.ts (haemo-shunt-vsd-simultaneous, haemo-shunt-asd-cross); not in this package's file list",
+      "problem": "Some tips are gated on phase only, so in the running lab they appear in the wrong scenario. 'Severe aortic stenosis: cross only with a reason' shows in the HOCM and mitral-stenosis valve phases. 'Septal ablation: pacing wire and continuous gradient first' shows in any left-heart phase, including constriction. 'VSD: simultaneous LV and RV pressures' shows during an ASD or normal saturation run. This does not break the acceptance test, which only checks tips whose requires names an event, but the learner sees tips for another condition.",
+      "severity": "minor",
+      "fix": "Outside this package (tip owners or tip-retarget): add event gates to the tips' when. haemo-lhc-stenotic-valve: event ['aortic-stenosis']. haemo-asa-pacing-first: event ['hocm']. haemo-shunt-vsd-simultaneous: event ['ventricular-shunt']. haemo-shunt-asd-cross: event ['atrial-shunt']. haemoTipContext already supplies these events."
+     },
+     {
+      "where": "src/ui/sections/HaemoLab.tsx line 200",
+      "problem": "The recorded-pressures heading lowercases the set title, so it reads 'Recorded pressures, before pci (mmHg)' and 'after pci'.",
+      "severity": "minor",
+      "fix": "Use `Recorded pressures, ${set.title.charAt(0).toLowerCase() + set.title.slice(1)} (mmHg)` or simply `Recorded pressures (${set.title}, mmHg)` so that 'PCI' keeps its capitals."
+     },
+     {
+      "where": "src/ui/sections/HaemoLab.tsx launchStudy()",
+      "problem": "`(p.events ?? \"\").split` throws a TypeError if a caller passes events as an array instead of the comma-separated string the schema defines. I triggered it with openSim('haemo', {events:['hypotension']}); the launch is lost and an uncaught error occurs inside the zustand subscriber.",
+      "severity": "minor",
+      "fix": "Guard the type: `const raw = p.events; const names = (Array.isArray(raw) ? raw : typeof raw === 'string' ? raw.split(',') : []).map((e) => String(e).trim()).filter(Boolean);`"
+     },
+     {
+      "where": "src/ui/haemo/DiagnosisPanel.tsx (behaviour carried over from the original HaemoLab)",
+      "problem": "A diagnosis can be submitted with 0/6 data collected and is shown as 'Correct'. One click on an option submits it and locks the study. This is not a regression (the original behaved the same way), and the score does reflect the missing data, but it lets a learner guess before collecting any data.",
+      "severity": "minor",
+      "fix": "Optional, behaviour change: in independent and exam modes, disable the diagnosis buttons until dataChecklist(s) has at least the pressures recorded, or ask for confirmation before submitting. Leave as is if behaviour preservation is preferred."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 1 (phase-only tips haemo-lhc-stenotic-valve, haemo-asa-pacing-first, haemo-shunt-vsd-simultaneous, haemo-shunt-asd-cross shown in the wrong scenario): the finding is correct, but the fix belongs in src/content/manual/cath-handbook/04-cardiac-catheterisation.ts and 06-additional-procedures.ts, which are not in this package's file list. outOfScope: whoever owns those tips (or tip-retarget) should add event gates to their when: haemo-lhc-stenotic-valve event ['aortic-stenosis'], haemo-asa-pacing-first event ['hocm'], haemo-shunt-vsd-simultaneous event ['ventricular-shunt'], haemo-shunt-asd-cross event ['atrial-shunt']. haemoTipContext already reports these events for the matching scenarios.",
+     "Finding 4 (a diagnosis can be submitted with 0/6 data collected): rejected as a behaviour change. The plan's design for this package says the HaemoLab split must preserve behaviour, and the verifier confirms the original lab worked the same way. The score already reflects the missing data, and the answer appears only in the post-submission debrief, so no ground truth reaches the live screen. Gating or confirming submission in independent and exam modes could go to a later haemo package as a deliberate change."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/haemo/panels.test.ts src/simulation/haemoStudy.test.ts src/ui/lab/haemoTips.test.ts src/simulation/haemo.test.ts (4 files, 72 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I applied two of the four findings and rejected two, both with reasons. Both fixes are in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/HaemoLab.tsx.\n\nApplied:\n- Finding 2 (heading capitals): the recorded-pressures heading now lowercases only the first letter of the set title, so it reads 'Recorded pressures, before PCI (mmHg)' and 'after PCI'. There is no test for this: the default HaemoLab render has no measurement sets, so the heading never appears in it.\n- Finding 3 (array events crash): launchStudy() now reads p.events as unknown. It splits a string on commas, takes an array as it is, and treats any other type as no events. Each name is converted with String() and trimmed before it is checked against LAB_EVENTS, so an array no longer throws inside the store subscriber. I exported launchStudy (a named export alongside the default component) so it can be tested.\n\nNew test: a 'haemodynamics lab launch' block in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/haemo/panels.test.ts. It checks that:\n- a string with one valid and one invalid name keeps only 'hypotension';\n- an array does not throw and gives ['hypotension'];\n- a number gives [];\n- an unknown scenario returns null.\n\nOut of scope (finding 1): event gates for four tips in src/content/manual/cath-handbook/04-cardiac-catheterisation.ts and 06-additional-procedures.ts; the rejected list above has the details. No other files outside the package were touched."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "haemoTips.test.ts: for every scenario and phase, no tip whose requires names another scenario's event is returned",
+      "met": true,
+      "evidence": "src/ui/lab/haemoTips.test.ts 'for every scenario and phase, no tip whose requires names another scenario's event is returned' builds states for every HAEMO_SCENARIOS entry (both pre and post sets for the shock presets) across setup, RA to PCWP, pigtail PA, Ao, LV, LV plus wedge, shunts and calculations, with and without the arterial line. It checks that tipsFor(ctx,100) returns no tip whose requires names a foreign scenario event, and no tip gated only on another scenario's condition event. A second test checks the PE, constriction, HOCM, AS and MS tip families by id. Both pass."
+     },
+     {
+      "criterion": "CPO 0.01 W off is accepted and 0.05 W off rejected; the shock-biv post set routes to the right-sided or biventricular row",
+      "met": true,
+      "evidence": "src/simulation/haemoStudy.test.ts 'CPO 0.01 W off is accepted and 0.05 W off rejected' passes (it also checks the first-attempt scoring). 'tolerances: PAPi 0.1, Qp:Qs 0.1, SVR 10%' passes. 'the shock-biv post set routes to the right-sided (biventricular) row...' passes: derive(withSet(shock-biv,'post')) maps to SHOCK_TABLE[1] 'Consider right-sided support', and expectedDecision is 'right-sided'. CALC_TOLERANCE in src/simulation/haemoStudy.ts has cpo abs 0.02, papi abs 0.1, qpqs abs 0.1 and svr rel 0.1, each with its source. The SHOCK_TABLE action text matches the module wording, and the thresholds come from src/content/manual/pci-manual/16-support-choice.ts (CPO below 0.6 W, PAPi below 0.9)."
+     },
+     {
+      "criterion": "derive() values are unchanged for the 15 scenarios",
+      "met": true,
+      "evidence": "src/simulation/haemo.test.ts 'the fifteen original scenarios' has three tests that pass. They check that the first fifteen ids are unchanged and in order. They compare 26 derive() keys per scenario against DERIVE_BEFORE, recorded before the change, to a relative 1e-9. They check that none of the fifteen has measurement sets and that withSet returns each one as it is."
+     },
+     {
+      "criterion": "browser: __lab.haemo.context() phase follows the catheter RA to PCWP",
+      "met": true,
+      "evidence": "Checked in my own tab against the running dev server on port 5173. With the Haemodynamics lab open, window.__lab.haemo.context() gave phase 'setup' with no catheter. After each of four rhc-advance dispatches (rhc index 0 to 3, RA to PCWP) it gave phase 'right-heart'. At the wedge, tips() included haemo-wedge-oedema-risk. No console errors. The unit test 'phase follows the catheter RA to PCWP (what __lab.haemo.context() reports)' in haemoTips.test.ts also covers this. The hook is registered in src/ui/sections/HaemoLab.tsx through registerLabHook('haemo', { context: () => haemoTipContext(...) })."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in core.launch.ts under lessons hb-specific-conditions-as, hb-specific-conditions-mitral, hb-specific-conditions-ar-right",
+      "met": true,
+      "evidence": "The haemoTips.test.ts test 'practiceIndex lists every scenario in core.launch.ts under its lessons, including hb-specific-conditions-as, -mitral and -ar-right' passes. Every core.launch.ts scenario appears under each of its lessonIds and caseIds. aortic-stenosis is under hb-specific-conditions-as, mitral-stenosis under -mitral, acute-ar under -ar-right and pe-high-risk under -pe. shock-biv with start 'post' is under pm-support-choice-rv. src/ui/content/practiceIndex.test.ts also passes (10 tests)."
+     },
+     {
+      "criterion": "Tips: in a core.launch.ts scenario, at 'setup' tipsFor(ctx,20) includes haemo-pe-venous-access-clot and at 'right-heart' haemo-pe-pa-pressure-limit; every waiting.ts entry naming this package becomes satisfiable, so the haemo waiting count falls by at least their number",
+      "met": true,
+      "evidence": "haemoTips.test.ts test 'pulmonary embolism (pe-high-risk in core.launch.ts)...' passes: at setup the tips include haemo-pe-venous-access-clot, and at right-heart they include haemo-pe-pa-pressure-limit. The reachability test passes and prints 'haemo tips still waiting: 45 -> 7'. All 38 tips in the waiting.ts entry with raisedBy haemo-study-session-and-tips are satisfiable from raises. src/content/lab/reachability.test.ts (5 tests) passes. It picks up src/ui/lab/haemoTips.ts through its '../../ui/**/*Tips.ts' glob and reports all 38 as ready. waiting.ts is owned by found-tip-retarget, and tip-retarget-catchup removes ready entries, so its listed count of 45 is expected."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/haemoTips.test.ts src/simulation/haemoStudy.test.ts src/simulation/haemo.test.ts src/ui/haemo/panels.test.ts -> 4 files, 72 tests passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts -> 2 files, 15 tests passed (haemo: 45 tips, 39 satisfiable, 38 package entries reported ready)",
+     "Browser check in my own tab on localhost:5173: window.__lab.haemo.context() phase was setup, then right-heart for rhc 0..3 (RA to PCWP); no console errors"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ]
+ }
+}

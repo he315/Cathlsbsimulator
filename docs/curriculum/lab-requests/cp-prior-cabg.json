@@ -1,0 +1,142 @@
+[
+  {
+    "lab": "cathlab",
+    "what": "Post-CABG diagnostic case generator: an operation note in the pre-brief (conduits, targets, proximal and distal anastomoses, date of surgery, optional ring markers and clips), vein graft ostia placed on the anterior ascending aortic wall above the sinuses in Oxford's usual order (circumflex grafts highest, LAD/diagonal grafts just above the left coronary ostium, RCA grafts lowest, just above and in front of the native RCA), patent, diseased and occluded grafts (an occluded graft shown as a stump), and native arteries with proximal occlusions whose territories fill by graft, by collaterals, or with competitive filling. The lab should report vessel = SVG or radial-graft during graft engagement, raise 'graft-not-found' after repeated failed attempts at a graft the note lists, and raise 'pressure-damped' at a stenosed graft ostium. A prior-CABG flag in the lab context would let graft-specific tips appear in the setup phase. The lab should also report the access route (femoral or radial) in the diagnostic context, so that the radial-specific tip diag-graft-radial-convert can carry a route trigger instead of saying 'if you are working from the radial'.",
+    "learnerDoes": "Reads the note, chooses femoral or left radial access, engages each vein graft with a JR4, multipurpose, AL1, LCB or RCB catheter using the LAO withdrawal-and-clockwise technique for right grafts and the up-and-down sweep for left grafts, recognises the jump on engagement, checks the pressure, gives a slow test injection, records stumps, and takes an LAO aortogram (pigtail placed higher, long acquisition) to use as a road map in the same projection when a graft cannot be found.",
+    "success": "Every graft in the note is engaged or shown occluded (stump or aortogram) and every myocardial territory is accounted for, with no injection into a damped trace and contrast kept below the stated limit (3.7 × eGFR). When contrast nears the limit with a graft still missing and no emergency, the learner stops and requests coronary CT instead of taking an aortogram.",
+    "tips": [
+      "diag-graft-op-note-first",
+      "diag-graft-radial-convert",
+      "diag-svg-jr4-after-rca",
+      "diag-svg-right-graft-lao",
+      "diag-svg-left-sweep",
+      "diag-svg-damped",
+      "diag-graft-not-found",
+      "access-cabg-left-radial"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-svg-find"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Vein graft imaging and interpretation in the diagnostic lab: per-graft view targets (LAO and RAO for the body; LAO cranial and left lateral for an LAD graft anastomosis, RAO caudal for a circumflex graft, LAO cranial for an RCA graft), larger contrast volumes needed to fill a graft, prolonged runs for long grafts, and rendered competitive filling (washout beyond the anastomosis, back-filling of a graft on native injection) and collateral filling. A report screen asking the learner to state each graft's patency, lesions and anastomosis.",
+    "learnerDoes": "Images each vein graft in at least two views from ostium to insertion, adds the anastomosis view for its target, keeps the run going until the native vessel fills, and interprets competitive and collateral filling on the native injections.",
+    "success": "Each graft is imaged in the required views with the anastomosis shown, the report correctly identifies patent and occluded grafts, and the learner predicts an open graft from an occluded native artery without collaterals.",
+    "tips": [
+      "diag-svg-views",
+      "diag-svg-long-run",
+      "diag-aorto-ostial-views"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-svg-image"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Arch and subclavian anatomy with internal mammary grafts: left and right subclavian arteries, vertebral arteries, innominate artery and right common carotid, the LIMA arising anteroinferiorly a few centimetres beyond the vertebral artery, an in situ RIMA, optional proximal subclavian stenosis (with an arm-to-arm systolic difference above 20 mmHg in the pre-brief and a damped subclavian trace), and tortuosity. Catheters: IM, IM-VB1, Bartorelli-Cozzi, Williams (3DRC) and Simmons in addition to JR4. The lab should report vessel = LIMA or RIMA, raise 'subclavian-tortuosity' and 'catheter-kink', allow a 0.035 J or hydrophilic wire to be steered into the subclavian (and wrongly into the vertebral or carotid), a long exchange wire, a blood pressure cuff on the left arm for non-selective injection, and LIMA ostial dissection with forceful injection.",
+    "learnerDoes": "Images the subclavian non-selectively (or compares its pressure with the aorta), enters it with anticlockwise rotation and slow withdrawal, wires it towards the arm, brings the catheter beyond the vertebral artery, aspirates and checks the trace, drops into the LIMA with anticlockwise withdrawal and small puffs, injects slowly, and acquires AP, RAO cranial, LAO cranial and left lateral views; repeats for the RIMA past the innominate artery; uses the cuff and a non-selective run when selective engagement fails.",
+    "success": "Subclavian assessed before selective mammary injection, no wire into the vertebral or carotid, no damped injections, slow injections, and the LIMA-to-LAD anastomosis shown in LAO cranial and lateral views.",
+    "tips": [
+      "diag-ima-subclavian-first",
+      "diag-lima-engage",
+      "diag-ima-tortuous",
+      "diag-ima-gentle-injection",
+      "diag-lima-views",
+      "diag-lima-not-engaged",
+      "diag-rima-engage",
+      "diag-radial-graft-spasm"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-arterial"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A degenerated saphenous vein graft scenario with a native-or-graft decision step: a planning screen offering redo surgery, native PCI or graft PCI with the inputs of Brilakis's algorithm (redo candidacy, need for more revascularisation, LIMA-LAD feasibility, native lesion complexity, graft lesion complexity, ability to treat the native lesion), then graft PCI with guide choice (JR4, multipurpose, AL, bypass shapes; 6 to 8 Fr), deep intubation or guide extension for support, intragraft vasodilator before and after, an optional GP IIb/IIIa inhibitor that adds no benefit, direct stenting versus predilation, IVUS sizing with a stent-to-vessel ratio readout, and complications driven by choices (no-reflow after predilation or oversizing; perforation after an oversized stent or high-pressure inflation, with a loculated effusion because the patient has had CABG). The lab should report vessel = SVG. The IVUS readout must label the reference lumen diameter separately from the vessel (EEM) diameter. A prior-CABG flag in the PCI lab context would let pci-cabg-perforation-act-now be restricted to post-CABG patients (it now fires on any perforation).",
+    "learnerDoes": "Chooses the target with the algorithm, sets up support, gives nicardipine intragraft, stents directly with a stent slightly smaller than the graft (stent diameter below 0.89 of the IVUS reference lumen diameter, not the vessel diameter) sized with IVUS, and treats a perforation at once.",
+    "success": "The algorithm's target is chosen, no routine GP IIb/IIIa inhibitor, direct stenting with a stent below 0.89 of the IVUS reference lumen diameter, final IVUS shows expansion, and any perforation is sealed immediately.",
+    "tips": [
+      "pci-graft-native-or-graft",
+      "pci-svg-chronic-occlusion",
+      "pci-svg-guide-support",
+      "pci-svg-no-routine-gpi",
+      "pci-svg-intragraft-vasodilator",
+      "pci-svg-direct-stent-size",
+      "pci-cabg-perforation-act-now",
+      "pci-phys-svg-avoid"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-target",
+      "cp-prior-cabg-svg-pci"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Distal embolic protection in the vein graft scenario: two filter types (a sheath-delivered filter wire in 2.25–3.5 and 3.5–5.5 mm sizes needing 25 or 30 mm of landing zone; an over-the-wire filter sized by Brilakis's table for 3–6 mm grafts needing 4–5 cm of landing zone, delivered through a dual-ended catheter), a landing-zone and diameter check (with in-stent restenosis and distal anastomotic lesions as cases where a filter is not needed or not possible), filter crossing failure (predilation with a 1.5–2.0 mm balloon, buddy wire that must be removed before stenting, more support), deployment (torquer locked at the valve; sheath or catheter withdrawn; contrast check), filter position monitoring with drift penalised after stenting, a filter that fills with debris and causes slow flow ('slow-flow' raised) treated by guide aspiration then retrieval, and retrieval (sheath to the stop, filter drawn in until resistance; partial recovery for a full over-the-wire filter; bent-tip sheath or guide extension when the retrieval device will not pass, raising 'equipment-entrapment'). Stenting over a left-in buddy wire should trap the filter. Include a jailed-filter branch: if the learner stents with a buddy wire still in place, the filter is entrapped; pulling hard fractures the wire, and the learner must advance a balloon, microcatheter or guide extension over the filter wire, then inflate a balloon over it, then add a second wire and balloon (Brilakis 27.2.3.1). Keep the bent-tip retrieval sheath for a free filter whose retrieval device will not pass the stent.",
+    "learnerDoes": "Checks feasibility, chooses and sizes the filter, prepares it in the correct order without discarding the packing coil or the dual-ended catheter, crosses and deploys it, keeps it still during PCI, manages slow flow, and retrieves it with the right technique for the amount of debris.",
+    "success": "Filter chosen only when feasible, correct size and landing zone, buddy wire removed before stenting, no filter movement after stenting, slow flow handled by aspiration then retrieval, and the filter retrieved without spilling debris. A jailed filter is never pulled hard, and the entrapment sequence is followed in order.",
+    "tips": [
+      "pci-epd-feasibility",
+      "pci-epd-cannot-cross",
+      "pci-epd-slow-flow",
+      "pci-epd-keep-still",
+      "pci-epd-retrieve",
+      "pci-epd-full-filter",
+      "pci-epd-retrieval-blocked"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-epd"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "LIMA-to-LAD PCI scenario: an IM guide (90 cm), a tortuous LIMA that develops accordion pseudolesions when a stiff wire or microcatheter straightens it ('new-narrowing-tortuous' and 'new-narrowing' raised, unaffected by vasodilator, resolving on withdrawal), an anastomotic lesion that responds to low-pressure balloon dilatation, clips near the anastomosis as landmarks, shaft-length limits for lesions beyond a long graft (90 cm or shortened guide, 300 cm wire, longest-shaft devices), dissection or perforation if the guide is deep-seated or a guide extension is used, and a two-guide option (deliver through the native left main, image through the LIMA). The lab should report vessel = LIMA.",
+    "learnerDoes": "Seats the IM guide gently, uses a soft wire, recognises pseudolesions and excludes dissection before withdrawing the equipment, dilates the anastomotic lesion with a low-pressure balloon using the clip as a landmark, and plans equipment length.",
+    "success": "No stent placed on a pseudolesion, no forceful or unnecessary deep intubation or guide extension in the LIMA (a guide extension advanced gently is allowed when alignment or delivery needs it), the anastomosis treated with a balloon first, and the equipment reaches the lesion.",
+    "tips": [
+      "pci-ima-guide-gentle",
+      "pci-lima-pseudolesion",
+      "pci-ima-anastomosis-balloon",
+      "pci-graft-route-reach"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-target"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A filter-state signal for tip triggers: the PCI lab reports whether an embolic protection filter is currently deployed in the target vessel (for example a new trigger condition or event such as 'epd-deployed'), so that filter-specific bail-out advice (aspirate then retrieve, do not pull an open filter into a stent, new filter for more PCI) shows only during protected vein graft PCI, while unprotected no-reflow shows the distal vasodilator advice instead. The tip pci-epd-slow-flow has been reworded to fit both states until this exists.",
+    "learnerDoes": "Develops slow flow during vein graft PCI, once with a filter deployed and once without, and follows the matching bail-out.",
+    "success": "With a filter: aspirates through the guide, retrieves the filter, inserts a new filter before further PCI. Without a filter: gives intragraft vasodilator as distally as possible and avoids repeated injections.",
+    "tips": [
+      "pci-epd-slow-flow",
+      "pci-epd-keep-still",
+      "pci-epd-full-filter"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-epd",
+      "cp-prior-cabg-svg-pci"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "An ostial LIMA dissection event in the diagnostic lab: a forceful selective LIMA injection can produce a persisting linear stain at the ostium, with or without impaired graft flow, chest pain and ECG change.",
+    "learnerDoes": "Recognises the dissection, disengages the catheter from the ostium, stops selective injections, judges flow from the last run, symptoms and ECG, and either observes a small non-flow-limiting dissection or, if flow is impaired, gives heparin to a therapeutic ACT, changes to a guide catheter and calls for immediate wiring and stenting of the true lumen (or surgery).",
+    "success": "No further selective injection after the stain appears; correct choice between observation and urgent treatment according to flow; no wire into the graft before the ACT is therapeutic.",
+    "tips": [
+      "diag-ima-gentle-injection"
+    ],
+    "lessonIds": [
+      "cp-prior-cabg-arterial"
+    ],
+    "priority": "P3"
+  }
+]

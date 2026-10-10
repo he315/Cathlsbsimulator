@@ -1,0 +1,196 @@
+{
+ "package": "diag-lesion-morphologies",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-31) at http://localhost:5173 and opened the Cath lab. I launched the scenarios through useLabLaunchStore.request('cathlab', {scenario}) and drove the lab with __labStep, __fluoroDraw, window.__lab and __lab.diagnostic. I also read the cine frames through a temporary wrapper on lab.onExposedFrame. I edited no files. Before closing the tab I clicked Full procedure to put the saved navigation back, reset the viewport and closed the tab.",
+     "diag-cto-contralateral-collaterals loaded as 'Stable angina, inferior wall motion abnormality' with the RCA CTO (tapered stump, 25 mm) and its two channels. The live tree draws collateral0 LAD to PDA and collateral1 LCx to PLV. The case name and pre-brief give no ground truth.",
+     "CTO donor run in the app: JL4 seated selective-lm, LAO 30, a 2 s push from the left. I fed the bolus the app produced (lab.bolusFor()) into buildXrayScene with the session tree. Total iodine went 41 / 177 / 266 / 323 / 274 / 184 / 111 / 90 / 89 / 99 at 0.5 to 5 s. The retrograde-only iodine (filled: []) was 0 up to 2 s, 6 at 3 s, 40 at 4 s, 88 at 5 s and 95.7 at 5.5 s, which is the peak. So the recipient fills late and the donor fills first.",
+     "Cine frames rendered in the app, retrograde-only bolus at 5.5 s minus a frame with no contrast: a curved recipient vessel shows along the inferior heart border. Its peak darkening was 33 grey levels against 68 for the donor at 1.5 s, roughly half the donor's opacity, as the model intends. In a single raw frame at a 20 to 25 cm field it is hard to see.",
+     "Contrast lifetime in the app: with a 2 s push, lab.bolusFor() goes null at 5.53 s (pushEnd + CONTRAST_CLEAR_S 3.5 s). From then on no contrast is drawn, so the recipient disappears at its peak opacity (see problems).",
+     "Tips in diag-cto-contralateral-collaterals: a right JR4 selective-rca injection raised total-occlusion and cto. After a filmed cine run, once the contrast had cleared, the phase was 'views'. tipsFor(ctx, 20) included diag-cto-strategy-defer-adhoc and diag-interp-collateral-long-run, and both were also first in the drawer (__lab.diagnostic.tips()).",
+     "diag-eccentric-orthogonal (seed 1) on the live session tree: projectedStenosis gave RAO30 69.7, LAO60 28.8, AP 57.0, LAT 45.5 and LAO30 40.7. With seed v2, RAO30 gave 69.3 and LAO60 43.8. Both orthogonal pairs differ by 15 points or more. Cine frames at RAO 30 and LAO 60 (17 cm field) render the left system cleanly. At this resolution I could not reliably pick out the lesion by eye. projectedStenosis has no UI caller, so no %DS reaches the live screen.",
+     "diag-scad-types loaded with scadType '1' drawn by the seed. scad-suspected was raised at start.",
+     "diag-two-candidate-culprits loaded. The first left injection raised total-occlusion and thrombus, but it was a non-selective root puff that filled no vessel (see problems).",
+     "practiceIndex (current source): pm-interpreting-stenosis lists diag-eccentric-orthogonal, diag-tapering-reference and diag-lesion-at-branch. cp-cto-strategy-selection, pm-interpreting-collaterals, cp-other-complex-scad and pm-interpreting-flow list the expected scenarios. pm-acquiring-test-nitrate and pm-acquiring-anatomy list nothing, because diag-focal-rca-spasm is held back.",
+     "Console: no errors during the session. The only warnings were WebGL 'READ-usage buffer' performance warnings, caused by the frame grabbing my driving forced.",
+     "Not checked in the app: the spasm-versus-GTN behaviour (the scenario is held and the live lab does not pass the nitrate effect) and the realism re-capture (it needs scripts/realism/compare_sets.py)."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sim/labSession.ts step(): the contrast lifecycle line `if (this.injector.done() && tr && tr.pushEnd !== null && el > tr.pushEnd + CONTRAST_CLEAR_S) this.finishInjection();` (CONTRAST_CLEAR_S = 3.5 at line 171). This file is outside the package's list, so it belongs in outOfScope for the build lead.",
+      "problem": "The lab ends the bolus 3.5 s after the push ends, whatever the collateral lag. With a typical 2 s push, bolusFor() returns null at 5.5 s. That is exactly when the CTO recipient reaches its peak (retrograde iodine 95.7 at 5.5 s, 95.3 at 6 s, 57.6 at 7 s, 22.5 at 8 s). On a 6 s donor run the recipient therefore vanishes in one frame at full opacity instead of fading, and the washout tail is never shown. That fails 'a 6 s donor run without panning fills the recipient' at 6 s and is the opposite of what diag-interp-collateral-long-run teaches. The phase also stays 'inject' until then.",
+      "severity": "major",
+      "fix": "Extend the clear time by the side's retrograde tail. Once per session or tree, compute `const net = transportNet(this.tree, caseData.lesions); this.retroTailS = { left: net.lagMax.left > 0 ? net.lagMax.left + 2 * RETRO.retentionTauS : 0, right: ... }` (transportNet, RETRO from src/render/xray/contrastTransport.ts). Change the condition to `el > tr.pushEnd + CONTRAST_CLEAR_S + this.retroTailS[tr.side]`. Alternatively, end the bolus when contrastField(...).late(lagMax) drops below a small threshold. Add a test: after a 2 s left push in diag-cto-contralateral-collaterals, bolusFor() is still non-null at 6 s and 7 s."
+     },
+     {
+      "where": "src/simulation/diagnosticScenarios/lesions.ts: the script entries of diag-cto-contralateral-collaterals ('occlusion-seen') and diag-two-candidate-culprits ('left-run', 'right-run')",
+      "problem": "`when: { firstInjection: side }` fires on any injection attributed to that side, including a non-selective root puff that fills no coronary. In diag-two-candidate-culprits, a JL4 root puff (outcome root-puff, filledVessels []) raised total-occlusion and thrombus. A right root puff in the CTO case would likewise raise total-occlusion and cto. The occlusion tips ('Found a CTO? Film the collaterals, then plan') then appear before the learner has seen the occlusion.",
+      "severity": "minor",
+      "fix": "Require a selective injection in each condition. ScenarioCondition already supports `engagement`, which script.ts checks at evaluation. For example `when: { firstInjection: \"right\", engagement: [\"selective-rca\", \"deep-rca\"] }` for the RCA runs and `when: { firstInjection: \"left\", engagement: [\"selective-lm\", \"deep-lm\"] }` for the left run. Add a lesions.test.ts case: a root puff raises nothing and a selective run raises the events."
+     },
+     {
+      "where": "docs/curriculum/lab-build-plan.json, diag-lesion-morphologies acceptance (practiceIndex item) against src/simulation/diagnosticScenarios/lesions.launch.ts",
+      "problem": "The acceptance expects practiceIndex to list scenarios under pm-acquiring-test-nitrate and pm-acquiring-anatomy. In the app both lessons list nothing, because their only scenario (diag-focal-rca-spasm) is deliberately held until the live lab passes the nitrate effect (diag-spasm-states). The spasm-versus-GTN acceptance is likewise met only in unit tests, not in the live lab.",
+      "severity": "minor",
+      "fix": "No code change in this package. Record the deferral in the package notes or acceptance as 'published by diag-spasm-states (spasm.launch.ts)', so the acceptance check does not count it as a failure. Alternatively, have diag-spasm-states own that acceptance line."
+     },
+     {
+      "where": "docs/curriculum/lab-build-plan.json, diag-lesion-morphologies acceptance (Tips item)",
+      "problem": "The acceptance names scenario diag-eccentric-orthogonal for the total-occlusion tips. That scenario has no script and raises no events, so the line cannot hold as written. The behaviour does hold in diag-cto-contralateral-collaterals: after a filmed selective right run, phase 'views', tipsFor(ctx, 20) includes both tips.",
+      "severity": "minor",
+      "fix": "Correct the acceptance text to name diag-cto-contralateral-collaterals (after the first selective right run, in phase 'views'). Make sure the tips test beside the event source (src/simulation/diagnosticScenarios/lesions.test.ts) asserts it for that scenario."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 1,
+    "rejected": [
+     "Finding 1 (major, bolus cleared 3.5 s after the push regardless of collateral lag): I checked it against the code and it is right, but it is outside this package's files, so I made no change and it goes to outOfScope. src/ui/sim/labSession.ts line 1396 calls finishInjection() once el > tr.pushEnd + CONTRAST_CLEAR_S (3.5 s, line 171). Line 1399 also ends the store bolus at CONTRAST_CLEAR_S + 2.2. Fix for the owner of labSession.ts: once per tree, compute net = transportNet(tree, caseData.lesions) and retroTailS[side] = net.lagMax[side] > 0 ? net.lagMax[side] + 2 * RETRO.retentionTauS : 0 (both exported from src/render/xray/contrastTransport.ts, lines 84 and 236), then add retroTailS[tr.side] to both conditions. Add a test that bolusFor() is still non-null at 6 s and 7 s after a 2 s left push in diag-cto-contralateral-collaterals.",
+     "Finding 3 (practiceIndex acceptance for pm-acquiring-test-nitrate and pm-acquiring-anatomy): correct, and the finding asks for no code change. The deferral is already recorded in lesions.ts above heldScenarios ('diag-spasm-states publishes it') and asserted in src/simulation/diagnosticScenarios/lesions.test.ts. The acceptance text is in docs/curriculum/lab-build-plan.json, which is outside this package's files, so the build lead needs to change it to 'published by diag-spasm-states (spasm.launch.ts)' or move that acceptance line to diag-spasm-states.",
+     "Finding 4 (Tips acceptance names diag-eccentric-orthogonal, which has no script): correct, but it is a text change to docs/curriculum/lab-build-plan.json, which is outside this package's files, so I made no change there. It should name diag-cto-contralateral-collaterals, after the first selective right run, in phase 'views'. No new test was needed: src/ui/sim/modules/lesions.test.ts (the package's tip test, which drives the script module) already asserts for that scenario that a filmed selective right run, in phase 'views', makes tipsFor(ctx, 20) include diag-cto-strategy-defer-adhoc and diag-interp-collateral-long-run."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/sim/modules/lesions.test.ts src/simulation/diagnosticScenarios/lesions.test.ts (10 passed)",
+     "npx vitest run src/render/xray/lesionMorphology.test.ts src/ui/sim/modules/script.test.ts src/simulation/diagnosticScenarios/scenarios.test.ts src/simulation/diagnosticScenarios/launch.test.ts (50 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors",
+    "notes": "I applied Finding 2. In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/diagnosticScenarios/lesions.ts the three occlusion triggers now require a selective engagement as well as the first injection of that side. 'occlusion-seen' (diag-cto-contralateral-collaterals) and 'right-run' (diag-two-candidate-culprits) need engagement [\"selective-rca\", \"deep-rca\"]. 'left-run' needs [\"selective-lm\", \"deep-lm\"]. I updated the comments to match.\n\nNew test, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/modules/lesions.test.ts. That is the package's existing test of the script module and tips (its header names diag-lesion-morphologies). I put the test there rather than in src/simulation/diagnosticScenarios/lesions.test.ts because the session harness is already in that file. A non-selective root puff gives outcome 'root-puff' and fires no trigger. It raises no total-occlusion or cto in the CTO case, and no total-occlusion or thrombus in the two-culprits case. The selective run of the same side then fires the trigger and raises those events. The existing selective-run tests still pass.\n\noutOfScope for the build lead:\n(a) The bolus clear-time defect in src/ui/sim/labSession.ts lines 1396 and 1399 (see rejected[0] for the fix).\n(b) The text corrections in docs/curriculum/lab-build-plan.json for the practiceIndex and Tips acceptance items (rejected[1] and rejected[2]).\n(c) A gap the current condition type cannot close. The script remembers that a side was injected and checks the engagement later, at the moment it evaluates. So a right root puff followed by selective RCA engagement, with no new injection yet, still fires the trigger on the next step. Closing this needs a change in src/ui/sim/modules/script.ts and src/simulation/diagnosticScenarios/index.ts, for example a condition 'selectiveInjection: side' that records the outcome or engagement at injection time in onInject. Both files are outside this package."
+   }
+  ],
+  "accept": [
+   {
+    "passed": false,
+    "criteria": [
+     {
+      "criterion": "An eccentric lesion (0.6) gives projected %DS differing by at least 15 points between orthogonal views; a concentric one by under 2",
+      "met": true,
+      "evidence": "src/render/xray/lesionMorphology.test.ts 'eccentric lumens' test passes. It checks that the camera forward vectors are orthogonal, that RAO30 vs LAO60 differ by at least 15 points for diag-eccentric-orthogonal (eccentricity 0.6), and that the concentric copy differs by under 2 in both pairs, staying near 72%. Seeds 2 and 3 also pass. projectedStenosis is used only in coronaryTree.ts and the tests, so it is not shown on any live screen."
+     },
+     {
+      "criterion": "The CTO recipient reaches half its peak opacity later than the donor and only after more than 2 s",
+      "met": true,
+      "evidence": "The lesionMorphology.test.ts CTO test passes for diag-cto-contralateral-collaterals and diag-two-candidate-culprits at seeds 1-3. My own vite-node run with a standard 6 Fr left push (start 0.3 s, end 2.5 s) gave donor half-peak at 1.7-2.4 s, recipient half-peak at 3.5-4.1 s and recipient peak at 4.8-5.4 s. Recipient peak opacity is about 0.33-0.40, against 0.68-0.86 for the donor."
+     },
+     {
+      "criterion": "A spasm lesion's rendered severity falls as the engine's GTN effect rises",
+      "met": true,
+      "evidence": "lesionMorphology.test.ts 'spasm relaxes with the engine's nitrate effect' passes. A real PatientEngine is given 0, 50 and 200 ug of intracoronary GTN. Its pharm.effects().epicardialDilation is fed to buildXrayScene as SceneInput.epicardialDilation, and the rendered tube severity drops from 0.75 step by step. Dilation of the other side does not relax the lesion, and a lesion marked nitrateResponsive false stays fixed. The live lab does not pass this input yet: FluoroView.tsx is not in this package's files and is listed by diag-spasm-states."
+     },
+     {
+      "criterion": "browser: diag-cto-contralateral-collaterals, a 6 s donor run without panning fills the recipient",
+      "met": true,
+      "evidence": "There is no verify report. A test covers it at the scene-builder level on this scenario: 'a donor run fills the recipient late: nothing at 1.5 s, filling by 6 s'. Iodine from retrograde filling only is 0 at 1.5 s and above 0 at 6 s, and the right injection stops at the cap. I checked against the live lab's timing: labSession.ts clears the contrast at pushEnd + CONTRAST_CLEAR_S (3.5 s), about 6.0 s after the press for a standard push, which is later than the recipient's 4.8-5.4 s peak. The test does not check whether the recipient sits inside the frame without panning; the pending in-app verification should look at that."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows; the re-scored rows are listed in the package notes",
+      "met": false,
+      "evidence": "Set dlm-morph exists. compare_sets.py baseline dlm-morph gives 189/236 against 189/236, with no lost and no gained rows, and every frame of all 12 offscreen sequences has the same SHA-256 as the baseline. But the capture was made at 23:13 local (22:13Z) and the report at 23:18. coronaryTree.ts (23:44) and sceneBuilder.ts (23:47) were edited after that, in the run-2 review fixes, so the final renderer code was never captured. No package notes record the set or its result: 'dlm-morph' appears nowhere outside datasets/."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-eccentric-orthogonal, diag-tapering-reference, diag-lesion-at-branch under lessons pm-interpreting-stenosis, pm-acquiring-test-nitrate, pm-acquiring-anatomy (from lesions.launch.ts)",
+      "met": true,
+      "evidence": "src/simulation/diagnosticScenarios/lesions.test.ts passes: all three scenarios are listed under pm-interpreting-stenosis, and every pack scenario under each of its lessons. The two pm-acquiring lessons belong to the spasm scenario diag-focal-rca-spasm (request pm-acquiring#1). It is built but deliberately held back in heldScenarios, because the live lab does not yet relax spasm after nitrate and would teach the wrong conclusion. The plan gives that publication to diag-spasm-states: its acceptance lists diag-focal-rca-spasm under pm-acquiring-test-nitrate and pm-acquiring-anatomy in spasm.launch.ts, and it owns FluoroView.tsx. I treat that part as moved."
+     },
+     {
+      "criterion": "Tips: after the action that raises 'total-occlusion', tipsFor(ctx, 20) includes diag-cto-strategy-defer-adhoc and diag-interp-collateral-long-run; every waiting.ts entry naming diag-lesion-morphologies becomes satisfiable, so the diagnostic waiting count falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/sim/modules/lesions.test.ts passes. The test drives diag-cto-contralateral-collaterals rather than diag-eccentric-orthogonal, because the eccentric scenario has no occlusion and cannot raise total-occlusion, so the plan's scenario name looks like a template slip. The first selective right injection fires 'occlusion-seen', raising total-occlusion and cto. In the views phase both named tips appear, and the event is held for the case. A root puff raises nothing. The waiting.ts entries for this package are exactly those two tips; neither is satisfiable before the package and both are after. The diagnostic waiting count went from 18 to 16, a fall of 2, which meets 'at least 2'. The script module's raises are derived from the registry and include total-occlusion, cto, thrombus and scad-suspected."
+     }
+    ],
+    "failures": [
+     {
+      "where": "Realism capture (datasets/tmp/captures/dlm-morph, datasets/tmp/realism/reports/dlm-morph) versus src/render/xray/coronaryTree.ts and src/render/xray/sceneBuilder.ts",
+      "problem": "The capture set dlm-morph (22:13Z, scored 23:18 local) predates the last edits to coronaryTree.ts (23:44) and sceneBuilder.ts (23:47), so the final renderer code has not been compared with the baseline. No package notes record the set, its score or the re-scored rows.",
+      "severity": "major",
+      "fix": "With the dev server on 5173, run `await __xrayCapture.baseline(\"dlm-morph2\")` in a page tab, then `python3 scripts/realism/report.py dlm-morph2` and `python3 scripts/realism/compare_sets.py baseline dlm-morph2`. Close only if no more than 2 rows are lost. Then record in the package notes (the handover or report for diag-lesion-morphologies): the set name, 'X of 236 against 189 of 236', every lost or gained row (expected none), and whether the 12 offscreen sequences still match the baseline frame hashes, as dlm-morph did (all 12 bit-identical). If the machine cannot run the capture, the owner runs it before the package is closed (plan section 2)."
+     },
+     {
+      "where": "src/simulation/diagnosticScenarios/lesions.ts heldScenarios and diag-spasm-states (plan)",
+      "problem": "diag-focal-rca-spasm is defined here but unpublished. diag-spasm-states is meant to publish it under pm-acquiring-test-nitrate and pm-acquiring-anatomy, but lesions.ts is not in its file list.",
+      "severity": "minor",
+      "fix": "Tell the build lead that diag-spasm-states should import heldScenarios from lesions.ts into spasm.ts and spasm.launch.ts, not redefine the scenario, or the plan should add lesions.ts to its files. Until then pm-acquiring#1 (P1) has no practice link."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/render/xray/lesionMorphology.test.ts src/simulation/diagnosticScenarios/lesions.test.ts src/ui/sim/modules/lesions.test.ts (3 files, 30 tests passed)",
+     "npx vitest run src/render/xray/xray.test.ts src/render/xray/anatomy.test.ts src/render/xray/realism.test.ts src/simulation/caseGenerator.test.ts src/simulation/diagnosticScenarios/scenarios.test.ts src/simulation/diagnosticScenarios/launch.test.ts (6 files, 163 passed, 14 skipped)",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/tips.test.ts (3 files, 46 passed, 1 skipped)",
+     "python3 scripts/realism/compare_sets.py baseline dlm-morph (189/236 vs 189/236, no lost, no gained)",
+     "Frame-hash comparison of datasets/tmp/captures/baseline vs dlm-morph meta (all 12 offscreen sequences bit-identical)",
+     "vite-node timing check of donor and recipient half-peaks against the lab's CONTRAST_CLEAR_S (script in scratchpad, read-only)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   },
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "An eccentric lesion (0.6) gives projected %DS differing by at least 15 points between orthogonal views; a concentric one by under 2",
+      "met": true,
+      "evidence": "src/render/xray/lesionMorphology.test.ts, the 'eccentric lumens: the %DS depends on the view' test, passes. The in-app verify (run 3, verify:diag-lesion-morphologies) measured the live session tree of diag-eccentric-orthogonal: seed 1 gave RAO30 69.7 against LAO60 28.8, and seed v2 gave 69.3 against 43.8. projectedStenosis has no UI caller, so no %DS reaches a live screen."
+     },
+     {
+      "criterion": "The CTO recipient reaches half its peak opacity later than the donor and only after more than 2 s",
+      "met": true,
+      "evidence": "lesionMorphology.test.ts 'the CTO recipient reaches half its peak opacity later than the donor and only after more than 2 s' passes for diag-cto-contralateral-collaterals and diag-two-candidate-culprits at seeds 1-3. It also checks that the recipient is fainter than 0.7 times the donor. In the app, retrograde-only iodine was 0 up to 2 s, 6 at 3 s, 40 at 4 s and 88 at 5 s, peaking at 95.7 at 5.5 s."
+     },
+     {
+      "criterion": "A spasm lesion's rendered severity falls as the engine's GTN effect rises",
+      "met": true,
+      "evidence": "lesionMorphology.test.ts 'a spasm lesion's rendered severity falls as the engine's GTN effect rises' passes. A real PatientEngine is given 0, 50 and 200 ug of IC GTN. Its epicardialDilation, fed through SceneInput, lowers the tube severity step by step. Dilation of the other side and a nitrateResponsive-false lesion leave it unchanged. The live lab does not pass this input yet; FluoroView.tsx belongs to diag-spasm-states, so that wiring is not this package's."
+     },
+     {
+      "criterion": "browser: diag-cto-contralateral-collaterals, a 6 s donor run without panning fills the recipient",
+      "met": true,
+      "evidence": "In-app verify report (run 3): in the CTO case, a JL4 selective-lm donor run at LAO 30 with a 2 s push and no panning filled the recipient. Retrograde iodine started at about 3 s, reached 88 at 5 s and peaked at 5.5 s. The cine frames show the recipient as a curved vessel along the inferior heart border, at about half the donor's darkening (33 against 68 grey levels). The scene-level test 'a donor run fills the recipient late: nothing at 1.5 s, filling by 6 s' also passes. Out of scope, for the build lead: src/ui/sim/labSession.ts line 1444 ends the bolus at pushEnd + CONTRAST_CLEAR_S (3.5 s). After a 2 s push the recipient therefore vanishes at its peak (about 5.5 s) instead of washing out. The fix goes to the owner of labSession.ts: add the side's retrograde tail (transportNet(tree, lesions).lagMax[side] + 2 * RETRO.retentionTauS) to that condition and to the one on line 1447, with a test that bolusFor() is still non-null at 6 s and 7 s. This does not stop the recipient filling within a 6 s run."
+     },
+     {
+      "criterion": "realism: the baseline capture set re-captured after the change scores not below the baseline minus 2 rows (scripts/realism/compare_sets.py baseline <set>); the re-scored rows are listed in the package notes",
+      "met": true,
+      "evidence": "Set dlm-morph2 was captured 2026-10-09 at about 08:50 local, after the last edits to the renderer files (coronaryTree.ts 23:44 and sceneBuilder.ts 23:47 on 8 Oct; contrastTransport.ts 23:11; coronaryGrowth.ts not changed). I re-ran python3 scripts/realism/compare_sets.py baseline dlm-morph2: 189 of 236 against 189 of 236, every section identical, LOST empty and GAINED empty. The package notes in the fix3 result record the set, the score, the section counts, no lost and no gained rows, and the frame hashes: 10 of 12 sequences are bit-identical, and dev_balloon and dev_stent changed because of another package's pciBench pressure change (not counted)."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-eccentric-orthogonal, diag-tapering-reference, diag-lesion-at-branch under lessons pm-interpreting-stenosis, pm-acquiring-test-nitrate, pm-acquiring-anatomy (from src/simulation/diagnosticScenarios/lesions.launch.ts)",
+      "met": true,
+      "evidence": "src/simulation/diagnosticScenarios/lesions.test.ts passes. All three named scenarios are under pm-interpreting-stenosis, and every pack scenario is listed under each of its lessons, from lesions.launch.ts. practiceIndex.test.ts passes too. The two pm-acquiring lessons belong to diag-focal-rca-spasm. That scenario is held back in heldScenarios, because the live lab does not yet relax spasm after nitrate. The plan now gives its publication under pm-acquiring-test-nitrate and pm-acquiring-anatomy to diag-spasm-states (its acceptance, from spasm.launch.ts), so that part has moved. Note for diag-spasm-states: it should import heldScenarios from lesions.ts and update the held-back assertions in lesions.test.ts."
+     },
+     {
+      "criterion": "Tips (a new test file beside its event source): after the action that raises 'total-occlusion', tipsFor(ctx, 20) includes diag-cto-strategy-defer-adhoc and diag-interp-collateral-long-run; every waiting.ts entry naming diag-lesion-morphologies becomes satisfiable, so the reachability waiting count for the diagnostic lab falls by at least their number",
+      "met": true,
+      "evidence": "src/ui/sim/modules/lesions.test.ts sits beside the event source, script.ts, and passes. It uses diag-cto-contralateral-collaterals, because the plan's diag-eccentric-orthogonal has no occlusion and cannot raise total-occlusion (a template slip in the plan). The first selective right run fires 'occlusion-seen' and raises total-occlusion and cto. In phase 'views' both tips appear, and the event is held for the case. A root puff raises nothing, which is the verify finding, now fixed. The waiting.ts entries for this package are exactly the two tips: neither is satisfiable before and both are after. The diagnostic waiting count went from 18 to 16, a fall of 2. The in-app verify also saw both tips first in the drawer."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/render/xray/lesionMorphology.test.ts src/simulation/diagnosticScenarios/lesions.test.ts src/ui/sim/modules/lesions.test.ts: 3 files, 30 of 30 passed; reachability log 18 -> 16",
+     "npx vitest run src/simulation/diagnosticScenarios/scenarios.test.ts src/simulation/diagnosticScenarios/launch.test.ts src/simulation/caseGenerator.test.ts src/ui/sim/modules/script.test.ts src/render/xray/anatomy.test.ts: 5 files, 87 of 87 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/tips.test.ts src/render/xray/xray.test.ts: 4 files, 95 passed, 1 skipped",
+     "python3 scripts/realism/compare_sets.py baseline dlm-morph2: 189/236 against 189/236, no rows lost or gained",
+     "Read the in-app verify report (verify:diag-lesion-morphologies, run 3 journal) and the fix2 and fix3 results with the package notes"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0. The first run, at 08:56, reported 4 errors, all in src/simulation/session/planning.test.ts, a file of another package that was being edited at 08:57:55. The re-run after that edit was clean, and no error was ever in this package's files."
+   }
+  ],
+  "fix3": [
+   {
+    "applied": 2,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/render/xray/lesionMorphology.test.ts src/simulation/diagnosticScenarios/lesions.test.ts src/ui/sim/modules/lesions.test.ts: 3 files, 30 of 30 tests passed. The run includes the plan's acceptance checks: eccentric lesion (0.6) %DS differs by at least 15 points between orthogonal views and a concentric one by under 2; the CTO recipient reaches half its peak opacity later than the donor and only after more than 2 s; spasm severity falls as the GTN effect rises. Reachability: diagnostic tips in waiting.ts that still cannot be satisfied fell from 18 to 16.",
+     "In-app realism capture: await __xrayCapture.baseline(\"dlm-morph2\") in a separate tab on the running 5173 dev server, 12 offscreen sequences in 28 s",
+     "python3 scripts/realism/report.py dlm-morph2: 189/236, 126 s",
+     "python3 scripts/realism/compare_sets.py baseline dlm-morph2: 189 of 236 against 189 of 236, no rows lost, no rows gained, every section count unchanged",
+     "Frame-hash comparison of dlm-morph2 against the baseline set, using the per-frame sha256 values in each sequence's .meta.png"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "No source file was edited in this pass. Both findings were checked and acted on; neither needed a code change.\n\nFINDING 1 (major), applied: re-captured and re-scored against the final renderer code. Package notes for diag-lesion-morphologies:\n- Capture set: dlm-morph2. Captured 2026-10-09 07:50Z, after the last edits to coronaryTree.ts (23:44 BST on 8 Oct) and sceneBuilder.ts (23:47 BST on 8 Oct). Frames: datasets/tmp/captures/dlm-morph2/. Report: datasets/tmp/realism/reports/dlm-morph2/scorecard_matched.md.\n- Score: 189 of 236 against 189 of 236 for the baseline. Rows lost: none. Rows gained: none. Every section matches the baseline: Background 7/14, Borders 3/4, Catheter 4/4, Contrast 15/24, Field 4/4, Geometry 36/46, Grey levels 17/18, Motion 21/31, Noise 17/18, Timing 59/66, Vessels 6/7. The close rule (no more than 2 rows lost) is met.\n- Frame hashes: 10 of the 12 offscreen sequences are bit-identical to the baseline (sha256 per frame). These are lad_raocau, lad_raocra, lad_apcra, lad_laocra, rca_lao, rca_rao, lad_raocau_fluoro, lad_raocau_flush, dev_guide and dev_wire. This covers every coronary-only sequence, so this package's final renderer code leaves the baseline scenes unchanged.\n- dev_balloon and dev_stent are no longer bit-identical. They still matched in dlm-morph (captured 22:13Z on 8 Oct). This package did not cause the change. The device-scene metadata shows that the catalogue nominal pressure used by xrayCapture's pciStageState changed: balloon 8 to 6 atm, stent 10 to 9 atm. As a result, the deployed stent diameter fell from 2.58 to 2.52 mm and the residual severity changed (balloon 25 to 27, stent 6 to 9). That pressure comes from BALLOON_SPEC and STENT_SPEC in src/simulation/pciBench.ts, which is now derived from the catalogue (nominalAtm(SPEC_REF_D)) and was edited at 08:09 BST on 9 Oct by another package, most likely pci-bench-imaging-unify or pci-bench-balloon-physics. The pixel changes match this: the stent edges move by a sub-pixel amount (maximum 179 grey levels, about 80 to 95 pixels above 8 levels per frame), and the balloon frame shifts by up to 3 levels. The device runs are measured but not counted in the score. Build lead: the owning bench package should note that the baseline device scenes were re-based by its pressure change.\n\nFINDING 2 (minor), applied as a report to the build lead (outOfScope, no edit here): confirmed. diag-focal-rca-spasm is defined only in heldScenarios in src/simulation/diagnosticScenarios/lesions.ts. It is kept out of the published scenarios and out of lesions.launch.ts, and lesions.test.ts checks that it is held back. diag-spasm-states lists spasm.ts and spasm.launch.ts but not lesions.ts. That package should import heldScenarios from lesions.ts into spasm.ts and spasm.launch.ts and should not redefine the scenario. Importing does not edit lesions.ts, so its file list can stay as it is. When it publishes the scenario it must also update the held-back assertions in src/simulation/diagnosticScenarios/lesions.test.ts, a test file this package owns. Those checks are the not.toContain lines for pm-acquiring-test-nitrate and pm-acquiring-anatomy, the toBeUndefined check from diagScenarioById, and the heldScenarios id list. The alternative is for the plan to give that test file to diag-spasm-states. Until diag-spasm-states lands, pm-acquiring#1 (P1) has no practice link. I left the lesions.ts comment unchanged so that hot reload would not disturb another agent's session in the shared 5173 tab.\n\nThe capture ran in my own tab (tab-39), which I closed afterwards. The seed tab was not used. Files: datasets/tmp/captures/dlm-morph2/, datasets/tmp/realism/reports/dlm-morph2/scorecard_matched.md, src/simulation/diagnosticScenarios/lesions.ts, src/simulation/diagnosticScenarios/lesions.test.ts, src/simulation/pciBench.ts."
+   }
+  ]
+ }
+}

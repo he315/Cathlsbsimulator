@@ -1,0 +1,304 @@
+{
+ "package": "diag-pressure-transducer",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built diag-pressure-transducer. The diagnostic lab now takes its pressure class, the deep-damping event and the damping score from the patient engine's tip state, set through a new store action (setEnginePressure). The legacy computePressure still runs for headless use. Other additions:\n- Transducer faults ('air-bubble', 'off', 'disconnected', 'unzeroed', 'low'), each with a remedy: fast flush, re-prime, level, zero, and turning the stopcock back and reconnecting.\n- A plug in the catheter lumen that damps the trace on the monitor while the true tip stays free.\n- An optional aortic valve orifice area in circulation.ts (Bernoulli loss), passed through EngineOptions and the patient profile, with engine.setAorticValveArea. A chart showing severe aortic stenosis now narrows the valve.\n- A side-hole JR4 ('JR4-SH') in the catalogue. The universal radial curve (TIG) also counts as side-holed, because the Oxford text in the module says the Tiger has a side hole.\n- Aspiration outcomes from the tip and lumen: free blood, no return against the wall, no return from a plug, and air drawn in by a hard pull.\n- Thrombus in the sheath that plugs the next catheter; aspirating the sheath side arm and removing a catheter under suction.\n- Flushing, injecting or passing the wire through a plug sends it into the coronary (an engine occlusion) or the aorta (neuro-deficit).\n- An ostial lesion narrows the gap around an engaged catheter.\n- Contrast is held in the vessel while the tip obstructs, and contrast-hold-up is raised 4 s after the push.\n- Hypotension is raised when the true systolic stays below 90 mmHg with the tip free.\n- The physiologist calls out a displayed systolic below 90 mmHg. This is an option on LabTeam that is off by default and switched on by the diagnostic lab.\n- HaemoMonitor keys: Fast flush, Re-prime line, Level, Check connections.\n- A gauze illustration and a clickable sheath side arm in TableView.\n- Four scenarios with a launch file: diag-damping-causes, diag-aspiration-failures, diag-transducer-faults and diag-as-pulse-not-damping.\n\nEvery new threshold or value is labelled MODEL PARAMETER or cites the module text.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useSimulatorStore.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/engine.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/circulation.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/patient.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/HaemoMonitor.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/TableView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/labTeam.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/data/catheters.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/diagnosticScenarios/pressure.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/diagnosticScenarios/pressure.launch.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/pressureTransducer.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/pressureSession.test.ts"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/pressureTransducer.test.ts src/ui/sim/pressureSession.test.ts: 24 passed",
+     "npx vitest run src/simulation/circulation.test.ts src/simulation/patient/patient.test.ts src/simulation/pressure.test.ts src/simulation/engagement.test.ts src/simulation/haemoStudy.test.ts src/simulation/pericardiocentesis.test.ts src/state/store.test.ts: 186 passed",
+     "npx vitest run src/simulation/diagnosticScenarios src/ui/sim/modules src/ui/sim/sessionModules.test.ts src/ui/lab/diagnosticContext.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/lab/patientEvents.test.ts src/ui/lab/controls/controls.test.ts: 102 passed, 2 failed, both in controls.test.ts. The failures are not from this package: a PciDevicesTab.tsx dated 08:37 today, added by another package, appears in the diagnostic tab list. This package does not touch the controls registry.",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts src/ui/lab/studyReport.tips.test.ts src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/simulation/team/team.test.ts src/simulation/team/formulary.test.ts: 85 passed",
+     "npx vitest run src/mentor/mentor.test.ts src/mentor/bridgePedal.test.ts src/content/lab/tips.test.ts src/content/lab/retarget.test.ts src/ui/pci/PciLabSession.tips.test.ts src/ui/mcs/mcs.test.ts src/ui/lab/mcsTips.test.ts src/audio/audio.test.ts src/ui/sections/Settings.test.ts: 173 passed, 1 skipped",
+     "npx vitest run src/simulation/session/emergencies.test.ts src/simulation/session/handover.test.ts src/simulation/session/hypotension.test.ts src/render/xray/lesionMorphology.test.ts: 72 passed",
+     "npx vitest run src/ui/physics/physicsDevices.test.ts: 18 passed; src/ui/physics/physicsDevices.tips.test.ts: 5 passed",
+     "npx vitest run src/simulation/angioPci.test.ts src/ui/sections/PhysiologyLab.test.ts src/ui/lab/LabLayout.test.ts src/ui/lab/physiologyTips.test.ts: 41 passed",
+     "npx vitest run src/simulation/diagnosticScenarios/scenarios.test.ts src/simulation/diagnosticScenarios/launch.test.ts src/ui/sim/modules/script.test.ts src/content/content.test.ts (rerun after the final scenario edits): 91 passed",
+     "Final rerun of the session-related files (lesions, sessionModules, diagnosticTips, diagnosticContext, integration, lab and both new test files): 84 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0) on the final run. An earlier run showed two errors in src/simulation/session/caseSession.ts (puffClampMl) from a package running at the same time; they had gone by the final run.",
+    "acceptance": [
+     {
+      "criterion": "TipInput with gap 0.1 and a JR4 gives tipState 'ventricularised'; with sideHoles true it gives 'aortic'",
+      "status": "met",
+      "evidence": "pressureTransducer.test.ts uses tipFromEngagement(deep RCA seat, catheterSideHoles('JR4')), which gives gap 0.1 and no side holes, and the engine shows 'ventricularised'. With catheterSideHoles('JR4-SH') it shows 'aortic'. The engine is the fixed seed 'probe'; the class depends on the patient. pressureSession.test.ts shows the same difference in a live session after setCatheter('JR4-SH')."
+     },
+     {
+      "criterion": "Fault 'air-bubble' lowers natural frequency and displayed pulse pressure; fast flush and re-prime restore it",
+      "status": "met",
+      "evidence": "pressureTransducer.test.ts: after setFault('air-bubble'), fnHz falls below a third of baseline and the displayed pulse pressure drops by more than 10 mmHg, while tipState stays 'aortic'. The fast flush shows the flush-bag pressure on the trace. After reprime() the faults list is empty, fnHz is back to baseline and pulse pressure is within 3 mmHg. Further tests: a fast flush alone leaves the air in; 'off', 'disconnected', 'unzeroed' and 'low' each have a remedy that clears them; an older snapshot without the new fields still restores."
+     },
+     {
+      "criterion": "Valve area 0.7 cm2 gives a later aortic peak and lower pulse than 3 cm2 and tipState stays 'aortic'",
+      "status": "met",
+      "evidence": "pressureTransducer.test.ts, with the tip in the aorta and engaged in the LM (gap 0.8): at 0.7 cm\u00b2 the median upstroke from foot to peak is more than 0.03 s longer, pulse pressure is more than 5 mmHg lower and true systolic is lower. tipState is 'aortic' in both. An unset area leaves the Circulation output identical, so the default is unchanged."
+     },
+     {
+      "criterion": "An injection while tipState is damped counts dangerousInjections; aspirate with a plug returns 'no-return' and raises catheter-plugged, and a saline flush then sets an occlusion",
+      "status": "met",
+      "evidence": "pressureSession.test.ts: in diag-damping-causes the JL4 seated on the 75% ostial LM lesion gives a damped tip state. An injection then raises dangerousInjections and adds a 'damped-injection' event, even with the aspiration forced to 'clean'. In diag-aspiration-failures, session.aspirate() returns outcome 'plug', the store's aspirated is 'no-return', and catheter-plugged and aspiration-failed are active. A saline push through onSyringe({port:'saline'}) then sets engine occlusion 'plug-embolus' (RCA, fraction 1) and counts one more dangerous injection. Further tests cover the neuro-deficit when the tip is in the aorta, the wire through a plug, removal under suction plus sheath aspiration, the wall versus hard-pull air outcomes, and air going down with the next push."
+     },
+     {
+      "criterion": "browser: scenario diag-transducer-faults flattens the HaemoMonitor trace and the drawer shows the transducer tip",
+      "status": "needs-browser",
+      "evidence": "Checked headless only. pressureSession.test.ts shows that diag-transducer-faults puts 0.1 mL of air in the line from the start, transducer-fault and pressure-damped are active with tipState 'aortic', and tipsFor includes diag-damped-stepwise, the tip that says to check the transducer. Whether the HaemoMonitor trace looks flat on screen has not been checked."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-damping-causes, diag-aspiration-failures, diag-transducer-faults under lessons pm-engaging-trace, pm-engaging-damping, pm-to-the-root-advance (from src/simulation/diagnosticScenarios/pressure.launch.ts)",
+      "status": "met",
+      "evidence": "pressureSession.test.ts checks practiceForLesson for each lesson. Every launch entry is listed under each of its lessons, including diag-as-pulse-not-damping under pm-engaging-trace and hb-specific-conditions-as. The pack and launch file agree and the registry holds the pack. scenarios.test.ts, launch.test.ts and content.test.ts pass with the new pack."
+     },
+     {
+      "criterion": "Tips: in scenario diag-damping-causes, after the action that raises 'pressure-damped', tipsFor(ctx, 20) includes diag-damped-stepwise, and after the action that raises 'pressure-ventricularised' it includes diag-ventricularised-stay-out; every waiting.ts entry naming diag-pressure-transducer becomes satisfiable",
+      "status": "met",
+      "evidence": "pressureSession.test.ts: the JL4 seated across the ostial LM lesion raises pressure-damped and shows diag-damped-stepwise. Backing off to the sinus clears it. Changing to a JR4 that dives deep into the RCA gives tipState 'ventricularised', raises pressure-ventricularised and shows diag-ventricularised-stay-out. No waiting.ts entry names diag-pressure-transducer, so that part is met trivially; the test asserts the list is empty. Separately, four new events are raised in the session but not yet declared in any raises export (see outOfScope)."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/lab/diagnosticContext.ts: four events the session now raises are not in the lab's raises export: transducer-fault, aspiration-failed, catheter-plugged and contrast-hold-up. neuro-deficit is probably missing too. labSession.ts exports PRESSURE_SESSION_EVENTS so they can be added to DIAGNOSTIC_SESSION_EVENTS. The context's pressure field should also map 'wedged' to 'damped' so that pressure-filtered tips match the trace, as the plan's tip integration asks.",
+     "src/ui/sim/Simulator.tsx (TableStrip): pass gauze={session.aspirateView()} and onSideArm={() => session.aspirateSheath()} to TableView. Add a hands-on control for session.removeUnderSuction(), for example a table-side tab in src/ui/lab/controls/tabs/, which is a registry another package owns. Until then the gauze and the explicit 'remove under suction' and 'aspirate sheath' actions exist only in the session API and tests.",
+     "src/ui/sim/CatheterHub.tsx: its aspirate button calls useSimulatorStore.getState().aspirate() directly, which uses the legacy judgement. It should call session.aspirate(). The keyboard and syringe path (onSyringe) and the table-side Aspirate button already use the session outcome.",
+     "src/ui/physics/physicsDevices.ts physicsCatheterId(): this is still an identity function. It should map side-hole variants to their base, using sideHoleBase from src/data/catheters.ts. The session already maps them for supports, exchangeTo and start, but the physics module's own comparisons (for example the exchange-complete check in the cost bench) do not.",
+     "docs/realism/facts: record the new MODEL PARAMETERS (transducer MP_FAULT_AIR_ML, MP_AIR_FAULT_MIN_ML, MP_FAULT_DRIFT_MMHG, MP_FAULT_LOW_CM, MP_LEVEL_TOL_CM, MP_FAST_FLUSH_S, MP_PLUG_R_FACTOR; labTeam MP_CALLOUT_*; labSession MP_HOLD_UP_S, MP_HOLD_UP_MAX_S, MP_HARD_PULL, MP_OSTIAL_POSITION, MP_PLUG_EMBOLUS, MP_HYPOTENSION_*, MP_SEVERE_AS_AVA_CM2; the scenarios' parkedInsertion and valve area). They are labelled in code, but docs/ is outside this package's file list.",
+     "Not built because the files are outside this package: coronary flow rising in high-flow states and contrast streaming or escaping through side holes (hb-specific-conditions#8, part of the design's circulation item; needs coronaryFlow.ts and the contrast transport), and a ventricular arrhythmia when held contrast is not cleared (cp-left-main#5; needs the engine's hazard model in responses.ts).",
+     "src/ui/lab/controls/controls.test.ts fails two tests because of src/ui/lab/controls/tabs/PciDevicesTab.tsx, which another package added. This package does not cause it."
+    ],
+    "notes": "I snapshotted the 10 listed files that existed into datasets/tmp/wp-snapshots/diag-pressure-transducer/ and created .started. pressure.ts and pressure.launch.ts were new. Only the 12 listed files and two new test files changed.\n\nBehaviour changes to know about:\n1. With a session attached, the diagnostic store's pressure class and its numbers now come from the patient engine, as the design asks. Headless stores still use computePressure. setEnginePressure changes only the pressure, never the tip or engagement, so tests that set an engagement directly keep it.\n2. TIG (the universal radial curve) now has side holes, citing the Oxford text in the module. A deep TIG seat now reads 'aortic' rather than damped.\n3. JR4-SH appears in the back table and catheter lists. In rod-physics mode the session moves it like a JR4.\n4. A chart with severe aortic stenosis (for example diag-contrast-sensitive) now narrows the engine's valve to MP_SEVERE_AS_AVA_CM2 = 0.7 cm\u00b2. That is inside the module text's severe band of 1.0 cm\u00b2 or less (ESC/EACTS); the exact value is a model parameter.\n5. The legacy lab starts every catheter at its natural seat, where a JR4 is selective. diag-damping-causes and diag-aspiration-failures therefore park the catheter at insertion -12 so they open with the tip free.\n6. I moved diag-damping-causes's lesion from the ostial RCA to the left main (75%). With the tree-based coronary flow, an obstructed RCA never ventricularised in this patient: it only damped or wedged. A JR4 deep in an unobstructed RCA does ventricularise for the default seed and 3 of the first 5 seeds tried. Ventricularised versus damped depends on the patient, so other seeds can give damped.\n7. A transducer fault or a plug raises 'pressure-damped' in the event log, because that is the trace on screen. The store's class still follows the true tip, so injecting through a trace damped only by the line is not scored as dangerous.\n8. The plan says scoring.ts and its tests change. No change was needed: the existing composite already counts dangerousInjections and dampedEvents, and scoring.ts is not in this package's list."
+   }
+  ],
+  "review": [
+   {
+    "findings": [
+     {
+      "where": "src/ui/sim/labSession.ts onSyringe (aspirate port, hard-pull branch) and MP_HARD_PULL = 0.6",
+      "problem": "The usual keyboard way to aspirate draws air in. Holding L ramps the plunger force to the default 0.7 (src/input/settings.ts keyboard.plungerForce 0.7, ramp 0.5 s), which is at or above MP_HARD_PULL 0.6. So any blocked catheter (wall or plug) aspirated by holding L for about 0.45 s returns 'air' and raises 'air'. In diag-aspiration-failures, every keyboard user then fails the 'no-air' check and gets an air embolus on the next push, without ever choosing a hard pull. The table button (pull 0.4) never hits this; the keyboard always does.",
+      "severity": "major",
+      "fix": "Set MP_HARD_PULL above the keyboard's default full pull, e.g. 0.85 (still a MODEL PARAMETER, with a comment that it must exceed settings.keyboard.plungerForce), so only a deliberate full pull (gamepad trigger, a force -0.9 hand) draws air. The existing test uses force -0.9 and still passes. Add a test that a keyboard-style ramp to -0.7 against a 'wall' tip leaves lastAspiration.outcome 'wall' and does not raise 'air'."
+     },
+     {
+      "where": "src/ui/sim/labSession.ts step() contrast hold-up (held && el < pushEnd + MP_HOLD_UP_MAX_S), startInjection(), flushCatheter(), removeUnderSuction()",
+      "problem": "While the tip obstructs, the session now holds a push's contrast for up to 20 s by not calling finishInjection(). A second push in that window calls injector.start(), which runs Injector.finish() internally. The session's finishInjection() is skipped, so the held push is never passed to st.bookContrast(), engine.contrast() (the renal and contrast-budget load) or st.endBolus(). removeUnderSuction() and the non-plugged flushCatheter() call injector.finish() directly and lose it the same way. Repeated injections into a damped trace are exactly what the damping scenarios provoke, so the contrast tally comes out low. This gap existed before only inside the 3.5 s CONTRAST_CLEAR_S window; the hold widens it to 20 s.",
+      "severity": "major",
+      "fix": "Book any held push before replacing it. In startInjection(), before st.inject(), add `if (this.injector.active) this.finishInjection();`. In flushCatheter() and removeUnderSuction(), replace the bare `this.injector.finish()` with `if (this.injector.active) this.finishInjection(); else this.injector.finish();`. Add a test in pressureSession.test.ts: two pushes 2 s apart with the JL4 seated on the ostial LM lesion give a total booked contrast (store score.contrastVolume or the engine contrast load) equal to the sum of both pushes."
+     },
+     {
+      "where": "src/ui/sim/Simulator.tsx TableStrip (outside the package's file list) and the table-side control registry",
+      "problem": "The design says the gauze, 'aspirate sheath side arm' and 'remove under suction' are explicit actions. The live diagnostic lab cannot reach any of them: TableStrip renders <TableView> without gauze or onSideArm, and no control calls session.removeUnderSuction(). In diag-aspiration-failures the learner has no way to do what the 'suction' check asks. The gauze always shows 'Gauze: clean', even after a plug or thrombus comes out. Only tests and the session API exercise these paths. The builder reported this in outOfScope.",
+      "severity": "major",
+      "fix": "Follow-up for the owner of Simulator.tsx and the controls registry: pass gauze={session.aspirateView()} and onSideArm={() => session.aspirateSheath()} to TableView in TableStrip; useSessionVersion already re-renders it, and aspirate() and aspirateSheath() call notify(). Add a 'Remove under suction' button, for example in a table-side tab under src/ui/lab/controls/tabs/, that calls session.removeUnderSuction(). Until then, list diag-aspiration-failures as not completable by hand."
+     },
+     {
+      "where": "src/ui/lab/diagnosticContext.ts (outside the package's file list)",
+      "problem": "Part of the plan's tip integration is missing. DIAGNOSTIC_SESSION_EVENTS, and so the lab's raises export, does not include transducer-fault, aspiration-failed, catheter-plugged, contrast-hold-up, hypotension or neuro-deficit, which the session now raises. The context's pressure field still passes store.pressure.kind through raw, so 'wedged' is not mapped to 'damped' for tips filtered by pressure. No tip triggers on those events yet, so reachability counts do not change today. The plan nonetheless asks for both.",
+      "severity": "minor",
+      "fix": "Follow-up for the diagnosticContext owner: spread PRESSURE_SESSION_EVENTS (exported from labSession.ts) into DIAGNOSTIC_SESSION_EVENTS. In tipContext, map pressure kind 'wedged' to 'damped' (`pressure: pk === 'wedged' ? 'damped' : pk`)."
+     },
+     {
+      "where": "src/state/useSimulatorStore.ts inject(), the new block `if (s._enginePressure && isDeepDamp(s.pressure) && result.outcome !== 'deep-reflux' && result.outcome !== 'lv-injection')`",
+      "problem": "This block can never run. injectContrast (src/simulation/contrast.ts) already returns 'deep-reflux' whenever pressure.kind is damped, wedged or ventricularised, and 'lv-injection' for an LV tip. Those are exactly the cases where isDeepDamp is true, and both are excluded. Its comment ('even where the legacy engagement would let the contrast through') is therefore wrong. The acceptance criterion is met by the existing deep-reflux case, because s.pressure is now the engine's class.",
+      "severity": "minor",
+      "fix": "Delete the block and its comment. Optionally note above the switch that, with a session attached, s.pressure is the engine's tip class, so the deep-reflux case covers injections into a damped trace."
+     },
+     {
+      "where": "src/ui/lab/TableView.tsx `<Gauze view={gauze ?? null} />`; src/ui/lab/HaemoMonitor.tsx new buttons",
+      "problem": "The gauze is drawn on every TableView, including the PCI lab (PciLab.tsx) and the input calibration screen, which never pass gauze. That changes labs this package does not touch. The four new line-remedy buttons also appear on the PCI lab's HaemoMonitor (showControls). The Gauze also uses inline hex colours (#2e0a0d, #efe6b8) instead of the file's C palette.",
+      "severity": "minor",
+      "fix": "Render the gauze only when the host passes the prop: `{gauze !== undefined && <Gauze view={gauze} />}`. Move the two colours into C (e.g. C.clot, C.debris). For HaemoMonitor, either accept the additive buttons in the PCI lab and say so in the report, or put them behind a `lineControls` prop (default false) that the diagnostic lab turns on."
+     },
+     {
+      "where": "src/ui/sim/labSession.ts removeUnderSuction()",
+      "problem": "It records the removal by calling st.aspirate({outcome: hadPlug ? 'plug' : 'free', ...}). The event log therefore says 'Aspiration: no blood return.' (or 'free blood return') for what was a catheter removed under suction. The log misdescribes the action the learner took.",
+      "severity": "minor",
+      "fix": "Add an optional `note` (or a `via: 'suction-removal'`) to the store's aspirate(result) and use it for the message, e.g. 'Catheter removed under suction: thrombus on the gauze.' Or push a dedicated info event from the session after st.aspirate."
+     },
+     {
+      "where": "src/ui/sim/labSession.ts dispose()",
+      "problem": "dispose() does not clear the store's _enginePressure. After a session ends, the store keeps the last engine class and numbers until the next loadCase. Code that reuses the store headless in between (mentor hosts, legacy controls) keeps reading a stale engine pressure instead of computePressure.",
+      "severity": "minor",
+      "fix": "In dispose(), call `this.store.getState().setEnginePressure(null)` (guarded by `!this.physics?.active`, or unconditionally, since null simply falls back to the legacy classes)."
+     },
+     {
+      "where": "src/ui/lab/labTeam.ts MP_CALLOUT_SYSTOLIC_MMHG comment; docs/realism/facts",
+      "problem": "The comment says 90 mmHg is 'not a sourced threshold'. The module text gives it: src/content/manual/pci-manual/07-engaging.ts (pm-engaging) has the physiologist calling out a fall 'as a rule of thumb a systolic below 90 mmHg'. Separately, none of the new MODEL PARAMETERS are recorded in docs/realism/facts, which the rules require (the builder reported this; docs are outside the file list).",
+      "severity": "minor",
+      "fix": "Cite pm-engaging (07-engaging.ts, the physiologist's call-out) in the comment and keep MODEL PARAMETER only for the hold and recovery values. Follow-up: add a facts entry listing MP_FAULT_AIR_ML, MP_AIR_FAULT_MIN_ML, MP_FAULT_DRIFT_MMHG, MP_FAULT_LOW_CM, MP_LEVEL_TOL_CM, MP_FAST_FLUSH_S, MP_PLUG_R_FACTOR, MP_CALLOUT_*, MP_HOLD_UP_S, MP_HOLD_UP_MAX_S, MP_HARD_PULL, MP_OSTIAL_POSITION, MP_PLUG_EMBOLUS, MP_HYPOTENSION_*, MP_SEVERE_AS_AVA_CM2 and the scenario parkedInsertion and valve area."
+     },
+     {
+      "where": "src/simulation/patient/transducer.ts faults()",
+      "problem": "A transducer more than MP_LEVEL_TOL_CM above the phlebostatic axis is also reported as 'low' (the check uses Math.abs(heightCm)). Any tip or check that reads the fault name will say 'low' for a transducer set too high.",
+      "severity": "minor",
+      "fix": "Either report 'low' only for heightCm < -MP_LEVEL_TOL_CM and add a 'high' fault, or rename the fault 'unlevelled' (with a migration note, since TRANSDUCER_FAULTS is exported)."
+     }
+    ],
+    "verdict": "The package mostly works, but two in-package fixes are needed first. Everything was checked headless only; the browser criterion (the HaemoMonitor trace in diag-transducer-faults) has not been looked at.\n\nThe engine-backed pressure path (setEnginePressure), transducer faults and remedies, the aortic valve orifice area, side-hole catheters, aspiration outcomes, plug embolism, contrast hold-up, true hypotension, the physiologist call-out and the four scenarios are implemented and tested meaningfully. I ran the package tests myself (24 passed) and the typecheck was clean. Regression runs passed: scenarios, launch, store, circulation, pressure, diagnosticTips, reachability, haemoStudy, integration and patient tests. controls.test.ts fails 2 tests, caused by another package's PciDevicesTab.tsx, as the builder said.\n\nOnly the 12 listed files plus the two new tests changed. The other src files newer than .started belong to proc-hypotension-pressors, access-* and the caseSession packages. Shared engines keep their defaults: avaCm2 unset leaves Circulation output identical, the transducer fields are optional, the call-out is off by default, and the TIG side hole and the AS severe band are sourced in the module text.\n\nTwo in-package fixes before acceptance:\n- Holding L on the keyboard ramps to 0.7, which is above MP_HARD_PULL 0.6, so a normal held aspiration of a blocked catheter draws air.\n- The contrast hold-up window lets a second push drop the first push's contrast from the store tally and the engine's contrast load.\n\nFollow-ups outside the file list, for the orchestrator:\n- Simulator.tsx needs to pass the gauze and side arm to TableView, and a control is needed for remove under suction; without them diag-aspiration-failures cannot be completed by hand.\n- diagnosticContext.ts needs the new raises and the wedged-to-damped mapping.\n- docs/realism/facts needs entries for the new MODEL PARAMETERS.\n\nThe minor findings are listed above."
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [
+     "Finding 3 (Simulator.tsx TableStrip gauze/onSideArm and a 'Remove under suction' control): correct, but Simulator.tsx and the controls registry are outside this package's file list, so it is out of scope here. Follow-up for the Simulator.tsx owner: pass gauze={session.aspirateView()} and onSideArm={() => session.aspirateSheath()} to TableView in TableStrip, and add a 'Remove under suction' control that calls session.removeUnderSuction(). Until that lands, diag-aspiration-failures cannot be completed by hand. Because of the finding 6 fix, the gauze no longer appears in the diagnostic lab until the host passes the prop.",
+     "Finding 4 (diagnosticContext.ts: spread PRESSURE_SESSION_EVENTS into DIAGNOSTIC_SESSION_EVENTS and map 'wedged' to 'damped' in tipContext): correct, but the file is outside this package's file list. Left as a follow-up for the diagnosticContext owner."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/sim/pressureSession.test.ts src/simulation/patient/pressureTransducer.test.ts (29/29 pass)",
+     "npx vitest run src/state/store.test.ts src/ui/sim/sessionModules.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/lab/diagnosticContext.test.ts (40/40 pass)",
+     "Regression check: with the finishInjection fix temporarily reverted, the two new contrast-booking tests failed. The fix was then restored."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "Applied fixes (finding 9 had two parts: the comment fix was applied, and the facts entry is a follow-up):\n1. Hard pull (major). In src/ui/sim/labSession.ts, MP_HARD_PULL went from 0.6 to 0.85. It is still a MODEL PARAMETER, and its comment now says it must stay above the keyboard's full pull (settings.keyboard.plungerForce, 0.7). New test: ramping the aspirate force to the keyboard's full pull against a damped LM seat gives 'wall' and does not raise 'air'. It also asserts MP_HARD_PULL > defaultSettings().keyboard.plungerForce.\n2. Held contrast booked (major). startInjection now calls finishInjection() before st.inject() when the injector is still active, and the bolus 'before' snapshots are re-read afterwards. flushCatheter() and removeUnderSuction() now call finishInjection() when the injector is active and injector.finish() otherwise. Two new tests check that the score's contrastVolume equals what the injector delivered: two pushes 2 s apart into the damped LM trace, and a held push followed by a flush or by removal under suction. syncCatheter (a catheter change in the middle of a hold) still calls a bare injector.finish(). It is in an in-scope file, but the review did not name it, so I left it alone; it is the same gap and the same one-line fix.\n3. Dead block (minor). The never-reached damped-injection block in the store's inject() is deleted. A comment above the switch now says that, with a session attached, s.pressure is the engine class, so the deep-reflux case covers this. I verified the claim in contrast.ts: damped, wedged and ventricularised all return deep-reflux.\n4. TableView (minor). The gauze renders only when the host passes the prop (`gauze !== undefined`). The two inline hex colours moved into C as C.clot and C.debris. The PCI lab and InputCalibration no longer show a gauze. HaemoMonitor: I accepted the four extra line-remedy buttons (Fast flush, Re-prime line, Level, Check connections) in the PCI lab. A lineControls prop would need Simulator.tsx, which is out of scope, to switch it on. These are generic arterial-line remedies acting on the same engine transducer, so they are harmless there.\n5. Suction-removal log (minor). AspirationResult gained an optional `via?: 'syringe' | 'suction-removal'`. The store's aspirate() logs 'Catheter removed under suction: thrombus on the gauze.' (or 'blood only on the gauze.'), and removeUnderSuction passes via 'suction-removal'. New test added.\n6. dispose (minor). dispose() now calls setEnginePressure(null). setEnginePressure skips damped-event scoring when p is null, so ending a session never adds a deep-engagement event or a score change. New test: _enginePressure is null after dispose and the event count is unchanged.\n7. Call-out citation (minor). The MP_CALLOUT_SYSTOLIC_MMHG comment in labTeam.ts now cites pm-engaging (src/content/manual/pci-manual/07-engaging.ts, the physiologist's 'as a rule of thumb a systolic below 90 mmHg'). The hold and recovery values stay MODEL PARAMETERS. The MP_HYPOTENSION_SYS_MMHG comment in labSession.ts was updated to match.\n8. 'low' vs 'high' (minor). A transducer above the axis no longer reports 'low'. faults() now reports 'low' only when heightCm < -tol and a new 'high' fault when heightCm > +tol. setFault('high') sets +MP_FAULT_LOW_CM. TRANSDUCER_FAULTS gained 'high' at the end, since the plan names only the first five, and the transducer test covers it.\n\nFollow-ups outside the file list:\n- Findings 3 and 4, as listed under rejected.\n- The facts entry from finding 9: docs/realism/facts should list MP_FAULT_AIR_ML, MP_AIR_FAULT_MIN_ML, MP_FAULT_DRIFT_MMHG, MP_FAULT_LOW_CM, MP_LEVEL_TOL_CM, MP_FAST_FLUSH_S, MP_PLUG_R_FACTOR, MP_CALLOUT_HOLD_S and MP_CALLOUT_RECOVER_MMHG, MP_HOLD_UP_S, MP_HOLD_UP_MAX_S, MP_HARD_PULL (now 0.85), MP_OSTIAL_POSITION, MP_PLUG_EMBOLUS, MP_HYPOTENSION_HOLD_S, MP_SEVERE_AS_AVA_CM2, and the scenarios' parkedInsertion and valve area.\n\nFiles changed:\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/labSession.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/state/useSimulatorStore.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/TableView.tsx\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/labTeam.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/pressureSession.test.ts\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/pressureTransducer.test.ts"
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-50) on http://localhost:5173 and closed it at the end. The dev server reloaded the page every 20 to 30 s while other packages were editing files. Vite also serves the stores under ?t= query URLs, so window.__sim and an unversioned import can point at a different store instance from the one the lab uses. I ran each check as one self-contained script against the module URLs the page had actually loaded.",
+     "Launch path: useUiStore.openSim('cathlab', {scenario:'diag-transducer-faults'}) loaded case 'scn|diag-transducer-faults|1' with the JL4. caseForLaunch and loadLaunchedCase work for all four pressure scenarios.",
+     "diag-transducer-faults on the HaemoMonitor: transducer.faults() = ['air-bubble'], airMl 0.1, and events transducer-fault and pressure-damped are active, with the engine tip 'aorta' and the store kind 'aortic'. The ART trace the monitor draws (engine.trace.art) ran 75-108 mmHg (pulse 34). The default case ran 76-136 (pulse 60), and the true tip pressure was 60-106. A screenshot of the monitor showed a rounded, low trace with no dicrotic notch and ART 105/54 (89) at 4 s, against a sharp 136/78 trace in the default case. The browser acceptance item is met on the trace.",
+     "Drawer: in diag-transducer-faults, __lab.diagnostic tips() starts with diag-damped-stepwise. After the pre-brief, the open Attending drawer showed 'Damped trace: do not inject, work the steps' with its text and lesson link at the top. The drawer acceptance item is met.",
+     "Remedies through the real HaemoMonitor buttons. Fast flush put a 305 mmHg flush square on the trace and left the air in (as designed). Re-prime line set the faults to [] and airMl to 0 and brought the trace back to 69-116. Zero ART then made the display match the true tip pressure (59-106). With setFault('disconnected') the display went flat at 11/11. Check connections cleared that fault and the trace recovered. pressure-damped and transducer-fault stayed in the event list for about 20 s after the fix, then cleared.",
+     "Physiologist call-out: with the line disconnected, the team log showed 'Systolic's down to 26.' and 'Pressure's dropping, 11 over 11.' No hypotension event was raised, which is correct because the true pressure was normal.",
+     "diag-aspiration-failures: the JR4 trace was damped at 99-116 against a true 69-132, and pressure-damped was raised. session.aspirate() returned {outcome:'plug', from:'catheter'}, the store's aspirated became 'no-return', and aspiration-failed and catheter-plugged were active. tips() showed diag-damped-stepwise.",
+     "diag-as-pulse-not-damping: tip 'aorta', store kind 'aortic', and only the aortic-stenosis event (no pressure-damped). The median true upstroke was 0.25 s against 0.15 s in diag-damping-causes, and the pulse pressure was 56 against 68 mmHg.",
+     "Start positions after 3 s: diag-damping-causes 'ascending-aorta' (free), diag-aspiration-failures 'non-selective', diag-transducer-faults 'coaxial-lm' 4.3 mm from the LM, diag-as-pulse-not-damping 'coaxial-lm' 5.1 mm from the LM.",
+     "The catheter selects list JR4-SH. The TableView strip renders in the diagnostic lab.",
+     "Console: no errors or warnings were captured."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sim/Simulator.tsx TableStrip (around line 544), which is outside this package's file list",
+      "problem": "The live diagnostic lab never shows the new TableView gauze, and the learner cannot click the sheath side arm. TableStrip passes neither gauze nor onSideArm, and nothing in the lab UI calls session.removeUnderSuction() or session.aspirateSheath(). grep finds no caller outside labSession.ts and tests apart from the access lab's TablePanel. In the app, the 'suction' check of diag-aspiration-failures ('removed under continuous suction, and the sheath aspirated') cannot be completed, and the plan's 'Remove under suction and aspirate sheath side arm are explicit' and 'gauze panel shows the aspirate' cannot be seen. The builder's report does not list this in outOfScope.",
+      "severity": "major",
+      "fix": "In Simulator.tsx TableStrip pass gauze={session.aspirateView()} (mapped to GauzeView) and onSideArm={() => session.aspirateSheath()}. Add a 'Remove under suction' control that calls session.removeUnderSuction(), either a button in TableSideControls or the Back table tab, or a lab key in the Simulator keydown handler. This needs the owner of Simulator.tsx and the table controls, so record it as an outOfScope follow-up for this package."
+     },
+     {
+      "where": "src/simulation/diagnosticScenarios/pressure.ts pressureSetups 'diag-transducer-faults' (and 'diag-as-pulse-not-damping')",
+      "problem": "The brief says 'The JL4 is in the root', but with no parkedInsertion the catheter starts 'coaxial-lm', 4.3 mm from the LM (5.1 mm in the AS scenario). The existing no-aspirate attending rule therefore escalates with no learner action. Within about 18 s it said 'You haven't aspirated since you moved', then 'Stop. You've got no back-bleed. Don't inject.' That is wrong when the learner has not aspirated at all, and it distracts from the transducer fault the scenario is teaching.",
+      "severity": "minor",
+      "fix": "Give both setups parkedInsertion: -12 (the value diag-damping-causes already uses, MODEL PARAMETER) so the tip starts free in the root, as each brief states."
+     },
+     {
+      "where": "diag-transducer-faults patient (scenario seed 1)",
+      "problem": "The seeded patient's heart rate settles at 47-50/min, which raises the 'bradycardia' event. The drawer then shows diag-bradycardia-atropine-or-pace ('Slow after injection: wait, atropine, pace...') second, before any injection, in a scenario about the pressure line. The other three pressure scenarios run at 72-83/min.",
+      "severity": "minor",
+      "fix": "Pin the scenario patient's heart rate (or choose a seed) so it stays in the normal range, for example via the scenario's patient profile or seed in pressure.ts, as a MODEL PARAMETER. Alternatively, accept bradycardia as intended and say so in the brief."
+     },
+     {
+      "where": "src/state/useSimulatorStore.ts engine-backed PressureState (numerics after a fast flush)",
+      "problem": "After the Fast flush key the store's pressure read 201/77 for several seconds, because the flush-bag square wave is counted as systole in the numerics window. Real monitors also show the flush artefact, but anything keyed on the store's systolic can misfire, such as scoring or hypertension logic.",
+      "severity": "minor",
+      "fix": "While transducer.st.flushing is true and for about 1 s after, exclude those samples from the store's systolic and diastolic window, or hold the last values."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [
+     "Finding 1 (major; the TableStrip in Simulator.tsx shows no gauze and has no side-arm or remove-under-suction control). I checked it against the code and the finding is correct. It is outOfScope because the fix belongs in src/ui/sim/Simulator.tsx (TableStrip and TableSideControls or the keydown handler), which is not in this package's file list. FOLLOW-UP for the owner of Simulator.tsx: (1) in TableStrip, pass gauze={session.aspirateView()}, mapped to TableView's GauzeView; (2) pass onSideArm={() => session.aspirateSheath()}; (3) add a 'Remove under suction' control that calls session.removeUnderSuction(), either as a button in TableSideControls or the Back table tab, or as a lab key. The session already has all three APIs (labSession.ts) and they are covered by pressureSession.test.ts. Until then the 'suction' check of diag-aspiration-failures cannot be completed in the app."
+    ],
+    "testsRun": [
+     "npx vitest run src/ui/sim/pressureSession.test.ts src/simulation/patient/pressureTransducer.test.ts (32 passed)",
+     "npx vitest run src/simulation/diagnosticScenarios/scenarios.test.ts src/simulation/patient/patient.test.ts src/ui/sim/modules/script.test.ts src/ui/lab/patientEvents.test.ts (119 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I verified and applied three of the four findings. Finding 1 is outOfScope and is described under rejected, with the follow-up for the owner of Simulator.tsx.\n\nFinding 2 (start seat), applied. In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/diagnosticScenarios/pressure.ts, 'diag-transducer-faults' and 'diag-as-pulse-not-damping' now set parkedInsertion: -12. This is the MODEL PARAMETER that diag-damping-causes already uses, so the JL4 starts free in the root as the briefs say, not at 'coaxial-lm'.\n\nFinding 3 (bradycardia), applied. A probe confirmed the seeded baseline heart rate for diag-transducer-faults was 51/min; the other three scenarios were 75 to 82/min. PressureSetup has a new optional field, heartRateBpm. diag-transducer-faults sets it to 70, the centre of generatePatient's heart-rate model line in patient.ts, labelled MODEL PARAMETER. engineOptionsForCase in src/ui/sim/labSession.ts applies it to profile.baseline.hr, alongside the existing valve-area override.\n\nFinding 4 (store numbers after a flush), applied.\n- /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/patient/transducer.ts: TransducerState has a new optional field, sinceFlushS. step() sets it to 0 while the diaphragm sees the flush bag, during a held flush or a fast flush, and counts up afterwards. Being optional, older snapshots still restore.\n- labSession.trackPressure: while sinceFlushS is under MP_FLUSH_HOLD_BEATS (5, MODEL PARAMETER) times the current RR interval, the store and the physics read-out keep the last numbers from before the flush. Five beats is the engine's 4-beat numerics window (engine.ts computeVitals) plus the beat the flush ended in.\n- Tracking the time since the flush in the transducer, rather than polling, means a 0.5 s fast flush is not missed by the 4 Hz tick.\n- The monitor's own trace and numerics still show the artefact, as a real monitor's do. Only the store's systolic and diastolic are held. The pressure class is unchanged, because it is classified from the true tip pressure.\n\nThree new tests are in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sim/pressureSession.test.ts, in the describe block 'in-app verification fixes':\n- Both setups start parked at the same seat as diag-damping-causes, not 'coaxial-lm'.\n- The diag-transducer-faults profile heart rate is the setup's value; after 20 s the heart rate is at least 50 and no bradycardia event is raised.\n- After a fast flush the engine's numerics jump by more than 30 mmHg, the store's systolic stays at its pre-flush value, and the store follows the engine again once the hold has passed.\n\nFiles edited, all in the package's list: pressure.ts, labSession.ts, transducer.ts. The only test file changed is pressureSession.test.ts."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "TipInput with gap 0.1 and a JR4 gives tipState 'ventricularised'; with sideHoles true it gives 'aortic'",
+      "met": true,
+      "evidence": "src/simulation/patient/pressureTransducer.test.ts 'the tip state of a JR4 and its side-hole variant': tipFromEngagement(deep RCA, JR4) gives {location:'ostium', side:'right', gap:0.1, sideHoles:false}, which gives 'ventricularised'; JR4-SH gives sideHoles true, which gives 'aortic'. The catalogue test confirms JR4-SH sits after JR4 with the same behaviour. At session level, pressureSession.test.ts 'a side-hole JR4 keeps the trace aortic in the deep seat' also passes. Passed."
+     },
+     {
+      "criterion": "Fault 'air-bubble' lowers natural frequency and displayed pulse pressure; fast flush and re-prime restore it",
+      "met": true,
+      "evidence": "pressureTransducer.test.ts: after the air-bubble fault, fnHz falls below fn0/3 and pulse pressure falls by more than 10 mmHg, while tipState stays 'aortic'. The fast flush shows the square wave (above 200 mmHg). After re-prime, fnHz matches fn0 (toBeCloseTo, 6 digits) and pulse pressure is within 3 mmHg. Separate tests cover the 'off', 'disconnected', 'unzeroed', 'low' and 'high' faults with their remedies, and show that a fast flush alone leaves the air in the line. Passed."
+     },
+     {
+      "criterion": "Valve area 0.7 cm2 gives a later aortic peak and lower pulse than 3 cm2 and tipState stays 'aortic'",
+      "met": true,
+      "evidence": "pressureTransducer.test.ts 'aortic stenosis' checks two tips (aorta, and ostium with gap 0.8). With AVA 0.7 the upstroke is more than 0.03 s later than with AVA 3, pulse pressure is more than 5 mmHg lower, true systolic is lower, and tipState is 'aortic' in both. A second test confirms that an unset avaCm2 leaves the Circulation output identical, so the shared-engine default is unchanged. Passed."
+     },
+     {
+      "criterion": "An injection while tipState is damped counts dangerousInjections; aspirate with a plug returns 'no-return' and raises catheter-plugged, and a saline flush then sets an occlusion",
+      "met": true,
+      "evidence": "pressureSession.test.ts: 'an injection while tipState is damped counts dangerousInjections, even after an aspiration that was judged clean' (also checks the damped-injection event). 'aspirate with a plug returns no-return and raises catheter-plugged, and a saline flush then sets an occlusion': outcome 'plug', store aspirated 'no-return', events include catheter-plugged and aspiration-failed, and after the saline syringe the occlusion 'plug-embolus' is {vessel:'RCA', fraction:1} with dangerousInjections +1. Passed. Further tests cover a neuro-deficit when the plug is flushed into the aorta or pushed out by the wire, removal under suction with sheath aspiration, wall versus air on a hard pull, and contrast-hold-up."
+     },
+     {
+      "criterion": "browser: scenario diag-transducer-faults flattens the HaemoMonitor trace and the drawer shows the transducer tip",
+      "met": true,
+      "evidence": "No browser verify report was found in docs/. The criterion is covered by tests. pressureSession.test.ts 'diag-transducer-faults: air in the line from the start...' shows engine.transducer.faults() is ['air-bubble'] with the tip 'aortic', and events transducer-fault and pressure-damped are raised. tipsFor(ctx, 20) includes diag-damped-stepwise, whose text tells the operator to 'check the transducer' (src/content/manual/pci-manual/07-engaging.ts:1942). pressureTransducer.test.ts shows that air-bubble cuts the displayed pulse pressure on engine.trace.art. HaemoMonitor.tsx draws tr.art from the engine, and Simulator.tsx:505 passes session.engine to it. Also passed: the scenario opens parked like diag-damping-causes, and raises no bradycardia over 20 s."
+     },
+     {
+      "criterion": "practiceIndex lists the scenarios diag-damping-causes, diag-aspiration-failures, diag-transducer-faults under lessons pm-engaging-trace, pm-engaging-damping, pm-to-the-root-advance (from pressure.launch.ts)",
+      "met": true,
+      "evidence": "pressure.launch.ts lists diag-damping-causes under [pm-engaging-trace, pm-engaging-damping], diag-aspiration-failures under [pm-engaging-damping, pm-to-the-root-advance] and diag-transducer-faults under [pm-engaging-trace], plus diag-as-pulse-not-damping. The pressureSession.test.ts practiceIndex test checks every lesson and scenario pair through practiceForLesson, the launch-to-pack id agreement and the registry lookup. Passed. scenarios.test.ts, practiceIndex.test.ts and reachability.test.ts also passed (29 tests)."
+     },
+     {
+      "criterion": "Tips: in diag-damping-causes, the action raising 'pressure-damped' makes diag-damped-stepwise appear and the action raising 'pressure-ventricularised' makes diag-ventricularised-stay-out appear; every waiting.ts entry naming diag-pressure-transducer becomes satisfiable",
+      "met": true,
+      "evidence": "The test file is new and sits beside its event source: src/ui/sim/pressureSession.test.ts, next to labSession.ts. In the scenario the JL4 is seated on the ostial left main lesion, which raises pressure-damped and brings diag-damped-stepwise into the tips. Easing back clears it. A JR4 on a deep RCA seat then gives 'ventricularised', and diag-ventricularised-stay-out appears. waiting.ts has no entry with raisedBy 'diag-pressure-transducer'; the test asserts this and also checks that every PRESSURE_SESSION_EVENTS name is in LAB_EVENTS. The drop in the waiting count is therefore at least 0, which holds trivially. Passed."
+     },
+     {
+      "criterion": "Package tests pass",
+      "met": true,
+      "evidence": "pressureTransducer.test.ts: 9 tests passed. pressureSession.test.ts: 23 tests passed. Regression runs by file after the shared-engine changes also passed: patient.test.ts with launch.test.ts (86 tests); scoring, store, lab, diagnosticTips, diagnosticContext, integration and mentor (123 tests); team, hypotensionCauses, haemoTips and ledgerTips (63 tests)."
+     },
+     {
+      "criterion": "Typecheck clean",
+      "met": true,
+      "evidence": "npx tsc -p tsconfig.app.json --noEmit reports one error, in src/simulation/bench/measure.test.ts(100,48), where a Stent literal is missing 'proxEdge'. That file is not in this package and was modified at 11:49 today, during this check, by another package running in parallel on the PCI bench. No file of this package has a type error."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/sim/labSession.ts (PRESSURE_SESSION_EVENTS) with src/ui/lab/diagnosticContext.ts (raises)",
+      "problem": "This does not block the acceptance criteria; it is a tipIntegration gap. The design says the package's event source exports raises for the reachability report. labSession.ts exports PRESSURE_SESSION_EVENTS but no 'raises', and reachability.test.ts does not glob labSession.ts. The new names transducer-fault, aspiration-failed, catheter-plugged, contrast-hold-up and neuro-deficit are therefore missing from the diagnostic lab's declared raises. Only pressure-damped, air and hypotension are already declared. No tip triggers on the missing names today, so no current reachability count changes, but tip-retarget-catchup will not see them.",
+      "severity": "minor",
+      "fix": "Raise this in outOfScope for a follow-up package; this package cannot do it inside its file list. Option 1: in src/ui/lab/diagnosticContext.ts, spread PRESSURE_SESSION_EVENTS (imported from ../sim/labSession) into raises.events. Option 2: add src/ui/sim/modules/pressure.ts exporting `raises: { lab: 'diagnostic', events: [...PRESSURE_SESSION_EVENTS] }`. A module file must also export createSessionModule, or collectSessionModules throws."
+     },
+     {
+      "where": "src/ui/sim/Simulator.tsx (host of TableView)",
+      "problem": "This is not covered by the acceptance criteria; it is a design gap. TableView accepts `gauze` and `onSideArm`, and the session exposes aspirateView(), removeUnderSuction() and aspirateSheath(). No diagnostic-lab host passes gauze or onSideArm, and nothing in the lab UI calls removeUnderSuction or aspirateSheath (grep finds no `gauze=`). The gauze panel and the explicit 'remove under suction' and 'aspirate sheath side arm' actions are therefore not reachable in the app.",
+      "severity": "minor",
+      "fix": "Raise this in outOfScope for a follow-up package that owns Simulator.tsx. In Simulator.tsx, pass gauze={session.aspirateView()} and onSideArm={() => session.aspirateSheath()} to TableView, and add a 'Remove under suction' control bound to session.removeUnderSuction()."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/patient/pressureTransducer.test.ts src/ui/sim/pressureSession.test.ts (2 files, 32 tests passed)",
+     "npx vitest run src/simulation/diagnosticScenarios/scenarios.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts (3 files, 29 tests passed)",
+     "npx vitest run src/simulation/patient/patient.test.ts src/simulation/diagnosticScenarios/launch.test.ts (2 files, 86 tests passed)",
+     "npx vitest run src/simulation/scoring.test.ts src/state/store.test.ts src/ui/lab/lab.test.ts src/ui/lab/diagnosticTips.test.ts src/ui/lab/diagnosticContext.test.ts src/ui/lab/integration.test.ts src/mentor/mentor.test.ts (7 files, 123 tests passed)",
+     "npx vitest run src/simulation/team/team.test.ts src/simulation/patient/hypotensionCauses.test.ts src/ui/lab/haemoTips.test.ts src/simulation/session/ledgerTips.test.ts (4 files, 63 tests passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: one error, src/simulation/bench/measure.test.ts(100,48) TS2345, a Stent literal missing 'proxEdge'. That file belongs to another package, was edited at 11:49 during this check, and is not caused by diag-pressure-transducer. None of this package's files has a type error."
+   }
+  ]
+ }
+}

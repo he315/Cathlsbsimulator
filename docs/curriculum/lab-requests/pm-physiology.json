@@ -1,0 +1,194 @@
+[
+  {
+    "lab": "physiology",
+    "what": "A treat-or-defer decision step before the wire is opened, on real intermediate lesions from the angiogram library: the case card gives symptoms (typical, equivocal), whether a non-invasive test has shown ischaemia, asthma, dipyridamole, previous adenosine reaction and caffeine intake, presentation (stable, ACS with culprit marked) and lesion type (native, vein graft, CTO vessel, CTO donor, ostial, left main).",
+    "learnerDoes": "Decides whether physiology is indicated, whether it is invalid for this lesion (ACS culprit, vein graft, CTO vessel, 90% or greater stenosis), which index to use (resting index if adenosine is contraindicated or caffeine was taken) and states the action for each possible result before measuring.",
+    "success": "Physiology chosen for intermediate native lesions with unproven ischaemia; declined for culprits, vein grafts, CTO vessels and stenoses of 90% or more; resting index chosen when adenosine is contraindicated; a correct treat/defer rule (FFR 0.80, iFR 0.89) stated in advance.",
+    "tips": [
+      "pci-phys-decide-before-measuring",
+      "pci-planning-adenosine-history"
+    ],
+    "lessonIds": [
+      "pm-physiology-when"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Set-up faults before equalisation: a wire that will not zero (loose connection or faulty wire), an introducer left in the valve, contrast left in the guide, air in the aortic line, a sensor parked too deep, and a console that matches the mean pressures while the Pd and Pa waveforms remain visibly offset. A wire-entry fault in which an oversized EBU guide sends the wire into the circumflex instead of the LAD, and wire deformation when the tip protrudes from the introducer or a balloon is in the guide.",
+    "learnerDoes": "Zeroes outside the body, introduces the wire with the introducer, places the proximal end of the radiopaque segment at the guide tip, removes the introducer, flushes, and equalises only when the waveforms superimpose; recognises each fault from the traces and corrects it (connections, introducer, flush, aortic line, sensor position, change guide, reshape or replace the wire).",
+    "success": "No measurement accepted with mismatched waveforms; each fault corrected with the remedy Brilakis gives; the wire changed when equalisation still fails.",
+    "tips": [
+      "pci-phys-zero-outside",
+      "pci-phys-equalise-at-tip",
+      "pci-phys-equalise-fail",
+      "pci-phys-wire-wrong-branch",
+      "pci-phys-cross-distal",
+      "pci-mon-aortic-line-physiology"
+    ],
+    "lessonIds": [
+      "pm-physiology-setup"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "physiology",
+    "what": "Hyperaemia choices and failures: intracoronary adenosine with a dose field (RCA 50–100 µg, left main 200 µg) and a guide-flush step; IV adenosine 140–180 µg/kg/min with a visible systolic pressure fall (about 10 mmHg) and heart-rate rise (5–10/min) when it works; contrast FFR (8 mL, threshold 0.83); failure states: tissued IV line in a small hand or forearm vein (the fix is a large peripheral or central vein), saline given instead of adenosine, a very low dose, recent caffeine, guide disengaged before an intracoronary bolus; an early-reading artefact while the guide trace is disturbed after the injection.",
+    "learnerDoes": "Gives the agent by the chosen route, flushes after an intracoronary bolus, waits for the haemodynamic response or the recovered guide trace before reading, recognises absent hyperaemia and finds its cause, and applies the correct threshold for contrast FFR.",
+    "success": "FFR read only after a clean trace and proven hyperaemia; failed hyperaemia traced to its cause and repeated; contrast FFR judged at 0.83.",
+    "tips": [
+      "pci-phys-ic-adenosine-flush",
+      "pci-phys-iv-hyperaemia-signs",
+      "pci-phys-no-hyperaemia"
+    ],
+    "lessonIds": [
+      "pm-physiology-indices"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "physiology",
+    "what": "Adenosine arrhythmias: a dose above 100 µg into the RCA or a dominant circumflex triggering transient AV block (resolving in seconds), persistent AV block without escape needing brief CPR and temporary pacing, R-on-T ventricular fibrillation needing defibrillation, and atrial fibrillation needing cardioversion if it does not revert.",
+    "learnerDoes": "Chooses a safe RCA dose; when an arrhythmia appears, asks the patient to cough, waits, paces, defibrillates or cardioverts as appropriate.",
+    "success": "No RCA or dominant-circumflex dose above 100 µg; each arrhythmia treated with the manual's response.",
+    "tips": [
+      "pci-adenosine-rca-dose",
+      "pci-adenosine-block-cough-wait"
+    ],
+    "lessonIds": [
+      "pm-physiology-indices"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Resting-index pullback with angiographic co-registration (virtual PCI): the trace mapped onto the angiogram, the learner marks a segment and sees the predicted post-stent value (Brilakis's example: distal iFR 0.41, a 48 mm segment accounting for 0.51, predicted about 0.92, actual 0.93 after a 48 mm stent), and a diffuse vessel with no step in which the prediction shows stenting is not worthwhile.",
+    "learnerDoes": "Performs the resting pullback, selects the segment with the step, reads the predicted value, chooses stent length and position, and declines PCI in the diffuse vessel.",
+    "success": "Segment and length chosen to cover the step; diffuse vessel left unstented.",
+    "tips": [
+      "pci-phys-serial-biggest-step",
+      "pci-phys-diffuse-no-step"
+    ],
+    "lessonIds": [
+      "pm-physiology-pullback"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Left main scenarios: an ostial left main lesion that damps the guide (equalise with sensor and guide in the aorta, measure disengaged); an intermediate distal left main measured in both the LAD and the circumflex with pullback, in three variants: significant left main (step in the left main on both pullbacks), non-significant left main with an ostial circumflex lesion (normal LAD, step at the circumflex ostium), and left main with severe proximal LAD disease that raises the circumflex value and masks left main severity.",
+    "learnerDoes": "Disengages the guide for the ostial lesion, measures both branches with pullback, locates the step and decides whether the left main is significant, recognising the downstream-disease variant as unreliable and choosing imaging as the alternative.",
+    "success": "Correct localisation of the pressure loss in each variant; no left main decision from a single branch; masking recognised.",
+    "tips": [
+      "pci-phys-left-main-both-branches",
+      "pci-phys-ostial-disengage",
+      "pci-phys-damped-guide"
+    ],
+    "lessonIds": [
+      "pm-physiology-subsets"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "physiology",
+    "what": "An aorto-ostial RCA lesion in which an engaged guide damps and ventricularises the trace, with a choice of intracoronary adenosine followed by disengagement or IV adenosine; the falsely high FFR with the guide engaged shown beside the true value.",
+    "learnerDoes": "Equalises in the aorta, gives intracoronary adenosine then disengages (or uses IV adenosine), measures disengaged, and repeats the final assessment the same way after stenting.",
+    "success": "All measurements made with the guide off the ostium.",
+    "tips": [
+      "pci-phys-ostial-disengage",
+      "pci-phys-damped-guide"
+    ],
+    "lessonIds": [
+      "pm-physiology-subsets"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Subsets in which the value misleads or should not be used: an intermediate vein-graft lesion with a normal FFR from competitive native flow; a CTO donor LAD whose FFR rises after the occlusion is opened (by 0.03–0.10); severe aortic stenosis with FFR lower after TAVR while iFR is unchanged; heart failure with high right atrial pressure, offering the (Pd − Pv)/(Pa − Pv) correction; cardiogenic shock; and a discordant pair (FFR abnormal, iFR normal) in a proximal LAD in a diabetic patient.",
+    "learnerDoes": "Declines to base the graft decision on FFR, defers the donor measurement until after recanalisation, interprets the aortic stenosis values with caution, prefers not to rely on FFR in high filling pressures or shock, and decides the discordant case on the clinical presentation.",
+    "success": "Each subset handled as the manuals advise.",
+    "tips": [
+      "pci-phys-svg-avoid",
+      "pci-interp-donor-ffr",
+      "pci-phys-discordance",
+      "pci-no-physiology-in-culprit"
+    ],
+    "lessonIds": [
+      "pm-physiology-subsets"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Post-PCI assessment handed over from the PCI lab: after a stent, a final FFR with three variants: an in-stent step (underexpansion), a focal step proximal or distal to the stent, and diffuse loss beyond the stent; plus a final value above 0.91.",
+    "learnerDoes": "Measures the final FFR, pulls back through the stent when it is 0.80 or less (iFR 0.89 or less) and chooses post-dilatation or another stent for an in-stent loss, a stent for a focal step outside it, and no further treatment for diffuse loss.",
+    "success": "Action matches Brilakis's post-PCI algorithm in each variant.",
+    "tips": [
+      "pci-phys-post-pci-pullback"
+    ],
+    "lessonIds": [
+      "pm-physiology-after-pci"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Provisional bifurcation stenting with a jailed side branch that looks narrowed: intracoronary nitroglycerin, then FFR in the branch (variants above and below 0.80, branch above and below 2 mm), and a left main to LAD provisional stent with a compromised-looking circumflex ostium in which the pullback shows the step at the circumflex ostium.",
+    "learnerDoes": "Gives nitroglycerin, measures the side branch, leaves it when FFR is above 0.80, treats it when 0.80 or less in a branch of at least 2 mm, and for the circumflex chooses deferral or a second-stent technique from the value.",
+    "success": "No side-branch treatment on appearance alone; decisions follow the 0.80 rule.",
+    "tips": [
+      "pci-phys-jailed-side-branch"
+    ],
+    "lessonIds": [
+      "pm-physiology-after-pci"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "The coronary function test in the ANOCA scenario completed with acetylcholine, in the UK consensus order: low-dose GTN (200 µg or less) before any reading; resting thermodilution in which inconsistent injections scatter the transit times; IV adenosine 140 µg/kg/min with visible hyperaemia markers (systemic symptoms, ventricularised distal waveform, lost distal dicrotic notch, separation of mean aortic and distal pressures) giving hyperaemic Tmn, CFR, IMR and FFR together (FFR above 0.80 confirms no epicardial lesion); a drift check at the ostium (0.03 or more means repeat); then acetylcholine provocation (100 µg into the left coronary over 20 s, 50 µg into the RCA) or a stepped Japanese-style sequence, with ECG, symptom question ('is this your usual pain?') and angiographic responses in two views at least 30° apart: epicardial spasm (90% or more), microvascular spasm (pain and ECG change without it), endothelial dysfunction (20% or more constriction during infusion) and a negative test; loss of the aortic trace during a guide infusion with a microcatheter option; transient bradycardia and AV block; a 'flush the guide' trap that delivers an extra bolus unless the acetylcholine is aspirated first.",
+    "learnerDoes": "Applies pads before acetylcholine, gives low-dose GTN before any reading, repeats injections until three agree within 10%, keeps the guide engaged without plugging the left main, confirms hyperaemia before the hyperaemic injections, reads CFR, IMR and FFR, checks drift (0.03 or more means repeat), performs adenosine measurements before acetylcholine, reads the response against the criteria, treats spasm with intracoronary nitrate (atropine if it fails), manages bradycardia, aspirates the guide, and assigns the endotype and treatment direction.",
+    "success": "Correct order (GTN, resting Tmn, IV adenosine with hyperaemic Tmn, CFR, IMR and FFR, drift check, then acetylcholine); correct endotype; safety steps done; no accidental bolus.",
+    "tips": [
+      "pci-phys-thermodilution-boluses",
+      "pci-phys-ach-prepare",
+      "pci-phys-ach-block",
+      "pci-phys-ach-spasm"
+    ],
+    "lessonIds": [
+      "pm-physiology-microvascular"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "An acquisition check for angiography-derived FFR: after filming an intermediate lesion the lab reports whether the runs would support a QFR analysis (nitrate given, two projections with minimal foreshortening and overlap, whole vessel in view, at least 12.5 frames per second, no panning or zooming, brisk continuous injection).",
+    "learnerDoes": "Films the lesion in two suitable projections without panning after nitrate.",
+    "success": "Both runs pass all acquisition criteria.",
+    "tips": [
+      "diag-phys-qfr-acquisition"
+    ],
+    "lessonIds": [
+      "pm-physiology-derived"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "physiology",
+    "what": "A lab event raised only while acetylcholine is being given in the ANOCA scenario (proposed id 'ach-provocation' in LAB_EVENTS, src/content/lab/tips.ts), so that the acetylcholine safety tips show during vasoreactivity testing and never during an adenosine FFR study, where chest pain and AV block are expected adenosine effects with different management (wait, cough).",
+    "learnerDoes": "Sees the acetylcholine tips (pads and dosing, bradycardia, spasm reversal) only during acetylcholine testing, and the adenosine tips during FFR.",
+    "success": "No acetylcholine tip appears in any adenosine FFR scenario; each appears at the matching moment of the acetylcholine test.",
+    "tips": [
+      "pci-phys-ach-prepare",
+      "pci-phys-ach-block",
+      "pci-phys-ach-spasm",
+      "pci-adenosine-block-cough-wait"
+    ],
+    "lessonIds": [
+      "pm-physiology-microvascular",
+      "pm-physiology-indices"
+    ],
+    "priority": "P1"
+  }
+]

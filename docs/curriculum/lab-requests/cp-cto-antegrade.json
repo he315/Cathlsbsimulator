@@ -1,0 +1,152 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Antegrade wire escalation ladder in the mid-RCA CTO scenario. Today the scenario offers a workhorse that buckles and a single stiff tapered CTO wire. Requested: a microcatheter that can be advanced to the cap (and whose distance from the wire tip changes tip support), and wire classes from Brilakis 30.7: workhorse, soft tapered polymer-jacketed (low penetration), composite-core / intermediate, stiff tapered (moderate and strong penetration), stiff polymer-jacketed. A cap descriptor per scenario (tapered with channel, blunt) that sets which wire progresses, a resistant segment that needs a stiffer wire, and a rule that a stiff wire advanced more than a few millimetres beyond the resistant segment tends to leave the plaque (subintimal) or the vessel.",
+    "learnerDoes": "Brings the microcatheter to the cap, chooses the first wire from the cap, escalates one class at a time, steps down after crossing the resistant segment, and reaches the distal true lumen.",
+    "success": "Crossing achieved without a wire exit, with the first wire matching the cap and a step-down recorded after the resistant segment; the debrief lists the wire sequence.",
+    "tips": [
+      "pci-cto-antegrade-microcatheter",
+      "pci-cto-antegrade-first-wire",
+      "pci-cto-antegrade-step-down"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-awe-kit",
+      "cp-cto-antegrade-awe-crossing"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Three wire positions in the CTO scenario (distal true lumen, subintimal, outside the vessel), each visible only with a contralateral injection in two orthogonal projections, plus the lab events 'wire-subintimal' and 'wire-distal-position'. Signs of an exit: tip beyond the contour, motion out of step with the vessel, ventricular ectopics. Consequences: advancing the microcatheter, a balloon or a stent over an exited wire creates a perforation; a microcatheter injection while subintimal enlarges the subintimal space (distal lumen fills less); advancing a subintimal wire far beyond the distal cap compresses the distal lumen.",
+    "learnerDoes": "After each wire advance, takes a contralateral injection in two views, names the position and acts: microcatheter in and exchange (true lumen), withdraw and redirect with nothing over it (exit), redirect then parallel wire or re-entry (subintimal).",
+    "success": "Every device advance is preceded by a two-view confirmation; no microcatheter injection while subintimal; no device over an exited wire.",
+    "tips": [
+      "pci-cto-antegrade-confirm-lumen",
+      "pci-cto-antegrade-parallel-wire"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-awe-crossing",
+      "cp-cto-antegrade-parallel"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Wire exchange and microcatheter removal after crossing: raise 'microcatheter-removal' when the learner removes a microcatheter or re-entry balloon over a short wire. Offer trapping (balloon size 2.5 or 3.0 mm, matched to guide size), wire extension and hydraulic exchange. Model: polymer-jacketed wires slip under aggressive withdrawal; hydraulic exchange can advance or lose the wire; air entrainment if the Y-connector is not back-bled before the next injection; a standard 6 Fr guide cannot trap over-the-wire balloons, the blunt dissection catheter or the re-entry balloon, and traps low-profile microcatheters only with a 0.071 in. lumen (Brilakis 8.9); a dedicated trapping balloon or trapping guide extension traps in smaller guides; trapping several devices in one guide tends to fail; offer circumcision as a last option.",
+    "learnerDoes": "Exchanges the stiff or polymer-jacketed crossing wire for a workhorse through the microcatheter, traps with the right balloon for the guide, removes the microcatheter, back-bleeds.",
+    "success": "Distal wire position kept, workhorse wire in place before the first balloon, no air embolism event.",
+    "tips": [
+      "pci-cto-antegrade-trap-exchange"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-awe-crossing"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Parallel wiring stage: when the first wire is subintimal alongside the distal cap, allow it to be left in place and a second wire delivered through a second microcatheter or a dual-lumen microcatheter (rapid-exchange lumen on the first wire). Include the variant in which the crossing wire enters a side branch beyond the distal cap, so the dual-lumen microcatheter is used to wire the main vessel without losing the branch. Scenario features that decide parallel wiring versus re-entry balloon (soft or hard distal cap, wire in plaque or subintimal, calcium at the zone, mid versus distal RCA) should be visible in the brief or the images.",
+    "learnerDoes": "Redirects briefly without persisting, then chooses parallel wiring or a re-entry balloon from the anatomy, delivers the second wire, confirms it in the lumen and removes the first wire.",
+    "success": "Second wire in the distal true lumen with the first removed only afterwards; the choice between parallel wiring and re-entry balloon matches the scenario features; no switching back and forth.",
+    "tips": [
+      "pci-cto-antegrade-parallel-wire",
+      "pci-cto-antegrade-distal-branch",
+      "pci-cto-antegrade-decide-early"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-parallel"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A long CTO scenario for antegrade dissection and re-entry: an RCA CTO of 20 mm or more with a clear cap, a tortuous poorly seen course with calcium, a good straight distal RCA, a right ventricular marginal branch from the occluded segment and only non-interventional collaterals; 7–8 Fr AL guide option. Knuckle stage: form a knuckle on a polymer-jacketed wire (size of loop matters; knuckles on support wires deform and entrap), advance it in the vessel architecture, risk of entering the side branch (haematoma, branch compromise, hypotension); a blunt dissection catheter option with short advances and a side-branch perforation risk. A subintimal haematoma model that grows with track length beyond the distal cap, antegrade injections and inflow, and shrinks with a guide extension at the proximal cap, a damped guide, a blocking balloon, and STRAW. Knuckling without an indication (clear course, short occlusion) should enlarge the space with no benefit. Hypotension during the case (from the branch haematoma, a knuckle exit or a femoral bleed) should prompt an echo and an access-site check, with a tamponade branch (balloon at the exit, fluids, pericardiocentesis). Antegrade injection through a damped guide or a guide extension at the cap should risk a hydraulic or aorto-coronary dissection. An entrapped knuckle should be freed only by the Brilakis sequence (no hard pull).",
+    "learnerDoes": "Chooses ADR by the hybrid algorithm, travels the segment with a small knuckle, keeps it out of the branch, stops short of the distal cap, avoids antegrade injections and reduces inflow. Knuckles only for an unclear, tortuous or calcified course; when hypotension occurs, excludes tamponade with an echo before attributing it to the branch.",
+    "success": "Knuckle stopped within a short distance of the distal cap, no antegrade injection after wall entry, branch preserved, distal lumen still visible on contralateral injection.",
+    "tips": [
+      "pci-cto-antegrade-knuckle",
+      "pci-cto-antegrade-dissection-catheter",
+      "pci-cto-antegrade-inflow"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-adr-track"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Re-entry stage with a re-entry balloon system: choose a re-entry zone (distance of the wire from the lumen, plaque thickness, calcium, branch at the zone), prepare the balloon with contrast (an unprepared balloon makes the ports hard to see), bougie with a rotational microcatheter, inflate at low pressure so that one port faces the lumen, STRAW, stick from the lumen-facing port, then swap for a softer wire (driving the stick wire distally dissects the distal vessel). Variants: double-blind stick-and-swap when the distal vessel cannot be seen, multi-stick for a small lumen, bobsled to a better zone. Failure branch: balloon the track without stenting (investment) and stop, with contrast and dose counters shown.",
+    "learnerDoes": "Re-enters the distal true lumen close to the distal cap with stick-and-swap, confirms it in two views, removes the balloon by trapping; or, if re-entry fails, chooses investment rather than blind persistence.",
+    "success": "True-lumen re-entry within a short distance of the distal cap with no distal dissection, or a correctly chosen investment-and-stop within the contrast and dose limits.",
+    "tips": [
+      "pci-cto-antegrade-reentry-zone",
+      "pci-cto-antegrade-stick-swap",
+      "pci-cto-antegrade-straw",
+      "pci-cto-antegrade-investment"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-reentry"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Move-the-cap stage: a CTO whose proximal cap is ambiguous or impenetrable to all wires, with a side branch at the cap and no retrograde route. Options: enter the wall just proximal to the cap with a stiff wire (scratch-and-go) or with a slightly oversized balloon inflated before the cap (BASE), with a side-branch protection option (side-BASE); then continue as ADR using the knuckle and re-entry stages.",
+    "learnerDoes": "Recognises that the cap cannot be crossed or clarified, protects the side branch, enters the wall before the cap, and completes the ADR.",
+    "success": "Distal true lumen reached without perforation and with the side branch preserved.",
+    "tips": [
+      "pci-cto-antegrade-move-cap"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-move-cap"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "IVUS frames for CTO work: a wire in the true lumen versus a wire in the subintimal space (with the true lumen beside it), and a re-entry point, so that IVUS confirmation of re-entry can be practised on the bench.",
+    "learnerDoes": "Identifies on each frame whether the wire is in the true lumen or the wall and where the true lumen lies.",
+    "success": "Correct identification on at least 8 of 10 frames.",
+    "tips": [
+      "pci-cto-antegrade-confirm-lumen"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-awe-crossing",
+      "cp-cto-antegrade-reentry"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A CTO-specific lab event 'cto', raised by the PCI lab only when the scenario target is a chronic total occlusion (today the mid-RCA CTO, target kind 'cto'), and an optional TipTrigger field 'requires' (every listed event must be active, checked in tipsFor and validateTips). Every antegrade CTO tip already sets requires: ['cto'] through the module's cto() helper, so it takes effect as soon as tips.ts honours the field. Without it, tips on generic events ('total-occlusion', 'wire-side-branch', 'wire-not-crossing', 'wire-subintimal', 'dissection', 'microcatheter-removal', 'high-contrast-volume', 'high-radiation-dose') would show in ordinary PCI or in primary PCI for an occluded infarct artery. The re-entry tips list both 'wire-subintimal' and 'dissection' with the 'wire' and 'complication' phases, because pciTipContext moves the phase to 'complication' whenever a dissection is overt. Optionally a 're-entry device in use' state so the STRAW and stick-and-swap tips appear only once a re-entry balloon has been delivered.",
+    "learnerDoes": "Sees the CTO crossing tips only in CTO scenarios, and the re-entry tips only when the wire is in the wall or a dissection plane has been made.",
+    "success": "No antegrade CTO tip appears in the focal LAD, calcified RCA or LCx STEMI scenarios, even after a wire enters a side branch, a wire fails to cross or a dissection occurs; the mid-RCA CTO scenario still shows them at the right moments.",
+    "tips": [
+      "pci-cto-antegrade-microcatheter",
+      "pci-cto-antegrade-first-wire",
+      "pci-cto-antegrade-step-down",
+      "pci-cto-antegrade-confirm-lumen",
+      "pci-cto-antegrade-trap-exchange",
+      "pci-cto-antegrade-parallel-wire",
+      "pci-cto-antegrade-distal-branch",
+      "pci-cto-antegrade-decide-early",
+      "pci-cto-antegrade-knuckle",
+      "pci-cto-antegrade-dissection-catheter",
+      "pci-cto-antegrade-inflow",
+      "pci-cto-antegrade-reentry-zone",
+      "pci-cto-antegrade-stick-swap",
+      "pci-cto-antegrade-straw",
+      "pci-cto-antegrade-investment",
+      "pci-cto-antegrade-move-cap"
+    ],
+    "lessonIds": [
+      "cp-cto-antegrade-adr-track",
+      "cp-cto-antegrade-awe-crossing",
+      "cp-cto-antegrade-awe-kit",
+      "cp-cto-antegrade-move-cap",
+      "cp-cto-antegrade-parallel",
+      "cp-cto-antegrade-reentry"
+    ],
+    "priority": "P1"
+  }
+]

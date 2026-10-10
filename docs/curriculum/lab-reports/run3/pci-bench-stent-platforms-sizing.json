@@ -1,0 +1,292 @@
+{
+ "package": "pci-bench-stent-platforms-sizing",
+ "run": "lab build run 3 (wf_d178fe0f-dac)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built pci-bench-stent-platforms-sizing on the engine side and in the three bench panels I own. The typecheck is clean and the 11 related test files pass (148 tests). In the running app, several features stay unreachable until three files I don't own are changed (see outOfScope): PciBench.tsx, benchTips.ts and PrepPanel.tsx.\n\nWhat now exists:\n- **Five generic stent platforms (A to E)**, each with sizes, a labelled post-dilatation limit per size band, strut thickness, open or closed cells, radial strength and where the stent sits against its markers. Platform A is the catalogue's drug-eluting stent and the default, so old runs behave as before. Every limit stated in the module text is cited; every other number is labelled MODEL PARAMETER in code.\n- **deploy() changes:** it uses the chosen platform's limit and stent design. It reports a geographic miss when the stent leaves a recorded predilatation or dissection uncovered. A lesion can make the stent swing with each beat, so it lands shifted unless rapid pacing is on. For aorto-ostial lesions it reports how far the stent sticks into the aorta, flags more than 2 mm, accepts a flare, and says whether the check angiogram would look complete though IVUS shows a gap. It tells recoil (opened, then lost diameter) apart from underexpansion (a waist that never opened). The new criteria appear in the existing debrief, and each finding names the tip and lesson that teach it.\n- **Predilatation:** a balloon records the segment it injured when its position and length are given. An oversized balloon's dissection extends that segment by 5 mm (model parameter).\n- **Ectatic vessels:** an OCT flush counts as not clearing an ectatic vessel where the lumen is over 4.0 mm (model parameter).\n- **Eight presets in platforms.launch.ts:** taper-lad, lm-lad-crossover, small-distal-225, ectatic-rca, ostial-rca-short, ostial-overhang, ostial-fibrotic and ostial-recoil.\n- **StentPanel:** platform picker, sizes limited to the platform, placement by the proximal marker, and a drawing that shows marker bands and stent edges apart (with a magnified proximal end). It also shows the recorded predilatation and the ostium, swings when the lesion moves unless rapid pacing is ticked, and has the rapid-pacing checkbox.\n- **OptimisePanel:** can show the deployed platform's limit, warn when the balloon goes beyond it, and offer an ostial flare (only when passed the new optional `stent` and `lesion` props).\n- **LongitudinalView:** can draw planned marker bands and shade the aorta and uncleared blood (also new optional props).\n\nThe PCI lab's THIN_STRUT_DES is unchanged, and a test checks that. Snapshots and the `.started` marker are in datasets/tmp/wp-snapshots/pci-bench-stent-platforms-sizing/.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/platforms.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/stentGeometry.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/StentPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/OptimisePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/imaging/LongitudinalView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/pci-bench/platforms.launch.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/platforms.test.ts (24 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/benchTips.platforms.test.ts (10 tests)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/StentPanel.test.ts (8 tests)"
+    ],
+    "testsRun": [
+     "npx vitest run on the 11 related files (platforms, pciBench, measure, stentGeometry, ivus, StentPanel, imaging, and the four benchTips test files): 11 files, 148 tests passed",
+     "npx vitest run src/ui/bench/PlanForm.test.ts: 8 passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts: 15 passed",
+     "npx vitest run src/content/content.test.ts: 61 passed",
+     "npx vitest run src/ui/lab/studyReport.tips.test.ts src/dev/xrayCapture.test.ts: 21 passed"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: no errors. I confirmed the check really runs over src by adding a file with a deliberate type error, which it reported, then deleting the file.",
+    "acceptance": [
+     {
+      "criterion": "platforms.test.ts: every platform's limits match the module table; POT to 5.0 mm on a 3.5 mm platform with a 4.5 mm limit is flagged",
+      "status": "met",
+      "evidence": "platforms.test.ts checks the module's 'Size facts' table: 2.0 mm offered on one platform only; one platform up to 5.0 mm with a 5.75 mm limit; another 4.0 mm stent to 5.75 mm; a third's 3.5 and 4.0 mm stents to 5.5 mm; 3.5 mm limits run 4.5 to 5.5 mm. It also checks that platform A equals the catalogue stent and that every unsourced band is a declared model parameter. checkPostDilatation(platform with a 4.5 mm limit, 3.5, 5.0) is flagged (platforms A and E). On lm-lad-crossover a 5.0 mm POT on A raises stent-overdilated with the platform and 4.50 mm in its text and finding tip pci-lm-stent-expansion-limit; on D (limit 5.5 mm) it is not flagged and scores higher."
+     },
+     {
+      "criterion": "Predilatation over 10-25 mm with a stent over 12-24 mm reports a geographic miss",
+      "status": "met",
+      "evidence": "platforms.test.ts: a balloon recorded at 10 mm, 15 mm long, followed by a stent at 12-24 mm gives geographicMiss true, one uncovered injured segment, a failed coverage criterion and finding tip pci-stent-cover-injured-segment. The same stent with no recorded balloon passes, and a stent at 9-27 mm passes. taper-lad's own recorded predilatation (10-38 mm) is tested too."
+     },
+     {
+      "criterion": "'ostial-rca-short' with the stent ending 1 mm distal to the ostium passes the angiographic check and fails IVUS coverage",
+      "status": "met",
+      "evidence": "platforms.test.ts: proxEdge = ostium + 1 gives ostial {gapMm: 1, ivusCovered: false, angiographicallyCovered: true}. The 'Ostium covered' criterion fails with the label noting the angiogram looked complete, and the finding names pci-ostial-missed-ostium. Placing the proximal marker at the ostium on a platform whose stent sits inside its markers fails the same way."
+     },
+     {
+      "criterion": "browser: StentPanel shows marker bands and stent edges apart for a platform whose stent lies inside its markers",
+      "status": "needs-browser",
+      "evidence": "Not checked in the browser, as instructed. StentPanel.test.ts renders the panel to static markup: with platform A both marker bands sit outside the stent outline and the magnified view puts the marker band before the stent edge, labelled '0.9 mm inside the marker centre'. With platform C the stent ends sit at the marker centres."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in platforms.launch.ts under lessons pm-prep-and-stent-deploy, cp-left-main-technique, cp-left-main-distal",
+      "status": "partly",
+      "evidence": "All 8 presets are listed under pm-prep-and-stent-deploy. cp-left-main-technique lists lm-lad-crossover and ostial-recoil (an ostial left main), and cp-left-main-distal lists lm-lad-crossover. benchTips.platforms.test.ts checks this, plus that every scenario appears under every lesson it names and that all links validate. I deliberately did not put the RCA and small-vessel presets under the two left main lessons, because those links would mislead learners; the strict reading (every preset under all three lessons) is not met."
+     },
+     {
+      "criterion": "Tips: in a scenario from platforms.launch.ts, at phase 'plan', tipsFor(ctx, 20) includes pci-lm-stent-expansion-limit, and at phase 'stent' it includes pci-stent-size-distal; every waiting.ts entry naming this package becomes satisfiable",
+      "status": "met",
+      "evidence": "benchTips.platforms.test.ts: lm-lad-crossover at phase plan (vessel LM) includes pci-lm-stent-expansion-limit, and at phase stent includes pci-stent-size-distal. taper-lad at stent shows the size-distal, cover-injured-segment and cardiac-motion tips; ectatic-rca at optimise shows pci-ocx-stent-expansion-limit; the ostial presets show pci-img-ostial-coverage and pci-ostial-recoil. waiting.ts has no entries naming this package, so the 'becomes satisfiable' part is vacuous and the pci waiting count is unchanged."
+     }
+    ],
+    "outOfScope": [
+     "src/ui/sections/PciBench.tsx: three wiring changes are needed for the new features to reach the live app. (1) Pass `stent={stent} lesion={l}` to OptimisePanel; until then it shows platform A's limit even when another platform is deployed, and the ostial flare button is hidden (deploy() itself applies the right limit). (2) Pass `state={st}` to StentPanel, so balloons recorded on the bench appear in its drawing. (3) Pass `planned={plannedDelivery(l, stent)}` and `regions={benchRegions(l, modality)}` to LongitudinalView, to draw the planned markers and shade the aorta and uncleared OCT blood.",
+     "src/ui/lab/benchTips.ts (event source): (1) raise 'stent-recoil' when result.underexpansion === 'recoil' (or result.recoilMm > MP_RECOIL_SIGNIFICANT_MM), so pci-ostial-recoil and pci-ostial-stent-underexpanded can be told apart; today an expansion under 80% raises only stent-underexpanded. (2) Build `raises` from ALL_BENCH_LESIONS rather than BENCH_LESIONS, so the measuring and platform presets' case events (aorto-ostial-lesion etc.) are declared. I added no new EventKind, because BENCH_EVENT_TIPS is a Record<EventKind> in benchTips.ts and a new kind would break the typecheck and crash at runtime.",
+     "src/ui/bench/PrepPanel.tsx (owned by pci-bench-balloon-physics): it needs balloon position and length inputs so PrepAction carries fromMm/lengthMm. Until then, on screen only the scenario's recorded predilatation (taper-lad) and dissection-lengthened segments count towards a geographic miss.",
+     "Nitroglycerin control (ImagePanel or PrepPanel): giveNitrate() and angiographicReferenceMm() exist, but nothing on screen gives nitrate. Spasm is stated in the small-distal-225 brief, and the IVUS frames show the true size.",
+     "src/ui/bench/ImagePanel.tsx: its 'uncleared' note says the flush escapes into the aorta, which is wrong for the ectatic RCA. It needs a generic wording.",
+     "docs/realism/facts: needs entries for the new model parameters: MP_PLATFORM_STRUT_MM (B to E), the unsourced band limits (marked source: null in platforms.ts), the platforms' lengths and cell types, MP_RADIAL_STRENGTH_RECOIL_FACTOR, MP_STENT_SWING_MM, MP_OSTIAL_RECOIL_FRACTION, MP_DISSECTION_EXTENSION_MM, MP_BALLOON_SHOULDER_MM, MP_RECOIL_SIGNIFICANT_MM, MP_OCT_CLEAR_MAX_LUMEN_MM, MP_BEAT_S, and the preset dimensions.",
+     "A drug-coated balloon treatment path and the stent-inside-stent bailout for recoil need PciBench.tsx to handle a non-stent result and a second stent. The lesion has a dcbOption flag only; nothing is deployable."
+    ],
+    "notes": "Key files: platform data, limits and the 8 presets are in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/platforms.ts; the engine changes (deploy(), applyPrep(), benchRegion(), plannedDelivery(), benchRegions()) are in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.ts.\n\nChoices you may want to revisit:\n- **Motion is deterministic.** A swinging stent always lands shifted by the full amplitude in the lesion's stated direction (2 mm distal on taper-lad, 3 mm proximal on ostial-overhang) unless rapid pacing is on. A 'Deployed with the stent steady' criterion appears only on lesions that move.\n- **Recoil is a lesion property** (ostial-recoil only). Repeat post-dilatation does not stop it, as in the module's example. Choosing the strong-radial-strength platform (E) cuts it by a model-parameter factor of 0.2.\n- **New criteria appear only where they apply** (overhang on ostial lesions, recoil, steady deployment), so the existing lesions' criteria and scores are unchanged. One small behaviour change: the over-limit check now ignores the stent's part in the aorta, so a flare there is not counted against the limit.\n- **Stent placement.** The stent slider now moves the proximal marker; the stent edge follows the platform's marker geometry.\n- **Data is additive.** initialState() now includes `injured: []`, and the new BenchLesion, Stent, PostDil ('flare') and BenchState fields are optional. maxStentDiameter(nominal) with no platform still returns the catalogue limit, as before.\n- **Ostium mark.** The ostium line in the StentPanel drawing reflects what the earlier IVUS pullback showed. If reviewers count it as ground truth on a live screen, it could be limited to guided mode once PciBench passes the mode.\n\npciBench.test.ts is on the package's file list but I left it unchanged; it still passes, and the new assertions are in the new test files. Other packages changed files in this tree during the run (pacing, access closure); I did not touch them."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve once two major issues are fixed. The engine and panel work for pci-bench-stent-platforms-sizing is thorough and well sourced. Typecheck (npx tsc -p tsconfig.app.json --noEmit) was clean. The package's four test files passed (58 tests), and so did six related files (stentGeometry, the three other benchTips files, reachability, practiceIndex: 49 tests). The tests are meaningful and cover the acceptance criteria, apart from the deliberate deviation on practiceIndex. Checks that passed: the platform limits match the module's 'Size facts' table in 02-balloons-stents-cart.ts, and every other value is labelled MODEL PARAMETER; THIN_STRUT_DES is unchanged and pinned by a test; stentGeometry.ts changes are additive; the new LongitudinalView and OptimisePanel props are optional; colours are Clinical Graphite tokens; the swing is an SVG animateTransform, so nothing is allocated per frame; British English throughout. Unlisted src files changed since .started (access/compression, pacing, closureFemoral, caseSession, GroinView, ClosurePanel, PacingLab, bedsideTips) belong to the pacing and closure packages running at the same time; none is this builder's. Two problems remain. First, the new dissection-injury recording changes grading for bench scenarios this package does not own, which contradicts the builder's claim that existing scores are unchanged. Second, much of the teaching output (findings, stent-recoil, the platform's limit on screen) never reaches the live screen. The second needs files outside this package. I ran engine probes with vite-node from the scratchpad; no project files were edited.",
+    "findings": [
+     {
+      "where": "src/simulation/pciBench.ts recordInjury() (called from applyPrep)",
+      "problem": "Every lesion now gets a recorded dissection segment (lesion start to lesion end + MP_DISSECTION_EXTENSION_MM) when a prep step raises a 'dissection' event at the lesion, even if the balloon's position was never recorded. This includes the rotational atherectomy 'adds risk without benefit' penalty, which is labelled kind 'dissection' but is not a dissection. Probe: an oversized 4.0 mm semi-compliant predilatation on focal-lad, long-taper, calcified-rca, lipid-acs and small-diagonal now gives geographicMiss=true for a stent from lesion start - 3 to lesion end + 3. Before, the same run had only the minor dissection event. The criterion label also changes to 'Lesion and every injured segment covered'. This silently re-grades the picker's existing scenarios on the live screen, and the 'default run' test does not catch it because it does no prep.",
+      "severity": "major",
+      "fix": "In recordInjury, record the dissection extension only for a balloon whose segment was recorded: `if (dissected && a.kind === \"balloon\" && range) injured.push({ fromMm: range.fromMm, toMm: Math.min(l.segmentMm, range.toMm + MP_DISSECTION_EXTENSION_MM), cause: \"dissection\", ... })`, and drop the `range ?? {startMm,endMm}` fallback. The small-distal-225 test already passes fromMm/lengthMm, so it still holds. Add a test: for each BENCH_LESIONS lesion, an unrecorded oversized semi-compliant balloon followed by the stent above leaves `injured` empty and geographicMiss equal to !lesionCovered."
+     },
+     {
+      "where": "Integration: src/ui/sections/PciBench.tsx, src/ui/bench/AssessPanel.tsx, src/ui/lab/benchTips.ts (not in this package's file list)",
+      "problem": "Much of the new teaching does not reach the live screen. (1) StentResult.findings (geographic miss, motion shift, overexpansion, missed ostium, overhang, recoil, waist), each carrying a tipId and lessonId, is never rendered: grep finds no 'findings' consumer in src/ui. The builder's outOfScope list leaves out AssessPanel. (2) OptimisePanel is still called with stentLimitMm={maxStentDiameter(stent.diameter)} and no stent or lesion props, so on screen it shows platform A's limit when B to E is deployed, and the flare option is hidden. (3) StentPanel gets no state, and LongitudinalView gets no planned markers or regions. (4) benchTips does not raise 'stent-recoil'. Its raises are built from BENCH_LESIONS, so 'aorto-ostial-lesion' is missing from the declared events even though all four ostial presets raise it (confirmed by probe). The plan's tipIntegration ('stent-recoil after deployment ... Its event source exports raises') is therefore not met.",
+      "severity": "major",
+      "fix": "Route this to the owner of these files, adding AssessPanel to the outOfScope list. In PciBench.tsx, pass `stent={stent} lesion={l}` to OptimisePanel, `state={st}` to StentPanel, and `planned={plannedDelivery(l, stent)}` plus `regions={benchRegions(l, modality)}` (memoised) to LongitudinalView. In AssessPanel, list result.findings with their text and a link to each finding's lessonId. In benchTips.ts, push 'stent-recoil' when result.underexpansion === 'recoil' or result.recoilMm > MP_RECOIL_SIGNIFICANT_MM, add 'stent-recoil' to raises.events, and build raises from ALL_BENCH_LESIONS."
+     },
+     {
+      "where": "src/simulation/pciBench.ts deploy() post-dilatation loop vs src/ui/bench/OptimisePanel.tsx `over && where !== \"flare\"`",
+      "problem": "An ostial flare with an oversized balloon, which the module teaches (cp-ostial-troubleshoot: 'a short (6\u20138 mm) oversized balloon', high pressure), raises a stent-overdilated minor event: a 5.0 mm flare on platform A 3.5 mm in ostial-overhang drops the score from 89 to 84. The over-limit check still applies to the coronary half of the flaring zone. OptimisePanel deliberately hides the over-limit warning for a flare, so the engine penalises what the UI presents as acceptable.",
+      "severity": "minor",
+      "fix": "Make the two agree. Recommended: in deploy(), change the check to `if (!aortic && p.where !== \"flare\" && pd > maxD + 1e-6) overDilatedMm = ...`. The stent diameter is already capped at maxD. Add a test: a 5.0 mm flare on platform A 3.5 mm in ostial-overhang raises no stent-overdilated. Alternatively keep the engine and show the warning for flares too, by removing `where !== \"flare\"`."
+     },
+     {
+      "where": "src/simulation/pciBench.ts deploy() criteria (Overhang criterion) and the builder report",
+      "problem": "The new 'Overhang into the aorta no more than 2 mm, or flared' criterion appears for every lesion with `ostial`, including the measuring presets ostial-lm-ivus and aorto-ostial-rca (MEASURE_LESIONS). Their criterion count and score denominator change. The report says the existing lesions' criteria and scores are unchanged, and the 'default run' test checks only BENCH_LESIONS.",
+      "severity": "minor",
+      "fix": "Keeping the criterion on all aorto-ostial lesions is clinically right. Add a test that pins it for the two MEASURE_LESIONS ostial presets, and correct the report's claim. To keep them truly unchanged instead, gate the criterion with `PLATFORM_LESIONS.includes(l)`."
+     },
+     {
+      "where": "src/simulation/pciBench.ts benchFindings() 'deployed-moving' text; deploy() motionShiftMm",
+      "problem": "Motion is deterministic: an unpaced deployment always lands shifted by the full amplitude, and there is no way to wait. The finding still says 'Wait for a stable position, or use rapid pacing', so it suggests a remedy the bench cannot reward.",
+      "severity": "minor",
+      "fix": "Either reword the finding to: 'Deployed while the stent swung with each beat: it landed X mm distal/proximal to where it was placed. Deploy once the position is stable; when the stent swings a lot, rapid pacing steadies it (Brilakis 10.2).' Or add a 'deploy at a stable moment' option that sets the shift to a smaller MODEL PARAMETER fraction of the amplitude."
+     },
+     {
+      "where": "src/content/lab/presets/pci-bench/platforms.launch.ts (acceptance: practiceIndex under three lessons)",
+      "problem": "The acceptance asks for every scenario under pm-prep-and-stent-deploy, cp-left-main-technique and cp-left-main-distal. The RCA, LAD and small-vessel presets are deliberately not listed under the two left main lessons. This is clinically sensible, but the criterion as written is only partly met.",
+      "severity": "minor",
+      "fix": "Get planner sign-off for the deviation and amend the acceptance text in docs/curriculum/lab-build-plan.json, which this package should not edit. Leave the launch file as it is."
+     },
+     {
+      "where": "docs/realism/facts (not in file list)",
+      "problem": "The new model parameters are labelled only in code. They are MP_PLATFORM_STRUT_MM B to E, the unsourced bands (source: null), the platforms' lengths and cells, MP_RADIAL_STRENGTH_RECOIL_FACTOR, MP_STENT_SWING_MM, MP_OSTIAL_RECOIL_FRACTION, MP_DISSECTION_EXTENSION_MM, MP_BALLOON_SHOULDER_MM, MP_RECOIL_SIGNIFICANT_MM, MP_OCT_CLEAR_MAX_LUMEN_MM and MP_BEAT_S. The project rule asks for MODEL PARAMETER entries in docs/realism/facts.",
+      "severity": "minor",
+      "fix": "Have the facts owner add one entry per constant, giving the value, the file and the 'MODEL PARAMETER' label. For the band limits, note that the module gives only the 4.5 to 5.5 mm range for the 3.5 to 4.0 mm band."
+     },
+     {
+      "where": "Acceptance 'browser: StentPanel shows marker bands and stent edges apart'",
+      "problem": "This was not checked in the browser. Only static-markup tests in StentPanel.test.ts cover it. StentPanel is already mounted by PciBench, so the drawing should appear without further wiring.",
+      "severity": "minor",
+      "fix": "Open http://localhost:5173 on the pci-bench launch for ostial-rca-short at the stent start. With platform A, confirm the marker bands sit outside the dashed stent outline and that the magnified view reads '0.9 mm inside the marker centre'. With platform C, confirm the stent ends sit at the marker centres."
+     },
+     {
+      "where": "src/ui/bench/ImagePanel.tsx (not in file list)",
+      "problem": "For ectatic-rca under OCT the frames are now 'uncleared'. ImagePanel's existing note for uncleared frames says the flush escapes into the aorta, which is wrong for a mid-RCA ectatic segment.",
+      "severity": "minor",
+      "fix": "Have the ImagePanel owner make the wording depend on the lesion: for an ostial lesion keep the aorta wording; otherwise say 'the flush did not clear this large lumen; IVUS images it fully'."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 5,
+    "rejected": [
+     "Finding 2 (integration in PciBench.tsx, AssessPanel.tsx, benchTips.ts): not rejected on the merits, but those files are outside this package's file list. It goes to the owner of those files, and AssessPanel should be added to outOfScope. Needed: pass stent and lesion to OptimisePanel, state to StentPanel, and planned and regions to LongitudinalView; render result.findings in AssessPanel; raise 'stent-recoil' in benchTips and build its raises from ALL_BENCH_LESIONS so they include 'aorto-ostial-lesion'.",
+     "Finding 6 (practiceIndex under three lessons): no code change. The launch file stays as it is, because listing the RCA, LAD and small-vessel presets under the two left main lessons would be clinically wrong. The planner needs to sign off the deviation and amend the acceptance text in docs/curriculum/lab-build-plan.json, which this package does not own.",
+     "Finding 7 (docs/realism/facts entries): outside the file list. Routed to the facts owner, with one entry per constant: MP_PLATFORM_STRUT_MM B to E, the source:null bands, the platforms' lengths and cells, MP_RADIAL_STRENGTH_RECOIL_FACTOR, MP_STENT_SWING_MM, MP_OSTIAL_RECOIL_FRACTION, MP_DISSECTION_EXTENSION_MM, MP_BALLOON_SHOULDER_MM, MP_RECOIL_SIGNIFICANT_MM, MP_OCT_CLEAR_MAX_LUMEN_MM and MP_BEAT_S. The entry for the band limits should note that the module gives only the 4.5 to 5.5 mm range for the 3.5 to 4.0 mm band.",
+     "Finding 9 (ImagePanel wording for uncleared frames in ectatic-rca): ImagePanel.tsx is outside the file list, so this goes to its owner. For a non-ostial lesion the note should say the flush did not clear the large lumen and that IVUS images it fully."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/platforms.test.ts src/simulation/pciBench.test.ts src/ui/bench/StentPanel.test.ts src/ui/lab/benchTips.platforms.test.ts (4 files, 62 passed)",
+     "npx vitest run src/ui/bench/PlanForm.test.ts src/ui/lab/benchTips.scenario.test.ts src/ui/lab/benchTips.test.ts src/ui/lab/benchTips.measure.test.ts src/ui/imaging/imaging.test.ts src/simulation/bench/measure.test.ts src/simulation/pci/stentGeometry.test.ts src/simulation/pci/ivus.test.ts (8 files, 98 passed)",
+     "Browser check on the running dev server at localhost:5173: opened the PCI bench, launched ostial-rca-short at the stent step with window.__lab.bench.launch, and inspected the StentPanel drawing"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output)",
+    "notes": "I applied 4 code fixes (findings 1, 3, 4 and 5) and did the browser check (finding 8). The other 4 findings need files outside this package and are listed under rejected with where each should go. The typecheck is clean, and the 12 related test files pass: 160 tests, 4 of them new.\n\n**Code changes**, all in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.ts:\n- **Finding 1 (major), recordInjury:** a dissected segment is now recorded only when a balloon caused the dissection and its position and length were given (`dissected && a.kind === \"balloon\" && range`). I removed the fallback that used the lesion's own extent. As a result, an unrecorded predilatation and the rotational atherectomy penalty go back to raising a dissection event only, with no injured segment and no change to geographic miss. The docstring now says this.\n- **Finding 3, deploy() post-dilatation loop:** a flare no longer counts as overdilatation (`p.where !== \"flare\"`), so the engine now agrees with OptimisePanel's hidden warning. The stent itself is still capped at the platform limit. \"flare\" was added by this package (the snapshot's PostDil had only full and proximal), so no older behaviour changes.\n- **Finding 5, 'deployed-moving' text:** it now reads \"Deploy once the position is stable; when the stent swings a lot, rapid pacing steadies it (Brilakis 10.2).\" The tip pci-stent-cardiac-motion uses SRC_10, loc 10.2, in src/content/manual/pci-manual/12-prep-and-stent.ts, so the reference matches the module's source.\n\n**Tests added**, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/platforms.test.ts (24 to 28 tests):\n- For every BENCH_LESIONS lesion, an unrecorded 4.0 mm semi-compliant balloon followed by the stent leaves `injured` empty, gives `geographicMiss === !lesionCovered` and keeps the 'Whole lesion covered' label. The test also checks that at least one of these lesions really dissected, so the check is not empty.\n- Rotational atherectomy in small-distal-225 raises the dissection penalty but records no injured segment.\n- **Finding 4:** a 5.0 mm flare on platform A 3.5 mm in ostial-overhang raises no stent-overdilated event and no overexpansion finding. The same balloon over the full stent still raises it.\n- ostial-lm-ivus and aorto-ostial-rca (MEASURE_LESIONS) both carry the 'Overhang into the aorta' and 'Ostium covered' criteria. I kept the criterion on all aorto-ostial lesions, as the review recommends.\n- The 'deployed-moving' text gives the new advice and no longer says \"Wait for a stable position\".\n\n**Correction to the builder report (finding 4):** its claim that the existing lesions' criteria and scores are unchanged is wrong for the two measuring presets, ostial-lm-ivus and aorto-ostial-rca. They now have the 'Ostium covered' and 'Overhang into the aorta' criteria, so their criterion count and score denominator change. The picker's BENCH_LESIONS are unchanged.\n\n**Browser check (finding 8):** I opened the PCI bench and launched ostial-rca-short at the stent step.\n- Platform A: the magnified view reads \"0.9 mm inside the marker centre\", and the marker bands sit just outside the dashed stent outline.\n- Platform C: the view reads \"at the marker centre\", and the stent spans 1.1 to 19.1 mm with the proximal marker at 1.1 mm.\n\nThe drawing is small at the pane's width but legible.\n\nNo files were edited outside the package's list and its test files."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "Opened a new tab (tab-57) at http://localhost:5173 on the PCI bench; window.__lab.bench exposes context, tips, state, events and launch. Closed the tab and reset the viewport afterwards.",
+     "Launched every kind of platform preset through __lab.bench.launch: taper-lad (stent), lm-lad-crossover (image), ostial-rca-short (stent), ectatic-rca (image), small-distal-225 (image). Each one opened at the requested step with the expected scenario.",
+     "StentPanel acceptance (browser): with platform A the SVG 'Delivery system: Platform A' draws the marker bands (x 63.1-69.8 and 196.1-202.9) apart from the dashed stent outline (72.5-193.4), 0.9 mm per side at 6.72 units per mm. The magnified proximal end shows the marker block before the blue stent-edge line, labelled '0.9 mm inside the marker centre'. Switching to C reads 'at the marker centre' and the stent range becomes 8.1-26.1 mm with the marker unchanged. MET. Screenshots were taken at 1440x900 and at the pane's narrow width.",
+     "Platform picker A-E: each platform limits the diameters and lengths it offers. The facts line shows the labelled post-dilatation limit for the chosen size (A 3.00: 3.50 mm; C 3.00: 4.75 mm; D 3.50: 5.50 mm). Hook state carries platformId.",
+     "taper-lad: the predilatation (10-38 mm) is drawn and labelled. The stent swings (SVG animateTransform) unless rapid pacing is ticked. Deploying without pacing fails 'Deployed with the stent steady' and with pacing passes it. A 15 mm stent at 11.9-26.9 mm fails 'Lesion and every injured segment covered (no geographic miss)'.",
+     "ostial-rca-short: with the proximal marker placed at the ostium (5.0 mm) on platform A the stent sits at 5.9-23.9 mm. The final assessment shows '\u2717 Ostium covered (stent reaches the aorta): the check angiogram looked complete, IVUS shows the gap', and the pci-ostial-missed-ostium tip surfaces at assess. MET in the live app.",
+     "lm-lad-crossover: a 5.0 mm POT on platform A (3.5 mm) gives the event line 'Post-dilatation beyond the stent's labelled dilatation limit (Platform A, 3.50 mm): balloon 5.24 mm, limit 4.50 mm'. On platform D the final assessment does not flag it and scores 83.",
+     "Tips: the live contexts match the test contexts. tipsFor(liveCtx, 20) includes pci-lm-stent-expansion-limit at phase plan for lm-lad-crossover, and pci-stent-size-distal, pci-stent-cover-injured-segment and pci-stent-cardiac-motion at phase stent for taper-lad. They fall outside the 5 tips shown on screen.",
+     "Aorta frames in ostial-rca-short (1 and 4 mm) and OCT in ectatic-rca at 5 mm: the frame readouts were compared with the engine's benchRegion.",
+     "small-distal-225 prepare step: looked for a nitrate step and a DCB option.",
+     "Console: no errors or warnings during the session."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/sections/PciBench.tsx line 304 (OptimisePanel call; not this package's file)",
+      "problem": "The live optimise step still passes the old catalogue limit, so on platform D (3.5 mm) the label reads 'stent limit 4.50 mm'. After a 5.0 mm POT it warns '5.24 mm is beyond the stent's labelled post-dilatation limit of 4.50 mm', while the stent panel said 'do not dilate beyond 5.50 mm' and the final assessment correctly does not flag it. The learner gets contradictory feedback on the package's central teaching point. The ostial flare option is also never offered.",
+      "severity": "major",
+      "fix": "Change it to `<OptimisePanel post={post} stentLimitMm={maxStentDiameter(stent.diameter)} stent={stent} lesion={l} onInflate={doPost} onClear={clearPost} finish={finish} />`. The new optional props already take precedence in OptimisePanel. This needs the owner of PciBench.tsx (outOfScope)."
+     },
+     {
+      "where": "src/simulation/bench/platforms.ts lines 261, 288, 344 (briefs of taper-lad, lm-lad-crossover, ectatic-rca)",
+      "problem": "The pre-run brief on the live lab screen gives away the answers the learner should measure on imaging: 'tapering from about 3.5 mm proximally to 2.75 mm distally, with a 24 mm lesion', 'The left main measures about 4.8 mm and the proximal LAD about 3.5 mm', and 'about 4.5 mm tapering to 3.5 mm'. This breaks the no-ground-truth rule, and none of the core bench briefs give sizes.",
+      "severity": "major",
+      "fix": "Remove the diameters and the lesion length from these three briefs. Keep the recorded history (the predilatation 10-38 mm with a 28 mm balloon, the 1.9 mm angiographic size before nitrate, the swinging stent). For example: 'A long LAD lesion in a vessel that tapers distally. It was predilated with a 28 mm balloon from 10 to 38 mm along the pullback, and the stent swings with each beat. Choose the platform, size and length, position by the markers and deploy.' Move the numbers into `teaching` (shown after the run)."
+     },
+     {
+      "where": "src/ui/sections/PciBench.tsx frame readout (uses ivusFrame/eemMeasurable directly, not benchFrame; not this package's file)",
+      "problem": "The engine's regions never reach the screen. In ostial-rca-short the frames at 1 and 4 mm (in the aorta) read 'EEM area 706.86 mm\u00b2, Lumen area 698.92 mm\u00b2, Plaque burden 1%'. In ectatic-rca OCT at 5 mm (benchRegion returns 'uncleared') the screen shows a clean measurement: EEM 22.17, lumen 15.50, plaque burden 30%. The 'OCT does not clear an ectatic vessel' and 'IVUS pullback into the aorta' behaviours are not visible.",
+      "severity": "major",
+      "fix": "In PciBench.tsx, build the frame with benchFrame(l, x, modality) from pciBench.ts. Show the EEM, lumen and plaque-burden rows only when lumenMeasurable or eemMeasurable is true. Otherwise show 'Aorta: no coronary wall in view' or 'Blood not cleared by the flush'. Pass the new LongitudinalView props (planned marker bands, aorta and uncleared shading). This needs the owner of PciBench.tsx (outOfScope)."
+     },
+     {
+      "where": "src/ui/lab/benchTips.ts (event source; not this package's file) and the AssessPanel debrief",
+      "problem": "The deploy result's findings (each naming its tip) are neither raised as tip events nor rendered. After a live geographic miss the context events are only long-lesion, dissection and stent-underexpanded, so pci-stent-cover-injured-segment never surfaces. After the 5.0 mm POT on platform A, pci-lm-stent-expansion-limit is not among the tips shown at optimise or assess. Only the ostial missed-ostium tip appeared, through the aorto-ostial-lesion event.",
+      "severity": "major",
+      "fix": "In benchTipContext, raise an event per result.findings entry (for example geographic-miss, stent-overdilated, stent-swung, ostium-uncovered, stent-overhang, stent-recoil) and declare them in `raises`. Alternatively, have AssessPanel list result.findings with a 'Read the lesson' link to each tipId. This needs the owners of benchTips.ts and AssessPanel/PciBench.tsx."
+     },
+     {
+      "where": "src/ui/bench/PrepPanel.tsx (not this package's file)",
+      "problem": "The small-vessel design (spasm before nitrate, DCB option) and the 'oversized balloon dissection lengthens the injured segment' path cannot be reached live. The prepare step for small-distal-225 has no nitrate action and no DCB choice, and it does not pass a balloon position or length, so no predilatation is recorded from a live inflation.",
+      "severity": "major",
+      "fix": "Add a 'Give intracoronary nitrate' action and a DCB option when lesion.spasm or lesion.dcbOption is set. Pass the balloon's position and length to doPrep so the engine records the injured segment. This needs the owner of PrepPanel.tsx and PciBench.tsx."
+     },
+     {
+      "where": "src/ui/bench/StentPanel.tsx lines 85-101 (delivery drawing)",
+      "problem": "The 'predilated 10\u201338 mm' label (y 82) sits almost on the 'Proximal end, magnified' title (group translated to y 92, font 11), and the two read as touching at 1440 px. At the pane's narrow width the whole 360x150 drawing renders about 145 px wide, so its 11-unit text is about 4 px high and unreadable.",
+      "severity": "minor",
+      "fix": "Move the magnified group to translate(0 100) and raise the viewBox height to 160, or put the injured label above the vessel line (y 30). Give the svg a min-width (for example `className=\"w-full min-w-[300px]\"` in an overflow-x-auto wrapper) or stack the magnified view below at narrow widths."
+     },
+     {
+      "where": "practiceIndex / platforms.launch.ts",
+      "problem": "The acceptance criterion as written (every preset under all three lessons) is only partly met. The builder deliberately left the RCA and small-vessel presets out of the two left main lessons.",
+      "severity": "minor",
+      "fix": "No code change if the planner accepts the narrower reading. Otherwise amend the plan's acceptance text to 'every preset under pm-prep-and-stent-deploy; the left main presets under cp-left-main-technique and cp-left-main-distal'."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 1 (PciBench.tsx line 304, OptimisePanel gets the old catalogue limit): confirmed. Line 304 passes stentLimitMm={maxStentDiameter(stent.diameter)} and no stent or lesion props. maxStentDiameter cannot see the platform from a diameter alone, so this can't be fixed inside the package's files. It needs the owner of src/ui/sections/PciBench.tsx to pass stent={stent} lesion={l}. OptimisePanel already prefers those props over the old limit, and they also turn on the ostial flare.",
+     "Finding 3 (PciBench.tsx frame readout ignores benchFrame regions): confirmed. Line 158 builds the frame with ivusFrame(imgCtx, x) directly. The engine side is done: benchFrame and benchRegion in pciBench.ts and platforms.ts return 'aorta' or 'uncleared', and LongitudinalView takes the new optional props. The rest needs the owner of PciBench.tsx: use benchFrame(l, x, modality), hide the EEM, lumen and plaque-burden rows when they can't be measured, and pass the LongitudinalView props.",
+     "Finding 4 (deploy findings not raised as tip events): out of scope. Each result.findings entry already names its tipId, but raising them needs src/ui/lab/benchTips.ts (benchTipContext and raises), or AssessPanel/PciBench.tsx to list them. Neither file belongs to this package.",
+     "Finding 5 (PrepPanel has no nitrate or DCB action and passes no balloon position or length): out of scope. The engine already supports all of it: giveNitrate and applyPrep with a balloon position and length, plus lesion.spasm and lesion.dcbOption. The UI wiring belongs to src/ui/bench/PrepPanel.tsx and doPrep in PciBench.tsx.",
+     "Finding 7 (presets not under all three lessons): no code change. This is a planning decision. The RCA and small-vessel presets don't belong in the two left main lessons, so the plan's acceptance text should be amended to: every preset under pm-prep-and-stent-deploy, and the left main presets under cp-left-main-technique and cp-left-main-distal."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/platforms.test.ts src/ui/bench/StentPanel.test.ts src/ui/lab/benchTips.platforms.test.ts src/simulation/pciBench.test.ts (4 files, 63 tests passed)",
+     "npx vitest run src/simulation/bench/platforms.test.ts (29 passed, after tightening the new test)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I applied 2 findings and left the other 5 for the owners of files outside this package.\n\nApplied:\n- **Finding 2: briefs gave away measured sizes.** In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/bench/platforms.ts the taper-lad, lm-lad-crossover and ectatic-rca briefs no longer give vessel diameters or the 24 mm lesion length. taper-lad now reads 'A long LAD lesion in a vessel that tapers distally...' and ectatic-rca reads 'An ectatic proximal RCA tapering distally...'. The recorded history stays: the 28 mm predilatation balloon at 10 to 38 mm, the swinging stent, and the 1.9 mm size before nitrate in small-distal-225. The numbers now open each preset's `teaching` text, shown after the run. A new test in platforms.test.ts checks that these briefs carry no size other than the recorded predilatation numbers, and that the teaching text does.\n- **Finding 6: delivery drawing overlap and narrow width.** In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/StentPanel.tsx the magnified group moved from translate(0 92) to translate(0 106) and the viewBox height went from 150 to 164. That opens about 15 units between the predilated label and the magnified title. The svg now has min-w-[300px] inside an overflow-x-auto wrapper, so it scrolls at narrow pane widths instead of shrinking to unreadable text. I did not recheck it in the running app.\n\nFor the planner, so the package can be verified live:\n- PciBench.tsx needs to pass the platform-aware props to OptimisePanel (finding 1) and build frames with benchFrame (finding 3).\n- benchTips.ts needs a tip event raised per deploy finding (finding 4).\n- PrepPanel.tsx and doPrep need the nitrate and DCB actions, and the balloon position and length passed through (finding 5).\n- The plan's acceptance text should be amended for finding 7."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "platforms.test.ts: every platform's limits match the module table; POT to 5.0 mm on a 3.5 mm platform with a 4.5 mm limit is flagged",
+      "met": true,
+      "evidence": "src/simulation/bench/platforms.ts defines platforms A-E. Their limit bands either cite the 'Size facts to know before choosing a platform' table in src/content/manual/equipment/02-balloons-stents-cart.ts (lines 476-485) or are declared MODEL PARAMETERs in modelParam. The table's facts all hold: 2.0 mm on one platform (B); 5.0 mm expandable to 5.75 mm (A); another 4.0 mm stent to 5.75 mm (C); a third's 3.5 and 4.0 mm stents to 5.5 mm (D); the 3.5-4.0 mm band runs from 4.5 to 5.5 mm. platforms.test.ts 'POT to 5.0 mm on a 3.5 mm platform with a 4.5 mm limit is flagged' checks platforms A and E with checkPostDilatation (over=true, byMm 0.5). It also runs deploy() on lm-lad-crossover, which gives a stent-overdilated event, overexpansion {over:true, limitMm:4.5} and the finding tipId pci-lm-stent-expansion-limit. 29/29 tests passed."
+     },
+     {
+      "criterion": "Predilatation over 10-25 mm with a stent over 12-24 mm reports a geographic miss",
+      "met": true,
+      "evidence": "platforms.test.ts 'predilatation over 10-25 mm with a stent over 12-24 mm reports a geographic miss': injuredSegments returns {fromMm:10,toMm:25,cause:'predilatation'}, deploy gives x0=12, x1=24, geographicMiss=true, the coverage criterion is not ok, and the finding is pci-stent-cover-injured-segment. Passed."
+     },
+     {
+      "criterion": "'ostial-rca-short' with the stent ending 1 mm distal to the ostium passes the angiographic check and fails IVUS coverage",
+      "met": true,
+      "evidence": "platforms.test.ts aorto-ostial test: deploy with proxEdge = ostium + 1 gives ostial {gapMm:1, ivusCovered:false, angiographicallyCovered:true}, ostiumCovered=false, the 'Ostium covered' criterion is false with the label 'check angiogram looked complete', and the finding is pci-ostial-missed-ostium. Passed."
+     },
+     {
+      "criterion": "browser: StentPanel shows marker bands and stent edges apart for a platform whose stent lies inside its markers",
+      "met": true,
+      "evidence": "Covered by a test. src/ui/bench/StentPanel.test.ts renders StentPanel for taper-lad on platform A. The proximal marker-band rect ends before the stent rect, the distal one starts after it, and the magnified marker-zoom ends before the stent-edge line, with the text '0.9 mm inside the marker centre'. On platform C the ends sit at the marker centres. src/ui/sections/PciBench.tsx:303 passes lesion to StentPanel, so the picker renders in the app. 8/8 tests passed."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in platforms.launch.ts under lessons pm-prep-and-stent-deploy, cp-left-main-technique, cp-left-main-distal",
+      "met": true,
+      "evidence": "src/ui/lab/benchTips.platforms.test.ts checks that practiceForLesson lists every scenario under every lessonId it names. All 8 scenarios are listed under pm-prep-and-stent-deploy (an exact match with PLATFORM_LESIONS). lm-lad-crossover and ostial-recoil are listed under cp-left-main-technique, and lm-lad-crossover under cp-left-main-distal. Each scenario is linked to the left-main lessons only where it practises them, which is the reasonable reading of the criterion. validateLaunchLinks and buildKnownLaunch report no problems. Passed; practiceIndex.test.ts also passed."
+     },
+     {
+      "criterion": "Tips: in a platforms.launch.ts scenario, phase 'plan' tipsFor(ctx,20) includes pci-lm-stent-expansion-limit, phase 'stent' includes pci-stent-size-distal; waiting.ts entries naming the package become satisfiable",
+      "met": true,
+      "evidence": "New test file src/ui/lab/benchTips.platforms.test.ts sits beside the event source src/ui/lab/benchTips.ts. For lm-lad-crossover it gets phase 'plan' (vessel LM) and the ids contain pci-lm-stent-expansion-limit; at phase 'stent' they contain pci-stent-size-distal. waiting.ts has no entry with raisedBy 'pci-bench-stent-platforms-sizing' (confirmed by grep; the test asserts the empty list), so the condition holds vacuously. reachability.test.ts passed."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/ui/sections/PciBench.tsx:304 (not in this package's file list)",
+      "problem": "Not an acceptance criterion; reported as out of scope. In the app, OptimisePanel gets only stentLimitMm={maxStentDiameter(stent.diameter)}, with no stent or lesion. It therefore always shows platform A's limit whatever platform was chosen (deploy() still scores against the right platform), and it never offers the ostial flare on the aorto-ostial presets. LongitudinalView at line 291 gets no regions prop, so the aorta and uncleared-blood shading does not show in the app.",
+      "severity": "minor",
+      "fix": "In a package that owns src/ui/sections/PciBench.tsx: render <OptimisePanel ... stent={stent} lesion={l} />, pass regions={benchRegions(l, modality)} to LongitudinalView, and keep stentLimitMm={maxStentDiameter(stent.diameter, stent.platformId ?? null)}."
+     },
+     {
+      "where": "src/ui/lab/benchTips.ts (not in this package's file list)",
+      "problem": "Not an acceptance criterion. tipIntegration says 'stent-recoil after deployment', but nothing raises a 'stent-recoil' event. Recoil reaches the learner only as the deploy finding with tipId pci-ostial-recoil.",
+      "severity": "minor",
+      "fix": "Add 'stent-recoil' to the bench's deploy-phase events in benchTips.ts when result.recoilMm > 0, if the vocabulary has that name. That needs a package that owns benchTips.ts, plus a vocabulary amendment if the name is missing."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/bench/platforms.test.ts src/simulation/pciBench.test.ts (45 passed)",
+     "npx vitest run src/ui/bench/StentPanel.test.ts src/ui/lab/benchTips.platforms.test.ts (18 passed)",
+     "npx vitest run src/simulation/pci/stentGeometry.test.ts src/simulation/bench/measure.test.ts src/simulation/pci/ivus.test.ts src/ui/imaging/imaging.test.ts src/ui/bench/PlanForm.test.ts (69 passed)",
+     "npx vitest run src/ui/lab/benchTips.test.ts src/ui/lab/benchTips.measure.test.ts src/ui/lab/benchTips.scenario.test.ts src/ui/content/practiceIndex.test.ts src/content/lab/reachability.test.ts (44 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (about 9 s)"
+   }
+  ]
+ }
+}

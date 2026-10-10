@@ -1,0 +1,47 @@
+[
+  {
+    "lab": "diagnostic",
+    "what": "A structured reflection step at the end of every debrief (diagnostic lab, PCI lab and procedure lab), saved to the logbook entry for that case. Fields: the timeline (auto-filled from the session's event log with times), the decision points the learner marks on it, for the weakest step the four questions goal / how / challenge / what went wrong, for any complication the three questions cause / prevention / treatment, system factors (fatigue declared at the brief, noise, missing equipment, scheduling), and one action. Mistake review should show reflections next to the recurring error they relate to, and flag a system factor that appears in three or more reflections as an audit topic.",
+    "learnerDoes": "After the case, marks the decision points on the auto-filled timeline, answers the frame questions for the step or complication chosen, ticks any system factors and writes one concrete action; later reopens the reflection from the logbook or Mistake review.",
+    "success": "Reflection saved with at least one decision point, the frame questions answered and an action that names what will change (free text not empty, not identical to a previous action); the logbook shows which cases have a completed reflection; Mistake review links reflections to error patterns.",
+    "tips": ["pci-safe-capture-the-facts", "diag-operator-review-the-runs"],
+    "lessonIds": ["hb-safe-practice-reflection"],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "A personal audit view in Competencies and logbook. Denominator = every case started, including abandoned and failed attempts (BCIS definition of an attempt). Shows success under a stated definition, complications by type, the share of cases with consent confirmed at sign in, dose and contrast recorded, contrast above 3.7 times the creatinine clearance, and skin follow-up booked after more than 5 Gy. Outcomes are shown as observed against expected (cases × benchmark rate, using Oxford's diagnostic catheterisation rates for diagnostic sessions) and on a funnel plot with control limits around the target, never as a ranking; a small-numbers notice appears when expected events are fewer than one.",
+    "learnerDoes": "Opens the audit view after a series of cases, reads observed versus expected for each outcome, checks where the point lies on the funnel plot, and chooses one process measure to improve before the next series.",
+    "success": "Audit computed from the full denominator (failed and abandoned cases included and labelled); observed and expected displayed for each outcome; funnel plot with control limits; process measures shown per month; the chosen improvement target is stored and re-measured after the next series.",
+    "tips": ["pci-safe-count-every-attempt", "pci-operator-log-the-case"],
+    "lessonIds": ["hb-safe-practice-audit"],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A documentation and disclosure step after any PCI-lab complication (dissection, perforation, no-reflow, acute closure, equipment entrapment, stent loss) or a high-dose run. During the complication, a 'scribe' option lets the learner assign a team member to log times, drugs and devices. After the case the learner writes the operator's account (prompted with Oxford's report contents), decides whether an incident report is needed, chooses how and when to tell the patient (options mirroring the candour guidance: now when awake, after the M&M, partial account), and, for a high-dose run, records the dose, the explanation to the patient and whether the dose was greater than expected (in which case the radiation protection adviser is contacted). During the case the lab should announce the cumulative air kerma every 1 Gy and/or every 30 minutes (Brilakis 28.2), prompt the learner to consider stopping once it exceeds 5–7 Gy and to consider staging at 7–8 Gy, and after more than 5 Gy (skin follow-up within a month) or more than 10 Gy (physicist's peak skin dose calculation, skin check at 2–4 weeks) ask the learner to book the follow-up.",
+    "learnerDoes": "Assigns the scribe when the complication starts; at the end completes the account, the incident decision, the disclosure choice and (if applicable) the dose record.",
+    "success": "Scribe assigned within the first step of the complication; report contains the complication, its management, dose and contrast; incident report filed; disclosure chosen as prompt and complete (a euphemism that omits the complication is scored as incomplete); any dose greater than expected escalated to the radiation protection adviser; skin follow-up booked when the dose thresholds are crossed; the debrief compares the learner's account with the session log and flags omissions (for example a complication not mentioned).",
+    "tips": ["pci-safe-scribe-the-timeline", "pci-safe-dose-incident-check", "pci-post-complication-candour"],
+    "lessonIds": ["hb-safe-practice-medicolegal"],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A brief before each PCI-lab case and a pause during complications. At the brief the learner declares their own state (rested, post-call), names the step most likely to go wrong with the first three actions for it, and, in the CTO scenario, sets stopping rules (air kerma, contrast as a multiple of creatinine clearance, time, own fatigue). The lab then raises the matching events: when a stopping rule is reached it says so, and when an acute closure or dissection occurs the learner must first choose 'hold the wire and announce' before other actions become available. A post-call flag set at the brief should make the attending suggest a second operator for the hardest step.",
+    "learnerDoes": "Completes the brief, works the case, stops when a rule is reached or justifies continuing, and in a complication secures the wire and announces before acting.",
+    "success": "Brief completed with state, anticipated problem and (CTO) stopping rules; wire held and event announced before any other action in a closure; procedure stopped at the first rule reached unless crossing is imminent; debrief compares plan with actions.",
+    "tips": ["pci-safe-state-check", "pci-safe-name-what-could-go-wrong", "pci-safe-cto-stop-rules", "pci-safe-control-the-controllable"],
+    "lessonIds": ["hb-safe-practice-mindset", "hb-safe-practice-wellbeing"],
+    "priority": "P3"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "Operator ergonomics at set-up in the diagnostic lab: table height adjustable (with a comfort indicator for the operator's height), choice of one-piece or two-piece apron and its lead equivalence (heavier at higher LE), and a ceiling-suspended protection option where the room has it. After a major event (perforation, acute closure, VF) in any lab, the next case should not start until the learner chooses whether to pause for a team debrief.",
+    "learnerDoes": "Sets table height and protection before the first run; after a major event chooses to debrief and decides whether the next case waits.",
+    "success": "Table set high but within the comfort range with the detector close to the patient; protection chosen; after a major event the pause-and-debrief option chosen before the next case.",
+    "tips": ["diag-safe-ergonomic-setup", "pci-safe-pause-after-major-event"],
+    "lessonIds": ["hb-safe-practice-wellbeing"],
+    "priority": "P3"
+  }
+]

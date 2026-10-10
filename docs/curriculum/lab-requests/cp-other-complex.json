@@ -1,0 +1,155 @@
+[
+  {
+    "lab": "lab tips vocabulary",
+    "what": "Context events so that the cp-other-complex tips fire only in the right lesion subset. Requested LAB_EVENTS (src/content/lab/tips.ts): 'scad-suspected' (raised when the case is flagged as possible spontaneous coronary artery dissection, in both the diagnostic and PCI labs), 'in-stent-lesion' (the target lesion lies inside a previously implanted stent), 'stent-thrombosis' (the occlusion or thrombus is inside a stent), 'small-vessel' (reference under 2.5 mm), 'large-vessel' (reference 4.0 mm or more, or an ectatic or aneurysmal segment) and 'long-lesion' (lesion over 20 mm). Interim triggers: the SCAD tips use phase 'setup', 'plan', 'lesion-prep' or 'stent' (pci-ocx-scad-stent-long-small no longer uses the 'dissection' event, which is usually iatrogenic) or the 'catheter-too-deep' event, and open with a condition ('If SCAD is suspected', 'If the target is a spontaneous coronary dissection'); the in-stent tips use 'balloon-uncrossable', 'stent-uncrossable', 'balloon-undilatable' and 'stent-underexpanded' (pci-ocx-st-fix-mechanism, which fires on 'stent-underexpanded' in the stent and optimise phases, opens with a conditional title, 'If an old failed stent is the target', because that event otherwise refers to the stent just implanted), except pci-ocx-isr-first-or-recurrent, which now uses phase 'plan' and 'lesion-prep' with a conditional opening ('If the target is in-stent restenosis'); the stent-thrombosis tips use 'thrombus' (pci-ocx-st-wire-escalation no longer uses 'wire-not-crossing', which also fires in CTOs), and pci-ocx-st-lifelong-dapt uses phase 'finish' alone with a conditional title until 'stent-thrombosis' exists; pci-ocx-small-vessel-prep uses phase 'lesion-prep' alone (no 'dissection' event); the vessel-size and long-lesion tips use phase alone or 'wire-prolapse' and 'contrast-streaming'. Once the events exist: gate diag-ocx-scad-setup, diag-ocx-scad-no-deep-seat, pci-ocx-scad-plan and pci-ocx-scad-stent-long-small on 'scad-suspected'; pci-ocx-substrut-knuckle, pci-ocx-isr-undilatable-order, pci-ocx-instent-atherectomy-last, pci-ocx-isr-first-or-recurrent, pci-ocx-stent-failure-image and pci-ocx-stent-failure-history on 'in-stent-lesion'; pci-ocx-st-wire-escalation, pci-ocx-st-image-mechanism, pci-ocx-st-fix-mechanism and pci-ocx-st-lifelong-dapt on 'stent-thrombosis'; pci-ocx-small-vessel-nitrate and pci-ocx-small-vessel-prep on 'small-vessel'; pci-ocx-large-vessel-ivus, pci-ocx-stent-expansion-limit, pci-ocx-large-vessel-side-branch and diag-ocx-large-vessel-fill on 'large-vessel'; pci-ocx-long-pullback, pci-ocx-long-image-measure and pci-ocx-long-distal-first on 'long-lesion'.",
+    "learnerDoes": "Nothing new; the labs raise the events from the scenario definition.",
+    "success": "SCAD, in-stent, stent-thrombosis, vessel-size and long-lesion tips appear only in cases of that kind, and no longer compete for tip slots in unrelated cases.",
+    "tips": [
+      "diag-ocx-scad-setup",
+      "diag-ocx-scad-no-deep-seat",
+      "pci-ocx-scad-plan",
+      "pci-ocx-scad-stent-long-small",
+      "pci-ocx-substrut-knuckle",
+      "pci-ocx-isr-undilatable-order",
+      "pci-ocx-instent-atherectomy-last",
+      "pci-ocx-isr-first-or-recurrent",
+      "pci-ocx-stent-failure-image",
+      "pci-ocx-stent-failure-history",
+      "pci-ocx-st-wire-escalation",
+      "pci-ocx-st-image-mechanism",
+      "pci-ocx-st-fix-mechanism",
+      "pci-ocx-st-lifelong-dapt",
+      "pci-ocx-small-vessel-nitrate",
+      "pci-ocx-small-vessel-prep",
+      "pci-ocx-large-vessel-ivus",
+      "pci-ocx-stent-expansion-limit",
+      "pci-ocx-large-vessel-side-branch",
+      "diag-ocx-large-vessel-fill",
+      "pci-ocx-long-pullback",
+      "pci-ocx-long-image-measure",
+      "pci-ocx-long-distal-first"
+    ],
+    "lessonIds": [
+      "cp-other-complex-scad",
+      "cp-other-complex-isr-mechanism",
+      "cp-other-complex-isr-treatment",
+      "cp-other-complex-stent-thrombosis",
+      "cp-other-complex-vessel-size",
+      "cp-other-complex-long-lesions"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "A suspected-SCAD diagnostic case: a young postpartum woman with an anterior STEMI and a virtual mid-LAD SCAD that the learner can view in types 1, 2A, 2B and 3 (multiple lumens or wall staining; diffuse narrowing over 20 mm with normal artery either side; diffuse narrowing to the tip; focal narrowing under 20 mm). The scenario raises 'scad-suspected'. Deep intubation or a forceful injection through a damped catheter produces an iatrogenic proximal dissection (persistent wall staining) that the debrief attributes to technique.",
+    "learnerDoes": "Chooses femoral access, engages the left coronary coaxially without deep seating, gives intracoronary nitrate and gentle injections, records orthogonal views, names the SCAD type and chooses observation, CABG discussion or revascularisation by Brilakis's rules (stability, left main or proximal two-vessel involvement, ongoing ischaemia). If radial access is chosen, it is done deliberately with extra care (AHA statement). For a conservatively managed patient the learner states the drug plan: stop the heparin infusion if nothing else needs it, agree single or dual antiplatelet therapy individually, and avoid clopidogrel if she is breastfeeding.",
+    "success": "No deep intubation or forceful injection; the type is named correctly; the management choice matches the rules (a stable patient without left main or proximal two-vessel dissection is observed for 3–5 days).",
+    "tips": [
+      "diag-ocx-scad-setup",
+      "diag-ocx-scad-no-deep-seat"
+    ],
+    "lessonIds": [
+      "cp-other-complex-scad"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A SCAD PCI scenario: recurrent ischaemia with TIMI 1 flow in a mid-LAD SCAD. Wire choice changes the outcome (a polymer-jacketed wire enters the false lumen; a workhorse wire reaches the true lumen, confirmable on IVUS). Stent strategy changes the outcome: a full-size stent with high-pressure post-dilatation propagates the intramural haematoma beyond the distal edge, which is treated by stenting the distal end first and then proximally; long, slightly undersized stents overlapping each end by 5–10 mm, or slow cutting-balloon fenestration, do not. GP IIb/IIIa or cangrelor selection extends the haematoma. VA-ECMO standby is an option the attending asks about. A catheter-induced proximal dissection branch rewards stopping selective injections (any essential injection given non-selectively with the catheter disengaged) and rapid stenting of the proximal dissection.",
+    "learnerDoes": "Plans drugs (heparin, oral antiplatelets, no GP IIb/IIIa or cangrelor) and support, wires with a workhorse, confirms the true lumen, stents long and undersized, and bails out a propagating haematoma distal-first.",
+    "success": "TIMI 3 flow with the haematoma covered, no false-lumen balloon inflation, and the correct order of bail-out stenting if the haematoma spreads.",
+    "tips": [
+      "pci-ocx-scad-plan",
+      "pci-ocx-scad-stent-long-small",
+      "pci-ocx-imh-distal-first"
+    ],
+    "lessonIds": [
+      "cp-other-complex-scad"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A stent-thrombosis STEMI scenario: occlusion of a proximal LAD stent implanted months earlier, after an interruption of the P2Y12 inhibitor. A soft workhorse wire fails; stepwise escalation (soft hydrophilic tip, then soft polymer-jacketed wire with microcatheter support) crosses; a stiff polymer wire carries a perforation risk. On some runs the wire passes under the old struts: the balloon will not enter the stent, forceful pushing (with or without a guide extension) causes longitudinal stent deformation, and re-crossing with a knuckled wire fixes it. After flow returns, the scenario hands over to the bench for imaging of the mechanism (underexpansion over calcium, fracture or gap, shown also with a stent-enhancement mode).",
+    "learnerDoes": "Treats it as STEMI (radial access preferred), escalates wires one step at a time, exchanges back to a workhorse before devices, recognises and corrects sub-strut wiring (ideally with a knuckled polymer-jacketed wire), restores flow, manages residual thrombus by the 20.9 questions (flow, thrombus size, ongoing ischaemia; thrombectomy or intense antithrombotic therapy with repeat angiography), and requests imaging before any new stent. A new stent is scored as needed only for a suboptimal result or residual dissection or disease; finishing without one when imaging shows a good result is correct. At the end the learner states a prolonged antiplatelet plan (lifelong per Brilakis unless bleeding risk is high; potent P2Y12 inhibitor; adherence addressed) and refuses protamine while equipment is in the artery.",
+    "success": "Flow restored without stent deformation or perforation, imaging performed before new metal, the mechanism corrected, no unnecessary stent length added, and the antiplatelet plan stated.",
+    "tips": [
+      "pci-ocx-st-wire-escalation",
+      "pci-ocx-substrut-knuckle",
+      "pci-ocx-st-image-mechanism",
+      "pci-ocx-st-fix-mechanism",
+      "pci-ocx-st-lifelong-dapt",
+      "pci-ocx-protamine-after-equipment"
+    ],
+    "lessonIds": [
+      "cp-other-complex-stent-thrombosis",
+      "cp-other-complex-isr-treatment"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "An in-stent restenosis bench with selectable mechanisms shown on IVUS and OCT: (1) a well-expanded stent filled with neointima; (2) an underexpanded stent with calcium behind the struts; (3) a stent fracture or gap (also visible with an enhanced stent image using a balloon in the stent); (4) malapposition; (5) a second layer of stent. The learner must image and name the mechanism before treatment options unlock. For underexpansion the in-stent undilatable order is enforced: non-compliant balloon at high pressure (shorter balloon, two balloons side by side, buddy wire), then a plaque-modification balloon (cutting balloon not above 14 atm, inflated slowly), then laser fired with contrast, then atherectomy (burr 1.75 mm or more; orbital disallowed in a recently implanted stent), with lithotripsy and very-high-pressure balloons available before atherectomy where the lab offers them. Hazards on the bench: balloon rupture (immediate angiogram for perforation, air or dissection), a sticky balloon that pulls the wire out unless withdrawn under fluoroscopy, and a cutting balloon withdrawn before full deflation. A 1:1 balloon must expand fully before definitive treatment: a new DES or a drug-coated balloon (both accepted; Brilakis favours the stent for a first episode), a drug-coated balloon or brachytherapy for recurrence, a warning against a third layer of metal, or referral for CABG for severe diffuse or recurrent disease.",
+    "learnerDoes": "Images, names the mechanism, works through the in-stent sequence until full expansion, chooses the definitive treatment by episode number and mechanism, sizes any new stent on imaging and confirms its expansion.",
+    "success": "No new stent is placed in an unexpanded stent; the sequence is followed; the treatment matches the mechanism and the number of previous episodes (a drug-coated balloon for a first episode is not scored as wrong); no third layer of metal; final minimal stent area meets the imaging target taught in pm-imaging.",
+    "tips": [
+      "pci-ocx-stent-failure-image",
+      "pci-ocx-isr-undilatable-order",
+      "pci-ocx-instent-atherectomy-last",
+      "pci-ocx-isr-first-or-recurrent",
+      "pci-ocx-brachytherapy-dapt"
+    ],
+    "lessonIds": [
+      "cp-other-complex-isr-mechanism",
+      "cp-other-complex-isr-treatment"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Small-vessel and large-vessel sizing variants alongside the existing long tapering LAD: (a) a 2.25 mm distal vessel that measures smaller before nitrate (spasm) and shows positive remodelling on IVUS; atherectomy is disallowed and an oversized balloon produces a dissection that lengthens the stent; a drug-coated balloon is available as an alternative to a short stent; (b) a 4.5 mm ectatic proximal RCA tapering to 3.5 mm, where OCT gives an incompletely cleared image and IVUS a full one, the stent is sized to the distal reference and the proximal segment post-dilated with a larger short non-compliant balloon, and the bench warns when a balloon exceeds the chosen stent's labelled post-dilatation limit.",
+    "learnerDoes": "Gives nitrate, chooses the imaging modality, sizes to the true distal reference, prepares without oversizing, and post-dilates proximally within the expansion limit.",
+    "success": "Sizing within the true references, no oversizing dissection, IVUS chosen for the large ectatic vessel, and no post-dilatation beyond the stent's limit.",
+    "tips": [
+      "pci-ocx-small-vessel-nitrate",
+      "pci-ocx-small-vessel-prep",
+      "pci-ocx-large-vessel-ivus",
+      "pci-ocx-stent-expansion-limit",
+      "pci-stent-size-distal"
+    ],
+    "lessonIds": [
+      "cp-other-complex-vessel-size"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Long-lesion pullback variants: a 45 mm angiographic lesion whose pullback shows a focal step-up over a short segment, and a 50 mm diffusely diseased vessel with a gradual decline and no step-up. The pullback must stop when the wire's radiopaque segment reaches the guide tip, where Pd/Pa is checked for drift (0.98–1.02; outside this range, re-equalise and repeat). For serial lesions, the lesion with the largest gradient is treated first and the vessel re-measured.",
+    "learnerDoes": "Performs the pullback, classifies the pattern as focal or diffuse, and chooses a short targeted stent (focal) or a surgical discussion (diffuse).",
+    "success": "Correct pattern recognition and the matching decision; the pullback stops at the guide tip and drift is checked there.",
+    "tips": [
+      "pci-ocx-long-pullback"
+    ],
+    "lessonIds": [
+      "cp-other-complex-long-lesions"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Long and serial lesion preparation and side-branch wiring in a large vessel: a 40 mm mid-to-distal RCA lesion where inflating proximally first makes later distal balloon delivery fail, a balloon that is too short melon-seeds while one longer than the lesion injures normal segments that then need longer stents, and an uncovered ballooned segment is scored as geographic miss; and a side branch off a large main vessel where the wire prolapses into the main vessel until a polymer-jacketed wire with an angulated microcatheter is used (then exchanged for a workhorse).",
+    "learnerDoes": "Dilates distal first, chooses balloon lengths, covers every ballooned segment, and wires the side branch with the right tools.",
+    "success": "Distal segment reached, no geographic miss, side branch wired, polymer wire exchanged before devices.",
+    "tips": [
+      "pci-ocx-long-distal-first",
+      "pci-ocx-long-image-measure",
+      "pci-ocx-large-vessel-side-branch",
+      "pci-stent-cover-injured-segment"
+    ],
+    "lessonIds": [
+      "cp-other-complex-long-lesions",
+      "cp-other-complex-vessel-size"
+    ],
+    "priority": "P3"
+  }
+]

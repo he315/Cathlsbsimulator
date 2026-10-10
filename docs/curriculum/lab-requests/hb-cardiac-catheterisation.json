@@ -1,0 +1,179 @@
+[
+  {
+    "lab": "cathlab",
+    "what": "Intended left ventriculogram as a task. Today an LV injection is scored as an error. Add a 'ventriculogram' task: the learner crosses the aortic valve with a pigtail (shallow U-loop in AP or RAO), positions the loop in the mid-cavity, reads the LVEDP after the a wave, connects the power injector (air check), sets volume, rate and rise time, chooses RAO 30° and/or LAO 60° cranial 20°, warns the patient, and acquires with a breath-hold. Simulate apical ectopy when the tip is near the apex, papillary muscle entrapment (pigtail will not move until rotated and withdrawn), ectopic beats at the start of the run, catheter-induced MR when the loop touches the mitral apparatus, and intramyocardial staining (with later hypotension and tachycardia) when injecting against the wall without a test injection.",
+    "learnerDoes": "Positions in the mid-cavity, records LVEDP, chooses 30–35 mL at 10–15 mL/s (reduced to about 30 mL at 10 mL/s if LVEDP above 25 mmHg; omits the run when echo can answer the question, the patient is breathless or in pulmonary oedema, or the LVEDP is near 30 mmHg, since Oxford advises avoiding the ventriculogram when the LVEDP is high without giving a number and says pulmonary oedema is likely above 30 mmHg), hand-tests 10 mL when unsure, acquires until an ectopic-free cycle, and pulls back to the aorta under pressure before removing the catheter over the wire.",
+    "success": "No injection from the apex, papillary muscles or wall; settings appropriate to the LVEDP; at least one clean sinus cycle recorded; pullback recorded; catheter removed over a wire.",
+    "tips": [
+      "diag-lv-gram-mid-cavity",
+      "diag-lv-gram-injector",
+      "diag-lv-gram-test-injection",
+      "diag-lv-gram-papillary",
+      "diag-lv-gram-clean-cycle",
+      "diag-lv-gram-views",
+      "diag-lv-pullback-over-wire",
+      "diag-lvedp-before-lv-gram",
+      "diag-lv-gram-tamponade"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-lv-gram",
+      "hb-cardiac-catheterisation-lhc"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Ventriculogram reading step. After an intended ventriculogram, show end-diastolic and end-systolic frames and ask the learner to (a) describe global function (normal, mildly, moderately or severely impaired), (b) assign wall motion per segment (normal, hypokinetic, akinetic, dyskinetic) in the walls the chosen view profiles (RAO: anterior, apical, inferior; LAO cranial: septal, posterolateral), (c) grade MR I–IV from left atrial density relative to the LV, and (d) refuse to grade when the run contains ectopic beats or the catheter sat on the mitral apparatus. Include an apical filling defect (thrombus), takotsubo apical ballooning with normal coronaries, a VSD jet in LAO cranial, and the anomalous circumflex 'dot' sign.",
+    "learnerDoes": "Reads each run and grades it, or declares it ungradable and repositions.",
+    "success": "Wall motion and MR grade correct within one grade; ungradable runs recognised.",
+    "tips": [
+      "diag-lv-gram-clean-cycle",
+      "diag-lv-gram-views"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-lv-gram"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Intended aortic root injection as a task, with AR grading. The learner places a pigtail in the proximal ascending aorta, checks it is clear of the leaflets, removes the wire, aspirates, connects the injector and gives 40–60 mL at 20 mL/s in LAO during a breath-hold. A pigtail interfering with the leaflets should create or exaggerate regurgitation (a design choice based on author's reasoning; Oxford only says to keep the catheter from interfering with leaflet opening and closing). Render AR grades I–IV (I clears each beat; II LV less dense than aorta; III equal; IV denser and persisting) for grading, and an Amplatz pushed onto the valve during coronary work that opens a cusp and drops the pressure until repositioned.",
+    "learnerDoes": "Positions clear of the valve, injects with appropriate settings and grades the regurgitation; recognises and corrects catheter-induced AR.",
+    "success": "No injection with the catheter on the valve; AR grade correct within one grade; Amplatz repositioned within a few seconds of the pressure fall.",
+    "tips": [
+      "diag-aortogram-setup"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-aortography"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Post-CABG graft search with an aortogram road map. When the learner cannot find a vein graft (graft-not-found event), allow an LAO aortogram with the pigtail higher in the aorta and a long acquisition; let the learner loop the run, freeze the clearest frame as an overlay, and engage grafts in the same projection using sternal wires and rib spaces as landmarks. Include a graft stump (occluded) and a territory with no visible supply until the last graft is found.",
+    "learnerDoes": "Performs the aortogram, freezes a road-map frame, engages in the same projection, and accounts for every territory.",
+    "success": "All patent grafts engaged, the occluded stump identified, and no territory left without a source of flow.",
+    "tips": [
+      "diag-aortogram-graft-roadmap"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-aortography"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Difficult aortic valve and stenotic valve crossing. A scenario where the pigtail will not cross a normal valve (requiring wire stiffening, wire-led crossing, change to JR4 or AL, straight or hydrophilic wire, exchange to pigtail over a long wire), and a severe AS scenario where the lab first asks whether crossing is indicated (concordant echo: should not cross; discordant symptoms or TAVI work-up: cross with a 5 F AL1 and straight hydrophilic wire aimed at the Prussian helmet opening on an aortogram, then exchange to a pigtail over an exchange-length J wire). Count crossing time and wire passes as an embolic-risk score.",
+    "learnerDoes": "Checks for AS before escalating; follows the sequence; declines to cross when echo already answers the question.",
+    "success": "Correct order of escalation; no crossing of a severely stenotic valve without an indication; controlled crossing with few passes when indicated.",
+    "tips": [
+      "haemo-lhc-u-loop",
+      "haemo-lhc-difficult-valve",
+      "haemo-lhc-stenotic-valve"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-lhc"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "haemo",
+    "what": "Torque-directed right heart catheterisation from the femoral vein with a multipurpose catheter, under fluoroscopy. Model the tip catching in a venous side branch, failure to enter the RV without an RA loop, ectopy and runs of VT with forceful manipulation (especially in the RVOT), reaching the PA by withdrawing from the apex and rotating cranially, the effect of a deep breath, and wedging on inspiration. Prolonged forceful manipulation should risk a knot, with the knot bail-out (call for help, do not pull tight, try a wire, else tighten and remove with the sheath).",
+    "learnerDoes": "Flushes and connects before insertion, navigates by the waveform, uses the loop, back-up-and-rotate and breathing manoeuvres, and manages a knot correctly.",
+    "success": "Wedge reached without VT or knot; if a knot forms, it is not pulled tight before help is called.",
+    "tips": [
+      "haemo-rhc-flush-and-watch",
+      "haemo-rhc-femoral-side-branch",
+      "haemo-rhc-ra-loop",
+      "haemo-rhc-apex-to-pa",
+      "haemo-rhc-wedge-inspiration",
+      "haemo-rhc-knot"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-rhc"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "haemo",
+    "what": "Thermodilution injection step with taught pitfalls. Let the learner perform the injections through the proximal port (volume, temperature, speed, timing in the respiratory cycle) and see each temperature curve and output. Scenarios: a slow or interrupted injection, a smaller volume than entered, a warm injectate, an intracardiac shunt, severe TR, very low output and AF, each distorting the curves as taught in the Academy thermodilution lesson. Then compare with a Fick output from measured or assumed VO2 and require the report to state the method.",
+    "learnerDoes": "Performs repeated injections, rejects distorted curves, recognises when thermodilution is invalid, and reports output with its method and as an index.",
+    "success": "Accepted value within the scenario's true output; invalid scenarios recognised; method and index reported.",
+    "tips": [
+      "haemo-co-say-how",
+      "haemo-co-index-it"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-output"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Intraprocedural hypotension work-up. During a simulated PCI, drop the arterial pressure and first offer false causes (open Y-connector, loose transducer connection or air, damping, catheter obstruction, bulky equipment), including a catheter obstructed by air, thrombus or contrast that must be aspirated, and removed without injection if aspiration fails, then real causes with matching right heart numbers and clues (an access-site haematoma or a 'dented bladder' on fluoroscopy for retroperitoneal bleeding; nitroglycerin after a recent PDE5 inhibitor or verapamil for vasodilatation): hypovolaemia (low wedge, low output), cardiac failure (high wedge, low output; include an Amplatz opening a cusp), vasodilatation (low wedge, high output, low SVR). The learner calculates SVR and names the group.",
+    "learnerDoes": "Excludes a false reading, then reads filling pressure, output and SVR to classify the hypotension.",
+    "success": "False reading excluded before treatment; group named correctly; SVR within 10% of the true value.",
+    "tips": [
+      "haemo-hypotension-pattern",
+      "haemo-pvr-right-pressures"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-resistance"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Vasoreactivity challenge step. In idiopathic, heritable or drug-associated PAH scenarios, allow inhaled nitric oxide (or inhaled iloprost) with repeat mean PA pressure and output; include a positive response, a fall of less than 10 mmHg, a fall to above 40 mmHg, and a fall with reduced output. Block or penalise the test in a patient with a raised wedge (left heart disease).",
+    "learnerDoes": "Chooses whether testing is indicated, runs it, and applies both criteria with the output condition.",
+    "success": "Correct indication and interpretation in every scenario.",
+    "tips": [],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-resistance"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "haemo",
+    "what": "ASD and VSD catheter studies. ASD: right heart pressures, right heart pullback, crossing the defect for a left atrial saturation, SVC, IVC, PA and aortic samples (with streaming that makes single RA samples unreliable), a step that requires the learner to address anomalous pulmonary venous drainage (Oxford lists excluding it as an aim of the study without giving the method; the Academy's shunt module teaches the oximetry clues, such as a step-up within the SVC), Flamm mixed venous saturation, Qp:Qs and PVR using Qp. VSD: simultaneous LV and RV pressures for the gradient, oximetry, and an LAO 60° cranial 20° ventriculogram showing the jet.",
+    "learnerDoes": "Takes the right samples in the right places, builds the mixed venous saturation, calculates Qp:Qs and PVR, and chooses the right ventriculographic view for a VSD.",
+    "success": "Qp:Qs within 0.2 of the true value; RA or PA never used as mixed venous in an atrial shunt; PVR calculated with Qp; LAO cranial chosen for the VSD.",
+    "tips": [
+      "haemo-shunt-mixed-venous",
+      "haemo-shunt-asd-cross",
+      "haemo-shunt-vsd-simultaneous"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-shunts"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Set-up checks before the study: manifold with 3–5 ports to be flushed free of air (a bubble left should be visible and injectable), zeroing at mid-chest with the distal port open to air, and a manifold 'prepared by an assistant' that contains a hidden bubble the learner must find.",
+    "learnerDoes": "Flushes every port, zeros correctly and inspects the assistant's manifold before the first injection.",
+    "success": "No air injected; transducer zeroed at the correct level.",
+    "tips": [
+      "haemo-setup-manifold-check"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-setup"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Post-ventriculogram complications as consequences. After a standard-dose ventriculogram in a patient with a raised LVEDP, simulate pulmonary oedema (cough, falling saturation, crackles) managed by Oxford's sequence: high-flow oxygen, sit up, IV loop diuretic, IV nitrates if systolic pressure above 100 mmHg, CPAP, consider IABP, admit. After an injection with the tip against the wall, simulate a myocardial stain followed by tachycardia and hypotension (tamponade), with contrast collecting in the pericardium, distinguished from a vasovagal reaction by the rising heart rate; the learner orders echo, performs or calls for pericardiocentesis, leaves a drain and reviews heparin reversal.",
+    "learnerDoes": "Recognises each complication, distinguishes tamponade from a vasovagal reaction by heart rate, and applies the management sequence in order.",
+    "success": "Oxygen and positioning within the first actions for oedema; pericardiocentesis not delayed when tamponade is strongly suspected; drain left and anticoagulation reviewed.",
+    "tips": [
+      "diag-lv-gram-test-injection",
+      "diag-lv-gram-tamponade",
+      "diag-lvedp-before-lv-gram"
+    ],
+    "lessonIds": [
+      "hb-cardiac-catheterisation-lv-gram"
+    ],
+    "priority": "P2"
+  }
+]

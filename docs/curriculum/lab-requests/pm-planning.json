@@ -1,0 +1,65 @@
+[
+  {
+    "lab": "pci",
+    "what": "A pre-brief planning form shown before every PCI lab scenario, with one field per step of Brilakis's fourteen-step plan: baseline monitoring, drugs given, access site and sheath size, guide shape and size, angiographic plan and contrast ceiling (below 3.7 × GFR, lower in CKD, counting recent contrast), target lesion and its ACC/AHA and SCAI class, wire, expected lesion preparation, stent, closure, physiology, imaging, haemodynamic support, and the two or three complications judged most likely with the equipment for each.",
+    "learnerDoes": "Completes the form from the scenario's chart and films before the case starts; the form stays visible during the case.",
+    "success": "The debrief scores the form against the scenario: guide size compatible with the lesion preparation actually needed (for example 7 Fr when atherectomy or V-stenting/simultaneous kissing stents are needed), contrast ceiling set and respected, imaging planned when the target was stented before, and the complication that occurred named in advance with its equipment available.",
+    "tips": ["pci-planning-fourteen-steps", "pci-planning-guide-size", "pci-planning-contrast-ceiling", "pci-planning-bailout-kit", "pci-planning-classify-lesion", "pci-planning-imaging-restenosis"],
+    "lessonIds": ["pm-planning-steps", "pm-planning-bailout", "pm-planning-classification"],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci",
+    "what": "Contrast and radiation counters with planned limits: the lab tracks contrast volume against the ceiling written in the pre-brief and cumulative air kerma, raising high-contrast-volume and high-radiation-dose events as each limit approaches (Brilakis: usually stop above 5–7 Gy air kerma; over 15 Gy is a sentinel event; Oxford: radiographer warning at 1 Gy, dose recorded and discussed with the patient).",
+    "learnerDoes": "Chooses at each warning whether to finish, stage or stop, and records the dose.",
+    "success": "No case exceeds the learner's own contrast ceiling without an explicit decision; the dose is recorded when the 1 Gy warning is given.",
+    "tips": ["pci-planning-contrast-ceiling", "pci-planning-radiation-limit"],
+    "lessonIds": ["pm-planning-bailout"],
+    "priority": "P2"
+  },
+  {
+    "lab": "access",
+    "what": "Full procedure lab chart with one planted problem per generated patient, drawn from the manuals' checklists: a DOAC taken too recently for its creatinine clearance (Brilakis Table 1.2; Oxford's general 24-hour hold, 72 hours for dabigatran in renal impairment, accepted where the unit protocol follows it), warfarin with an INR not checked within 24 hours, metformin in CKD, a previous contrast reaction without premedication, sildenafil in the past 24 hours or tadalafil in the past 48 hours, an anchor-and-collagen-plug closure device in one groin within 90 days, a dialysis fistula arm, bloods older than 14 days for an out-patient, a planned non-cardiac operation within 6–12 months, an unsuspended do-not-resuscitate order, or a pregnancy test not done.",
+    "learnerDoes": "Reads the chart before the time-out and chooses the action for each problem (hold and delay, choose another access site, premedicate, avoid nitroglycerin, repeat bloods, rethink stenting, clarify resuscitation status).",
+    "success": "The planted problem is found and acted on before the time-out is completed; missing it produces the consequence in the case (bleeding, contrast reaction, nitrate hypotension, kidney injury) and the debrief links to the lesson.",
+    "tips": ["access-planning-site-history", "access-planning-anticoagulated", "diag-planning-pde5-nitrate", "diag-planning-contrast-allergy", "pci-planning-stent-candidacy", "diag-planning-resuscitation-status", "diag-planning-check-in"],
+    "lessonIds": ["pm-planning-assessment", "pm-planning-preparation"],
+    "priority": "P1"
+  },
+  {
+    "lab": "access",
+    "what": "A scored consent conversation in the full procedure lab whose risks come from the generated patient: Oxford's approximate diagnostic and PCI figures as a starting point, raised by the patient's own factors (age, left main or three-vessel disease, poor LV function, class IV heart failure, aortic valve disease, CKD for kidney injury), with the chance of success, the alternatives (medical therapy, CABG), the long-term risks (restenosis, stent thrombosis, DAPT), the ad hoc plan, and resuscitation status and any proxy.",
+    "learnerDoes": "Chooses what to tell the patient from a set of statements, including what will and will not be done ad hoc.",
+    "success": "Mortality is mentioned; patient-specific risk factors are named; alternatives and long-term risks are covered; an ad hoc limit is agreed; a lack of capacity is handled by best interests unless someone holds legal authority.",
+    "tips": ["diag-planning-ad-hoc-consent", "diag-planning-resuscitation-status"],
+    "lessonIds": ["pm-planning-consent"],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "An end-of-diagnostic decision point in the cath lab: the angiogram reveals anatomy beyond what was consented (left main, multivessel disease or a chronic occlusion), and the learner must decide whether to proceed ad hoc or stop.",
+    "learnerDoes": "Chooses to proceed or to stop, and if stopping, what to arrange (heart-team discussion, a new consent conversation).",
+    "success": "Ad hoc PCI is declined when the consent does not cover the anatomy or the disease is complex; the debrief cites Brilakis's reasons to delay PCI.",
+    "tips": ["diag-planning-ad-hoc-consent"],
+    "lessonIds": ["pm-planning-consent"],
+    "priority": "P2"
+  },
+  {
+    "lab": "diagnostic",
+    "what": "A classify-the-lesion step on real angiogram runs that carry expert lesion boxes (CADICA): after locating the lesion, the learner records length (under 10, 10–20, over 20 mm), shape, contour, calcium, angulation, side-branch involvement, ostial position, thrombus and patency, and the app derives the ACC/AHA type (A, B1, B2, C) and SCAI class (I–IV).",
+    "learnerDoes": "Classifies each lesion with its reasons, then compares with an expert classification where one exists.",
+    "success": "Agreement with the expert on the type C features and on patency, which together decide the SCAI class.",
+    "tips": ["pci-planning-classify-lesion"],
+    "lessonIds": ["pm-planning-classification"],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci",
+    "what": "Left main and heavily calcified scenarios in the PCI lab whose set-up depends on the plan: a left main bifurcation case where a 7 or 8 Fr guide, defibrillator pads, a vasopressor plan, intravascular ultrasound and a haemodynamic assessment must be chosen before the start (hypotension follows otherwise; support is chosen from LV function and haemodynamics, not routinely), and a calcified LAD where a 6 Fr radial guide forces a guide exchange when atherectomy is needed.",
+    "learnerDoes": "Prepares the case from the pre-brief, then manages the consequences of the choices made.",
+    "success": "Pads, a vasopressor plan and a 7–8 Fr guide are in place for the left main case; the guide chosen for the calcified case accepts the plaque-modification device without an exchange.",
+    "tips": ["pci-planning-left-main", "pci-planning-guide-size"],
+    "lessonIds": ["pm-planning-bailout"],
+    "priority": "P2"
+  }
+]

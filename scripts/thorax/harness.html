@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Thorax harness</title>
+    <script>
+      // Other streams edit the tree constantly; the dev server's hot-reload socket would reload this
+      // page in the middle of a measurement. Disable it here (reload by hand to pick up changes).
+      window.WebSocket = class {
+        constructor() {}
+        addEventListener() {}
+        removeEventListener() {}
+        send() {}
+        close() {}
+      };
+    </script>
+    <style>
+      body { background: #111; color: #ccc; font: 12px ui-monospace, monospace; margin: 8px; }
+      canvas { width: 384px; height: 384px; image-rendering: pixelated; }
+      pre { white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <div>S4 thorax harness (development only). Drive it from the console: <code>await __s4.measure()</code>.</div>
+    <div id="cv"></div>
+    <pre id="log"></pre>
+    <script type="module" src="./harness.ts"></script>
+  </body>
+</html>

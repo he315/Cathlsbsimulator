@@ -1,0 +1,40 @@
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 696ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 11900ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > over-torque winds up the shaft and releases it as whip 392ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1719ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 4300ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 3006ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 2766ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 11288ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 2970ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1.2, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 18308ms
+ ✓ src/physics/manoeuvres.test.ts (12 tests) 64864ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 2981ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 663ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 15773ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > over-torque winds up the shaft and releases it as whip 507ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1570ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 5000ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2356ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 3592ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 15198ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 4220ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > dilated root on the frozen fixture (known gap, regenerate the fixture when the root is re-oriented): a JL5 in the dilated root engages within 3 of 12 starts of a JL4 in a normal root 11092ms
+   ✓ manoeuvres on the fixture geometry, segment scale 1, 120 Hz > pushing on an engaged JR4 advances it further into the RCA without leaving it or reaching the ventricle 1911ms
+ ✓ src/physics/manoeuvres.live-1.0.test.ts (11 tests) 66473ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > JL4 from the femoral route engages the left main with minimal manipulation in most starts, never the RCA or the ventricle 3194ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > pushing on an engaged JL4 seats it deep in the left coronary, and it stays there 1184ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > JR4 engages the RCA with gentle clockwise torque, never without torque, and less often turning anticlockwise 16898ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > over-torque winds up the shaft and releases it as whip 529ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > a right catheter pushed on in the left sinus buckles and prolapses into a loop on the valve 1690ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an engaged guide backs out when a device is pushed out of it against resistance, and stays when it is not 5287ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an extra-backup 3.75 guide from the femoral route engages the left main with the same technique in at least 2 of 5 starts, never the RCA or the ventricle 2596ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > a radial universal catheter from the right radial artery engages the left main in every start that reaches the root 3469ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > Judkins left size against root size: a JL3.5 suits a small root at least as well as a JL4 and better than a JL5; a JL4 suits a normal root 12128ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > an Amplatz left 1 with the Amplatz technique engages the left main in most starts that reach the root, never the RCA, is never called prolapsed while seated or engaged, and is not pulled out by a withdrawal 4619ms
+   ✓ manoeuvres on the live geometry with arch branches, segment scale 1, 120 Hz > dilated root (app geometry): a JL5 engages the left main at least as reliably as a JL4 does in a normal root, and an undersized JL4 in the dilated root does no better than the JL5 (12 starts each) 14878ms
+ Test Files  67 passed | 1 skipped (68)
+      Tests  1158 passed | 15 skipped (1173)
+   Start at  20:23:50
+   Duration  93.18s (transform 8.37s, setup 0ms, collect 40.19s, tests 532.95s, environment 9ms, prepare 6.80s)
+exit 0

@@ -1,0 +1,201 @@
+{
+ "package": "pci-bench-imaging-unify",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built pci-bench-imaging-unify. src/simulation/pci/ivus.ts is now the only frame generator for both the bench and the PCI lab. Frames carry the modality, calcium with its arc and thickness (thickness on OCT only, null on IVUS), a plaque-burden profile, a lipid pool with an optional cap, thrombus type, side-branch ostia and struts for every stent layer. The PCI lab's calcium grade (0, 1, 2) and lipid flag still work through normaliseLesion, so angioPci.ts and pci/actions/imaging.ts compile unchanged.\n\nThe EAPCI criteria live in one place (src/simulation/imaging/criteria.ts). pciBench.deploy() and ivusSummary() both use them, and both cite SIM_FACTS \u00a712. The shared types are in src/simulation/imaging/types.ts.\n\npciBench.ts now takes every device from equipment.ts:\n- balloonDiameter and stentDiameter read the catalogue charts through chartDiameter.\n- BALLOON_SPEC and STENT_SPEC are derived from the catalogue, so the pressures AngioPci displays are the ones the engine applies.\n- maxStentDiameter is the catalogue's dilatationLimit, and the size pickers offer only catalogue sizes.\n- deploy() builds the stent ring by ring with stentGeometry.deployStent.\n- benchIvusContext(l, st, result, modality) produces frames whose lumen and EEM areas match lumen() and eem().\n- Dissections the procedure causes appear in the images as flaps at the lesion or beside the stent edge that caused them.\n\nOn the UI side:\n- src/ui/imaging/IntravascularView.tsx and LongitudinalView.tsx render frames for both labs. IVUS shows calcium as a bright arc with a shadow and no back edge; OCT shows it as a sharp-bordered region with measurable thickness, and lipid as a diffuse-bordered region that hides the media.\n- PciBench.tsx is split into src/ui/bench/{Image,Prep,Stent,Optimise,Assess}Panel.tsx, with LabModeBar and LabTipsPanel.\n- Runs are logged through useLabRun: one row at the first final pullback, with one decision per criterion.\n- Lessons and cases open the bench through useLabLaunch('pci-bench'), and DEV builds get window.__lab.bench (context, tips, state, events, launch).\n\nsrc/ui/lab/benchTips.ts reports the bench's phase, vessel, imaging modality and events (both from the procedure and from the lesion definition), plus a raises export derived from the lesions that actually exist. src/content/lab/presets/pci-bench/core.launch.ts declares the five lesions with their starts (image, prep, stent), lessons, cases and modality links.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/ivus.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/ivus.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/imaging/types.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/imaging/criteria.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pciBench.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/imaging/IntravascularView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/imaging/LongitudinalView.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/PciBench.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/ImagePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/PrepPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/StentPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/OptimisePanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/bench/AssessPanel.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/benchTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/benchTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/pci-bench/core.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/benchTips.scenario.test.ts (new test file)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/imaging/imaging.test.ts (new test file)"
+    ],
+    "testsAdded": [
+     "src/simulation/pci/ivus.test.ts: for each bench lesion, lumen and EEM areas at 10 positions are within 2% of lumen() and eem(); OCT frames give calcium thickness and IVUS frames null; the PCI lab's calcium grade gives OCT thickness and IVUS null; the bench pullback summary agrees with preImaging, a deployed stent's frames carry struts and the shared criteria; a bench edge dissection appears as a flap beside that edge",
+     "src/simulation/pciBench.test.ts: BALLOON_SPEC diameters and pressures equal equipment.ts chartDiameter at nominal and RBP for every kind and every catalogue size; the stent follows the catalogue DES chart, pressures and dilatation limit; the optimised focal LAD plan scores >= 80; the calcified RCA without calcium modification fails expansion; the SC-vs-NC compliance test recalibrated to the catalogue charts",
+     "src/ui/lab/benchTips.test.ts: calcified RCA after a 2.5 NC at 12 atm gives lesion-prep with balloon-undilatable; distal-lm gives vessel LM with left-main-lesion, bifurcation and large-vessel; plan before modality, imaging after; the phase for each step; the size and length classes; stent-underexpanded only after deployment; the complication phase; raises uses the shared vocabulary and claims nothing no lesion raises",
+     "src/ui/lab/benchTips.scenario.test.ts: the launch file declares exactly the bench lesions; every lessonId, caseId and link validates against TRACKS and ALL_CASES; the practice index lists each scenario under every lesson it names, plus the OCT links; launchBench parses scenario, start or step, modality and mode; slow-flow brings pci-principles-explain-unexpected and dissection at optimise brings pci-stop-after-complication; waiting entries satisfiable with the bench's raises and none without; the screen renders",
+     "src/ui/imaging/imaging.test.ts: IntravascularView draws an IVUS calcium shadow and an OCT bordered deposit without naming any finding; it draws stent struts; LongitudinalView samples come from the frame generator and render with the cursor"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pciBench.test.ts src/simulation/pci/ivus.test.ts src/ui/lab/benchTips.test.ts src/ui/lab/benchTips.scenario.test.ts src/ui/imaging/imaging.test.ts: 5 files, 44 tests passed",
+     "npx vitest run src/content/lab/reachability.test.ts src/ui/content/practiceIndex.test.ts src/dev/xrayCapture.test.ts: 24 passed (pci satisfiable 297 of 553)",
+     "npx vitest run src/content/content.test.ts: 61 passed (validates every .launch.ts, including the new one)",
+     "npx vitest run src/simulation/angioPci.test.ts src/simulation/pci/equipment.test.ts src/simulation/pci/equipment.tips.test.ts src/simulation/pci/stentGeometry.test.ts src/simulation/imaging: 7 files, 61 passed, 1 todo",
+     "npx vitest run src/content/lab/retarget.test.ts src/content/lab/tips.test.ts src/simulation/pci/facade.test.ts src/simulation/pci/lesionAssessment.test.ts: 68 passed, 1 skipped"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (test files included).",
+    "acceptance": [
+     {
+      "criterion": "pciBench.test.ts expectations still pass (focal LAD optimised plan scores >= 80; calcified RCA without modification fails expansion), recalibrated where compliance changed",
+      "status": "met",
+      "evidence": "All 14 tests pass. Two tests are new: focal LAD score >= 80, and the calcified RCA failing the expansion criterion. One test was recalibrated: the SC-vs-NC comparison now uses the catalogue nominals (SC 6 atm, NC 12 atm) and checks that SC grows more per atm and more than 1.5 times NC over its working range. The other outcome tests (calcium modification, perforation from an oversized burr, LM POT, edge in plaque, lipid no-reflow) pass unchanged under catalogue compliance and dilatation limits."
+     },
+     {
+      "criterion": "ivus.test.ts: for each BENCH_LESION, lumen and EEM areas at 10 positions match pciBench lumen() and eem() within 2%; OCT frames report calcium thickness and IVUS frames null",
+      "status": "met",
+      "evidence": "The new tests in ivus.test.ts pass for all 5 lesions at 10 positions each. On calcified-rca, the OCT frame thickness is over 0.5 mm and IVUS gives null; the same holds for the PCI lab's graded calcium through the adapter. The 4 original PCI-lab IVUS tests still pass."
+     },
+     {
+      "criterion": "BALLOON_SPEC diameters equal equipment.ts chartDiameter at nominal and RBP for every kind",
+      "status": "met",
+      "evidence": "pciBench.test.ts 'devices from the catalogue' checks every kind and every catalogue diameter, at nominal and RBP, plus the label, the pressures at 3.0 mm and mmPerAtm. The stent is checked against the DES chart and dilatationLimit."
+     },
+     {
+      "criterion": "benchTips.test.ts: calcified RCA after a 2.5 NC at 12 atm gives phase 'lesion-prep' with balloon-undilatable; distal-lm gives vessel 'LM'",
+      "status": "met",
+      "evidence": "Both are tested and pass in src/ui/lab/benchTips.test.ts."
+     },
+     {
+      "criterion": "angioPci.test.ts and AngioPci compile unchanged; browser: __lab.bench.state() follows the step preset",
+      "status": "needs-browser",
+      "evidence": "angioPci.test.ts passes and tsc is clean, and AngioPci.tsx is untouched. A browser check is still needed. The unit test checks that benchHookState(launchBench({scenario:'lipid-acs', start:'prep', modality:'OCT'}).session) reports step prep and modality OCT, and the hook also offers launch(params) for checking in the pane."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/pci-bench/core.launch.ts under the lessons its .launch.ts names, and every named lessonId resolves",
+      "status": "met",
+      "evidence": "benchTips.scenario.test.ts confirms the practice index lists every scenario under every lesson it names, and that validateLaunchLinks against TRACKS and ALL_CASES gives no errors for the file (lessons, cases and links). content.test.ts passes."
+     },
+     {
+      "criterion": "Tips: after the action that raises 'slow-flow', tipsFor(ctx,20) includes pci-principles-explain-unexpected; after 'dissection' it includes pci-stop-after-complication; every waiting.ts entry naming pci-bench-imaging-unify becomes satisfiable, so the waiting count for the pci lab falls by at least their number",
+      "status": "partly",
+      "evidence": "Both tip checks pass in benchTips.scenario.test.ts. lipid-acs uses an SC 3.5 mm balloon at 8 atm to raise slow-flow; focal-lad lands a stent edge in plaque, which raises dissection at optimise. 5 of the 8 waiting entries become satisfiable, and none of them is satisfiable without the bench's raises (tested). The other 3 cannot be made satisfiable honestly. pci-ocx-small-vessel-nitrate and pci-ocx-small-vessel-prep need a small vessel, and no bench lesion has a distal reference under 2.5 mm (pci-bench-stent-platforms-sizing plans that scenario). pci-ocx-large-vessel-side-branch needs the wire phase with wire-prolapse, and no PCI raises declaration reports the wire phase today."
+     }
+    ],
+    "outOfScope": [
+     "docs/realism/facts: list the new MODEL PARAMETERS (labelled in code): MP_CALCIUM_THICKNESS, MP_LIPID_ARC_DEG and MP_CALCIUM_DEPTH in pci/ivus.ts; MP_BENCH_FLAP_ARC, MP_BENCH_FLAP_MM, MP_BENCH_PLAQUE_ANGLE and MP_BENCH_WIRE_ANGLE in pciBench.ts; the 80 \u00b5m drawn cap in IntravascularView. Also record the size classes benchTips.ts uses (small < 2.5 mm, large >= 4.0 mm, long > 20 mm), which cite cp-other-complex-vessel-size and cp-other-complex-long-lesions.",
+     "src/ui/sections/AngioPci.tsx (lines 407-408) still hard-codes the stent's nominal 10 atm and RBP 16 atm. The catalogue DES nominal is 8 or 9 atm, now exported as STENT_SPEC.nominalAtm or stentPressures(d). The balloons in AngioPci now show catalogue values (for example SC nominal 6 atm, previously 8). AngioPci also appends ' balloon' to a label that already ends in 'balloon', which predates this package.",
+     "src/dev/xrayCapture.ts reads BALLOON_SPEC['semi-compliant'].nominalAtm and STENT_SPEC.nominalAtm, which are now catalogue values (6 atm instead of 8, and 9 instead of 10). xrayCapture.test.ts passes, but captured device frames inflate at slightly different pressures. Under the renderer-baseline rule, the owner or the realism stage should re-capture and compare the PCI device set.",
+     "pci-ocx-large-vessel-side-branch can only become satisfiable once a PCI lab event source declares the wire phase and wire-prolapse (pci-tip-context or pci-wire-microcatheter). Neither src/ui/lab/pciTips.ts nor pciEvents/ exports raises today.",
+     "pci-ocx-small-vessel-nitrate and pci-ocx-small-vessel-prep need a small-vessel bench lesion. pci-bench-stent-platforms-sizing designs one, and the waiting.ts raisedBy for them could move there."
+    ],
+    "notes": "I departed from the plan in four places.\n\n1. Vessel-size classes. benchTips uses the reference lumen (proximal >= 4.0 mm is large, distal < 2.5 mm is small), which is how the module (Brilakis, via cp-other-complex-vessel-size) defines vessel size. The plan's \"proximal EEM 4.0 mm or more\" would mark every bench segment (EEM 4.1 to 5.6 mm) as large, including a 3.4 mm mid-LAD. Only distal-lm is large now.\n\n2. raises is derived from the lesions that exist, so it does not claim small-vessel, cto and the other flags no lesion has. I added flags: ['bifurcation'] to distal-lm, since its brief describes a provisional strategy. The bench also raises left-main-lesion, calcified-lesion (the brief states fluoroscopic calcium) and burr-deceleration, plus the 'complication' phase while a perforation, dissection or no-reflow is present.\n\n3. The stent is deployed when the learner presses Deploy, and each post-dilatation re-deploys it. Deployment events such as an edge dissection therefore occur at the optimise step and are imaged there; the old screen only computed them at the final pullback. Once deployed, only the optimise and assess steps are available.\n\n4. Ground truth on live screens. The prep log names events, and the calcium-modification percentage shows, only in guided mode. Otherwise events are named in AssessPanel after the final pullback. The slice readout no longer shows calcium thickness on IVUS. The slice and pre-PCI measurement read-outs are otherwise still visible in every mode; hiding them belongs to pci-bench-measure-and-plan.\n\nLaunch details: the start step is the validated 'start' key, because the schema rejects 'step' without a technique. launchBench still accepts 'step' from a direct caller, and 'modality' is a key specific to the bench lab. With no modality given, a start past imaging defaults to IVUS.\n\nSnapshots of the four files that already existed are in datasets/tmp/wp-snapshots/pci-bench-imaging-unify/src, next to .started; the other 13 listed files are new. The section title stays 'PCI bench' to match App.tsx. Nothing was checked in the browser; that stage still has to confirm the rendered frames and __lab.bench."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Changes needed before this package can be accepted, though no finding is critical. The package and regression test files pass (5 files, 44 tests) and the typecheck is clean.\n\nI also checked the browser acceptance criterion in a new background tab, which I then closed. In the PCI bench, __lab.bench.launch({scenario:\"lipid-acs\", start:\"prep\", modality:\"OCT\"}) moved state() to step \"prep\" with modality \"OCT\". The context came back as lesion-prep, LCx, oct, and one OCT frame and one OCT longitudinal view rendered.\n\nOther src/ files changed since .started all belong to diag-lesion-morphologies and diag-rod-physics, which were running at the same time. Nothing outside this package's list looks touched by it.\n\nWhat is done correctly:\n- ivus.ts is the single frame generator. The bench lumen and EEM areas match lumen() and eem().\n- OCT frames give calcium thickness and IVUS frames give null, including the PCI lab's calcium grade through normaliseLesion.\n- criteria.ts thresholds match SIM_FACTS \u00a712.\n- BALLOON_SPEC, the stent, sizes and dilatation limits come from the catalogue.\n- PciBench is split into step panels, with useLabRun logging, useLabLaunch, LabTipsPanel and the dev hook.\n- Prep events are named only in guided mode; the events row in LabTipsPanel shows only in DEV builds.\n\nThe main problems:\n- The images and the bench's own numbers do not agree on malapposition. In calcified-rca the frames show a strut-to-wall distance of 0.43 mm, while the final assessment says 0.04 mm.\n- The ring-by-ring stent geometry sits in the wrong place when the stent runs past the segment end.\n- One waiting tip is counted as reachable although no screen can show it, so 4 of the 8 waiting tips can really appear, not 5.\n- The OCT image has no depth fade.\n- The bench never passes side branches to the frames.\n- AngioPci (outside this package) now shows stent pressures that differ from the catalogue pressures it applies.",
+    "findings": [
+     {
+      "where": "src/simulation/pci/ivus.ts ivusFrame (strut loop and stentR), shown in src/ui/sections/PciBench.tsx 'Strut-to-wall distance' and AssessPanel 'Maximum malapposition'",
+      "problem": "Struts are drawn on a circle centred on the EEM centre, but the native lumen is a circle moved away from the plaque by `off`. Each strut's gap is measured as the native lumen radius along that strut's angle minus r, so on the thin side of the plaque every strut shows an extra gap of about `off`. As a result the frame and deploy() disagree. In a scratch run of the bench context and ivusSummary against deploy(): calcified-rca (3.5x23 at 14 atm, NC 3.75 at 20) gave a frame maximum of 0.43 mm against 0.04 mm from deploy, so the slice readout breaks the 0.4 mm criterion while AssessPanel passes it. distal-lm gave 0.29 against 0.10 mm, and focal-lad without post-dilatation gave 0.17 against 0.01 mm. The header's claim that the two 'cannot disagree' does not hold for the measures fed to the criteria either. Expansion differs too: focal-lad without post-dilatation was 76% from deploy (fail) and 84% from ivusSummary (pass); distal-lm with POT was 82% (pass) and 74% (fail).",
+      "severity": "major",
+      "fix": "In ivusFrame, centre each stent ring on the native lumen centre (cx, cy). Place struts at (cx + r cos th, cy + r sin th), take gapMm = max(0, lumR - r) (or ring.lumenD/2 - ring.d/2 when the ring carries lumenD), and make the stented lumen outline rayToCircle(th, cx, cy, max(lumR, stentR)). This matches deploy()'s concentric apposition (lum - d)/2. Add a test to ivus.test.ts: for each BENCH_LESION, under a standard plan and a calcium-unmodified plan, the maximum strut gap over the frames is within 0.05 mm of r.maxMalapposition, the frame MSA is within 2% of r.msa, and ivusSummary(benchIvusContext(...), {leftMain}).criteria malapposition, MSA and edge ok flags equal r.criteria[1..3].ok. Also either state in criteria.ts and the bench footer that the bench's expansion is the half-stent (ILUMIEN) definition while ivusSummary uses MSA over the mean reference (SIM_FACTS \u00a712), or add an opts.expansion:'halves' to ivusSummary for the bench, and test that the two expansion verdicts agree."
+     },
+     {
+      "where": "src/simulation/pciBench.ts deploy(): the geom = deployStent(...) block, plus benchIvusContext stents entry",
+      "problem": "Ring diameters are sampled at x0 + u*(x1 - x0), where x1 is clipped to segmentMm, but deployStent positions the rings over the label length. The context also puts the stent at [x0, x1]. In long-taper, an 8x... rather a 38 mm stent at proxEdge 20 (allowed by the slider, which goes up to segmentMm - 4) produced a 38.18 mm geometry over a 30 mm span. Rings past 30 mm are never shown, and each ring shown carries the diameter of a different position, so in a tapering vessel the frames show the wrong stent size at a given mm. Foreshortening alone also shifts rings by about 3%: geometry 17.43 mm against an 18 mm span.",
+      "severity": "major",
+      "fix": "Map u onto the physical stent rather than the clipped span. Sample at x = x0 + u*stent.lengthMm, clamped to [x0, x1], in dAt and in the lumenD callback. In benchIvusContext, set toMm = Math.min(l.segmentMm, result.x0 + result.geom.lengthMm). Add a test: for long-taper with a stent running past the segment end, the frame stent area at three positions is within 3% of area(profile d) at the same x."
+     },
+     {
+      "where": "src/ui/lab/benchTips.scenario.test.ts NOT_BY_BENCH and the acceptance claim '5 of the 8 waiting entries become satisfiable'",
+      "problem": "pci-ocx-long-pullback requires phase 'physiology' and the long-lesion event. The bench never reports the physiology phase, and physiologyTips.ts raises physiology but never long-lesion. The tip passes only because the report takes the union of all pci raises; no screen produces both together, so the tip can never fire. In practice 4 of the 8 entries become reachable (large-vessel-ivus, stent-expansion-limit, long-image-measure, long-distal-first), and the test hard-codes the false count.",
+      "severity": "major",
+      "fix": "Add 'pci-ocx-long-pullback' to NOT_BY_BENCH with the reason 'phase physiology: the bench has no pressure-wire step; needs long-lesion from the physiology lab'. Change the expectation to ready.length >= 4 and the report to 4 of 8. Under outOfScope, record that the physiology package (physiologyTips.ts PHYSIOLOGY_PRESET_EVENTS) should raise long-lesion for its long or diffuse presets, or that the waiting.ts raisedBy for this tip should move there."
+     },
+     {
+      "where": "src/ui/imaging/IntravascularView.tsx (periadventitial tissue, lipid and calcium bands drawn out to 20 mm) and the PciBench.tsx slice readout",
+      "problem": "OCT is drawn with no depth falloff: bright speckle fills the whole 10.7 mm field, which the browser frame of lipid-acs at 18 mm confirmed. The module gives OCT tissue penetration of 2 to 3.5 mm against 4 to 8 mm for IVUS (Oxford, src/content/manual/pci-manual/15-imaging.ts), and says OCT may not see the EEM behind lipid. The live slice still prints an EEM area and plaque burden on OCT frames where the image hides the media, so the screen gives a measurement the image cannot support.",
+      "severity": "minor",
+      "fix": "Add a radial mask per modality, defined once in <defs>, so signal fades beyond the penetration depth from the lumen. Label it a MODEL PARAMETER within the module's 2 to 3.5 mm (OCT) and 4 to 8 mm (IVUS) ranges and cite 15-imaging. In PciBench, show the EEM area and plaque burden as 'not measurable' on OCT frames where frame.lipid is set or eemR - lumen exceeds the penetration depth."
+     },
+     {
+      "where": "src/simulation/pciBench.ts BenchLesion and benchIvusContext (sideBranches never passed)",
+      "problem": "The design lists side-branch ostia in the frames, and the engine and renderer support them, but no bench lesion passes sideBranches. The distal-lm lesion now carries the 'bifurcation' flag and a provisional strategy, yet its pullback never shows the LCx ostium. The sideBranch render path has no test.",
+      "severity": "minor",
+      "fix": "Add sideBranches?: ImagingSideBranch[] to BenchLesion. Give distal-lm one entry for the LCx ostium, with its position and diameter labelled MODEL PARAMETER, and pass l.sideBranches through benchIvusContext. Add tests that ivusFrame at that mm has a non-null sideBranch and that IntravascularView draws the ostium sector."
+     },
+     {
+      "where": "src/simulation/pci/ivus.ts ivusFrame: newest = rings[rings.length - 1]; stentR = newest.ring.d/2",
+      "problem": "With overlapping stents, the lumen is now taken from the newest layer. Previously it came from the first stent found, so this changes PCI-lab behaviour. If an earlier stent was post-dilated larger, the lumen shrinks to the inner stent's ring, and the frame's MSA and stent area understate the lumen.",
+      "severity": "minor",
+      "fix": "Use stentR = max over rings of ring.d/2 for the lumen and areas.stent, and keep the per-layer struts. Add a two-layer test to ivus.test.ts."
+     },
+     {
+      "where": "src/ui/sections/AngioPci.tsx lines 407-408 (out of this package's files)",
+      "problem": "The PCI lab now applies catalogue charts through balloonDiameter and stentDiameter but still displays a hard-coded stent nominal of 10 atm and RBP of 16 atm, while the catalogue DES nominal is 8 or 9 atm. For balloons it shows BALLOON_SPEC values read at 3.0 mm, so a 4.5 or 5.0 mm NC balloon shows RBP 20 atm where the catalogue says 18. Displayed and applied pressures disagree, which this design set out to remove. The builder flagged the stent case only.",
+      "severity": "major",
+      "fix": "In the owning PCI-lab package, replace lines 407-408 with stentPressures(dev.diameter) and balloonPressures(dev.balloon, dev.diameter) from pciBench.ts. Fix the doubled ' balloon' label at line 600 there too, and re-capture the xrayCapture PCI device set under the renderer-baseline rule."
+     },
+     {
+      "where": "src/ui/imaging/LongitudinalView.tsx (cursor stroke #facc15; text fontSize 9-10), src/ui/imaging/IntravascularView.tsx ('1 mm' fontSize 10)",
+      "problem": "The cursor colour is outside the Clinical Graphite palette, and the SVG labels render below the 12 px minimum at normal widths: a 760-unit viewBox at about 600 px makes 9 units about 7 px.",
+      "severity": "minor",
+      "fix": "Stroke the cursor in the accent (#4F8EF7) or warn (#E9B95A) token. Scale the label font sizes so they render at 12 px or more: about 15 to 16 units in the 760 viewBox and 12 to 13 in the 300 viewBox, or move the tick labels into HTML text with text-[12px] text-ink-faint."
+     },
+     {
+      "where": "src/simulation/pciBench.test.ts SC-vs-NC test; src/simulation/pci/ivus.test.ts MSA label check",
+      "problem": "expect(sc/8).toBeGreaterThan(nc/8) repeats sc > nc, since both spans are 8 atm, and is weaker than the 1.5x check after it. The MSA label check compares optimisationCriteria with itself, so it cannot fail. Neither tests that the bench and the frames agree.",
+      "severity": "minor",
+      "fix": "Remove the /8 assertion. Replace the label-equality check with the bench-and-frame agreement test from the first finding."
+     },
+     {
+      "where": "src/simulation/pciBench.ts maxStentDiameter",
+      "problem": "The fallback 'nominal + 0.5' is an unsourced number with no label. It cannot be reached today, because the DES has a dilatationLimit.",
+      "severity": "minor",
+      "fix": "Drop the fallback and throw or assert when dilatationLimit is missing, or label the value MODEL PARAMETER."
+     },
+     {
+      "where": "src/simulation/pci/actions/imaging.ts line 86 (not in this package's files)",
+      "problem": "The PCI lab calls ivusSummary without { leftMain }, so the new IvusSummary.criteria would judge a left main PCI-lab case against the 5.5 or 4.5 mm\u00b2 MSA instead of 7 or 8 mm\u00b2. Nothing reads it yet.",
+      "severity": "minor",
+      "fix": "Record for pci-intravascular-imaging: pass { leftMain: lesion in LM } when it consumes summary.criteria."
+     },
+     {
+      "where": "src/ui/lab/benchTips.ts context, and tips seen in the browser at lipid-acs prep",
+      "problem": "The bench context is plain lab 'pci', so cath-lab handling tips come up on the bench, which has no guide or valve. At lipid-acs prep these were pci-trap-then-backbleed and pci-balloon-open-the-valve, and pci-img-calcium-score appeared on a lesion with no calcium. Separately, pci-ocx-large-vessel-ivus ('choose IVUS') can only fire once the modality has already been chosen, because its trigger is phase imaging and the bench reports plan before the choice.",
+      "severity": "minor",
+      "fix": "Out of scope here: record a tips retarget so that guide or valve handling tips require a lab-handling event or procedure the bench does not raise, and so that pci-ocx-large-vessel-ivus also triggers in phase 'plan'. Alternatively, the bench could declare a procedure value that those tips exclude, once the tip schema supports it."
+     },
+     {
+      "where": "src/ui/sections/PciBench.tsx lesion <select> (shows k.title, e.g. '4. Lipid-rich culprit lesion in NSTEMI')",
+      "problem": "The lesion picker on the live screen gives the answer away, which the launch file's titles avoid ('NSTEMI culprit in the proximal LCx'). This was already in the snapshot.",
+      "severity": "minor",
+      "fix": "Label the options with the launch-file scenario titles: import the titles from core.launch.ts, or add a neutral pickerTitle to BenchLesion. Keep l.title for AssessPanel and the run log."
+     },
+     {
+      "where": "docs/realism/facts (not in this package's files)",
+      "problem": "The new MODEL PARAMETERS are labelled in code but not yet recorded in docs/realism/facts: MP_CALCIUM_THICKNESS, MP_LIPID_ARC_DEG, MP_CALCIUM_DEPTH, MP_BENCH_FLAP_ARC, MP_BENCH_FLAP_MM, MP_BENCH_PLAQUE_ANGLE, MP_BENCH_WIRE_ANGLE and the drawn 80 \u00b5m cap. The builder reported this correctly.",
+      "severity": "minor",
+      "fix": "The realism stage should add them, together with the size classes in benchTips.ts (small under 2.5 mm and large 4.0 mm or more, from cp-other-complex-vessel-size; long over 20 mm, from cp-other-complex-long-lesions)."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 11,
+    "rejected": [
+     "Finding 2 (ring mapping), partly: the ring diameters now follow each ring's physical position. deploy() reads ring u at x0 + u x lengthMm, then makes a second pass at the ring centres the first pass placed. I did not set the context's toMm to min(segmentMm, x0 + geom.lengthMm). deployStent's length differs from the label by ring-count rounding: 13.93 against 15 mm and 18.42 against 20 mm in the probe runs. With toMm at the geometry end, the frames' distal-edge plaque burden moved away from deploy's: 0.456 against 0.383 for focal-lad. StentPanel plans the edges from the label length, so the stent layer stays at deploy's [x0, x1]. Rings past x1, including those past the segment end, are not imaged. The test the reviewer asked for, stent area within 3% of area(profile d) at three positions in long-taper with the stent past the segment end, passes.",
+     "Finding 7 (AngioPci.tsx lines 407-408 and 600, xrayCapture re-capture): out of scope. Recorded for the PCI-lab package. Replace the hard-coded stent 10/16 atm and the BALLOON_SPEC values read at 3.0 mm with stentPressures(dev.diameter) and balloonPressures(dev.balloon, dev.diameter) from pciBench.ts. Fix the doubled ' balloon' label. Re-capture the xrayCapture PCI device set under the renderer-baseline rule.",
+     "Finding 11 (pci/actions/imaging.ts line 86): out of scope. Recorded for pci-intravascular-imaging: pass { leftMain } to ivusSummary when it consumes summary.criteria. Pass expansion: 'halves' only if that lab adopts the bench's definition.",
+     "Finding 13 (tip retargeting): out of scope. Recorded for the tips owner. Guide and valve handling tips (pci-trap-then-backbleed, pci-balloon-open-the-valve) should require an event or procedure the bench does not raise. pci-img-calcium-score should require calcium. pci-ocx-large-vessel-ivus should also trigger in phase 'plan'.",
+     "Finding 14 (docs/realism/facts): out of scope. Recorded for the realism stage. Add MP_CALCIUM_THICKNESS, MP_LIPID_ARC_DEG, MP_CALCIUM_DEPTH, MP_BENCH_FLAP_ARC, MP_BENCH_FLAP_MM, MP_BENCH_PLAQUE_ANGLE, MP_BENCH_WIRE_ANGLE and the drawn 80 um cap. Add the new MP_PENETRATION_MM (IVUS 5 mm, OCT 2.5 mm, inside the module's 4-8 and 2-3.5 mm ranges, 15-imaging.ts line 121) and MP_BENCH_LCX_OSTIUM (10 mm, 100 deg, 3.5 mm). Add the benchTips size classes (under 2.5 mm, 4.0 mm or more, over 20 mm). Also outOfScope from finding 3: the physiology package (physiologyTips.ts PHYSIOLOGY_PRESET_EVENTS) should raise long-lesion for its long or diffuse presets, or waiting.ts should move raisedBy for pci-ocx-long-pullback there."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/ivus.test.ts src/simulation/pciBench.test.ts src/ui/lab/benchTips.test.ts src/ui/lab/benchTips.scenario.test.ts src/ui/imaging/imaging.test.ts src/simulation/pci/facade.test.ts (6 files, 72 tests passed)",
+     "Browser check on the running dev server (my own tab, now closed): lipid-acs on OCT at 18 mm showed 'not measurable' for EEM area and plaque burden. The tissue faded beyond the penetration depth. The picker listed the launch titles."
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+    "notes": "I verified all 14 findings against the code and the plan. I applied 1, 3, 4, 5, 6, 8, 9, 10 and 12 in full, and finding 2's ring mapping. Finding 2's toMm change is the one partial rejection, with the reason above. Findings 7, 11, 13 and 14 are recorded out of scope. That makes 11 entries under 'applied'. Every bench case now gives the same verdicts on deploy() and on its frames. That covers all five lesions on a standard plan and an unprepared plan, plus the reviewer's three cases, on both IVUS and OCT.\n\nFinding 1, strut placement (src/simulation/pci/ivus.ts):\n- Stent rings and the stented lumen are now circles about the lumen centre. Struts are given in polar form about the EEM centre.\n- A strut's gap is the wall behind its ring minus the ring radius. The wall is the native lumen, or an earlier layer that is larger.\n- A stent larger than the native lumen gets a smaller lumen offset, min(off, eccentricity x (eemR - R)), so it stays inside the EEM. Without this the ring was clipped at the EEM on the thin side. The native lumen is unchanged.\n\nFinding 1, deploy() (src/simulation/pciBench.ts):\n- maxMalapposition and profile[].apposition are now taken at each 0.25 mm position as the native lumen against the ring found there, through the newly exported stentRingAt. This is what the frames show. A ring keeps its centre's diameter, so a ring straddling a calcium edge stands off the wall.\n- The reviewer's calcified-rca case now gives 0.122 mm on both sides, where it was 0.04 against 0.43.\n\nFinding 1, expansion:\n- ivusSummary takes opts.expansion: 'halves' (each half of the stent against its nearest native reference), labelled with the shared EXPANSION_HALVES_LABEL. 'mean' stays the default for the PCI lab.\n- criteria.ts and the bench footer now state both definitions.\n\nFinding 1, new tests in ivus.test.ts:\n- For every case and both modalities: frame maximum gap within 0.05 mm of deploy's; frame MSA within 2%; all four criterion labels and verdicts equal deploy's.\n- Struts sit on the lumen outline.\n- The long-taper past-end case.\n\nFindings 6, 5 and 4:\n- Finding 6: stentR is the largest ring at the position. A two-layer test checks the lumen, both layers' struts and a 0.3 mm gap for the inner layer.\n- Finding 5: BenchLesion.sideBranches is passed through benchIvusContext. distal-lm has the circumflex ostium (MP_BENCH_LCX_OSTIUM, a MODEL PARAMETER). There are engine and render tests for it.\n- Finding 4: there is one radial depth mask in <defs> over the tissue layers. Its depth is MP_PENETRATION_MM, cited to 15-imaging. eemMeasurable(frame) is false on OCT behind lipid or where the wall is thicker than the penetration depth, and PciBench then shows EEM area and plaque burden as 'not measurable'.\n\nFindings 8, 9, 10, 12 and 3:\n- Finding 8: the cursor uses the warn token #E9B95A. Longitudinal labels are 15 units, with H raised to 164; the '1 mm' label is 13 units. Both are tested.\n- Finding 9: the redundant /8 assertion and the self-comparing label check are gone. The agreement test replaces the label check.\n- Finding 10: maxStentDiameter throws when the dilatation limit is missing.\n- Finding 12: the lesion picker uses the launch-file scenario titles. A render test checks that the debrief titles do not appear on the live screen.\n- Finding 3: pci-ocx-long-pullback is in NOT_BY_BENCH with the reviewer's reason. The test now asserts that 4 of 8 waiting tips are satisfiable from the bench's own raises alone. The correct report is 4 of 8, not 5.\n\nI edited only package files and package test files. The prettier check was not used, because the repo has no prettier config and untouched files fail it too."
+   }
+  ]
+ }
+}

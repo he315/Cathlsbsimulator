@@ -1,0 +1,138 @@
+{
+ "package": "pci-engine-modularise",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I split src/simulation/angioPci.ts (1,818 lines) into src/simulation/pci/state.ts and 13 action modules under src/simulation/pci/actions/. angioPci.ts is now a facade. It re-exports the public symbols of state.ts by name and everything else with `export *` from each action module, so it exports the same 77 runtime names and 19 type names as before. Behaviour is unchanged. Before the split I recorded a scripted run of all four scenarios: wiring, torque, a guide extension and buddy wire, the full device workflow with the supervised ACT gate, timed inflations including melon-seeding and a burst, scoring, IVL and covered-stent passes, compatibility-path stent and post-dilatation, every drug and bail-out, IVUS pullback, the pressure wire (equalise, measure, pullback, drift check), debrief and metrics. Its 752,311-byte JSON output is byte-identical after the split (sha256 c09c0301\u2026). Two helpers are needed by a second action module: handleWireEvents (wire.ts, used by devices.ts) and rupture/applyInflation (inflation.ts, used by step.ts). Each sits in its module's default export, which `export *` does not pass on, so neither leaks into the facade. The shared helpers in state.ts (log, tele, withNotes, syncWire, wireOf, syncMirrors, specOf, refDAt, lesionCover, lesionShape) are not re-exported either. loadDevice, moveDevice, inflate and deflate are marked @deprecated with a note that pci-lab-shell-session removes their UI callers; headless tests still use them. bailouts.ts is an empty module (`export {}`) with a header for the later bail-out packages.",
+    "filesChanged": [
+     "src/simulation/angioPci.ts",
+     "src/simulation/pci/state.ts",
+     "src/simulation/pci/actions/scenario.ts",
+     "src/simulation/pci/actions/wire.ts",
+     "src/simulation/pci/actions/guide.ts",
+     "src/simulation/pci/actions/devices.ts",
+     "src/simulation/pci/actions/inflation.ts",
+     "src/simulation/pci/actions/drugs.ts",
+     "src/simulation/pci/actions/pressure.ts",
+     "src/simulation/pci/actions/imaging.ts",
+     "src/simulation/pci/actions/assessment.ts",
+     "src/simulation/pci/actions/step.ts",
+     "src/simulation/pci/actions/patient.ts",
+     "src/simulation/pci/actions/bailouts.ts",
+     "src/simulation/pci/actions/debrief.ts",
+     "src/simulation/pci/facade.test.ts"
+    ],
+    "testsAdded": [
+     "src/simulation/pci/facade.test.ts (8 tests): Object.keys of angioPci equals the frozen pre-split list of 77 names and has no 'default'; each export keeps its typeof; the facade hands out the action modules' own function objects; all 13 listed action modules exist and are re-exported by the facade; the internal helpers in state.ts are absent from the facade; state.ts imports no action module and not the facade; the import graph among action modules has no cycle, none imports the facade, and the parser finds the known edges devices->wire, step->inflation and imaging->devices/assessment; all 19 pre-split type names still import from angioPci (enforced by tsc)"
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/facade.test.ts src/simulation/angioPci.test.ts src/simulation/complications/complications.test.ts: 3 files, 32 tests passed",
+     "npx vitest run src/simulation/pci/coronaryWire.test.ts guide.test.ts indeflator.test.ts ivus.test.ts lesionAssessment.test.ts pressureWire.test.ts stentGeometry.test.ts: 7 files, 43 tests passed",
+     "npx vitest run src/mentor/mentor.test.ts src/progress/progress.test.ts (other test importers of angioPci): 2 files, 122 tests passed",
+     "Scratch behaviour fingerprint (vite-node script in the scratchpad, not a repo file), run before and after the split: outputs byte-identical (cmp), sha256 c09c0301b374241b4457c960ab32ab406c376125ca471343d7d3116086b814d3"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors (about 17 s).",
+    "acceptance": [
+     {
+      "criterion": "angioPci.test.ts, complications.test.ts and every src/simulation/pci/*.test.ts pass unchanged",
+      "status": "met",
+      "evidence": "None of these test files was edited. angioPci.test.ts (14), complications.test.ts (10), coronaryWire (13), guide (5), indeflator (5), ivus (4), lesionAssessment (5), pressureWire (6) and stentGeometry (5) all pass. The scripted fingerprint run produced byte-identical output before and after the split."
+     },
+     {
+      "criterion": "facade.test.ts: Object.keys of the angioPci module equals the frozen pre-split list",
+      "status": "met",
+      "evidence": "The FROZEN map in src/simulation/pci/facade.test.ts was taken with vite-node from the unmodified angioPci.ts before any edit (77 keys, each with its typeof). The test asserts that Object.keys(facade).sort() equals that list and that every value keeps its typeof. It passes."
+     },
+     {
+      "criterion": "No import cycle: state.ts imports no action module",
+      "status": "met",
+      "evidence": "facade.test.ts reads state.ts as raw source and checks that none of its import or re-export specifiers points into actions/ or at angioPci. It also builds the import graph of the action modules and finds no cycle (wire and guide depend only on state; devices on wire; step on inflation; patient on step; pressure on patient; imaging on devices and assessment; debrief on assessment). Passes."
+     },
+     {
+      "criterion": "browser: the PCI lab loads and window.__pciDraw() renders a frame",
+      "status": "needs-browser",
+      "evidence": "I did not use the browser, as instructed. The UI importers of angioPci (src/ui/sections/AngioPci.tsx, src/ui/lab/pciTips.ts, src/dev/xrayCapture.ts, src/render/xray/segments/demo/demo.ts, src/mentor/prebrief.ts, src/content/mentor/prebriefs.ts) all pass the typecheck against the new facade. The browser stage still has to confirm the lab loads and __pciDraw() renders a frame."
+     }
+    ],
+    "outOfScope": [
+     "facade.test.ts requires the export list to equal the frozen list, as the acceptance asks. Later packages that add a public export to an action module will therefore fail it, and none of them lists src/simulation/pci/facade.test.ts: pci-wire-microcatheter, pci-indeflator, pci-perforation (bailouts.ts), pci-flow-closure, pci-equipment-tray and others. The planner should either add facade.test.ts to those packages' file lists so they can extend FROZEN, or relax the check to 'the frozen list is a subset' once this package is accepted."
+    ],
+    "notes": "The snapshot is at datasets/tmp/wp-snapshots/pci-engine-modularise/: src/simulation/angioPci.ts (the only listed file that already existed) and .started. Every other listed file is new.\n\nTwo departures from the design text:\n1. The plan's design names 'initPci'; the existing function is initialPci, and I kept that name so the export list stays frozen.\n2. The design says angioPci.ts becomes 'export * from these plus the existing type re-exports'. Doing that for state.ts too would leak its internal helpers into the facade, so state.ts is re-exported by name and only the action modules use `export *`. New public functions added to an action module still reach the facade without editing angioPci.ts; none of the later packages lists angioPci.ts.\n\nTwo helpers are shared between action modules, and each module puts them in a default-exported object (wireInternal in wire.ts, inflationInternal in inflation.ts). This keeps them out of the facade because `export *` does not re-export default. bailouts.ts and the angioPci.ts header explain the convention.\n\nWhere things went:\n- PciScenario is defined in state.ts (initialPci and lesionNow need it, and state.ts may not import an action module); scenario.ts re-exports it as a type.\n- The generic bailout() lives in drugs.ts beside giveDrug, which calls it, because the design asks for an empty bailouts.ts.\n- inject and injectPci went to imaging.ts.\n- cxContext went to step.ts.\n- routeTurning went to assessment.ts.\n- Geometry wrappers (pciGeom, sampleAtMm, routeSamples, takeOffAngle, routeEndMm) and lesionNow went to state.ts.\n- DEFAULT_SHAPE, WIRE_SPEC, tipBend, pathToTarget and branchLabel went to wire.ts.\n- guideBackupN went to guide.ts.\n- deviceDiameterNow and deviceSpecOf went to devices.ts.\n- lumenFor, pciPatientEffects and complicationsNow went to patient.ts.\n\nLog and telemetry names and fields are unchanged; the fingerprint compares full event and telemetry arrays. No dose, threshold or device value was added or changed. Every moved literal is copied verbatim, and the existing MODEL PARAMETER labels (MP_MELON_*, the extension inflow fraction) are kept. I did not touch the browser or the dev server."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "ACCEPT, with one cross-package fix needed before later packages run. The refactor is behaviour-preserving, and I checked that myself. I parsed the snapshot of src/simulation/angioPci.ts and every new file with the TypeScript compiler API and compared each top-level declaration after normalising whitespace. Every declaration is verbatim apart from two call sites: advanceDevice now calls wireInternal.handleWireEvents and stepPci now calls inflationInternal.rupture. The only new declarations are the two default-exported helper objects. Nothing is missing or duplicated, and no module-level mutable state was split. The original's static runtime export list (77 names) matches FROZEN in facade.test.ts exactly. The 19 type names (WireKind, BalloonKind, PciGeom, TipShape, PciScenario, DeviceKind, DeviceStage, Device, Placed, PciEvent, PciTelemetry, PciState, InitOptions, AdvanceOptions, StepOptions, PciDrug, PciMetricsReport, PciDebrief, RngState) are all still exported. tsconfig.app.json includes test files, so the type-import test is really checked by tsc. Tests I ran: facade + angioPci + complications gave 3 files, 32 tests passed; the 7 existing src/simulation/pci/*.test.ts files gave 43 tests passed; tsc -p tsconfig.app.json --noEmit is clean. The running Vite server on 5173 returns 200 for angioPci.ts, state.ts and all 13 action modules. state.ts imports no action module. The action-module graph has no cycle, and the cycle test checks real edges, so it is not tautological. @deprecated markers are on loadDevice, moveDevice, inflate and deflate. Log and telemetry calls are unchanged, so tip context is unaffected. No clinical numbers were added; the MP_MELON_* MODEL PARAMETER constants were moved verbatim. There are no UI, render-path or design-system changes, and the new comments use British English. Other files under src/ newer than .started (src/progress/*, src/mentor/skillCards.ts, src/mentor/debrief.ts, src/mentor/mentor.test.ts, src/mentor/registries.test.ts, src/ui/mentor/Debrief.tsx, src/ui/mentor/debrief/*) are listed by found-mentor-registries, progression-labels and progression-exams, or are new tests of those packages. They are not attributable to this package. Still open: the browser acceptance criterion (the PCI lab loads and window.__pciDraw() renders a frame) has not been verified in a browser. The browser stage has to confirm it.",
+    "findings": [
+     {
+      "where": "src/simulation/pci/facade.test.ts, tests 'Object.keys of the angioPci module equals the frozen pre-split list' and 'each export keeps its kind'",
+      "problem": "Both tests require exact equality with FROZEN (toEqual on the sorted key list and on the full kinds map). Later packages add public exports to action modules: pci-wire-microcatheter (wire.ts), pci-indeflator (inflation.ts), pci-perforation, pci-flow-closure and pci-acs-thrombus (bailouts.ts), pci-equipment-tray (devices.ts) and others. None of them lists facade.test.ts, so each will hit a failing test it is not allowed to edit. The builder raised this in outOfScope, but the test itself is this package's file.",
+      "severity": "major",
+      "fix": "After this package is accepted against the strict check, relax the two assertions to a superset check that still freezes the pre-split surface: `const keys = Object.keys(facade); expect(keys).toEqual(expect.arrayContaining(Object.keys(FROZEN))); expect(keys).not.toContain(\"default\"); for (const [k, t] of Object.entries(FROZEN)) expect(typeof (facade as Record<string, unknown>)[k], k).toBe(t);`. Keep the internal-helper exclusion test as it is. The alternative is for the planner to add src/simulation/pci/facade.test.ts to every later package that adds a public export, so each can extend FROZEN."
+     },
+     {
+      "where": "src/simulation/angioPci.ts (re-exports from ./pci/state by name)",
+      "problem": "state.ts is re-exported by explicit name, not by `export *`, so its helpers stay private. That was the right call. The side effect is that a public type or function a later package adds to state.ts does not reach the facade unless angioPci.ts is edited. pci-equipment-tray, pci-indeflator, pci-device-delivery, pci-wire-microcatheter and pci-two-rail-engine all list state.ts, and none lists angioPci.ts.",
+      "severity": "minor",
+      "fix": "Planner note for those packages: put new public types and functions in the relevant action module (which `export *` already passes on), or import them directly from src/simulation/pci/state, or add src/simulation/angioPci.ts to the package's file list. No code change is needed in this package."
+     },
+     {
+      "where": "src/simulation/pci/actions/inflation.ts line 339 (`const inflationInternal = { rupture, applyInflation };`)",
+      "problem": "applyInflation is placed in the shared internal object, but no other module uses it; only rupture is called from step.ts. The builder report says both are used by step.ts, which is inaccurate. This is harmless, but it widens the internal surface for no reason.",
+      "severity": "minor",
+      "fix": "Change it to `const inflationInternal = { rupture };`. Optionally amend the doc comment above it to name rupture only."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 2,
+    "rejected": [
+     "Finding 2 (state.ts re-exported by name, so new public symbols added there do not reach the facade): verified and correct, but the reviewer itself says no code change is needed in this package. It is a planner note for pci-equipment-tray, pci-indeflator, pci-device-delivery, pci-wire-microcatheter and pci-two-rail-engine. Those packages should put new public symbols in an action module, import them from src/simulation/pci/state directly, or add src/simulation/angioPci.ts to their file list. I made no edit here."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/pci/facade.test.ts src/simulation/angioPci.test.ts (22/22 passed)",
+     "npx vitest run src/simulation/pciBench.test.ts src/simulation/pci/indeflator.test.ts src/simulation/pci/pressureWire.test.ts src/simulation/pci/ivus.test.ts (25/25 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors (exit 0)",
+    "notes": "I applied two of the three findings and rejected one, which needed only a planner note.\n\nFinding 1 (major, applied). Two tests in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/facade.test.ts demanded an exact match with the frozen pre-split list of exports. Any later package that adds a public export would break them, and none of those packages may edit this file. The strict version passed at build time, and the facade still exports exactly the 77 pre-split names. I relaxed both tests to a lower-bound check, as the reviewer suggested:\n- The key-list test now requires every frozen name to be present (`expect.arrayContaining(Object.keys(FROZEN))`) and still requires that there is no 'default' export.\n- The kind test now checks the typeof of each frozen name with the name as the failure message (`toBe(t)`).\nI added a comment saying the facade may grow but must never lose a name. These tests are unchanged: the internal-helper exclusion test, the state.ts import test, the cycle test and the action-module list test.\n\nFinding 3 (minor, applied). In /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/pci/actions/inflation.ts the shared internal object now holds only `rupture`: `const inflationInternal = { rupture };`. A grep found that step.ts is its only outside user and calls only `inflationInternal.rupture`, so the builder report was wrong to say step.ts also uses applyInflation. applyInflation stays a private function inside inflation.ts. I reworded the doc comment to name rupture only.\n\nFinding 2 (minor, rejected): see rejected. No code change.\n\nI edited only files on the package list."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "angioPci.test.ts, complications.test.ts and every src/simulation/pci/*.test.ts pass unchanged",
+      "met": true,
+      "evidence": "npx vitest run src/simulation/angioPci.test.ts src/simulation/complications/complications.test.ts src/simulation/pci/ gave 10 files and 75 tests passed. The existing test files and testSetup.ts are all dated 5 Oct, before the package work on 8 Oct; only the new facade.test.ts is new, so the existing tests are unchanged."
+     },
+     {
+      "criterion": "facade.test.ts: Object.keys of the angioPci module equals the frozen pre-split list",
+      "met": true,
+      "evidence": "facade.test.ts (8 tests) passes. Its FROZEN list (77 names) matches exactly the names exported by the pre-split snapshot datasets/tmp/wp-snapshots/pci-engine-modularise/src/simulation/angioPci.ts (export function/const plus `export { routeEndMm, DEFAULT_SHAPE }`). Every name exported now (all export function/const in pci/actions/*.ts, the DEFAULT_SHAPE re-export in wire.ts and the 7 named value re-exports from state.ts) is the same set: no extra names, no missing names, no duplicates. The default exports (wireInternal, inflationInternal) are not passed on by export *, and the test asserts 'default' is absent. Note: the test asserts a superset (arrayContaining) rather than strict equality, on purpose so later packages can add exports. Equality holds today because the set diff above was exact."
+     },
+     {
+      "criterion": "No import cycle: state.ts imports no action module",
+      "met": true,
+      "evidence": "state.ts imports only ../../types, ../../render/xray/coronaryTree, ./equipment, ./coronaryWire, ./guide, ./indeflator, ./geometry, ./rng, ./pressureWire, ./ivus, ./lesionAssessment and ../complications/engine. It imports no action module and not the facade. facade.test.ts checks this, and also runs a DFS for cycles across the action modules and checks that no action module imports the facade. Both pass."
+     },
+     {
+      "criterion": "browser: the PCI lab loads and window.__pciDraw() renders a frame",
+      "met": true,
+      "evidence": "No verify report exists, so I checked it myself in a fresh background tab on the running dev server (localhost:5173). I opened 'PCI in the cath lab' (heading present), saw window.__pciDraw is a function, and called __pciDraw(0.3) with no error. The main 656x656 canvas then held a rendered frame (downsampled grey levels min 63, max 209, mean 145) and the console showed no errors. I closed the tab afterwards."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/simulation/angioPci.test.ts src/simulation/complications/complications.test.ts src/simulation/pci/ (10 files, 75 tests, all passed: stentGeometry, indeflator, complications, facade, lesionAssessment, pressureWire, ivus, guide, coronaryWire, angioPci)",
+     "Set diff of the pre-split snapshot exports against the current facade exports (exact match, 77 names)",
+     "Browser: PCI lab load and window.__pciDraw(0.3) frame render on localhost:5173"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean (exit 0, no output)"
+   }
+  ]
+ }
+}

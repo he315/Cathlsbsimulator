@@ -1,0 +1,39 @@
+# pci-two-rail-engine: model parameters
+
+The PCI engine gained a second rail (`src/simulation/pci/state.ts` `RailState`, `PciState.rails` and `activeRail`): a second coronary wire in the same guide with its own device and indeflator. The legacy fields are the rail the hands work on; `syncRail` writes them back and `selectRail`/`setActiveRail` move the hands. Rails exist only once a second wire is loaded (or a start puts a wire under a stent's struts), so a single-wire case keeps the state and the behaviour it had. With two rails the engine jails the other wire under a stent deployed beside it, records the strut cell a wire crosses into a side branch through a deployed stent, lets a wire pass outside a stent's proximal struts (devices on it then stop at that edge), kisses two balloons and records a final POT across the take-off. Device dimensions come from the catalogue (`src/simulation/pci/equipment.ts`), already sourced. Every share, distance and chance below is a MODEL PARAMETER chosen so the behaviour matches what the module text describes; none is a clinical measurement.
+
+## Values from the module text
+
+| Value | File | Value | Source |
+|---|---|---|---|
+| Effective diameter of two kissing balloons: 0.678 x (sum of the two diameters), to be similar to the proximal main-vessel diameter | `stentGeometry.ts` `FINET_KISS_COEFF`, `kissEffectiveDiameter`; `actions/inflation.ts` `kissBalloons` | 0.678 | cp-bifurcation-provisional-sb, formula "Finet's law applied to kissing balloons (Brilakis 16.2)"; tip pci-bif-kissing-size |
+| Rewire the side branch through a cell close to the carina: advance beyond the carina, aim the tip at the branch, withdraw slowly until it falls into the origin, push forward through that cell; a proximal cell pushes the struts into the main-vessel lumen | `actions/wire.ts` `railsAfterMove` (fall-in on the pull-back), `crossCell`, `cellOf`, `cellScaffoldsOstium` | rules | cp-bifurcation-provisional-sb, 'Exit 4b', steps 1 and "How to land in a distal cell"; tip pci-bif-rewire-distal-cell; lab request cp-bifurcation-provisional#1 |
+| Remove the jailed wire only once the new wire is in the branch; gentle traction | `actions/wire.ts` `removeRailWire` ('jailed-wire-removed', rewired) | rule | cp-bifurcation-provisional-sb step 2; cp-bifurcation-provisional-jailed; tip pci-bif-jailed-wire-removal |
+| A final POT with the balloon across the take-off narrows the opened cell in front of the branch; kept proximal to the take-off it leaves the cell | `actions/inflation.ts` `potAcrossTakeoff` ('pot-across-takeoff', crossing.narrowed) | rule | cp-bifurcation-provisional-sb, "An alternative to the kiss" (Andreasen 2020 as the module gives it); lab request cp-bifurcation-provisional#1 |
+| A final POT corrects the oval proximal stent the kiss leaves | `actions/inflation.ts` (Placed.oval set by the kiss, cleared by a balloon inside it) | rule | cp-bifurcation-provisional-sb step 4; tip pci-bif-kissing-size |
+| A small balloon advanced over the jailed wire (the rescue of an occluded branch) | `actions/devices.ts` `railEdge` (MP_JAILED_DEVICE_MAX_MM below) | rule | cp-bifurcation-provisional (rescue over the jailed wire; pci-bifurcation-provisional's lcx-om-sb-occlusion) |
+| The device stops exactly at the old stent's edge over a wire that passed under a strut; recross with a knuckled tip; forcing it deforms the old stent longitudinally | `actions/devices.ts` `railEdgeStop`, `oldStentWireUnder`; `actions/wire.ts` (no under-strut course with a folded tip) | rules | lab request pm-prep-and-stent#5 (pm-prep-and-stent-delivery); tip pci-delivery-old-stent-rewire |
+
+## MODEL PARAMETERS
+
+| Parameter | File | Value | Unit | Rests on |
+|---|---|---|---|---|
+| `MP_CELL_DISTAL_U` | `actions/wire.ts` | 0.5 | fraction of the ostium (0 proximal edge, 1 carina) | The distal half of the ostium is the "distal cell" the module asks for; the bench uses the two classes proximal and distal (src/simulation/bench/bifurcation.ts) |
+| `MP_CELL_CARINA_U` | `actions/wire.ts` | 0.85 | fraction of the ostium | The last cell before the flow divider, named 'carina'; it scaffolds as a distal cell (`cellScaffoldsOstium`) |
+| `MP_ADVANCE_ENTRY_U` | `actions/wire.ts` | 0.25 | fraction of the ostium | A wire going forward drops into the first cells it meets, the proximal ones (the reason the module teaches the pull-back technique) |
+| `MP_FALL_AZ_TOL` | `actions/wire.ts` | 0.5 | rad | The tip falls into the origin on a pull-back only when aimed at the branch; of the order of the wire engine's own branch-capture window (coronaryWire.ts branchDecision) |
+| `MP_SECOND_WIRE_TARGET_ZONE_MM` | `actions/wire.ts` | 12 | mm | A second wire put into a branch whose origin is this close to the lesion is wired on purpose (not counted as off the route) |
+| `MP_UNDER_STRUT_P`, `MP_UNDER_STRUT_P_PER_GAP_MM`, `MP_UNDER_STRUT_P_MAX` | `actions/wire.ts` | 0.03; 0.8; 0.6 | chance per edge crossing; per mm of strut-to-wall gap at the edge; cap | A wire re-crossing a stent's proximal edge rarely passes outside the struts, more often at a malapposed edge (pm-prep-and-stent#5); drawn from a generator of its own so no other draw shifts; two rails only |
+| `MP_UNDER_STRUT_GAP_MM` | `actions/wire.ts` | 0.1 | mm | A gap above this names the cause 'malapposed-edge' (debrief wording only) |
+| `MP_EDGE_STOP_MM` | `actions/devices.ts` | 0.2 | mm | The device stops just short of the edge it meets |
+| `MP_JAILED_DEVICE_MAX_MM` | `actions/devices.ts` | 1.5 | mm | A balloon of this diameter or smaller follows the jailed wire under the stent (the small-balloon rescue); larger devices stop at the stent edge |
+| `MP_EDGE_FORCE_BITES`, `MP_EDGE_DEFORM_MM`, `MP_EDGE_DEFORM_MAX_MM` | `actions/devices.ts` | 3; 0.4; 3 | bites; mm per further bite; mm | Forcing the device against the old stent shortens it from its proximal end (longitudinal deformation, pm-prep-and-stent#5) |
+| `MP_DISTAL_MV_REF_MM` | `actions/inflation.ts` | 3 | mm beyond the branch origin | Where the distal main-vessel reference for the carina shift is read |
+| `MP_KISS_PROX_REF_MM` | `actions/inflation.ts` | 3 | mm proximal to the ostium | Where the proximal reference of a kiss is read (the 'kissing' record's proximalRefMm and ratio) |
+| `MP_KISS_OVAL` | `actions/inflation.ts` | 0.3 | axis ratio per (smaller / larger balloon) | The bench's MP_KISS_OVAL (src/simulation/bench/bifurcation.ts), so both ovalise alike |
+| `MP_OSTIUM_LEN_MIN`, `MP_OSTIUM_LEN_MAX` | `stentGeometry.ts` | 1; 2 | branch diameters | The ostium's length along the main vessel is the branch diameter over the sine of its take-off angle, kept within these (an elliptical ostium, teaching geometry) |
+| `MP_CARINA_SHIFT_PER_MM` | `complications/sideBranch.ts` | 0.5 | mm of shift per mm of stent over the distal main vessel | The carina shift the module names as the mechanism of side-branch compromise, larger with an oversized main-vessel stent |
+| `MP_CARINA_SHIFT_TRUE_MM`, `MP_CARINA_SHIFT_BASE_MM` | `complications/sideBranch.ts` | 0.2; 0.05 | mm | Plaque shift with disease on both sides of the carina, and the small shift of a stent that fits |
+| `MP_CARINA_SHIFT_RISK`, `MP_CARINA_SHIFT_FREE` | `complications/sideBranch.ts` | 3; 0.05 | weight; fraction of the branch diameter | With two rails the shift replaces the stent-to-vessel ratio term (`1 + 3 x (ratio - 1.05)`, unchanged with one wire) with the same weight, so the overall risk stays near the earlier calibration |
+| `MP_PROXIMAL_CELL_RESIDUAL` | `complications/sideBranch.ts` | 0.45 | severity (0..1) | A kiss through a proximal cell leaves struts across the ostium and a residual narrowing (cp-bifurcation-provisional-sb); a teaching value |
+| Grip geometry of `wire014b` and `balloon2` | `src/input/settings.ts` `DEFAULT_GRIP_GEOMETRY` | as `wire014` and `balloon` | mm | The second rail's wire and device are the same devices as the first's (existing model parameters, facts S8) |

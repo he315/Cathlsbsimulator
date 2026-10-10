@@ -1,0 +1,230 @@
+{
+ "package": "found-tip-retarget",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built found-tip-retarget. 291 tip triggers changed across 36 module files (only `when` changed; titles, text, sources and lesson ids are the same), and 30 tips gained an alsoIn entry for the diagnostic lab. A diff of the dumped tips before and after confirms that only `when` and `alsoIn` changed. The edits by area:\n- PCI CTO tips no longer gate on total-occlusion; they require cto.\n- Bifurcation tips, including the two-stent planning tips, now require bifurcation. The 14 pci-bif-* tips have the phases their request asks for.\n- Calcium tips require calcified-lesion.\n- Ostial tips require aorto-ostial-lesion or branch-ostial-lesion. rota-coaxial, orbital-constrain, undilatable and stent-underexpanded are back on lesion-prep or optimise with their events.\n- OCT tips are on imaging 'oct'; IVUS-only tips are on 'ivus'.\n- The pm-imaging lesion-type tips and the pci-ocx/diag-ocx tips require their lesion subset.\n- Haemo condition tips are gated on their scenario flag.\n- Every structural and mcs tip names a procedure. bed-peri-* now use procedure pericardiocentesis plus a stage phase.\n- The access route fixes and the two diagnostic fixes the plan lists are in.\n\nvalidate.ts now rejects a structural or mcs tip without a known procedure, and a bedside tip without one. Pacing tips still on the deprecated 'pacing' phase are exempt until tip-retarget-catchup. The 'pericardiocentesis' phase alias is no longer accepted on a trigger. The alias itself stays in LAB_PHASES, because tips.ts is not in this package.\n\nsrc/content/lab/raisable/waiting.ts is new. It holds the LabRaises type, 34 WAITING_TIPS groups (890 tips waiting on their current trigger, keyed by the plan package expected to raise what they need) and 79 DEFERRED_RETARGETS. The deferred entries are: perforation subtypes, 18 bifurcation technique tips, rotational/orbital atherectomy, stent-recoil, aortocoronary-dissection, extension-in-place, the flow and spasm tips, retrograde, wire and microcatheter, pacing procedure plus stage, and the P2 ones (wire-fracture, balloon-entrapment, snare, epd, operator-dose-alarm).\n\nreachability.test.ts globs the `raises` exports and prints per-lab counts. It fails only on a tip that is neither satisfiable nor listed. No lab exports `raises` yet, so every tip is waiting (pci 553, diagnostic 154, access 89, mcs 59, structural 55, haemo 45, bedside 14).",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/validate.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/reachability.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/raisable/waiting.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/01-lab-and-radiation.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/02-the-operator.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/03-safe-practice.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/04-cardiac-catheterisation.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/05-specific-conditions.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/06-additional-procedures.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/07-tavi.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/cath-handbook/08-mitral-tricuspid-laa.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/01-ostial.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/02-bifurcation-provisional.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/03-bifurcation-two-stent.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/04-left-main.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/05-prior-cabg.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/06-calcium.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/07-acs-thrombus.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/08-complex-patients.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/09-cto-strategy.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/10-cto-antegrade.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/11-cto-retrograde.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complex-pci/12-other-complex.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complication-management/03-perforation.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/complication-management/06-access-complications.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/equipment/01-sheaths-guides.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/equipment/02-balloons-stents-cart.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/01-planning.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/02-monitoring.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/03-antithrombotics.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/04-lab-drugs.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/05-access.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/06-to-the-root.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/07-engaging.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/08-acquiring.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/09-interpreting.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/15-imaging.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/16-support-choice.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual/pci-manual/17-support-devices.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/retarget.test.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/retarget.test.ts (new, 24 tests: superset guard over 10 complication contexts with the pre-change caution and bailout sets embedded; total-occlusion and CTO gating; bifurcation, ostial and lesion-subset tips absent from ordinary cases and present in their own; IVUS/OCT; pci-perf-covered-one-guide on perforation alone; haemo, structural, mcs and bedside procedure gating; access radial closure and central-vein; diagnostic narrowing and the alsoIn borrows)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/reachability.test.ts (new, 5 tests: raises vocabulary; every tip satisfiable or listed, with per-lab counts printed; waiting entries name planned packages and the right lab, with no duplicates; every deferred retarget has a valid new trigger and raisedBy; ready detection using a fixture raises)",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/manual.test.ts (added: every structural, mcs and bed-peri tip names a known procedure, no tip uses the pericardiocentesis alias, and the validator rejects or accepts the fixture cases)"
+    ],
+    "testsRun": [
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/retarget.test.ts src/content/manual.test.ts src/content/lab/tips.test.ts: 4 files passed, 58 tests passed, 1 skipped (the tips.test.ts phase-only snapshot is skipped by design once the tip-data fingerprint changes)",
+     "npx vitest run src/content/content.test.ts: 59 passed",
+     "npx vitest run src/ui/lab/lab.test.ts (uses pciTipContext): 12 passed",
+     "Cross-check: a Python replica of tipScore/tipsFor used to compute the embedded BEFORE sets returns exactly what TS tipsFor returns (same ids, same order) for all 10 guard contexts on the edited data",
+     "Dump of LAB_TIPS before and after (vite-node): 969 tips, only when and alsoIn differ, and both match the edit specification exactly"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no output",
+    "acceptance": [
+     {
+      "criterion": "vitest manual.test.ts: validateTips returns [] with the new rule that every structural, mcs and pericardiocentesis tip sets a known procedure",
+      "status": "met",
+      "evidence": "checkProcedure was added to validateTips in src/content/validate.ts. In manual.test.ts, 'every lab tip validates' returns [], and the new test confirms every structural, mcs and bed-peri-* tip has a known procedure and that the validator rejects the fixture cases (structural, mcs and bedside tips with no procedure; the pericardiocentesis alias) and accepts the deprecated pacing phase. 6/6 tests pass."
+     },
+     {
+      "criterion": "Superset: for lad-focal and rca-calcified contexts at phase 'complication' with perforation, dissection, no-reflow, thrombus or air, the caution and bailout tips returned by tipsFor(ctx, 100) are a superset of the pre-change set",
+      "status": "met",
+      "evidence": "retarget.test.ts 'superset guard' has 10 tests, all passing. The pre-change sets are embedded (BEFORE) and were computed from the pre-edit data with a replica checked against TS tipsFor. Edits that would have broken the guard were deferred instead: pci-ostial-aortocoronary-seal, pci-cto-retro-aortocoronary-dissection, pci-calc-rota-slow-flow and pci-calc-atherectomy-perforation were left unchanged."
+     },
+     {
+      "criterion": "No PCI tip lists 'total-occlusion' as its only CTO gate; imaging 'ivus' returns no OCT-only tip; with events ['perforation'] alone pci-perf-covered-one-guide is still returned (its retarget waits in waiting.ts)",
+      "status": "met",
+      "evidence": "retarget.test.ts PCI tests pass. No PCI tip lists total-occlusion together with requires cto. The only PCI tips that still list total-occlusion are pci-arrhythmia-reperfusion (acute) and pci-interp-donor-ffr (the physiology lab's donor presets). No pci-img-oct-* tip or tip with imaging ['oct'] is returned under imaging 'ivus' in any phase. pci-perf-covered-one-guide is returned with events ['perforation'], and its perforation-large-vessel retarget is in DEFERRED_RETARGETS."
+     },
+     {
+      "criterion": "tipsFor({lab:'haemo',phase:'right-heart'}) contains no haemo-pe-*, haemo-constriction-*, haemo-ps-*, haemo-tr-*, haemo-ts-* or haemo-hocm-* tip; tipsFor({lab:'structural',phase:'plan',procedures:['laao']}) returns no TAVI or BAV tip; no bed-peri-* tip is returned for procedures ['pacing']",
+      "status": "met",
+      "evidence": "Tested more strictly than asked: every haemo phase at limit 100, also excluding haemo-as-*, haemo-ms-* and haemo-pulmonary-angiography-protocol. Every structural phase with procedures laao+transseptal. Every bedside phase with procedures ['pacing'] and events. Positive checks confirm each tip still appears in its own study or procedure. All pass."
+     },
+     {
+      "criterion": "{lab:'access',phase:'closure',route:'radial'} returns no femoral-route tip; access-central-vein-no-blood appears only for jugular or subclavian with no-flashback",
+      "status": "met",
+      "evidence": "retarget.test.ts 'access routes' passes. Radial closure was checked with 7 event sets at limit 100: no tip has route femoral or 'femoral'/'groin' in its id or title. access-central-vein-no-blood is true only for jugular or subclavian with no-flashback, and false for jugular without the event and for femoral or radial."
+     },
+     {
+      "criterion": "reachability.test.ts reads the raises exports, prints satisfiable, waiting and ready counts per lab, and fails on a tip that is neither satisfiable nor waiting; every deferred retarget in waiting.ts names its new trigger and raisedBy package",
+      "status": "met",
+      "evidence": "The test uses import.meta.glob({eager:true, import:'raises'}) over pciEvents, sim/modules, session/modules, ui/lab/*Context.ts and ui/**/*Tips.ts, and prints per-lab counts. No module exports raises yet, so 0 declarations are found and every tip is listed. The deferred-retarget test checks that raisedBy is a plan package id and that each new trigger passes validateTips. A fixture test shows that ready detection works (pci-perf-covered-one-guide becomes ready when perforation-large-vessel is raised). 5/5 tests pass."
+     }
+    ],
+    "outOfScope": [
+     "src/content/lab/tips.ts (owned by found-tips-vocabulary): the LabRaises type that every lab's `raises` export uses lives in src/content/lab/raisable/waiting.ts, because tips.ts is not in this package. A later vocabulary amendment may move it next to LabContext.",
+     "src/content/manual/pci-manual/10-target.ts is not in this package's file list. pci-plan-name-the-goal and pci-oct-unclear-culprit, the two remaining tips the diagnostic requests cite (angio-decision-drills pm-target#1, diag-acs-scenarios pm-target#5), need alsoIn [{lab:'diagnostic', phase:['views']}]. This package applied 30 of the plan's 32 borrows.",
+     "The side-branch-occlusion event that cp-bifurcation-provisional#7 asks for is not in LAB_EVENTS, so a vocabulary amendment is needed. Until then pci-bif-confirm-inside-struts and pci-bif-occluded-sb-rescue stay lesson-only. They now require bifurcation and are listed in WAITING_TIPS under pci-bifurcation-provisional with a note.",
+     "pci-noreflow-pick-agent: the plan's 'adrenaline line to no-reflow-refractory' is a text split, not a trigger change. It is recorded in DEFERRED_RETARGETS with its current trigger and a note, for whoever may change tip text."
+    ],
+    "notes": "Snapshot: the 48 listed files that existed were copied to datasets/tmp/wp-snapshots/found-tip-retarget/ with .started. The two new listed files did not exist yet. Files changed since .started that this package did not touch belong to concurrent packages: content.test.ts, validateLaunch.ts, useLabLaunchStore*, practiceIndex*, BlockRenderer.tsx, CaseStudies.tsx and xrayCapture*. A new test file of this package, src/content/lab/retarget.test.ts, holds the acceptance tests that do not belong in manual.test.ts.\n\nJudgement calls a reviewer should check:\n1. The plan's '32' borrowed tips. I found 25 cited by diagnostic and cathlab requests, plus 7 cited by the angio-real label and decision drills. 30 were applied; the other 2 are in 10-target.ts (see outOfScope). The borrowed pci-calc-imaging-decides keeps its balloon-event gate, so in the diagnostic lab it shows only if the drill passes such an event. structural-tavi-iliofemoral-run and haemo-as-slow-rise-not-damping now need procedures ['tavi'] or the aortic-stenosis event in the diagnostic context. access-root-femoral-no-waveform and access-root-iliac-long-sheath gained route femoral so the borrow does not show in radial cases.\n2. I went beyond the explicit list where a phase-only trigger leaked into ordinary cases:\n   - pci-cto-anticoagulant-choice now requires cto.\n   - pci-lm-preload-wire-ostial, pci-lm-ostial-stent-position and pci-eqb-ostial-flare-markers now require aorto-ostial-lesion.\n   - pci-ostial-orbital-constrain is back on lesion-prep (the request asks for this; the plan lists only three such tips).\n   - The 23 two-stent tips also gained requires bifurcation, so their plan-phase tips do not reach every PCI plan once pci-tip-context reports 'plan'.\n   - The IVUS-only tips pci-img-ivus-clear-view and pci-img-ivus-jumps are on imaging 'ivus'; pci-img-calcium-score is on 'oct'.\n   - haemo-constriction-simultaneous-lv-rv uses event ['constriction','restriction'], and the HOCM pullback and post-ectopic tips use event ['hocm','aortic-stenosis'], because they tell two conditions apart.\n3. The CTO tips: total-occlusion was dropped from the event list and cto kept in requires. Other events were kept where they mark the moment (act-recheck keeps low-act; stop-rules keeps dose and contrast; move-cap, dissection-catheter). The event was dropped for pci-cto-antegrade-microcatheter and pci-cto-strategy-confirm-before-advancing, because only total-occlusion marked their moment.\n4. Bifurcation technique deferrals cover 18 tips, not 24. The 4 general two-stent tips, pci-dkcrush-sb-balloon-wont-go and pci-sks-emergency-only are not technique-specific. Step ranges are omitted, because technique/steps.ts does not exist yet; each entry's note says so.\n5. Four deferred entries are marked as subject to the superset guard: pci-ostial-aortocoronary-seal, pci-cto-retro-aortocoronary-dissection, pci-embol-plaque-aspirate and pci-perf-check-other-side. Their retargets would remove a caution or bailout tip from today's complication contexts, so the catchup guard may refuse them.\n6. The raisedBy assignments in WAITING_TIPS are planning data derived from the plan's tipIntegration text: the latest-landing raiser among a tip's needs. They can be refined by tip-retarget-catchup.\n\nConflicts with later packages' acceptance text:\n- pericardiocentesis-tips-and-pci-handover expects bed-peri tips 'at phase pericardiocentesis', but this package moved them to stage phases with procedure pericardiocentesis, as this package's own plan entry asks.\n- diag-tip-context's st-elevation check for diag-ohca-ecg-sorts now also needs the post-arrest case event.\n\nNo dose, threshold, device dimension or citation was added."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve once one major fix is made. I dumped every tip from the 48 snapshot module files and from the current ones (969 each) and compared them. Only `when` and `alsoIn` changed, on 315 tips; titles, text, tone, lessonId and sources are the same. Every change matches the plan's explicit list, and I checked them against the cited requests. The 30 diagnostic borrows match the 32 tips the diagnostic, cathlab and angio-real requests cite, less pci-plan-name-the-goal and pci-oct-unclear-culprit, which live in 10-target.ts (not in the file list; correctly reported as out of scope).\n\nI checked the superset guard myself. I ran tipsFor(ctx, 100) on the before and after tip data for LAD, RCA, LCx, LM and no vessel at phase 'complication', with each of the five complication events plus wire-side-branch and guide-backout. No caution or bailout tip was lost, and the top 6 shown in the lad-focal and rca-calcified guard contexts did not change.\n\nOutside the listed files, src/ has changed in content.test.ts, validateLaunch.ts, practiceIndex*, useLabLaunchStore*, BlockRenderer.tsx, CaseStudies.tsx and xrayCapture*. All of them are listed files of found-launch-links, content-links-backfill* or realism-baseline/diag-rod-physics, so none belong to this package. No lab code, engine or UI was touched, so labs this package does not touch behave as before. No clinical numbers were added. \n\nResults I ran myself: the four package test files gave 58 passed and 1 skipped (the fingerprint-gated snapshot, skipped by design); content.test.ts and ui/lab/lab.test.ts gave 71 passed; `npx tsc -p tsconfig.app.json --noEmit` is clean.\n\nThe tests are meaningful: positive and negative checks per gate, the guard sets are embedded, and the reachability fixture shows ready detection. reachability.test.ts cannot fail today, because every tip is listed in waiting.ts and no lab exports `raises` yet; that is what the plan expects at this stage.\n\nThe main gap: two calcium retargets that the plan and the cp-calcium request ask for were never written to waiting.ts, although the builder's report says they were deferred. The other findings are minor trigger choices, a test name that misdescribes today's code, and a missing out-of-scope note.",
+    "findings": [
+     {
+      "where": "src/content/lab/raisable/waiting.ts (DEFERRED_RETARGETS, pci-calcium-uncrossable block)",
+      "problem": "The plan says 'pci-calc-rota-* to atherectomy-rotational' is recorded in waiting.ts. Request cp-calcium#0 also asks for 'the slow-flow, perforation, entrapment and bradycardia tips' to be gated on an atherectomy event. Entries exist for burr-entrapment and rota-bradycardia, but not for pci-calc-rota-slow-flow or pci-calc-atherectomy-perforation. Those two appear only in WAITING_TIPS (pci-tip-context) on their current triggers, so tip-retarget-catchup will never retarget them and they will keep firing on any slow-flow, no-reflow or perforation. The builder's report says they were 'deferred', but no entry was written.",
+      "severity": "major",
+      "fix": "Add both under the pci-calcium-uncrossable comment and remove them from the pci-tip-context WAITING_TIPS group (the duplicate check fails otherwise). (1) { tipId: \"pci-calc-rota-slow-flow\", raisedBy: \"pci-calcium-uncrossable\", when: { phase: [\"lesion-prep\", \"complication\"], event: [\"slow-flow\", \"no-reflow\"], requires: [\"atherectomy-rotational\"] }, note: \"the superset guard applies: it is a bailout in the no-reflow complication context today\" }. (2) { tipId: \"pci-calc-atherectomy-perforation\", raisedBy: \"pci-calcium-uncrossable\", when: { phase: [\"lesion-prep\", \"complication\"], event: [\"perforation\"], requires: [\"atherectomy-rotational\"] }, note: \"the superset guard applies: it is a bailout in the perforation complication context today; orbital atherectomy needs an atherectomy-any event or a split tip, because requires is AND\" }. Re-run reachability.test.ts and retarget.test.ts."
+     },
+     {
+      "where": "src/content/manual/complex-pci/12-other-complex.ts, pci-ocx-brachytherapy-dapt",
+      "problem": "This tip is still on { phase: ['finish'] } alone, so it shows at the finish of every PCI case. The plan says pci-ocx-* tips gain lesion-subset requires 'as their text demands', and this text opens 'If the treated segment received intracoronary brachytherapy', which is in-stent restenosis treatment.",
+      "severity": "minor",
+      "fix": "Change it to when: { phase: [\"finish\"], requires: [\"in-stent-lesion\"] }, matching pci-ocx-isr-*. Alternatively, leave the trigger and list it in WAITING_TIPS under the same raiser as the other in-stent tips, with a note."
+     },
+     {
+      "where": "src/content/manual/complication-management/03-perforation.ts, bed-peri-after-pci",
+      "problem": "It moved to phase ['drain'] only, but half the text is needle guidance ('Leaked contrast often outlines the sac, so fluoroscopy can guide the needle; do not wait for echo'). In the pericardiocentesis procedure it would appear only after the needle stage it advises on.",
+      "severity": "minor",
+      "fix": "when: { phase: [\"needle\", \"drain\"], procedure: [\"pericardiocentesis\"] }; then extend the retarget.test.ts bedside positive check to phase 'needle'."
+     },
+     {
+      "where": "src/content/lab/raisable/waiting.ts, DEFERRED_RETARGETS entry for pci-noreflow-pick-agent",
+      "problem": "The entry's `when` is identical to the tip's current trigger, because the request is a text split, not a trigger change. Once pci-flow-closure (or pci-tip-context) raises no-reflow at complication, reachability reports it 'ready'. tip-retarget-catchup then 'applies each ready entry's trigger, deletes the entry', which does nothing to the tip and throws away the only record of the text-split request.",
+      "severity": "minor",
+      "fix": "Remove it from DEFERRED_RETARGETS. Add a WAITING_TIPS group { raisedBy: \"pci-flow-closure\", lab: \"pci\", note: \"text change, not a trigger change: split the adrenaline sentence into its own tip on no-reflow-refractory\", tips: [\"pci-noreflow-pick-agent\"] }, or keep it only in outOfScope for whoever owns tip text."
+     },
+     {
+      "where": "src/content/lab/retarget.test.ts, test 'no PCI tip gates a CTO on total-occlusion, which the lab raises only for acute occlusions'",
+      "problem": "The test name describes the planned pci-tip-context behaviour, not today's code. Today src/ui/lab/pciTips.ts raises 'total-occlusion' only inside `if (opts.cto)` (CTO scenarios with severity >= 95). The same wrong premise is in the NOT_CTO_OCCLUSION comment, and today pci-arrhythmia-reperfusion can only show in CTO cases.",
+      "severity": "minor",
+      "fix": "Rename the test to 'no PCI tip gates a CTO on total-occlusion, which pci-tip-context will raise only for acute occlusions'. Reword the NOT_CTO_OCCLUSION comment the same way."
+     },
+     {
+      "where": "src/content/manual/cath-handbook/08-complex-patients.ts, structural-tavi-iliofemoral-run (alsoIn diagnostic)",
+      "problem": "The validator forces procedure ['tavi'], so the borrowed tip shows in the diagnostic lab only if the diagnostic context reports procedures ['tavi']. LabContext.procedures is documented for the structural, mcs and bedside labs. diag-tip-context's plan reports route and vessel but not procedures, so this borrow stays unreachable in the diagnostic lab. The builder mentioned this among the judgement calls but did not record it in outOfScope as a dependency.",
+      "severity": "minor",
+      "fix": "Add an outOfScope item: diag-tip-context (or the TAVI work-up scenario) must report procedures: ['tavi'] in the diagnostic context for TAVI work-up cases, or structural-tavi-iliofemoral-run's diagnostic borrow stays unreachable. The route-gated borrows (access-root-*, access-arrest-radial-spasm) depend in the same way on diag-tip-context reporting route, which its plan already covers."
+     },
+     {
+      "where": "src/content/manual/equipment/01-sheaths-guides.ts, pci-gx-ostial-keep-guide-out",
+      "problem": "The old trigger was catheter-too-deep AND pressure 'damped'. The new one is event ['pressure-damped','catheter-too-deep'] (OR) plus requires aorto-ostial-lesion, so the tip now fires on a deep guide without damping, or on damping alone. The text describes both together ('keeps diving into a diseased ostium and damping'), and the builder's report does not list this as a judgement call.",
+      "severity": "minor",
+      "fix": "Keep the AND: when: { phase: [\"guide\", \"stent\"], event: [\"catheter-too-deep\"], requires: [\"aorto-ostial-lesion\", \"pressure-damped\"] }. Record the request's extension-in-place exclusion (eq-sheaths-guides#7) as a WAITING note for pci-device-delivery."
+     },
+     {
+      "where": "src/content/validate.ts checkProcedure, and the regex in src/content/manual.test.ts",
+      "problem": "The error message reads 'a mcs tip must name its procedure', which is ungrammatical; it should be 'an mcs tip'.",
+      "severity": "minor",
+      "fix": "Use `${t.lab === \"mcs\" ? \"an\" : \"a\"} ${t.lab} tip must name its procedure (when.procedure)` and change the manual.test.ts regex to /an mcs tip must name its procedure/."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 8,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/content/lab/reachability.test.ts src/content/lab/retarget.test.ts src/content/manual.test.ts src/content/lab/tips.test.ts (4 files, 58 passed, 1 skipped)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all eight findings against the code, the plan and the lab requests. All eight hold: seven needed code changes and one is recorded below as an out-of-scope dependency. None rejected. All four test files pass, the typecheck is clean, and reachability counts are unchanged (pci 553, diagnostic 154, haemo 45, bedside 14, structural 55, access 89, mcs 59; all waiting, none ready).\n\n1. src/content/lab/raisable/waiting.ts: I took pci-calc-rota-slow-flow and pci-calc-atherectomy-perforation out of the pci-tip-context group and added them as deferred retargets under pci-calcium-uncrossable. Both now need atherectomy-rotational and carry the superset-guard notes; the perforation note also covers the orbital device. Request cp-calcium confirms that the slow-flow, perforation, entrapment and bradycardia tips should need an atherectomy event.\n\n2. src/content/manual/complex-pci/12-other-complex.ts: pci-ocx-brachytherapy-dapt now has when { phase: [\"finish\"], requires: [\"in-stent-lesion\"] }. It stays in the pci-tip-context group, where the other in-stent tips already wait. tips.test.ts still passes; its per-phase list already includes tips that have requires.\n\n3. src/content/manual/complication-management/03-perforation.ts: bed-peri-after-pci now shows at phase [\"needle\", \"drain\"]. The bedside check in retarget.test.ts now expects it at needle as well.\n\n4. waiting.ts: I removed pci-noreflow-pick-agent from DEFERRED_RETARGETS. It now sits in its own pci-flow-closure WAITING_TIPS group, with a note that the adrenaline sentence must be split into a new tip on no-reflow-refractory (a text change, not a trigger change).\n\n5. src/content/lab/retarget.test.ts: renamed the test to \"...which pci-tip-context will raise only for acute occlusions\". I also reworded the NOT_CTO_OCCLUSION comment: src/ui/lab/pciTips.ts currently raises total-occlusion only inside `if (opts.cto)`, and the comment now says so.\n\n6. (out of scope, no file in this package can fix it) diag-tip-context, or the TAVI work-up scenario, must report procedures: [\"tavi\"] in the diagnostic context for TAVI work-up cases. Otherwise the diagnostic borrow of structural-tavi-iliofemoral-run stays unreachable, because the validator forces procedure [\"tavi\"]. The tip is in src/content/manual/complex-pci/08-complex-patients.ts, not cath-handbook as the finding said. The route-gated borrows (access-root-*, access-arrest-radial-spasm) depend in the same way on diag-tip-context reporting route, which its plan already covers.\n\n7. src/content/manual/equipment/01-sheaths-guides.ts: pci-gx-ostial-keep-guide-out again needs both conditions at once: when { phase: [\"guide\", \"stent\"], event: [\"catheter-too-deep\"], requires: [\"aorto-ostial-lesion\", \"pressure-damped\"] }. pressure-damped is a LabEvent that useLabTips raises for a damped or wedged trace. Request eq-sheaths-guides#7 also says the tip must not show while a guide extension is in place. A trigger cannot express that (TipTrigger has no negation), so I moved the tip out of the pci-tip-context group into a new pci-device-delivery WAITING_TIPS group with a note to split the sentence or add an exclusion once extension-in-place is raised.\n\n8. src/content/validate.ts: the message now reads \"an mcs tip must name its procedure\" for mcs tips and \"a ...\" for the rest. The regex in src/content/manual.test.ts now matches /an mcs tip must name its procedure/.\n\nFiles edited: src/content/lab/raisable/waiting.ts, src/content/manual/complex-pci/12-other-complex.ts, src/content/manual/complication-management/03-perforation.ts, src/content/manual/equipment/01-sheaths-guides.ts, src/content/validate.ts, src/content/manual.test.ts, src/content/lab/retarget.test.ts (all under /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator)."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "vitest manual.test.ts: validateTips returns [] with the new rule that every structural, mcs and pericardiocentesis tip sets a known procedure",
+      "met": true,
+      "evidence": "src/content/manual.test.ts passes (6 tests). validateTips(LAB_TIPS) returns []. The new test asserts that no structural, mcs or bed-peri-* tip lacks a known procedure and that no tip is left on the 'pericardiocentesis' phase. It also asserts that the validator rejects a bare structural, mcs or bedside tip with 'must name its procedure' and rejects the retired phase. The rule is implemented in src/content/validate.ts lines 222-241."
+     },
+     {
+      "criterion": "Superset: for lad-focal and rca-calcified contexts at phase 'complication' with perforation, dissection, no-reflow, thrombus or air, the caution and bailout tips returned by tipsFor(ctx, 100) are a superset of the pre-change set",
+      "met": true,
+      "evidence": "src/content/lab/retarget.test.ts 'superset guard' passes all 10 contexts against a hard-coded BEFORE list. I checked this separately against the pre-change snapshot in datasets/tmp/wp-snapshots/found-tip-retarget: I dumped the tips before and after the edits with esbuild and ran tipsFor(ctx,100,tips) for LAD and RCA x 5 complications x extra events ([], wire-side-branch, guide-backout, both, slow-flow). No caution or bailout tip was lost in any context. The post-edit dump matches live LAB_TIPS. 316 tips changed trigger and 0 non-trigger fields changed (title, text, sources and lessonId are untouched)."
+     },
+     {
+      "criterion": "No PCI tip lists 'total-occlusion' as its only CTO gate; imaging 'ivus' returns no OCT-only tip; with events ['perforation'] alone pci-perf-covered-one-guide is still returned",
+      "met": true,
+      "evidence": "retarget.test.ts 'PCI retargets' passes. My own check found no PCI tip that has both total-occlusion and requires cto, and every CTO-lesson tip has requires ['cto'] except two retrograde complication tips. Those two are deferred in waiting.ts to pci-cx-recognition and pci-cto-retrograde. Only two tips keep total-occlusion: pci-arrhythmia-reperfusion (acute reperfusion) and pci-interp-donor-ffr. The donor-FFR trigger { phase ['physiology'], event ['total-occlusion'] } is exactly what lab-requests/pm-interpreting.json#10 asks for. No pci-img-oct-* tip or imaging-['oct'] tip appears with imaging 'ivus' in any PCI phase. pci-perf-covered-one-guide is returned for { phase 'complication', events ['perforation'] }, and its retarget is a DEFERRED_RETARGETS entry raisedBy pci-perforation."
+     },
+     {
+      "criterion": "haemo right-heart has no haemo-pe/constriction/ps/tr/ts/hocm tip; structural plan with procedures ['laao'] returns no TAVI or BAV tip; no bed-peri-* tip for procedures ['pacing']",
+      "met": true,
+      "evidence": "retarget.test.ts 'procedure and scenario gating' passes. My separate run gave: haemo right-heart returned [] for those prefixes. Structural plan with ['laao'] returned only 3 tips, all with lessonId hb-mitral-tricuspid-laa-laao-plan and procedure ['laao']. Bedside with procedures ['pacing'] across all phases and events (hypotension, perforation, bradycardia, tamponade) returned no bed-peri-* tip."
+     },
+     {
+      "criterion": "{lab:'access',phase:'closure',route:'radial'} returns no femoral-route tip; access-central-vein-no-blood appears only for jugular or subclavian with no-flashback",
+      "met": true,
+      "evidence": "retarget.test.ts 'access routes' passes. My separate run across 10 event sets returned no tip with route femoral. The only text match was access-vagal-prevention, a general vasovagal tip (lesson cm-patient-complications-vasovagal), not a femoral-route tip. The live trigger of access-central-vein-no-blood is { phase ['puncture'], route ['jugular','subclavian'], event ['no-flashback'] }, and the test confirms it is absent for femoral or radial and for jugular without no-flashback."
+     },
+     {
+      "criterion": "reachability.test.ts reads the raises exports, prints satisfiable, waiting and ready counts per lab, and fails on a tip that is neither satisfiable nor waiting; every deferred retarget in waiting.ts names its new trigger and raisedBy package",
+      "met": true,
+      "evidence": "src/content/lab/reachability.test.ts passes (5 tests). It globs the planned event-source and tip-context paths with import.meta.glob({eager:true, import:'raises'}). It prints per-lab tips, satisfiable, waiting and ready counts, and asserts unlisted == []. The 80 DEFERRED_RETARGETS entries are each checked for a raisedBy that is a package in lab-build-plan.json, a non-empty new trigger, and a pass through validateTips. A fixture test checks the ready and borrowed logic. Note: the run reports 'from 0 raises declarations'. No event source exports raises yet (src/ui/lab/pciTips.ts is outside this package's files), so all 969 tips are currently listed in waiting.ts and satisfiable is 0 for every lab. That is consistent with the design, which assigns the raises exports to the owning packages."
+     }
+    ],
+    "failures": [
+     {
+      "where": "src/content/lab/reachability.test.ts (run output) / src/ui/lab/pciTips.ts",
+      "problem": "Reachability is computed from 0 raises declarations. No module exports raises, including src/ui/lab/pciTips.ts, which already raises cto, complications and wire events today. Every tip is therefore 'waiting' and the report cannot yet tell a tip the PCI or diagnostic lab shows today from one it never shows. This is not a defect of this package, because pciTips.ts is not in its file list.",
+      "severity": "minor",
+      "fix": "No change in found-tip-retarget. pci-tip-context, and diag-tip-context for the diagnostic lab, should add `export const raises` to their tip-context files. waiting.ts entries will then start reporting as ready and can be pruned by tip-retarget-catchup."
+     },
+     {
+      "where": "src/content/lab/retarget.test.ts line ~269 (expect(borrowed.length).toBe(30)) vs lab-build-plan.json tipIntegration ('the 32 pci, access, haemo and structural tips ... gain alsoIn')",
+      "problem": "The plan says 32 borrowed tips gain alsoIn, but 30 carry alsoIn. This does not affect any acceptance criterion. The two missing ids are presumably absent or not borrowable, and the design asks for missing ids to be recorded in the PR notes, but I found no such note.",
+      "severity": "minor",
+      "fix": "List the two diagnostic-request tip ids that did not gain alsoIn, with the reason (id not found or already present), in the package's PR notes or as a note on a waiting.ts entry."
+     }
+    ],
+    "testsRun": [
+     "npx vitest run src/content/manual.test.ts src/content/lab/retarget.test.ts src/content/lab/reachability.test.ts (3 files, 35 tests passed)",
+     "npx vitest run src/content/lab/tips.test.ts (23 passed, 1 skipped; regression check)",
+     "Independent scratch check via vite-node: pre-change snapshot (datasets/tmp/wp-snapshots/found-tip-retarget) vs live tips. Superset guard over LAD/RCA x 5 complications x 5 extra-event sets: 0 contexts lost a caution or bailout tip. 0 non-trigger field changes, 316 trigger changes. Criteria 3-5 queried directly with tipsFor.",
+     "Independent scratch check of waiting.ts: 80 deferred retargets grouped by raisedBy and compared against the plan's deferred list"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors (covers waiting.ts, reachability.test.ts, retarget.test.ts)"
+   }
+  ]
+ }
+}

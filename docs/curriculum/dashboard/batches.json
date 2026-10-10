@@ -1,0 +1,116 @@
+[
+ {
+  "name": "Pilot",
+  "what": "Engaging the coronary arteries",
+  "modules": 1,
+  "state": "done",
+  "when": "6–7 Oct",
+  "note": "Pipeline calibrated: 50 issues found and fixed",
+  "moduleIds": [
+   "pm-engaging"
+  ]
+ },
+ {
+  "name": "Batch A",
+  "what": "PCI step by step",
+  "modules": 16,
+  "state": "done",
+  "when": "7 Oct",
+  "note": "754 issues found and fixed; 60 corrections to older Academy lessons",
+  "moduleIds": [
+   "pm-planning",
+   "pm-monitoring",
+   "pm-antithrombotics",
+   "pm-lab-drugs",
+   "pm-access",
+   "pm-to-the-root",
+   "pm-acquiring",
+   "pm-interpreting",
+   "pm-target",
+   "pm-wiring",
+   "pm-prep-and-stent",
+   "pm-closure",
+   "pm-physiology",
+   "pm-imaging",
+   "pm-support-choice",
+   "pm-support-devices"
+  ]
+ },
+ {
+  "name": "Batch B",
+  "what": "Complex lesions and patients",
+  "modules": 13,
+  "state": "done",
+  "when": "7 Oct",
+  "note": "Resumed once after the Mac overloaded; three modules re-checked in batch C",
+  "moduleIds": [
+   "cp-left-main",
+   "cp-prior-cabg",
+   "cp-calcium",
+   "cp-acs-thrombus",
+   "cp-complex-patients",
+   "cp-cto-strategy",
+   "cp-cto-antegrade",
+   "cp-cto-retrograde",
+   "cp-other-complex",
+   "cp-uncrossable"
+  ]
+ },
+ {
+  "name": "Batch C",
+  "what": "Complications and equipment, plus a full re-check of three complex-PCI modules",
+  "modules": 8,
+  "state": "done",
+  "when": "7–8 Oct",
+  "note": "Interrupted by a Mac restart and an app quit, resumed from cache; the ostial and bifurcation modules got their full double check (114 more issues fixed); 45 more Academy corrections",
+  "moduleIds": [
+   "cm-principles-closure",
+   "cm-flow-embolism",
+   "cm-perforation",
+   "cm-equipment-loss",
+   "cm-patient-complications",
+   "cm-access-complications",
+   "eq-sheaths-guides",
+   "eq-balloons-stents-cart",
+   "cp-ostial",
+   "cp-bifurcation-provisional",
+   "cp-bifurcation-two-stent"
+  ]
+ },
+ {
+  "name": "Batch D",
+  "what": "The catheter laboratory handbook",
+  "modules": 10,
+  "state": "done",
+  "when": "8 Oct",
+  "note": "492 issues found and fixed; 21 more Academy corrections. All 247 topics now taught",
+  "moduleIds": [
+   "hb-lab-and-radiation",
+   "hb-the-operator",
+   "hb-safe-practice",
+   "hb-cardiac-catheterisation",
+   "hb-specific-conditions",
+   "hb-additional-procedures",
+   "hb-tavi",
+   "hb-mitral-tricuspid-laa",
+   "hb-after-the-procedure",
+   "hb-background"
+  ]
+ },
+ {
+  "name": "Lab build",
+  "what": "Hands-on practice from the lab requests",
+  "modules": 0,
+  "state": "running",
+  "when": "8 Oct",
+  "note": "159 work packages planned; 44 accepted after run 3. Run 1: 16 of 29 foundation packages (a network outage cut six short); run 2: repairs, retries and the core hands-on skills; run 3: 21 more accepted, 7 failed acceptance on cross-package items, which were repaired; run 4 (from 9 Oct evening): those 7 resumed, 7 repair packages for wiring between labs and the facts register, the rest of phase 2 and all of phase 3 (76 items). Live detail at http://localhost:5173/build.html"
+ },
+ {
+  "name": "Final checks",
+  "what": "Every topic, every test, the app end to end",
+  "modules": 0,
+  "state": "pending",
+  "when": "last",
+  "note": ""
+ }
+]

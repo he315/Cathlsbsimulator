@@ -1,0 +1,138 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A distal left main scenario (Medina 1,1,0 and a true Medina 1,1,1 variant) that reuses the bifurcation tools: two wires, cross-over stent from the left main into the LAD, proximal optimisation, a jailed circumflex that can look narrowed, physiology or imaging of the circumflex, optional second stent (T, TAP, reverse crush, culotte, DK crush), trissing for a trifurcation variant, and a pre-brief in which the learner states the support plan from the haemodynamics shown. Variants: the circumflex occludes after the cross-over stent (rewirable or not), and the jailed circumflex wire becomes trapped on removal.",
+    "learnerDoes": "Chooses a 7 or 8 Fr EBU/XB guide without side holes, wires both branches, sizes the cross-over stent to the distal LAD on a platform that can reach the left main diameter, performs POT with a balloon matched to the left main and its distal marker at the carina, gives nitroglycerin and measures circumflex FFR or images it, and if the FFR is 0.80 or less rewires distally, kisses and repeats the POT before deciding on a second stent; finishes with IVUS from both branches. Jails a workhorse circumflex wire with a straight tip, not across its radiopaque segment, and leaves the circumflex unballooned before a provisional stent. If the circumflex occludes, rewires through a distal strut and removes the jailed wire only after a low-profile balloon has entered the branch, or, if rewiring fails, passes a 1.0–1.5 mm balloon (or torquable microcatheter) over the jailed wire, restores flow, rewires through a dual-lumen microcatheter, kisses and repeats the POT (or converts to inverted DK crush). Frees a trapped jailed wire with gentle traction or a small balloon or microcatheter, never a hard pull. Sizes kissing balloons by Finet's law (0.678 × the sum of the two diameters, close to the left main diameter).",
+    "success": "Provisional strategy for 1,1,0; circumflex deferred when FFR > 0.80; when FFR ≤ 0.80, distal rewiring, kissing and re-POT first, second stent (by a listed technique) only if still inadequate; POT balloon not oversized; final IVUS from both branches meeting 5, 6, 7 and 8 mm² (circumflex ostium, LAD ostium, polygon of confluence, left main) and at least 80–90% of each stented segment's reference lumen area. Occluded circumflex reopened by the Fig. 16.9 pathway without losing the jailed wire; no hard pull on a trapped wire and no deep guide intubation; kissing pair within Finet's effective diameter of the left main.",
+    "tips": [
+      "pci-lm-distal-strategy",
+      "pci-lm-jailed-circumflex",
+      "pci-lm-no-routine-kissing",
+      "pci-lm-trifurcation",
+      "pci-lm-stent-expansion-limit",
+      "pci-img-lm-both-branches",
+      "pci-lm-circumflex-occluded",
+      "pci-lm-jailed-wire-removal"
+    ],
+    "lessonIds": [
+      "cp-left-main-distal"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An ostial and shaft left main scenario: pressure damping on engagement (worse with larger guides and deep seating), the option of a side-hole guide that hides damping, a short-left-main variant in which a deep guide occludes the circumflex behind a pseudonormal trace, intermittent disengagement, and ostial stent positioning with a 1–2 mm aortic protrusion, flare and IVUS check of coverage. Variants: a stent that protrudes too far (flare with a short oversized balloon) and acute ostial stent recoil (re-dilate, then a high-radial-force stent inside). Add ostial balloon preparation (balloon partly in the aorta, watermelon seeding that responds to 1 atm steps, a buddy wire or a scoring balloon) and orbital atherectomy that injures the vessel if activated before it engages the ostium.",
+    "learnerDoes": "Preloads a wire (and balloon) to the guide tip, engages, wires and disengages by torquing off axis at the first damping, never injects while damped, keeps injections short in a left-dominant or occluded-RCA variant, prepares the lesion with brief inflations, positions and flares the stent, re-engages gently.",
+    "success": "No injection with a damped trace; no side-hole guide in the unprotected variant; stent edge 1–2 mm into the aorta confirmed in AP cranial and LAO cranial; IVUS shows full ostial coverage; inflations short with the aortic pressure monitored. Ostial balloon held across the ostium without watermelon seeding; orbital device constrained (crown beyond the lesion, or nose cone in the ostium with the crown 5 mm short).",
+    "tips": [
+      "pci-lm-no-side-hole-guide",
+      "pci-lm-preload-wire-ostial",
+      "pci-lm-damped-torque-off",
+      "pci-lm-injections-dominance",
+      "pci-lm-brief-inflations",
+      "pci-lm-ostial-stent-position"
+    ],
+    "lessonIds": [
+      "cp-left-main-technique"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Left main dissection as a complication event in the left main scenarios (raised by injection into a damped guide, or by an aggressive guide), with the bifurcation spared or involved, the patient stable or unstable, a lost-wire variant and a variant in which contrast stains the aortic wall. The aortic-stain variant should allow an IVUS-guided ostial stent and a distal check through a dual-lumen microcatheter or aspiration catheter, and should show propagation, aortic regurgitation or tamponade as surgical triggers.",
+    "learnerDoes": "Keeps the wire, disengages, stops selective injections, confirms the true lumen with IVUS, wires both branches if the bifurcation is involved, stents the entry quickly, asks for femoral access for support, chooses surgery or PCI according to Oxford's table; if the wire is lost uses parallel wiring, IVUS and a microcatheter with a workhorse wire (no contrast through it) before CTO re-entry methods or surgery; with aortic staining stops injecting and seals the ostium. For a non-flow-limiting dissection, or one at the proximal edge of a new stent, recognises that treatment may not be needed; confirms the distal true lumen by IVUS or a collateral (RCA) injection; for an aorto-coronary dissection places an IVUS-guided stent 1–2 mm into the aorta, injects the distal vessel only through a dual-lumen or aspiration catheter, and plans CT or transoesophageal follow-up and blood pressure control.",
+    "success": "Wire position kept; no further selective injection; IVUS (not OCT) used for lumen confirmation; entry sealed promptly; surgery discussed when the bifurcation is involved in a stable patient; no contrast through a possibly subintimal microcatheter; aortic stain treated by sealing the ostium with surgical triggers named. No contrast through the guide after an aortic stain; sealing stent protrudes 1–2 mm into the aorta on IVUS; surgery called for aortic regurgitation, tamponade or extension beyond about 40 mm.",
+    "tips": [
+      "pci-lm-dissection-bailout"
+    ],
+    "lessonIds": [
+      "cp-left-main-technique"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Ostial left main IVUS step: a pullback that reaches the aorta, showing the slanted ostium, the minimum lumen area, the reference diameter and calcium arc, with a toggle between populations (6.0 mm² and 4.5 mm² thresholds) and an OCT option that fails to clear the ostium.",
+    "learnerDoes": "Runs IVUS pullbacks from the LAD and the circumflex, takes the smaller MLA, measures the reference diameter, decides significance (with physiology for 4.5–6 mm²), and after stenting confirms struts protruding into the aorta.",
+    "success": "Correct significance call against the chosen threshold, with physiology requested in the 4.5–6 mm² grey zone; recognises that OCT cannot clear the ostial left main; confirms ostial coverage.",
+    "tips": [
+      "pci-lm-ivus-for-ostium",
+      "pci-img-lm-threshold"
+    ],
+    "lessonIds": [
+      "cp-left-main-assess",
+      "cp-left-main-technique"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Stent platform expansion limits for left main cross-over stents: each generic platform shows its labelled post-dilatation limit, and POT beyond it is flagged.",
+    "learnerDoes": "Chooses a platform whose limit reaches the left main diameter before sizing the cross-over stent to the distal LAD.",
+    "success": "POT reaches the left main reference without exceeding the platform limit.",
+    "tips": [
+      "pci-lm-stent-expansion-limit"
+    ],
+    "lessonIds": [
+      "cp-left-main-technique",
+      "cp-left-main-distal"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Left main damping causes in the diagnostic lab: a left main stenosis, the tip angulated into the wall, spasm, and selective LAD or circumflex intubation in a short left main, each producing a damped trace; a damped waveform with the features Oxford describes, a catheter that cannot be aspirated, plus contrast that fails to clear after an injection with an obstructing catheter, leading to ventricular arrhythmia if the catheter is not withdrawn.",
+    "learnerDoes": "Recognises damping, withdraws without injecting (and until blood can be aspirated), excludes catheter causes (thrombus, kink, transducer), takes non-selective images, gives nitroglycerin for suspected spasm, keeps injections short in a left-dominant patient, and acquires the five-view left main set.",
+    "success": "No injection with a damped trace; correct cause identified; disengages when contrast does not clear; names LAO caudal and LAO cranial as the least foreshortened views of the ostium.",
+    "tips": [
+      "diag-lm-damping-causes",
+      "diag-lm-short-injections"
+    ],
+    "lessonIds": [
+      "cp-left-main-assess"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "impella",
+    "what": "Protected left main PCI combining the microaxial pump console with the PCI lab: a CHIP patient (unprotected left main, occluded RCA, EF 25%, wedge above 25 mmHg with SvO2 below 50%) with a pre-brief choosing upfront support or standby, a PA catheter trace during the case, and ischaemic steps (atherectomy, inflations) that drop the pressure unless supported.",
+    "learnerDoes": "Classifies the haemodynamics (wedge, RA, PAPi as (sPAP − dPAP)/RA, mixed venous saturation) and the procedure, chooses and documents the support plan, positions the pump, watches the PA and arterial traces during ischaemic steps, starts a vasopressor early, and stages remaining work.",
+    "success": "Support decision (upfront or standby) consistent with Brilakis's framework and with CHIP-BCIS3 discussed and recorded; no ischaemic step without the pressure in view; escalation on hypotension or pulmonary oedema; procedure ends without an unplanned CTO attempt.",
+    "tips": [
+      "pci-chip-three-domains",
+      "pci-lm-support-triggers",
+      "pci-lm-hypotension-inflation",
+      "haemo-support-rhc-thresholds"
+    ],
+    "lessonIds": [
+      "cp-left-main-chip"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "physiology",
+    "what": "Left main physiology presets: an intermediate left main measured from both branches with pullback (significant and non-significant patterns), a downstream LAD stenosis that masks left main severity, and a jailed circumflex after provisional stenting with FFR either side of 0.80. Add a preset with discordant resting and hyperaemic indices and one with a high RA pressure and LVEDP.",
+    "learnerDoes": "Disengages the guide for an ostial lesion, measures LAD and circumflex with pullback, locates the step, and decides on the jailed circumflex.",
+    "success": "Correct localisation of the pressure step; recognises downstream masking; defers the circumflex above 0.80 and plans stepwise treatment at 0.80 or less; decides discordant indices on the clinical presentation; avoids FFR with high filling pressures.",
+    "tips": [
+      "pci-phys-left-main-both-branches",
+      "pci-lm-jailed-circumflex"
+    ],
+    "lessonIds": [
+      "cp-left-main-assess",
+      "cp-left-main-distal"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Distal left main bifurcation atherectomy with both wires kept: a guide-extension option over the atherectomy wire (7 Fr guide with 6 Fr extension for a 1.25 mm burr or crown; 8 Fr with 7 Fr for a 1.5 mm burr) and a microcatheter-protected side-branch wire through an 8 Fr guide.",
+    "learnerDoes": "Chooses whether to remove the second wire before atherectomy, and if keeping it selects a guide and extension (or microcatheter protection, moving the microcatheter slowly while each run is under way) compatible with the chosen burr.",
+    "success": "Guide, extension and burr sizes compatible; second wire protected or removed with the rewiring risk stated.",
+    "tips": [],
+    "lessonIds": [
+      "cp-left-main-technique"
+    ],
+    "priority": "P3"
+  }
+]

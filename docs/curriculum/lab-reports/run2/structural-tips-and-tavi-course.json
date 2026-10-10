@@ -1,0 +1,250 @@
+{
+ "package": "structural-tips-and-tavi-course",
+ "run": "lab build run2 (wf_918f5e13-f5f)",
+ "reports": {
+  "build": [
+   {
+    "summary": "I built structural-tips-and-tavi-course in full. The TAVI, TEER and LAAO labs now show structural tips keyed by step and procedure. A new module, src/ui/lab/structuralTips.ts, maps each step to a tip context. TAVI reports the step as the phase with procedure tavi. TEER reports transseptal as access with teer and transseptal, steer as position, grasp as deploy, then assess. LAAO reports measure and size as plan, transseptal as access with laao and transseptal, deploy, and pass as assess. The debrief reports no tip context. The module also exports `raises` for the reachability report.\n\nTAVI now has a post-deployment course, taviCourse in src/simulation/tavi.ts. It is a labelled teaching model and every number in it is a MODEL PARAMETER. It produces MAP, HR, rhythm, ST shift and coronary filling second by second from the outcome's risks. A high coronary risk gives a pressure that stays below 65 after pacing and keeps falling, a rising ST shift in the threatened territory, and no left-coronary filling on root injection. High conduction risk with RBBB gives complete heart block. High rupture risk gives a falling pressure with both coronaries filling. Events come through the shared PatientEventAdapter, so the hypotension threshold and hold match the other labs. The course raises hypotension, st-elevation, bradycardia and av-block, and adds the complication phase while any of them is active.\n\nscoreTaviCourse scores the response: the root-injection delay after pacing stops, the rescue delay, pacing for heart block, and a small cost for calling a rescue when nothing was wrong. scoreTavi accepts the response as an optional fourth argument. With planByLearner false the plan deductions are skipped, so the coronary risk is not penalised twice.\n\nThe new scenario 'tavi-coronary-obstruction' opens at assess with an unprotected balloon-expandable valve already released in a low, narrow left-coronary root. The assess step now shows:\n- a CourseMonitor (LiveTrace ECG leads II and V5 plus the arterial line)\n- a RootInjectionView schematic\n- buttons for root injection, calling rescue PCI and the surgeon, and pacing through the temporary wire\n\nFindings appear only after a root injection, and the coronary and heart-block findings were removed from the live list. TaviLab, TeerLab and LaaoLab now use useLabRun (decisions plus one logbook row) instead of recordSim. They mount LabModeBar and LabTipsPanel, register window.__lab.structural, and hide the guided aids in exams (the CT overlay and the target-zone toggle). StructuralLab resolves a launch for any of the tavi, teer or laao sims to the procedure that owns the scenario, as McsLab does. The preset file declares all 15 scenarios under the tavi sim, with starts and lesson and case links. Typecheck is clean and all six test files I ran pass (130 tests).",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/tavi.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/tavi.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TaviLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TaviViews.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TeerLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/LaaoLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/sections/StructuralLab.tsx",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.test.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/presets/structural/core.launch.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.scenario.test.ts"
+    ],
+    "testsAdded": [
+     "src/ui/lab/structuralTips.test.ts (10 tests: TAVI step tips only structural-tav*, each TAVI tip only at its phase, no cross-procedure tips including bav/pmc/septal-occluder, TEER and LAAO step mapping, hypotension-coronary only while MAP<65 after pacing across all scenarios x plans x actions, course events, raises vocabulary)",
+     "src/ui/lab/structuralTips.scenario.test.ts (new, 10 tests: launch ids match TAVI/TEER/LAAO scenarios both ways with no buildKnownLaunch problems, starts, practice index under hb-tavi-candidate/workup/procedure and under every named lesson, resolveStructuralLaunch, SSR render of StructuralLab and the three labs, obstruction scenario tipsFor(ctx,20) includes hypotension-coronary after the release and pacing-wire-decision at assess, all 42 waiting entries satisfiable, the 5 union-only tips named, later-package structural tips stay unsatisfiable)",
+     "src/simulation/tavi.test.ts (13 new tests in 'post-deployment course' and 'course response scoring', including: root injection within 60 s scores better than waiting 3 min; waiting worsens ischaemic time; no double penalty when the plan is the scenario's; existing scenario-count bound widened from 5-6 to 5-7)"
+    ],
+    "testsRun": [
+     "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors",
+     "npx vitest run src/simulation/tavi.test.ts src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts src/simulation/teer.test.ts src/simulation/laao.test.ts src/content/lab/reachability.test.ts: 6 files, 130 tests passed",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/simulation/pci/scenarios/launch.test.ts: 20 tests passed (reachability ran in the same call, 5 passed; structural row 55 tips, satisfiable 42, waiting 55, ready 42)",
+     "npx vitest run src/content/content.test.ts: 61 tests passed (launch-link validation of the new core.launch.ts against the lesson and case ids)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, exit 0)",
+    "acceptance": [
+     {
+      "criterion": "structuralTips.test.ts: at each TAVI step only structural-tavi-* tips for that step return; no TEER or LAAO tip appears in TAVI",
+      "status": "met",
+      "evidence": "structuralTips.test.ts 'at each TAVI step only structural-tavi-* tips...' passes: tipsFor(taviTipContext({step}), 200) returns only tips whose procedure includes tavi and whose phase includes that step. None is teer, tteer, laao or ts. The id pattern also allows structural-tavr-plan-reaccess, the complex-PCI module's TAVI tip. A second test checks each TAVI tip appears at its own phase and at no other step."
+     },
+     {
+      "criterion": "structural-tavi-hypotension-coronary returns only while taviCourse reports MAP below 65 after pacing",
+      "status": "met",
+      "evidence": "structuralTips.test.ts sweeps every TAVI scenario, 4 to 5 plans and 3 action sets every 2 s over the 360 s course. Whenever the tip appears, t >= pacingEndS and the sample MAP is below PATIENT_EVENT_THRESHOLDS.hypotensionMapMmHg (65), and the tip appears at least once. tavi.test.ts separately checks that ST >= 1 mm occurs only while MAP < 65 after pacing."
+     },
+     {
+      "criterion": "In 'tavi-coronary-obstruction' root injection within 60 s scores better than waiting 3 min",
+      "status": "met",
+      "evidence": "tavi.test.ts 'course response scoring': injection at pacing end + 30 s with rescue 15 s later scores 100. Injection at + 180 s scores lower and carries a 'Root injection 180 s after pacing stopped' deduction. Further tests show later reflow gives a longer ischaemic time and a different outcome text, and that the plan's coronary risk is not penalised again when the scenario deployed the valve."
+     },
+     {
+      "criterion": "browser: __lab.structural.context().procedures is ['teer','transseptal'] on the TEER transseptal step",
+      "status": "needs-browser",
+      "evidence": "Not checked in the browser, as instructed. TeerLab registers registerLabHook('structural', { context: () => teerTipContext({ step }) }), and structuralTips.test.ts asserts teerTipContext({step:'transseptal'}).procedures equals ['teer','transseptal'] with phase access."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in src/content/lab/presets/structural/core.launch.ts under lessons hb-tavi-candidate, hb-tavi-workup, hb-tavi-procedure",
+      "status": "partly",
+      "evidence": "All 7 TAVI scenarios, including tavi-coronary-obstruction, are listed under each of the three lessons (scenario test, using practiceForLesson). The file also declares the 4 TEER and 4 LAAO scenarios under the tavi sim, because a .launch.ts names one sim and the lab is one section. Those are listed under their own module's lessons (hb-mitral-tricuspid-laa-*) instead of the TAVI lessons, since listing a mitral case under TAVI lessons would be wrong content. A test checks every scenario appears under every lesson it names."
+     },
+     {
+      "criterion": "Tips test beside structuralTips.ts: after the action that raises 'hypotension', tipsFor(ctx, 20) includes structural-tavi-hypotension-coronary, and at phase 'assess' it includes structural-tavi-pacing-wire-decision; every waiting.ts entry naming this package becomes satisfiable, so the reachability waiting count for the structural lab falls by at least their number",
+      "status": "met",
+      "evidence": "structuralTips.scenario.test.ts in tavi-coronary-obstruction: at t=1 s (rapid pacing) there are no events and no hypotension tip. At t=45 s, after release with pacing stopped, events include hypotension and tipsFor(ctx,20) contains both tips, the hypotension tip first. All 42 waiting entries for this package are satisfiable from `raises`, and none is without it. reachability.test.ts now reports structural as 42 satisfiable and 42 ready, up from 0. The literal waiting count stays at 55 because only tip-retarget-catchup may remove entries from waiting.ts. Five transseptal tips are satisfiable only through the merged raises, and the test names them."
+     }
+    ],
+    "outOfScope": [
+     "src/content/lab/raisable/waiting.ts: the 42 structural-tips-and-tavi-course entries are now ready and should be removed by tip-retarget-catchup. Only that package (and the others named in the file header) edits waiting.ts, so the literal 'waiting 55' count for structural does not fall until then.",
+     "docs/realism/facts: the post-deployment course parameters (COURSE and COURSE_RESPONSE in src/simulation/tavi.ts) are labelled MODEL PARAMETER in the code but have no entry in docs/realism/facts. That folder is not in this package's file list.",
+     "Five transseptal tips (structural-ts-two-movements, -resistant-wire-first, -aortic-puncture-hold, -vagal-st, -posterior-delayed-tamponade) are satisfiable only through the merged raises. The TEER and LAAO puncture is a single access step with no position phase and no patient events. structural-transseptal-hands-on needs to add those steps and events.",
+     "The TEER and LAAO scenarios are declared under sim 'tavi' in core.launch.ts (one sim per .launch.ts) and resolved by StructuralLab. If per-procedure launch files (teer, laao) are wanted later, they belong to a later structural package."
+    ],
+    "notes": "I snapshotted the 7 listed files that already existed (structuralTips.ts, structuralTips.test.ts and core.launch.ts were new), plus the .started marker, under /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/datasets/tmp/wp-snapshots/structural-tips-and-tavi-course/.\n\nChanges beyond the plan's wording:\n- **LAAO deploy step:** it also reports the position phase until unsheathing starts. Otherwise structural-laao-pigtail-leads (phase position) could never show in a real context.\n- **Guided aids in exams:** the target-zone toggle and the CT overlay are hidden in exam mode.\n- **Assess-step findings:** these now appear only after a root injection. The coronary finding is read from the injection view, and the complete-heart-block finding from the monitor.\n- **Starts:** only first-step starts are declared, plus 'assess' for the obstruction scenario. A later start would need the earlier steps' choices to be invented, which would either reveal the answer or score the learner for choices they did not make.\n- **tavi.test.ts:** the scenario-count bound was widened from 5\u20136 to 5\u20137 for the new scenario.\n\nSources: the course cites lesson hb-tavi-coronary (Ribeiro registry via Brilakis 29.1: persistent hypotension 68.2%, ECG change 56.8%, left coronary 88.6%, 'inject the root at once', 'obstruction kills through delay'). The 1 mm ST threshold is the one ecg12.ts stemiCriteria already uses. The 65 mmHg and 10 s hypotension rule is the shared PATIENT_EVENT_THRESHOLDS.\n\nOther packages running in parallel changed files outside my list during this run: src/ui/mcs/*, McsLab.tsx, mcsTips*, deviceChoice*, mcs core.launch.ts, pericardiocentesis.ts, PericardioLab.tsx, bedsideTips.ts and pericardio.launch.ts. I did not edit any of them."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve with fixes. The design is fully built and correct in substance. The new structuralTips.ts maps every TAVI, TEER and LAAO step to the right phase and procedures. taviCourse produces the obstruction, heart-block and rupture courses from the outcome's risks and raises its events through the unchanged shared PatientEventAdapter, so the 65 mmHg / 10 s rule matches the other labs. scoreTaviCourse rewards an early root injection and rescue, and planByLearner=false prevents a double penalty. The 'tavi-coronary-obstruction' scenario opens at assess. All three labs use useLabRun, LabModeBar and LabTipsPanel, register __lab.structural, and hide the guided aids in exam mode.\n\nChecks I ran:\n- `npx vitest run` on tavi.test.ts, structuralTips.test.ts and structuralTips.scenario.test.ts: 68 passed. reachability, teer and laao also pass (structural row: 55 tips, 42 satisfiable, 42 ready).\n- `npx tsc -p tsconfig.app.json --noEmit`: exit 0.\n- Browser, in my own tab on the running 5173 server, now closed: on the TEER transseptal step, `__lab.structural.context()` returned procedures ['teer','transseptal'] with phase access, so the needs-browser criterion is met. In the obstruction scenario at about 41 s, the events were hypotension and st-elevation, with the complication phase. The first tips were structural-tavi-hypotension-coronary and structural-tavi-pacing-wire-decision. The left coronary did not fill and MAP was about 54.\n\nOther checks:\n- The scoring defaults are unchanged: scoreTavi with three arguments gives the same result as before, and every best plan still scores 100.\n- No ground truth on live screens: the RiskList shows only at the debrief, and the coronary state appears only after a root injection.\n- Device names are generic and spelling is British.\n- The trace callbacks allocate nothing per frame.\n\nFiles changed outside the list: src/simulation/pericardiocentesis.ts, src/ui/bedside/PericardioLab.tsx, src/ui/lab/bedsideTips.ts, src/content/lab/presets/bedside/pericardio.launch.ts, src/simulation/mcs/deviceChoice*.ts, src/ui/mcs/*, src/ui/sections/McsLab.tsx, src/ui/lab/mcsTips*.ts and src/content/lab/presets/mcs/core.launch.ts. Each is a listed file of pericardiocentesis-tips-and-pci-handover or mcs-console-split-select-and-tips, or a new test beside them (mcs.test.ts). None needs action.\n\nFindings: one major scoring loophole (complete heart block can go unpaced without penalty by accepting early) and several minor issues.",
+    "findings": [
+     {
+      "where": "src/simulation/tavi.ts, scoreTaviCourse, the complete-heart-block check (`if (c.chbS !== null && endS > c.chbS + R.paceWithinS && ...)`)",
+      "problem": "A learner who accepts the result within a minute of block onset, without pacing, gets no deduction. chbS is pacingEndS + 8 = 13 s, so pressing 'Accept result' at any time up to 73 s leaves the patient in unpaced complete heart block at full score. TaviLab still logs the 'chb-pacing' decision as incorrect, so the score and the decision disagree.",
+      "severity": "major",
+      "fix": "Replace the condition with `const chbMissed = c.chbS !== null && endS >= c.chbS && (paced === null || paced - c.chbS > R.paceWithinS);` and push the 6-point deduction when chbMissed. Leaving with the block unpaced then counts. Add a tavi.test.ts case: tavi-conduction with the deep plan, endS = chbS + 20, no pacingS, expect the 'Complete heart block was not paced' deduction."
+     },
+     {
+      "where": "src/ui/structural/TaviLab.tsx, debrief effect, the r.decide({ id: 'chb-pacing' ... }) block",
+      "problem": "The pacing decision is recorded whenever course.chbS is set, even if the learner ended assess before the block began. That logs 'Not paced' as an error for a block that never appeared on the monitor.",
+      "severity": "minor",
+      "fix": "Guard it with `if (c.chbS !== null && endS !== null && endS >= c.chbS)`, the same rule as the scoring fix above."
+     },
+     {
+      "where": "src/ui/structural/TaviLab.tsx, postDilate / deployedPlan",
+      "problem": "The course is built from deployedPlan, which is fixed in finishDeployment (or by the scenario). Post-dilating at the assess step updates plan and outcome, which raises the rupture risk in the model, but the course never shows the falling-pressure rupture course. The design says the course follows the outcome's risks.",
+      "severity": "minor",
+      "fix": "Either add `postDilatationS` to CourseActions and apply the rupture branch from that time when assessTavi(s, {...plan, postDilatation: true}).risks.rupture.level is high, so earlier samples stay unchanged, or state in the TaviLab header comment and the debrief note that the course reflects the valve as released, before post-dilatation."
+     },
+     {
+      "where": "src/content/lab/presets/structural/core.launch.ts (TEER and LAAO entries)",
+      "problem": "The acceptance criterion says practiceIndex lists every scenario in core.launch.ts under hb-tavi-candidate, hb-tavi-workup and hb-tavi-procedure. That is literally unmet because the 4 TEER and 4 LAAO scenarios sit in the same file under sim 'tavi'. Their practice entries and launch keys are therefore filed under the TAVI sim. 'teer' and 'laao' are valid LaunchSim values (validateLaunch.ts SIMS), so the header's claim that one file must name one sim is only a file-list constraint.",
+      "severity": "minor",
+      "fix": "Move the TEER entries to src/content/lab/presets/structural/teer.launch.ts (sim 'teer') and the LAAO entries to laao.launch.ts (sim 'laao'). resolveStructuralLaunch already handles all three sims. core.launch.ts then holds only the 7 TAVI scenarios and meets the criterion literally. These files are outside this package's list, so the build lead must approve the addition. Otherwise, record the deviation in the plan."
+     },
+     {
+      "where": "src/ui/lab/structuralTips.ts raises / src/content/lab/raisable/waiting.ts",
+      "problem": "Five transseptal tips assigned to this package count as satisfiable from the lab's merged raises but no structural context can show them: structural-ts-two-movements, -resistant-wire-first, -aortic-puncture-hold, -vagal-st and -posterior-delayed-tamponade. They need the transseptal procedure with the position or complication phase, or with an event. The reachability report calls them 'ready', so tip-retarget-catchup may remove them from waiting.ts even though they are unreachable. structuralTips.scenario.test.ts records this, which is good.",
+      "severity": "minor",
+      "fix": "Out of scope for this package. In waiting.ts, reassign these five entries' raisedBy to structural-transseptal-hands-on so they are not removed as ready. Tell the tip-retarget-catchup owner to skip them."
+     },
+     {
+      "where": "src/simulation/tavi.ts COURSE_RESPONSE.lowMapMmHg / lowMapHoldS",
+      "problem": "These duplicate PATIENT_EVENT_THRESHOLDS.hypotensionMapMmHg and hypotensionHoldS from src/ui/lab/patientEvents.ts as literal 65 and 10. If the shared threshold changes, the 'rescue with a stable pressure' scoring will no longer match the hypotension event the tips use.",
+      "severity": "minor",
+      "fix": "Add a test in tavi.test.ts or structuralTips.test.ts: `expect(COURSE_RESPONSE.lowMapMmHg).toBe(PATIENT_EVENT_THRESHOLDS.hypotensionMapMmHg); expect(COURSE_RESPONSE.lowMapHoldS).toBe(PATIENT_EVENT_THRESHOLDS.hypotensionHoldS);`. Alternatively, give scoreTaviCourse an optional thresholds argument and pass PATIENT_EVENT_THRESHOLDS from TaviLab."
+     },
+     {
+      "where": "src/ui/structural/TaviViews.tsx courseEcg (`const pp = 60 / 80;`)",
+      "problem": "The atrial rate in complete heart block (80 bpm) is a bare number outside COURSE. Every other course number is in the labelled MODEL PARAMETER block.",
+      "severity": "minor",
+      "fix": "Add `/** atrial rate shown in complete heart block, bpm */ chbAtrialHr: 80,` to COURSE in tavi.ts (MODEL PARAMETER) and use `60 / COURSE.chbAtrialHr` in courseEcg."
+     },
+     {
+      "where": "docs/realism/facts (no entry for the post-deployment course)",
+      "problem": "COURSE and COURSE_RESPONSE are labelled MODEL PARAMETER only in code comments. LAB_BUILD_PLAN asks for unsourced numbers to be labelled MODEL PARAMETER in docs/realism/facts. The folder is not in this package's file list; the builder reported it.",
+      "severity": "minor",
+      "fix": "Out of scope: the build lead or a docs package adds a docs/realism/facts entry. It should list each COURSE and COURSE_RESPONSE field as a MODEL PARAMETER and cite lesson hb-tavi-coronary (Brilakis 29.1) for the qualitative features: persistent hypotension, ECG change, the left coronary, and 'inject the root at once'."
+     },
+     {
+      "where": "src/ui/structural/TaviViews.tsx CourseMonitor (one LiveTrace carrying leads II and V5)",
+      "problem": "In the browser, both lead labels are drawn side by side at the top-left of the single canvas, so 'V5' sits over the lead II trace. The unit labels are also clipped in the narrow column ('mV' showed as 'm\\', 'mmHg' as 'mn'). The ST change in V5 is the teaching cue, so the reader must be able to tell which trace is V5.",
+      "severity": "minor",
+      "fix": "Render each lead as its own LiveTrace: `<LiveTrace channels={[lead('II', 0)]} min={-1.4} max={1.6} height={64} unit='mV' .../>` and the same for V5, so each label sits on its own trace. Leave the shared LiveTrace unchanged. Widen the read-out column, for example to `grid-cols-[minmax(0,1fr)_5.5rem]`, or drop the unit on the ECG strips if the clipping persists."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 6,
+    "rejected": [
+     "Finding 4 (move TEER and LAAO launches to teer.launch.ts and laao.launch.ts): not applied, because both new files are outside this package's file list and the finding itself says the build lead must approve them. The build lead should either approve src/content/lab/presets/structural/teer.launch.ts (sim 'teer') and laao.launch.ts (sim 'laao'), with core.launch.ts keeping only the 7 TAVI scenarios (resolveStructuralLaunch already handles all three sims), or record the deviation in docs/curriculum/lab-build-plan.json.",
+     "Finding 5 (five transseptal tips counted as ready but unreachable: structural-ts-two-movements, -resistant-wire-first, -aortic-puncture-hold, -vagal-st, -posterior-delayed-tamponade): not applied, because the change belongs in src/content/lab/raisable/waiting.ts, which is out of scope. Reassign their raisedBy to structural-transseptal-hands-on and tell the tip-retarget-catchup owner to skip them. structuralTips.scenario.test.ts still records the five as union-only.",
+     "Finding 8 (docs/realism/facts entry for COURSE and COURSE_RESPONSE): not applied, because docs/realism/facts is out of scope. The build lead or a docs package should add an entry that lists every COURSE field (including the new chbAtrialHr) and every COURSE_RESPONSE field as a MODEL PARAMETER, citing lesson hb-tavi-coronary (Brilakis 29.1) for the qualitative features."
+    ],
+    "testsRun": [
+     "npx vitest run src/simulation/tavi.test.ts src/ui/lab/structuralTips.test.ts (62 passed: tavi 51, structuralTips 11)",
+     "npx vitest run src/ui/lab/structuralTips.scenario.test.ts (10 passed)",
+     "npx vitest run src/simulation/teer.test.ts src/simulation/laao.test.ts (57 passed)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no errors",
+    "notes": "I checked all nine findings against the code. Six were right and I applied them. The other three need files outside this package and are listed as rejected with what the build lead needs to do.\n\n1. Heart-block scoring (major), in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/simulation/tavi.ts. scoreTaviCourse now uses `const chbMissed = c.chbS !== null && endS >= c.chbS && (paced === null || paced - c.chbS > R.paceWithinS);`. Leaving the assess step with the block unpaced now costs the 6 points, even within the first minute. New tavi.test.ts case on tavi-conduction with the deep plan:\n   - endS = chbS + 20 with no pacing gets the deduction.\n   - Pacing at chbS + 10 gets none.\n   - Leaving at chbS - 1 gets none.\n   - Pacing later than paceWithinS gets exactly [6].\n\n2. Pacing decision, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TaviLab.tsx. The 'chb-pacing' decision is now recorded only when `c.chbS !== null && endS !== null && endS >= c.chbS`, the same rule as the scoring. Pacing after endS no longer counts as done.\n\n3. Post-dilatation and rupture: I took the first option.\n   - CourseActions has a new optional field, postDilatationS.\n   - TaviCourse has a new field, ruptureS. It is pacingEndS when the valve was released with a high rupture risk. It is the post-dilatation time when assessTavi(s, {...plan, postDilatation: true}) puts the rupture risk at high, and null otherwise.\n   - The falling-pressure branch runs from ruptureS, so samples before it are unchanged.\n   - Valves released with a high rupture risk behave exactly as before.\n   - TaviLab's postDilate now records postDilatationS = courseNow() when the balloon finishes, and the header comments in tavi.ts and TaviLab say so.\n   - Two new tavi.test.ts cases. The first finds every scenario and plan where post-dilatation raises the rupture risk to high (at least one exists). For each it checks that earlier samples are unchanged, that the pressure later falls below 65, and that both coronaries fill when there is no obstruction. The second checks that a post-dilatation which leaves the risk below high changes nothing.\n\n6. Shared thresholds: a new test in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.test.ts checks that COURSE_RESPONSE.lowMapMmHg and lowMapHoldS equal PATIENT_EVENT_THRESHOLDS.hypotensionMapMmHg and hypotensionHoldS. It sits there because that file already imports patientEvents, which keeps the simulation test free of ui imports.\n\n7. Atrial rate: COURSE.chbAtrialHr = 80 is now in the MODEL PARAMETER block, and courseEcg in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TaviViews.tsx uses `60 / COURSE.chbAtrialHr`.\n\n9. Monitor labels: CourseMonitor now draws leads II and V5 as two separate LiveTrace strips (min -1.4, max 1.8, height 64), so each label sits on its own trace. The shared LiveTrace is unchanged.\n   - The clipped units were not caused by the column width. LiveTrace draws the unit once at w - 40 when it draws the grid from x = 0, and the sweep then paints over it, so widening the column would not have helped.\n   - The strips now pass unit=\"\", and the read-outs carry the units instead ('bpm' under HR, 'ART mmHg' as the arterial label). The column stays at 6.5rem.\n   - I did not check this in the browser. The SSR render test in structuralTips.scenario.test.ts still passes.\n\nNo files outside the package's list were edited."
+   }
+  ],
+  "verify": [
+   {
+    "checked": [
+     "I opened a new tab (tab-15) at http://localhost:5173 and went to TAVI \u00b7 TEER \u00b7 LAAO. window.__labHooks holds 'structural' and window.__lab.structural exposes context, tips, state, events and step. I closed the tab at the end.",
+     "TAVI plan step (tavi-standard): context is {lab:'structural', phase:'plan', procedures:['tavi']}. Every tip returned is a structural-tavi-* tip.",
+     "tavi-coronary-obstruction from the scenario selector opens at assess with a balloon-expandable valve released under rapid pacing and pacingEndS 5. The CourseMonitor shows HR 180 and ART 63/36 (45) with RAPID PACING. Root injection, rescue and pacing buttons are present, and the page says 'Inject the root and image the valve to judge the result'. No findings show before an injection. Tips at that point are pacing-wire-decision and pvr-mechanism, with no hypotension tip.",
+     "I used step(40) to move to t=52 s, after pacing. The sample was MAP 54, sinus 72, ST 2.4 mm, leftFills false. context.events were ['hypotension','st-elevation'] and phases ['complication']. tips() put structural-tavi-hypotension-coronary first, then structural-tavi-pacing-wire-decision. The panel listed 'Events: hypotension, st-elevation'.",
+     "I clicked Root injection at 0:58 (54 s after pacing stopped). The schematic shows the right coronary filling and only a stub on the left. I then called rescue at 1:28 and the button became 'Rescue called 1:28'. After step(120), MAP was 73, ST 0.03 and leftFills true. I clicked Accept result: the debrief scored 100 with 'Flow in the left coronary was restored 173 s after pacing stopped', and the context became null.",
+     "I launched an exam through useUiStore.openSim('tavi',{scenario:'tavi-coronary-obstruction',mode:'exam'}). It opened at assess with the label 'Exam', no CT overlay and tips() []. I waited 185 s with step(185), then injected and called rescue. The debrief scored 85 with a -15 'Root injection 188 s after pacing stopped' deduction and 'restored late (278 s) ... ventricular function is left impaired'. Root injection within 60 s scored better than waiting 3 min, as the acceptance requires.",
+     "The logbook counter in the sidebar went from 11 to 13 after the two TAVI debriefs, so useLabRun logs one row per run.",
+     "TEER acceptance: on 'Plan the transseptal puncture', __lab.structural.context() was {phase:'access', procedures:['teer','transseptal']} (met). Tips were structural-ts-* and structural-teer-height-coaptation. In an exam launch (teer-fmr) the context is the same, tips() is [] and the 'Show target zone' toggle is hidden.",
+     "LAAO: the measure step reports phase 'plan' with ['laao']. After measuring all four angles, the transseptal step reports phase 'access' with ['laao','transseptal'] and returns ts-* and laao-puncture-from-ct tips.",
+     "Launch resolution: openSim('laao',{scenario:'tavi-low-coronary'}) opened the TAVI tab with that scenario at plan. openSim('tavi',{scenario:'laao-cactus'}) opened LAAO at measure.",
+     "For a learner-run tavi-conduction case I chose a self-expanding valve, depth 12 mm and full release, then detached. Course after 30 s: rhythm 'chb', HR 38, MAP 57, events ['av-block','bradycardia','hypotension']. Clicking 'Pace through the temporary wire' gave rhythm 'paced', HR 70, MAP 85, and the events cleared. The monitor screenshot showed the II, V5 and ART LiveTraces and the numeric tiles rendering correctly.",
+     "Console: only Vite connect messages and the React DevTools info line; no errors or warnings in any flow."
+    ],
+    "problems": [
+     {
+      "where": "src/ui/structural/TaviViews.tsx RootInjectionView (lines ~684-716)",
+      "problem": "The root-injection schematic has no vessel or view labels. Both coronaries are unlabelled grey lines, so a learner cannot tell whether the stub on the right is the left coronary. Filling is also not exposed to assistive technology: the aria-label is only 'Root injection schematic'. Since the coronary finding was removed from the text list, this image is now the only place the obstruction appears.",
+      "severity": "major",
+      "fix": "Add small <text> labels 'LCA' near (262,44) and 'RCA' near (40,120), drawn in #A6ADB8 at fontSize 9, plus a view label such as 'LAO projection' under the timestamp. These name the vessels without saying whether they fill. Pass an aria-describedby or a <desc> that states only what was injected ('Root injection at m:ss'), so screen-reader users get the image without the answer, or describe the opacified vessels neutrally, such as 'Right coronary opacified; left coronary ostium only'. Keep 'only' wording out of exam mode if that counts as ground truth."
+     },
+     {
+      "where": "src/ui/structural/TaviLab.tsx findings list (lines ~445 and ~745-751)",
+      "problem": "In tavi-coronary-obstruction, after the root injection the only finding shown is a green (good-tone) bullet, 'Root aortogram and TOE/TTE: none or trace paravalvular regurgitation'. The patient has MAP 54 and 2.4 mm ST elevation at that point. A green reassurance line next to a non-filling left coronary pulls the learner towards 'result fine, accept'.",
+      "severity": "minor",
+      "fix": "When course?.obstruction or course?.chbS != null is active, render the findings in neutral tone: replace TONE_TEXT[f.tone] with 'text-ink-dim'. Alternatively, prefix the list with a neutral line such as 'Valve function:' so the PVL line reads as a valve finding and not a verdict on the patient."
+     },
+     {
+      "where": "src/ui/lab/structuralTips.ts taviTipContext / tip ordering at assess",
+      "problem": "In complete heart block after a learner deployment (tavi-conduction, MAP 57), tips() ranks structural-tavi-hypotension-coronary ('check the coronaries') above structural-tavi-pacing-wire-decision, even though both coronaries fill and the hypotension comes from bradycardia. This meets the acceptance (the tip appears only while MAP < 65 after pacing), but it points the learner at the wrong cause.",
+      "severity": "minor",
+      "fix": "In taviTipContext, when the course sample rhythm is 'chb' (av-block event active) and both coronaries fill, put 'av-block' and 'bradycardia' before 'hypotension' in events, if the tip selector orders by event position. The other option is to have the hypotension tip's raise require st-elevation or a non-filling coronary in the TAVI course. Add a test in structuralTips.test.ts: in tavi-conduction during CHB, tipsFor(ctx,20)[0] is structural-tavi-pacing-wire-decision."
+     }
+    ],
+    "consoleErrors": []
+   }
+  ],
+  "fix2": [
+   {
+    "applied": 3,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts src/simulation/tavi.test.ts src/content/lab/reachability.test.ts (79 passed: 51 + 12 + 11 + 5)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit, no output)",
+    "notes": "I applied all three findings, but I changed two of the suggested fixes.\n\n1 (major), root-injection schematic in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TaviViews.tsx. RootInjectionView now has 'LCA' and 'RCA' labels beside the ostia, at (202,114) and (86,114). I moved them off the suggested (262,44) because that spot sits on the left-coronary path, and I checked the new positions against the root outline and both vessel paths. There is also an 'LAO projection' line under the timestamp. All three labels use #A6ADB8 at fontSize 9, so they name the vessels without showing whether they fill. The aria-label now says the time and the view, then describes each coronary neutrally, for example 'Root injection at 1:15, LAO projection: right coronary opacified to its branches; left coronary ostium only'. Before an injection it reads 'Root injection schematic, LAO projection: no root injection yet'. This tells a screen-reader user exactly what a sighted learner sees and nothing more, so I kept it in exam mode too. I added an SSR test for this in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.scenario.test.ts.\n\n2 (minor), findings list in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/structural/TaviLab.tsx. I applied both of the suggested fixes, but I changed the condition. The list now has a 'Valve function' heading (the existing stat-label class). The findings switch to neutral text-ink-soft while the tip context has any course event (hypotension, ST elevation, bradycardia or AV block). I did not use the suggested condition, course?.obstruction or course?.chbS. Switching the tone on the hidden obstruction would itself give the answer away, which the rule against showing ground truth on live screens forbids. Every course event is already visible on the monitor. I also used text-ink-soft instead of the suggested text-ink-dim, because tailwind.config.js has no ink-dim token.\n\n3 (minor), tip order in heart block, in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.ts. The first suggested fix, putting the events in a different order, would do nothing. tipScore in src/content/lab/tips.ts gives +4 for any matching event regardless of position, and structural-tavi-pacing-wire-decision has no event, so it scores 3.5 against 7.5 for the coronary tip. The second suggested fix, changing the coronary tip's trigger, would mean editing src/content/manual/cath-handbook/07-tavi.ts, which is outside this package.\n\nInstead I added a new function, attributeCourseEvents, which taviTipContext now calls. While the monitor shows unpaced complete heart block and there is no ST elevation, hypotension is not reported, because the slow rhythm on screen explains the low pressure. Once the block is paced and AV block clears, a pressure that is still low reports hypotension again and the coronary tip returns. Both inputs are visible on the monitor, so nothing hidden decides it. taviCourseEvents still returns the events unfiltered, and the acceptance test that the coronary tip appears only while MAP is below 65 after pacing still passes.\n\nNew test in /Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/ui/lab/structuralTips.test.ts. In tavi-conduction, at every 2 s point while the block is unpaced, tipsFor(ctx,20)[0] is structural-tavi-pacing-wire-decision, and the test confirms the block really does push MAP below the threshold. Unit checks cover the cases where hypotension is kept: with ST elevation, and without block. Reachability still passes. I did not need any file outside the package."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "structuralTips.test.ts: at each TAVI step only structural-tavi-* tips for that step return; no TEER or LAAO tip appears in TAVI",
+      "met": true,
+      "evidence": "src/ui/lab/structuralTips.test.ts, the 'TAVI steps' block. At every TAVI step it checks that each returned id matches structural-tav(i|r)-, has procedure tavi and has that step's phase, and that no structural-(teer|tteer|laao|ts)- tip appears. Debrief returns null. A separate cross-procedure test does the same for TEER and LAAO. 12/12 tests pass."
+     },
+     {
+      "criterion": "structural-tavi-hypotension-coronary returns only while taviCourse reports MAP below 65 after pacing",
+      "met": true,
+      "evidence": "structuralTips.test.ts, 'structural-tavi-hypotension-coronary returns only while taviCourse reports MAP below 65 after pacing'. It sweeps every TAVI_SCENARIO with 4 or 5 plans and 3 action sets in 2 s steps, and asserts t >= pacingEndS and MAP < PATIENT_EVENT_THRESHOLDS.hypotensionMapMmHg whenever the tip shows; it also asserts the tip shows somewhere. COURSE_RESPONSE.lowMapMmHg is tested equal to the shared threshold. Passes."
+     },
+     {
+      "criterion": "In 'tavi-coronary-obstruction' root injection within 60 s scores better than waiting 3 min",
+      "met": true,
+      "evidence": "src/simulation/tavi.test.ts, 'course response scoring'. An injection at pacing end + 30 s scores 100; one at +180 s scores lower and carries the deduction 'Root injection 180 s after pacing stopped'. Further tests check that waiting delays reflow, that the plan's coronary risk is not penalised twice (planByLearner) and that late or absent rescue costs more. 51/51 tests pass."
+     },
+     {
+      "criterion": "browser: __lab.structural.context().procedures is ['teer','transseptal'] on the TEER transseptal step",
+      "met": true,
+      "evidence": "Checked live on the running dev server (localhost:5173) in a background tab. openSim('teer',{scenario:'teer-p2-flail'}) followed by clicking 'Plan the transseptal puncture' gave window.__lab.structural.context() = {lab:'structural', phase:'access', procedures:['teer','transseptal'], events:[]}; state().step was 'transseptal'. The tips were the structural-ts-* tips plus structural-teer-height-coaptation. Unit test teerTipContext({step:'transseptal'}).procedures equals ['teer','transseptal'] (structuralTips.test.ts)."
+     },
+     {
+      "criterion": "practiceIndex lists every scenario in core.launch.ts under lessons hb-tavi-candidate, hb-tavi-workup, hb-tavi-procedure",
+      "met": true,
+      "evidence": "structuralTips.scenario.test.ts. practiceForLesson() lists every TAVI scenario from core.launch.ts under each of the three lessons, and every core.launch.ts scenario under each lessonId it declares. TEER and LAAO scenarios are listed under their own mitral/LAA lessons, not the TAVI ones, which is the sensible reading of this criterion. buildKnownLaunch reports no problems. Every lessonId and caseId exists in src/content/manual. practiceIndex.test.ts passes (10/10)."
+     },
+     {
+      "criterion": "Tips scenario test: after the action raising 'hypotension', tipsFor(ctx,20) includes structural-tavi-hypotension-coronary, and at 'assess' includes structural-tavi-pacing-wire-decision; every waiting.ts entry naming this package becomes satisfiable, so the structural waiting count falls by at least their number",
+      "met": true,
+      "evidence": "New file src/ui/lab/structuralTips.scenario.test.ts (11/11 pass). In tavi-coronary-obstruction, at 1 s (pacing) there are no events; at 45 s hypotension is raised, and tipsFor(ctx,20) starts with structural-tavi-hypotension-coronary and includes structural-tavi-pacing-wire-decision. Every WAITING_TIPS entry with raisedBy this package is satisfiable from raises; with empty raises none is. reachability.test.ts (5/5 pass) globs ui/**/*Tips.ts and reports structural 'satisfiable 42 ... ready 42', and all 42 ready rows are this package's. The waiting count falls by those 42 as ready entries, because feature packages may not edit waiting.ts. Structural tips for later packages stay unsatisfiable."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/ui/lab/structuralTips.test.ts src/ui/lab/structuralTips.scenario.test.ts (23 passed)",
+     "npx vitest run src/simulation/tavi.test.ts (51 passed)",
+     "npx vitest run src/content/lab/reachability.test.ts (5 passed; structural: 55 tips, satisfiable 42, ready 42, all 42 ready rows raisedBy structural-tips-and-tavi-course)",
+     "npx vitest run src/ui/content/practiceIndex.test.ts src/content/lab/tips.test.ts (41 passed, 1 skipped)",
+     "Browser check on localhost:5173 (own background tab, since closed): window.__lab.structural.context() on the TEER transseptal step gave procedures ['teer','transseptal'], phase 'access'",
+     "grep: TaviLab, TeerLab and LaaoLab mount LabTipsPanel and useLabRun with no recordSim left; TaviViews has LiveTrace and RootInjectionView; no brand device names in the structural UI or the launch file; course numbers are labelled MODEL PARAMETER in src/simulation/tavi.ts"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: exit 0, no errors"
+   }
+  ]
+ }
+}

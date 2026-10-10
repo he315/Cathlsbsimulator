@@ -1,0 +1,125 @@
+{
+ "package": "found-tips-vocabulary",
+ "run": "lab build run1 (wf_7cf449bd-b7a)",
+ "reports": {
+  "build": [
+   {
+    "summary": "Built found-tips-vocabulary. src/content/lab/tips.ts now holds one shared vocabulary for every lab. The changes:\n- 96 new LAB_EVENTS, grouped with comments and following the plan's naming decisions. A SUPERSEDED_EVENTS map records each replaced name (isr to in-stent-lesion, af to atrial-fibrillation, and so on).\n- ACCESS_ROUTES gains distal-radial, ulnar, femoral-vein, jugular and subclavian.\n- The bedside phases are now the stages assess, access, position, test, troubleshoot, decide, plan, needle and drain. 'pacing' and 'pericardiocentesis' stay as deprecated aliases, also listed in a new DEPRECATED_LAB_PHASES.\n- New lists and types: BIF_TECHNIQUES/BifTechnique, IMAGING_MODALITIES/ImagingModality and LAB_PROCEDURES/LabProcedure.\n- TipTrigger gains procedure, technique, step ([from, to]) and imaging.\n- LabTip gains alsoIn (TipBorrow { lab, phase? }).\n- LabContext gains phases (matched together with phase, so either can match), procedures, technique, step and imaging.\n\nMatching is now in an exported tipScore(tip, ctx). New fields add technique +3, step +2, imaging +2, procedure +2; the existing weights are unchanged. In a borrowing lab, the alsoIn phases replace the tip's own phase condition, and every other condition still applies.\n\ntipsFor keeps its signature and gains an optional third argument for the tip list. The new tipsForAll(ctxs, limit, tips) returns each tip once, at its best score across the contexts, highest score first; ties keep context order, then registry order.\n\nvalidateTips in src/content/validate.ts now rejects:\n- a step without a technique, a step range that runs backwards, and step values that are not whole numbers;\n- unknown procedures, techniques and imaging modalities;\n- alsoIn entries that are empty, name an unknown lab, the tip's own lab or the same lab twice, or use a phase that is not in the borrowing lab.\nWhen a tip uses a replaced event name, the error message names the agreed one. No tip trigger was retargeted.",
+    "filesChanged": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/validate.ts",
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.test.ts"
+    ],
+    "testsAdded": [
+     "/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.test.ts (22 tests: phase-only snapshot for 20 diagnostic and PCI contexts, comparison with the old algorithm, vocabulary contents, validator rules, matching of the new fields, tipsForAll)"
+    ],
+    "testsRun": [
+     "npx vitest run src/content/lab/tips.test.ts: 22 passed, none skipped (checked with the verbose reporter)",
+     "npx vitest run src/content/content.test.ts src/content/manual.test.ts: 57 passed",
+     "npx vitest run src/content/track.check.test.ts: 1 skipped (it was already skipped; this package did not change that)",
+     "npx vitest run src/ui/lab/lab.test.ts src/ui/lab/integration.test.ts: 21 passed (these use LabContext from the tip consumers)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, no output (the tsconfig includes all of src, so the test files are checked too)",
+    "acceptance": [
+     {
+      "criterion": "vitest content.test.ts and manual.test.ts pass unchanged (no tip is retargeted here)",
+      "status": "met",
+      "evidence": "Both files: 57/57 passed with neither file edited. validateTips(LAB_TIPS, ...) returns no errors. No file under src/content/manual was touched."
+     },
+     {
+      "criterion": "tips.test.ts: a snapshot of tipsFor for 20 existing diagnostic and PCI contexts (phase only) is identical before and after",
+      "status": "met",
+      "evidence": "Before editing tips.ts I ran the old tipsFor with vite-node and recorded tipsFor(ctx, 100) for all 10 diagnostic and 10 PCI phases (269 ids) as a literal in tips.test.ts. The new code returns the same lists in the same order, and the first 6 match tipsFor(ctx). This check runs only while the tip-data fingerprint matches the one recorded (969:a14ca619). A second test always runs: a verbatim copy of the old algorithm is compared with the new tipsFor at limits 4, 5, 6 and 100, over every tip that uses only the old fields."
+     },
+     {
+      "criterion": "tips.test.ts: validateTips rejects step without technique, an unknown procedure, and alsoIn with a phase that is not in the borrowing lab",
+      "status": "met",
+      "evidence": "Tests 'rejects a step without a technique', 'rejects an unknown procedure, technique or imaging modality' and 'rejects alsoIn with a phase that is not in the borrowing lab' (diagnostic borrowing the PCI phase 'stent') all pass. Further tests cover backwards step ranges, alsoIn naming the own lab, a lab twice or an unknown lab, an empty alsoIn, and the replaced-name hint. A tip that uses every new field validates clean."
+     },
+     {
+      "criterion": "tips.test.ts: tipsForAll over an access and a diagnostic context returns each tip once, highest score first",
+      "status": "met",
+      "evidence": "Synthetic test: a tip in both labs through alsoIn comes back once, in the order [shared 5, caution 1.5, low 1], and the limit is respected. Registry test with an access radial context and a diagnostic advance context: ids are unique, their set equals the union of the two tipsFor results, best scores never increase down the list, and both labs are present. With one context, tipsForAll equals tipsFor for all 20 phase-only contexts."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean",
+      "status": "met",
+      "evidence": "Ran after the final edits; no output."
+     }
+    ],
+    "outOfScope": [],
+    "notes": "- Snapshots of the original tips.ts and validate.ts are in datasets/tmp/wp-snapshots/found-tips-vocabulary/, with .started. Files changed since .started that are not mine: src/types/index.ts, src/types/caseModel.test.ts, src/state/useUiStore.ts, src/state/useLabLaunchStore.ts, src/content/schema.ts, src/content/validateLaunch.ts, src/ui/sections/CaseStudies.tsx, src/ui/content/practiceIndex.ts and src/ui/content/BlockRenderer.tsx. They appear to come from the wave-1 packages running at the same time. My diff of validate.ts against its snapshot shows only my own changes.\n- I scanned every package's tipIntegration in lab-build-plan.json for kebab-case names missing from the new vocabulary, from the tip ids and from the package ids. Only non-event words were left (closure-timi0 is a start state, lesion-estimate is telemetry, damped and ventricularised are PressureKind), so no package needs a name that is missing.\n- Decisions the plan left open, which later packages should know:\n  1. In a borrowing lab, alsoIn.phase replaces the tip's own phase condition. Without phases the tip shows at any phase of that lab. event, requires, route, catheter and the other conditions still apply.\n  2. Step numbers must be whole and at least 0, with from <= to. The step catalogue (technique/steps.ts) does not exist yet, so I did not fix whether steps start at 0 or 1.\n  3. tipsFor and tipsForAll take an optional tip list (default LAB_TIPS) so tests can use synthetic tips. tipScore is exported for the reachability work.\n- Robustness for later packages, since none of them lists tips.test.ts:\n  1. The literal snapshot check stands down once the tip-data fingerprint changes (found-tip-retarget will change it). The comparison with the old algorithm keeps guarding tipsFor.\n  2. The vocabulary tests use containment, so a later vocabulary amendment does not break them.\n  3. The bedside test still passes after tip-retarget-catchup removes the deprecated aliases, provided DEPRECATED_LAB_PHASES is updated with them.\n- Comments on the new events give only meanings, with no doses, thresholds or citations. Where I was unsure of a meaning ('high-flow', 'contrast-sensitive') I left the comment out.\n- No browser checks were run, as instructed."
+   }
+  ],
+  "review": [
+   {
+    "verdict": "Approve. found-tips-vocabulary is complete and correct, with two minor issues worth fixing; nothing blocks merge.\n\nScope: only the three listed files changed. The diffs against the snapshots of tips.ts and validate.ts contain only this package's work, and tips.test.ts is new. The other src files newer than .started all belong to found-launch-links or found-case-model-types, which list them (the new test files and fixtures are theirs too): src/types/index.ts, caseModel.test.ts, schema.ts, validateLaunch.ts, useUiStore.ts, useLabLaunchStore.ts(+test), CaseStudies.tsx, practiceIndex.ts(+test), BlockRenderer.tsx, __fixtures__/*.launch.ts.\n\nDesign coverage:\n- All new events in the plan are in LAB_EVENTS: I extracted the plan's list by script and none is missing.\n- The superseded names are absent and mapped to their agreed names.\n- ACCESS_ROUTES, BIF_TECHNIQUES, IMAGING_MODALITIES, LAB_PROCEDURES and the bedside stage phases match the plan. The deprecated pacing and pericardiocentesis aliases are kept. The comment says tip-retarget-catchup removes them, which matches the plan's review notes and that package's file list.\n- The TipTrigger, LabContext and LabTip.alsoIn fields are all present.\n- Scoring weights: technique +3, step +2, imaging +2, procedure +2; the existing weights are unchanged.\n- phases is matched as a union with phase.\n- tipsFor keeps its signature and its default limit of 6.\n- validateTips adds the required rules (step only with a technique, from <= to, the list checks, alsoIn phases), plus the extra checks the builder listed.\n\nUnchanged behaviour: the only callers of tipsFor (useLabTips.ts and AngioPci.tsx) pass phase-only contexts, and the legacy algorithm in the test is a line-for-line copy of the removed code. No number, threshold or citation was added, and there is no UI.\n\nWhat I ran:\n- tips.test.ts (verbose): 22/22 passed. The fingerprint-gated snapshot test ran and was not skipped.\n- content.test.ts and manual.test.ts: 64/64 passed. The count has grown since the builder's 57 because another package added tests.\n- ui/lab/lab.test.ts and integration.test.ts: 21/21 passed.\n- tsc -p tsconfig.app.json --noEmit: clean.\n\nThe tests are meaningful: they include a literal snapshot from before the change, an always-on comparison with the old algorithm at four limits, the rejections the acceptance criteria name, and tipsForAll tested on both synthetic tips and the registry.\n\nOne trade-off to note: the literal snapshot test stops running (vitest reports it skipped) once found-tip-retarget changes the tip data. The comparison with the old algorithm then becomes the only guard. That is acceptable and documented in the test.",
+    "findings": [
+     {
+      "where": "src/content/lab/tips.ts, tipsForAll (the docstring and the Map insertion/sort)",
+      "problem": "The docstring says ties keep the order of the contexts, then of the registry. The code keeps the order in which each tip was first matched. Example: ctxs [A, B]; tip X scores 1 in A and 5 in B; tip Y scores 5 only in B and comes before X in the registry. tipsForAll returns [X, Y], but the docstring implies [Y, X], because both reach their best score in B and Y is earlier in the registry. This matters for the full-case panel, which will rely on this order.",
+      "severity": "minor",
+      "fix": "Either reword the docstring to 'ties keep the order in which tips first matched (context order, then registry order)', or make the code match the docstring: store { tip, score, ci, ri } with the context index and registry index at the best score (update ci and ri when the score improves), then sort by (b.score - a.score) || (a.ci - b.ci) || (a.ri - b.ri). Add a tie case like the X/Y example to the tipsForAll tests in tips.test.ts."
+     },
+     {
+      "where": "src/content/validate.ts, checkAlsoIn",
+      "problem": "An alsoIn entry with no phase, or with phase: [], borrows the tip into every phase of the borrowing lab. If the tip's trigger sets only phase (the most common kind of tip), its own phase condition is dropped and nothing else is checked. The tip then shows unconditionally in the borrowing lab at score 0 (0.5 for a caution or bailout tip), and the 'trigger sets no condition' rule does not catch it because it counts the tip's own phase. Example: { lab: 'pci', when: { phase: ['plan'] }, alsoIn: [{ lab: 'diagnostic' }] } validates clean and appears at every diagnostic phase.",
+      "severity": "minor",
+      "fix": "In checkAlsoIn, reject an empty array explicitly: if (a.phase && !a.phase.length) errs.push(`${w}: alsoIn ${a.lab} has an empty phase list`). Also reject a borrow that would apply unconditionally: if (!a.phase?.length && !Object.entries(t.when).some(([k, x]) => k !== 'phase' && Array.isArray(x) && x.length)) errs.push(`${w}: alsoIn ${a.lab} sets no phase and the trigger has no condition besides phase, so the tip would show at every ${a.lab} phase`). Add both cases to the alsoIn rejection test in tips.test.ts."
+     }
+    ]
+   }
+  ],
+  "fix": [
+   {
+    "applied": 2,
+    "rejected": [],
+    "testsRun": [
+     "npx vitest run src/content/lab/tips.test.ts (24 passed)",
+     "npx vitest run src/content/manual.test.ts (5 passed; validates the registry tips)"
+    ],
+    "tsc": "npx tsc -p tsconfig.app.json --noEmit: clean, exit 0",
+    "notes": "I checked both findings against the code and both were correct, so I applied both.\n\n1. tipsForAll ordering (/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/lab/tips.ts). The code listed tied tips in the order they were first matched. It did not follow the docstring. I changed the code to match the docstring. Each tip now keeps { tip, score, ci, ri }, where ci is the index of the context in which it reached its best score and ri is its registry index. When a tip scores strictly higher in a later context, ci and ri are updated, so a tie keeps the earlier context. Tips are sorted by score (highest first), then ci, then ri. The docstring now says ties go by the context in which the tip first reached that score, then by registry order. With a single context the result is still the same as tipsFor, and the existing test for this still passes.\n\nNew test in tips.test.ts: Y comes before X in the registry. X is borrowed into the access lab with no phase, so it scores 1 there and 2 in diagnostic. Y scores 2 only in diagnostic, and Z, last in the registry, scores 2 only in access. The expected order is [access-z, diag-y, diag-x]. The old code would have returned [X, Z, Y], so the test tells the two apart.\n\n2. checkAlsoIn (/Users/qc25212/Downloads/Misc/Games and apps/Cath Simulator/src/content/validate.ts). The validator now rejects two more cases:\n- an alsoIn entry whose phase list is empty;\n- an alsoIn entry with no phase when the trigger has no condition other than phase, because the tip would then show at every phase of the borrowing lab.\n\nI used the error messages the review proposed. New test in tips.test.ts covers both rejections. It also checks that a borrow with no phase is still accepted when the trigger has another condition (requires).\n\nThe registry still validates clean: manual.test.ts passes. I changed only the three listed package files, so nothing goes in outOfScope."
+   }
+  ],
+  "accept": [
+   {
+    "passed": true,
+    "criteria": [
+     {
+      "criterion": "vitest content.test.ts and manual.test.ts pass unchanged (no tip is retargeted here)",
+      "met": true,
+      "evidence": "npx vitest run src/content/content.test.ts src/content/manual.test.ts: 2 files, 64 tests passed. No tip was retargeted: the tip-data fingerprint in tips.test.ts (SNAPSHOT_FINGERPRINT \"969:a14ca619\", taken over every tip's id, lab, tone, trigger and alsoIn) still matches, so the snapshot test ran and was not skipped. The project is not a git repo, so 'unchanged' was checked by the fingerprint and by the package's file list (tips.ts, validate.ts, tips.test.ts), which does not include either test file. content.test.ts was last modified at 07:00 today and the package files at 07:53. manual.test.ts dates from 6 October."
+     },
+     {
+      "criterion": "tips.test.ts: a snapshot of tipsFor for 20 existing diagnostic and PCI contexts (phase only) is identical before and after",
+      "met": true,
+      "evidence": "PHASE_ONLY_CONTEXTS covers all 10 diagnostic and 10 PCI phases, and a test asserts there are 20. 'tipsFor returns the recorded tips for each context, in order' compares tipsFor(ctx,100) and tipsFor(ctx) with PHASE_ONLY_SNAPSHOT. It runs only while the fingerprint matches, and it ran and passed. A second test checks the new tipsFor against a reimplementation of the old algorithm at limits 4, 5, 6 and 100, and it passed too."
+     },
+     {
+      "criterion": "tips.test.ts: validateTips rejects step without technique, an unknown procedure, and alsoIn with a phase that is not in the borrowing lab",
+      "met": true,
+      "evidence": "These tests passed: 'rejects a step without a technique', 'rejects an unknown procedure, technique or imaging modality' and 'rejects alsoIn with a phase that is not in the borrowing lab' (\"stent\" is not a diagnostic phase). The checks are at src/content/validate.ts lines 197-218 (alsoIn) and 239-247 (procedure, technique, imaging, step whole numbers, from <= to, step only with technique)."
+     },
+     {
+      "criterion": "tips.test.ts: tipsForAll over an access and a diagnostic context returns each tip once, highest score first",
+      "met": true,
+      "evidence": "Four tipsForAll tests passed: one on synthetic tips, one on the registry tips (no duplicate ids, the set equals the union of the per-context tipsFor results, best scores never increase), one on the tie-break order, and one showing that a single context gives the same result as tipsFor. The implementation is tipsForAll in src/content/lab/tips.ts lines 471-487."
+     },
+     {
+      "criterion": "npx tsc -p tsconfig.app.json --noEmit is clean",
+      "met": true,
+      "evidence": "tsc printed nothing (no errors)."
+     }
+    ],
+    "failures": [],
+    "testsRun": [
+     "npx vitest run src/content/lab/tips.test.ts (24/24 passed, snapshot test ran because the fingerprint matched)",
+     "npx vitest run src/content/content.test.ts src/content/manual.test.ts (64/64 passed)",
+     "npx tsc -p tsconfig.app.json --noEmit (clean)"
+    ],
+    "tsc": "clean (npx tsc -p tsconfig.app.json --noEmit produced no output)"
+   }
+  ]
+ }
+}

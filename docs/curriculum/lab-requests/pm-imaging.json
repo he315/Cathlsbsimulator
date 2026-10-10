@@ -1,0 +1,215 @@
+[
+  {
+    "lab": "pci-bench",
+    "what": "Modality choice before the pullback: each bench lesion comes with a stated goal and patient (for example ostial left main, aorto-ostial RCA, eGFR 24, suspected ACS culprit, apposition check, CTO cap) and the learner must commit to IVUS or OCT before imaging. The choice changes what the run can show (OCT cannot clear an aorto-ostial segment; IVUS shows calcium as a shadow without thickness; OCT adds contrast to the running total).",
+    "learnerDoes": "Reads the scenario, picks IVUS or OCT and states the reason, runs the pullback, and sees the consequence of the choice.",
+    "success": "Choice matches the goal-based selection (OCT for culprit, thrombus, dissection, apposition, edges and calcium thickness; IVUS for left main significance, aorto-ostial and large vessels, CTO crossing and contrast saving; either for sizing and expansion). A wrong choice produces the matching limitation, explained in the debrief.",
+    "tips": [
+      "pci-img-choose-by-goal",
+      "pci-img-ivus-contrast-saver"
+    ],
+    "lessonIds": [
+      "pm-imaging-when-which"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "An IVUS catheter in the fluoroscopic PCI lab (the engine already defines one): phased-array or rotational, loaded on the wire, advanced beyond the segment and pulled back under fluoroscopy, with the frames then read on the bench. Phased-array catheters require the ‘clear view’ step in a roomy segment or the aorta before crossing; tight or calcified lesions stop the catheter until predilated; forcing it kinks the catheter; solid-state pullbacks across tight segments or struts jump.",
+    "learnerDoes": "Gives intracoronary nitrate, chooses the catheter type, presses clear view (phased-array), advances past the lesion, predilates with a small balloon if it will not cross, sets depth, runs a motorised pullback, and recognises jumps.",
+    "success": "Nitrate given before imaging; clear view pressed before crossing (phased-array); no forcing (forcing produces a kinked, non-imaging catheter); lengths quoted only from a motorised pullback, with co-registration as well for phased-array; jumps handled by slower pullback, rotational catheter or further preparation.",
+    "tips": [
+      "pci-img-nitrate-first",
+      "pci-img-ivus-clear-view",
+      "pci-img-cannot-cross",
+      "pci-img-ivus-jumps"
+    ],
+    "lessonIds": [
+      "pm-imaging-ivus"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "OCT acquisition with the flush as a learner decision: guide size (6 Fr for hand injection, 5 Fr needs an injector), catheter purge with 100% contrast and calibration (not while purging), marker position (middle marker at least 57 mm beyond the target), survey versus high-resolution mode (75 mm at 36 mm/s, 5 frames/mm; 54 mm at 18 mm/s, 10 frames/mm), test injection, and injection rate and duration (typically 4 mL/s × 4 s left, 3 mL/s × 3 s right). Poor engagement or a weak injection gives reflux and no trigger; an unheld catheter migrates distally on a forceful injection; buddy wires and a poor purge give artefacts. Contrast used per run is added to the case total.",
+    "learnerDoes": "Prepares and positions the catheter, chooses the mode, tests engagement, sets the injection, holds catheter and wire, and recovers from a failed trigger (re-engage, guide extension, stronger or longer injection, predilate, manual trigger).",
+    "success": "A clean run on the first or second attempt with the contrast used shown; a failed run is diagnosed from its cause; distal migration, if provoked, is followed by a check for distal injury.",
+    "tips": [
+      "pci-img-oct-guide-size",
+      "pci-img-oct-marker",
+      "pci-img-oct-purge-calibrate",
+      "pci-img-oct-flush-rates",
+      "pci-img-oct-hold-catheter",
+      "pci-img-oct-no-pullback"
+    ],
+    "lessonIds": [
+      "pm-imaging-oct"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Artefact recognition on the bench: OCT runs that contain incomplete clearance, air in the catheter (attenuated arc with bubbles), sew-up, saturation streaks, sunflower and merry-go-round struts from an eccentric imaging wire, and fold-over at a side branch; IVUS runs with ring-down, NURD (rotational only), blood speckle, wire shadow and cardiac-motion shift.",
+    "learnerDoes": "Labels each artefact before reading tissue, and says whether the run must be repeated and what to correct first (purge, flush, remove buddy wire).",
+    "success": "Every artefact named correctly; no artefact read as thrombus, lipid or calcium; the correct fix chosen for repeatable artefacts.",
+    "tips": [
+      "pci-img-oct-purge-calibrate",
+      "pci-img-oct-no-pullback"
+    ],
+    "lessonIds": [
+      "pm-imaging-oct",
+      "pm-imaging-ivus"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Pre-PCI planning check: after the pullback the learner enters the calcium arc, thickness and length (OCT calcium score), the preparation tool, the landing zones, the length between them, the distal reference (lumen or EEM) and the stent and post-dilatation balloon diameters; the bench compares each entry with the measurements on the frames.",
+    "learnerDoes": "Scores the calcium (arc over 180° = 2, thickness over 0.5 mm = 1, length over 5 mm = 1), chooses balloon or modification, marks landing zones with plaque burden below 50% and no lipid-rich plaque or thin-cap fibroatheroma, and sizes from the distal reference (lumen +0.25 mm or EEM −0.25 mm) with a separate proximal balloon.",
+    "success": "Score and plan match the frames; edges not placed on lipid; stent not sized from the proximal reference; length taken from the automated pullback. Landing on lipid produces an edge dissection; sizing to the proximal reference produces a distal dissection.",
+    "tips": [
+      "pci-img-calcium-score",
+      "pci-img-image-after-modification",
+      "pci-img-landing-zone",
+      "pci-img-size-distal-reference"
+    ],
+    "lessonIds": [
+      "pm-imaging-planning"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Left main assessment and optimisation: a left main lesion imaged from the LAD and from the circumflex, with the significance thresholds (IVUS below 6.0 mm², OCT below 5.4 mm², 4.5 mm² proposed in Korean patients) before PCI and the segment targets after (5 mm² circumflex ostium, 6 mm² LAD ostium, 7 mm² polygon of confluence, 8 mm² left main). An ostial left main cannot be cleared by an OCT flush.",
+    "learnerDoes": "Chooses IVUS, pulls back from both branches before and after stenting, judges significance and then each segment against its target, and post-dilates the segment that falls short.",
+    "success": "Both branches imaged; each segment graded correctly; a short circumflex ostium detected only by the circumflex pullback.",
+    "tips": [
+      "pci-img-lm-threshold",
+      "pci-img-lm-both-branches"
+    ],
+    "lessonIds": [
+      "pm-imaging-planning",
+      "pm-imaging-optimisation"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Image, post-dilate, image again on the same stent: a stent deployed in the PCI lab is imaged on the bench, and the bench's MSA, malapposition and edge findings drive the next step in the PCI lab (non-compliant balloon at least the stent diameter above 18 atm for underexpansion; semi-compliant at low pressure for extensive malapposition; extra stent for a dissection over 60° and/or over 3 mm, especially distal; nothing for small flaps or smooth protrusion with an adequate lumen).",
+    "learnerDoes": "Calculates 80% of the mean reference lumen area, compares it with the MSA (OCT over 4.5 mm², IVUS at least 5.5 mm²), chooses the treatment, performs it in the PCI lab and re-images.",
+    "success": "Expansion checked first; the treatment matches the finding; small findings left alone; oversized balloons at the edge produce a new dissection.",
+    "tips": [
+      "pci-img-underexpansion-fix",
+      "pci-img-malapposition",
+      "pci-img-edge-dissection",
+      "pci-img-ostial-coverage"
+    ],
+    "lessonIds": [
+      "pm-imaging-optimisation"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "ACS culprit scenarios beside the existing lipid-rich culprit: plaque rupture (cap discontinuity with a cavity, red thrombus), definite erosion (thrombus attached to an intact surface, often over fibrous plaque, white thrombus), probable erosion, and calcified nodule (disrupted cap over protruding superficial calcium). A two-lesion NSTEMI asks the learner which lesion is the culprit; a suspected SCAD scenario penalises a forceful OCT flush.",
+    "learnerDoes": "Images the candidate lesions with OCT, classifies each by the criteria, classifies thrombus by attenuation, chooses thrombus-free reference frames for sizing, and declines physiology on the suspected culprit.",
+    "success": "Mechanism and culprit identified; sizing not taken from thrombus-laden frames; in suspected SCAD, imaging used cautiously or replaced by IVUS for wire position.",
+    "tips": [
+      "pci-oct-unclear-culprit",
+      "pci-img-thrombus-sizing",
+      "pci-img-scad-caution",
+      "pci-img-ivus-wire-position"
+    ],
+    "lessonIds": [
+      "pm-imaging-acs"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Co-registration between the bench and the PCI-lab angiogram: once both labs share a vessel, the current bench frame, the chosen landing zones and (for physiology) the pressure-drop map are shown on the angiogram, and are used to position the stent.",
+    "learnerDoes": "Marks landing zones on the pullback, sees them on the angiogram, and positions the stent between them using the marks and fixed landmarks.",
+    "success": "Stent edges land within the marked zones; a solid-state IVUS pullback without co-registration offers no length.",
+    "tips": [
+      "pci-img-coreg-landing"
+    ],
+    "lessonIds": [
+      "pm-imaging-coreg-ct"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "CT planning for the mid-RCA CTO scenario: a schematic CCTA reconstruction beside the angiogram showing the proximal cap, the course and bending of the occluded segment, calcium, the occlusion length and distal cap, and suggested working projections, with a CT-RECTOR score panel (multiple occlusions, blunt stump, severe calcification, bending, duration of 12 months or more, previously failed PCI).",
+    "learnerDoes": "Predicts the cap location, course and calcium, scores the lesion, chooses working projections and a crossing strategy (antegrade with the cap defined, or retrograde or move-the-cap if it stays ambiguous) before wiring.",
+    "success": "Cap, course, calcium and length predicted correctly; score calculated correctly; an ambiguous cap is not probed blindly.",
+    "tips": [
+      "pci-img-ct-cap"
+    ],
+    "lessonIds": [
+      "pm-imaging-coreg-ct"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Tip context for imaging in the PCI lab: src/ui/lab/pciTips.ts (pciTipContext) should report phase \"imaging\" while an imaging catheter is the active device (the engine's IVUS device, st.device.kind === \"ivus\"; later an OCT catheter, with a way to tell the two apart so that OCT-only tips do not appear during IVUS runs), phase \"plan\" before the guide is engaged, the target vessel (TIP_VESSELS, e.g. \"LM\") from the scenario lesion, and the event \"wire-subintimal\" (wire tip outside the true lumen). It should also keep phase \"optimise\" when, with a stent in place, the only complication is an edge dissection (st.dissection.kind === \"edge\"), so that edge-dissection grading advice can be shown on the actual flap. Today it emits none of these, so the imaging-acquisition, left main and wire-position tips cannot appear in the lab. Until then pci-img-choose-by-goal and pci-img-nitrate-first also show at lesion-prep, pci-img-ivus-contrast-saver at optimise, and pci-img-edge-dissection at optimise as a grading reminder.",
+    "learnerDoes": "Selects an imaging catheter, or works in a left main scenario, or loses the true lumen, or raises an edge flap with a stent, and sees the matching technique tip.",
+    "success": "pci-img-nitrate-first, pci-img-ivus-clear-view, pci-img-cannot-cross and pci-img-choose-by-goal show while an IVUS catheter is in use, and the pci-img-oct-* tips only while an OCT catheter is in use; pci-img-lm-threshold and pci-img-lm-both-branches only in left main scenarios; pci-img-ivus-wire-position only when the wire is subintimal; pci-img-edge-dissection on a post-stent edge flap and never on a dissection made before any stent (for example a guide-induced ostial dissection).",
+    "tips": [
+      "pci-img-choose-by-goal",
+      "pci-img-nitrate-first",
+      "pci-img-ivus-clear-view",
+      "pci-img-cannot-cross",
+      "pci-img-oct-guide-size",
+      "pci-img-oct-marker",
+      "pci-img-oct-purge-calibrate",
+      "pci-img-oct-flush-rates",
+      "pci-img-oct-hold-catheter",
+      "pci-img-oct-no-pullback",
+      "pci-img-lm-threshold",
+      "pci-img-lm-both-branches",
+      "pci-img-ivus-wire-position",
+      "pci-img-edge-dissection"
+    ],
+    "lessonIds": [
+      "pm-imaging-when-which",
+      "pm-imaging-ivus",
+      "pm-imaging-oct",
+      "pm-imaging-planning",
+      "pm-imaging-optimisation",
+      "pm-imaging-acs"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A lesion-type field in the tip context and in TipTrigger (src/content/lab/tips.ts), with values such as \"cto\", \"aorto-ostial\", \"ostial-branch\", \"left-main\", \"scad\", reported by the PCI lab from the scenario lesion. Without it, CTO-cap, ostial-coverage and SCAD tips either fire for every lesion or are held back to the plan phase.",
+    "learnerDoes": "Works an ostial, CTO or suspected SCAD lesion and sees only the tips that apply to that lesion type.",
+    "success": "pci-img-ct-cap appears while wiring a CTO and never for other lesions; pci-img-ostial-coverage appears after an ostial stent only; pci-img-scad-caution appears only in a SCAD scenario, never for iatrogenic dissections.",
+    "tips": [
+      "pci-img-ct-cap",
+      "pci-img-ostial-coverage",
+      "pci-img-scad-caution"
+    ],
+    "lessonIds": [
+      "pm-imaging-coreg-ct",
+      "pm-imaging-optimisation",
+      "pm-imaging-acs"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "IVUS in CTO crossing for the mid-RCA CTO scenario: an IVUS catheter that can be run from a side branch or over a subintimal wire, showing the cap position and whether a second wire has re-entered the true lumen, and sizing the antegrade balloon for reverse CART. Guide size limits the option: IVUS-guided re-entry needs 8 Fr guides, and a 6 Fr guide may rule out IVUS-guided cap penetration.",
+    "learnerDoes": "Chooses a 7 or 8 Fr guide, uses IVUS to locate an ambiguous cap and to confirm re-entry of a parallel wire, and sizes the reverse-CART balloon from the IVUS vessel size.",
+    "success": "Cap located before probing; re-entry confirmed on IVUS; IVUS option unavailable through a 6 Fr guide.",
+    "tips": [
+      "pci-img-ct-cap"
+    ],
+    "lessonIds": [
+      "pm-imaging-coreg-ct"
+    ],
+    "priority": "P3"
+  }
+]

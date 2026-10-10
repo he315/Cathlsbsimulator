@@ -1,0 +1,153 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "A calcified-lesion context reported to the tip registry. Today the cp-calcium tips can only be triggered by phase plus events such as balloon-undilatable or balloon-uncrossable, so several (DRAW, runs, cutting balloon, lithotripsy, orbital) compete for the six tip slots whenever a balloon fails in any scenario. Needed: LAB_EVENTS entries 'calcified-lesion' (raised when the target lesion is graded severely calcified), 'atherectomy-active' (raised while a burr or crown is in the guide or artery), 'burr-deceleration' (speed drop over 5,000 rpm), 'long-run' (run over 15 seconds) and 'laser-active' / 'ivl-active', so each tip can be tied to the device in use. Until 'atherectomy-active' exists, the trapped-burr bail-out (pci-calc-burr-entrapment) can fire on any entrapped balloon, stent or wire, the bradycardia tip (pci-calc-rota-bradycardia) on vagal or ischaemic bradycardia, and the burr-delivery tip whenever a balloon fails; these tips have been reworded to open with 'during atherectomy' as a stop-gap. Once the event exists, gate pci-calc-rota-draw, pci-calc-rota-runs, pci-calc-burr-delivery, pci-calc-burr-entrapment, pci-calc-rota-bradycardia and pci-calc-orbital-low-speed on it (with a device qualifier for rotational versus orbital). Interim triggers (round 4): pci-calc-rota-draw and pci-calc-rota-runs now fire only on balloon-uncrossable, where rotational atherectomy is the preferred device; pci-calc-burr-delivery fires on poor-guide-support or non-coaxial during lesion preparation; the slow-flow and perforation tips are retitled for lesion preparation and open conditionally on atherectomy being in use. Requested events, to be added to LAB_EVENTS in src/content/lab/tips.ts by the lab build: 'atherectomy-rotational', 'atherectomy-orbital' and 'burr-not-advancing' (in addition to those above); then retrigger DRAW and runs on 'atherectomy-rotational', burr delivery on 'burr-not-advancing', the orbital tip on 'atherectomy-orbital', and gate the slow-flow, perforation, entrapment and bradycardia tips on an atherectomy event as well.",
+    "learnerDoes": "Nothing new; the lab raises the events from its own state.",
+    "success": "Rotational atherectomy tips appear only while a burr is in use, the orbital tip only with the orbital device, the laser tips only when laser is chosen or nothing but the wire crosses, and the balloon tips only during balloon preparation of a calcified lesion.",
+    "tips": [
+      "pci-calc-atherectomy-perforation",
+      "pci-calc-balloon-boost",
+      "pci-calc-burr-delivery",
+      "pci-calc-burr-entrapment",
+      "pci-calc-cutting-slow",
+      "pci-calc-imaging-decides",
+      "pci-calc-ivl-crossing",
+      "pci-calc-laser-uncrossable",
+      "pci-calc-no-stent-until-expanded",
+      "pci-calc-orbital-low-speed",
+      "pci-calc-rota-bradycardia",
+      "pci-calc-rota-draw",
+      "pci-calc-rota-runs",
+      "pci-calc-rota-slow-flow"
+    ],
+    "lessonIds": [
+      "cp-calcium-balloons",
+      "cp-calcium-laser",
+      "cp-calcium-orbital",
+      "cp-calcium-recognise",
+      "cp-calcium-rota",
+      "cp-calcium-rota-complications"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Rotational atherectomy in the calcified mid-RCA scenario: exchange to the dedicated wire through a microcatheter, burr choice (1.25–2.5 mm) checked against guide size (1.25–1.75 mm in 6 Fr, 2.0 mm in 7 Fr, 2.15–2.25 mm in 8 Fr), the DRAW check, platform speed setting, delivery to 1–2 cm proximal with tension release, runs with a live rpm readout and a run timer, glide-mode or trapping removal (with a back-bleed of the Y-connector after trapping), exchange back to a workhorse wire, then a 1:1 non-compliant balloon test.",
+    "learnerDoes": "Chooses the burr for the reference diameter, completes the DRAW check, advances in short pecking runs keeping decelerations under 5,000 rpm, runs under 15 seconds and pauses of 30 seconds or more, polishes until the burr passes freely, removes the burr and proves expansion with a 1:1 non-compliant balloon before stenting.",
+    "success": "Burr-to-artery ratio about 0.5 and compatible with the guide; no run over 15 seconds; no deceleration over 5,000 rpm; full expansion of the 1:1 balloon before the stent; debrief scores each of these.",
+    "tips": [
+      "pci-calc-wire-exchange",
+      "pci-calc-rota-draw",
+      "pci-calc-rota-runs",
+      "pci-calc-burr-delivery"
+    ],
+    "lessonIds": [
+      "cp-calcium-setup",
+      "cp-calcium-rota"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Rotational atherectomy complications modelled from run technique: bradycardia and AV block in the RCA or a dominant circumflex (more likely with larger burrs, longer runs and no prevention), slow flow or no-reflow after long or forceful runs, oversized burrs, speeds over 180,000 rpm or a damped guide, burr entrapment after forceful advancement with large decelerations, a 1.25 mm burr or stopping beyond the lesion, and perforation with oversized burrs in tortuous or small vessels.",
+    "learnerDoes": "Chooses a bradycardia plan (pacing, aminophylline, test runs or atropine) before the first run; when a complication occurs, stops the run and applies the bail-out: distal vasodilator through a microcatheter for slow flow, the stepwise entrapment algorithm (straighten guide, glide mode, second wire and balloon, cut shaft and guide extension, snare, gentle wire pull, surgery), balloon tamponade for perforation.",
+    "success": "Complications occur only when the learner's technique invites them, and each is resolved in the order Brilakis teaches; the debrief links each event to the run that caused it.",
+    "tips": [
+      "pci-calc-bradycardia-plan",
+      "pci-calc-rota-bradycardia",
+      "pci-calc-rota-slow-flow",
+      "pci-calc-burr-entrapment",
+      "pci-calc-atherectomy-perforation"
+    ],
+    "lessonIds": [
+      "cp-calcium-setup",
+      "cp-calcium-rota-complications"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "A calcified variant that no balloon can cross: the workhorse wire crosses, a microcatheter crosses in one version and not in the other. With the microcatheter across, the learner must exchange to the atherectomy wire and use rotational atherectomy; without it, laser over the existing wire (0.9 mm, 80 Hz, 80 mJ/mm², saline flush, 5-minute console warm-up) is the way forward.",
+    "learnerDoes": "Recognises a balloon-uncrossable lesion, checks whether a microcatheter will cross, and chooses rotational atherectomy or laser accordingly; switches the laser console on early.",
+    "success": "The learner never forces the balloon until the guide backs out, chooses rotational atherectomy only when the dedicated wire can be exchanged in, and chooses laser when it cannot.",
+    "tips": [
+      "pci-calc-wire-exchange",
+      "pci-calc-laser-uncrossable"
+    ],
+    "lessonIds": [
+      "cp-calcium-strategy",
+      "cp-calcium-laser"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Balloon preparation of calcium on the bench: a non-compliant balloon whose waist responds to pressure (20 atm or more), inflation time (with a slowly falling indeflator reading as the lesion yields) and buddy wires; a cutting balloon that must be inflated about 1 atm every 5 seconds and kept within 12–14 atm; a scoring balloon; balloon rupture above the rated pressure (and a higher rupture risk above 20 atm); watermelon seeding of a short balloon inflated fast, corrected by slower inflation, a buddy wire, a longer or plaque modification balloon; then stent, post-dilatation at 20 atm or more and imaging of expansion.",
+    "learnerDoes": "Escalates balloon preparation correctly, watches the indeflator, inflates the cutting balloon slowly, stents only after full 1:1 balloon expansion and post-dilates.",
+    "success": "No stent before full balloon expansion; no cutting balloon over 12–14 atm or fast inflation; rupture recognised from the sudden pressure drop and handled (suction, remove, inject).",
+    "tips": [
+      "pci-calc-balloon-boost",
+      "pci-calc-cutting-slow",
+      "pci-calc-no-stent-until-expanded",
+      "pci-calc-postdilate"
+    ],
+    "lessonIds": [
+      "cp-calcium-balloons"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Intravascular lithotripsy as a bench device: a 12 mm balloon that cannot cross a very tight lesion until it has been predilated or debulked, an energy field that falls off about 3 mm from each emitter so long segments need overlapping positions, a pulse counter whose per-catheter limit comes from the instructions for use held as data (80 per catheter as printed in Brilakis Fig. 30.89, 2020), and OCT before and after, which may or may not show fractures (expansion of a 1:1 non-compliant balloon is the test). Optionally, ectopic beats or ventricular capture timed with the pulses, which a 2022 review describes as common and transient with no ventricular tachyarrhythmias or adverse outcomes reported; the learner should keep the ECG and pressure on screen and continue, and the lab could offer R-wave-timed pulses as a case report suggests. Sizing and inflation pressures must come from the device instructions for use, which the lab should hold as data rather than the content inventing them.",
+    "learnerDoes": "Chooses lithotripsy for circumferential deep calcium, positions it to cover the whole calcified length with overlap, keeps count of pulses, then proves the result with a 1:1 non-compliant balloon.",
+    "success": "The whole calcified length is treated, pulses kept within the per-catheter limit of the instructions for use, and the lesion is proved to expand before the stent.",
+    "tips": [
+      "pci-calc-ivl-crossing"
+    ],
+    "lessonIds": [
+      "cp-calcium-ivl"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "An underexpanded stent in calcium for the in-stent undilatable algorithm: high-pressure non-compliant balloons with buddy wires, plaque modification balloons, laser with contrast inside the stent, lithotripsy (or a very-high-pressure balloon) where available as an option before atherectomy (Brilakis 23.2.5), rotational atherectomy (a 1.5 mm burr as in Fig. 23.8, or a larger burr of 1.75 mm or more considered selectively against entrapment), then IVUS to decide on restenting, with IVUS at each step (based on Brilakis Fig. 23.8).",
+    "learnerDoes": "Works through the algorithm in Brilakis's order, using contrast lasing only inside the stent and choosing a burr with entrapment in mind, then images and restents if the old stent is disrupted, and confirms expansion.",
+    "success": "Tools are used in the in-stent order (balloons, modified balloons, laser, lithotripsy where available, atherectomy); no orbital atherectomy in a freshly placed stent; final IVUS shows expansion.",
+    "tips": [
+      "pci-calc-laser-underexpanded-stent",
+      "pci-calc-postdilate"
+    ],
+    "lessonIds": [
+      "cp-calcium-laser",
+      "cp-calcium-strategy"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "angio-real",
+    "what": "A calcium-grading drill on real library runs once they carry expert calcium labels: grade each lesion as severe or moderate from the frames before contrast arrives, using Brilakis's definitions (severe: visible without cardiac motion on both sides of the wall; moderate: under 50% of the reference diameter, often only with motion).",
+    "learnerDoes": "Scrolls to the frames before contrast, grades the calcium and states whether imaging is needed before choosing a device.",
+    "success": "Agreement with the expert label on grade, and the learner flags lesions where angiography may under-report calcium.",
+    "tips": [
+      "pci-calc-imaging-decides"
+    ],
+    "lessonIds": [
+      "cp-calcium-recognise"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "pci-bench",
+    "what": "Orbital atherectomy as a planning exercise (no lab device needed yet): speed choice (80,000 or 120,000 rpm by vessel size and balloon response), 1 mm per second advance, runs under 15 seconds with rests of 30–60 seconds, the 10 mm rule from the wire tip, total time under 5 minutes, and the aorto-ostial nose-cone technique.",
+    "learnerDoes": "Answers each set-up choice for a given vessel and lesion and is corrected against Brilakis's steps.",
+    "success": "All choices match Brilakis 19.9.6, including avoiding high speed under 3.0 mm and never using the device in a recently placed stent.",
+    "tips": [
+      "pci-calc-orbital-low-speed"
+    ],
+    "lessonIds": [
+      "cp-calcium-orbital"
+    ],
+    "priority": "P3"
+  }
+]

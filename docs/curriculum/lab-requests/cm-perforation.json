@@ -1,0 +1,208 @@
+[
+  {
+    "lab": "angio-pci",
+    "what": "Perforation recognition step. Whenever the complications engine creates a wire or device perforation (wire exit into a distal branch, oversized or very high-pressure balloon or stent, balloon rupture, atherectomy), pause and ask the learner to name the location (large vessel, distal vessel, collateral) and the Ellis grade (I crater, II blush without a 1 mm exit, III streaming through 1 mm or more, III cavity spilling into the coronary sinus or a chamber). Render each grade distinctly on the fluoroscopic image, including a contrast-outlined pericardium as the effusion grows. Balloon rupture (sudden loss of inflation pressure) should require suction, balloon removal, guide aspiration and an immediate angiogram before anything else.",
+    "learnerDoes": "Names location and grade before acting; after a balloon rupture applies suction, removes the balloon and takes an angiogram.",
+    "success": "Correct location and grade within one attempt; no further inflation or device advance before the angiogram after a rupture.",
+    "tips": [
+      "pci-perf-grade-and-locate",
+      "pci-perf-size-and-pressure"
+    ],
+    "lessonIds": [
+      "cm-perforation-classify"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Blocking balloon with a patient clock. When a perforation is active, let the learner choose a balloon (compliance, diameter relative to the vessel, pressure) and inflate it at or proximal to the site. Extravasation should stop only when a balloon of roughly vessel size occludes flow; an oversized non-compliant balloon at high pressure should enlarge the tear. Run a visible inflation timer (Brilakis: at least 10–15 minutes) and make Ellis I–II perforations seal with a prolonged inflation in some runs. Each deflation should release a fresh jet and add to the pericardial volume. Show downstream ischaemia (ST change, chest pain) during inflation in non-CTO vessels, and little ischaemia when the perforated vessel is a CTO target.",
+    "learnerDoes": "Inflates a semi-compliant, vessel-sized balloon at 8–10 atm or less immediately and keeps it up while organising the rest.",
+    "success": "Balloon up within the first minute; no repeated test deflations; inflation sustained 10–15 minutes or until the definitive device is ready.",
+    "tips": [
+      "pci-perf-balloon-now"
+    ],
+    "lessonIds": [
+      "cm-perforation-first-minutes"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Universal-sequence actions during a perforation: request a second arterial access (enabled when the guide is smaller than 8 Fr), IV fluids, vasopressor, atropine, echo, pericardiocentesis kit, notify cardiac surgery, stop GP IIb/IIIa inhibitor or cangrelor infusions, and a protamine order with dose and rate fields. Protamine given while wires, balloons or fresh stents are in the coronary should raise the probability of guide or stent thrombosis and of clotted pericardial blood that drains poorly; doses above 50 mg or faster than 5 mg/min should cause hypotension.",
+    "learnerDoes": "Runs the sequence in order and holds protamine until the equipment is out and the pericardium drained (or the definitive treatment has failed).",
+    "success": "All universal actions taken; GP IIb/IIIa or cangrelor stopped; no protamine with equipment in the artery.",
+    "tips": [
+      "pci-perf-second-access",
+      "pci-perf-support-and-call",
+      "pci-perforation-stop-iv-antiplatelet",
+      "pci-protamine-only-after-equipment-out"
+    ],
+    "lessonIds": [
+      "cm-perforation-first-minutes"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Covered stent delivery for large-vessel perforation: expose a covered-stent device with design variants (two-layer sandwich ePTFE: diameters 2.8, 3.5, 4.0, 4.5 and 4.8 mm only, 6 Fr for 2.8–4.0 mm, 7 Fr for 4.5 and 4.8 mm, needs at least 15 atm, shortens up to 1.6 mm at each end, hard to pass existing stents; single-layer polyurethane: diameters 2.5 to 5.0 mm in 0.5 mm steps, 5 Fr for 2.5–4.0 mm, 6 Fr for 4.5 and 5.0 mm, easier to deliver, may slip off its balloon). Support both delivery techniques: single guide 'block and deliver' (second wire through the same guide past the inflated balloon during a brief deflation; only allowed when balloon and device fit together, usually 8 Fr for the sandwich design) and two guides 'ping-pong' (second access, second guide to the same ostium, first guide pulled back with its balloon inflated). The inflated balloon should act as a distal anchor that improves delivery. After deployment, a leak behind the stent should persist until the stent is post-dilated at high pressure (including the shoulders), and a residual edge dissection should keep leaking until stented.",
+    "learnerDoes": "Chooses the technique from the guide size and device, delivers the covered stent with the vessel blocked until the swap, post-dilates it and treats residual dissection.",
+    "success": "Bleeding time limited to the swap; covered stent across the tear; high-pressure post-dilatation; no residual leak.",
+    "tips": [
+      "pci-perf-covered-one-guide",
+      "pci-perf-covered-two-guides",
+      "pci-perf-covered-expand"
+    ],
+    "lessonIds": [
+      "cm-perforation-large-vessel"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Distal-vessel perforation embolisation: a second wire and a microcatheter that can sit beside the blocking balloon in one guide (enforce the minimum guide size for each microcatheter as in Brilakis Table 26.2: 6, 7 or 8 Fr depending on the model; 0.018-inch-coil-compatible microcatheters range from 6 Fr to 8 Fr), microcatheter tip injections that show the leak without deflating the balloon, and embolic materials: autologous fat (any microcatheter; poorly visible; uncontrolled; may need several pieces), 0.014-inch detachable coils (retrievable until released) and 0.018-inch pushable coils (only through a 0.018-inch microcatheter; irreversible). Sealing should sometimes take a few minutes after a coil. Add a 'covered stent across the branch origin' option when the branch cannot be wired, and require a contralateral injection to confirm sealing when the branch is fed by collaterals. Use the mid-RCA CTO scenario and a non-CTO polymer-jacketed-wire scenario.",
+    "learnerDoes": "Blocks proximally, sets up block and deliver, chooses fat or a compatible coil, re-injects after a wait, and confirms with guide and, if needed, contralateral injection.",
+    "success": "Branch sealed with the vessel blocked throughout; no incompatible coil attempted; contralateral injection done when collaterals feed the branch.",
+    "tips": [
+      "pci-perf-distal-block-deliver",
+      "pci-perf-fat-embolisation",
+      "pci-perf-coil-match",
+      "pci-perf-distal-covered-origin",
+      "pci-perf-check-other-side"
+    ],
+    "lessonIds": [
+      "cm-perforation-distal",
+      "cm-perforation-collateral-cabg"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "angio-pci",
+    "what": "Delayed distal perforation: a scenario in which a polymer-jacketed or stiff wire tip drifts into a small branch during device exchanges, with the tip outside a collimated field, and a slow leak that is visible only on a full-field view and produces hypotension and tamponade during the finish phase or in recovery. Raise wire-distal-position when the tip enters a small branch. Starting a GP IIb/IIIa inhibitor or cangrelor after the leak should accelerate it.",
+    "learnerDoes": "Keeps the tip in view, exchanges to a workhorse wire after crossing, traps during exchanges, inspects the full field at the end, and withholds IV antiplatelet drugs after a distal leak.",
+    "success": "Tip kept out of small branches; any leak found before the patient leaves; no GP IIb/IIIa inhibitor or cangrelor after a distal perforation.",
+    "tips": [
+      "pci-perf-wire-tip-watch",
+      "pci-perf-distal-finish-watch",
+      "pci-perf-hypotension-tamponade"
+    ],
+    "lessonIds": [
+      "cm-perforation-classify",
+      "cm-perforation-distal",
+      "cm-perforation-tamponade"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "pericardiocentesis",
+    "what": "Haemopericardium after coronary perforation on a shared patient clock with the PCI lab: the pericardial volume should grow with every second the perforation is unblocked, the pressure should fall and the heart rate rise, and fluoroscopy should show the sac outlined by leaked contrast so that the needle can be guided by X-ray when echo is not yet available. Small effusions in a stable patient should sometimes be best left (raised pericardial pressure slows the leak); instability should require immediate drainage. Drainage of 20–50 mL should improve the haemodynamics. Keep the drain and show continued output while the source is unsealed. Offer an autotransfusion option as a local-practice choice. Wire confirmation: render a J-wire that either curls round the heart border outside the chambers (pericardial) or runs into the right ventricular outflow tract and pulmonary artery (needle in the right ventricle), so that both lie in the cardiac shadow and only the course separates them; the aspirate should look the same in both, and agitated saline on echo should show bubbles in the sac or in the chamber.",
+    "learnerDoes": "Decides whether to drain from the haemodynamics and echo, performs subxiphoid drainage under fluoroscopy (and echo when present), confirms before dilating that the wire curls round the heart outside the chambers (not into the outflow tract) or that agitated saline appears in the sac, leaves the drain and re-images.",
+    "success": "Unstable patients drained promptly; wire position confirmed before dilating; drain kept; echo repeated after drainage.",
+    "tips": [
+      "bed-peri-set-up",
+      "bed-peri-confirm-wire",
+      "bed-peri-after-pci",
+      "bed-peri-drain-stays"
+    ],
+    "lessonIds": [
+      "cm-perforation-pericardiocentesis",
+      "cm-perforation-first-minutes"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pericardiocentesis",
+    "what": "Loculated collection after CABG: a scenario in which a perforation in a patient with previous bypass surgery produces a localised collection compressing the left atrium or right ventricle, with tachycardia, pulsus paradoxus and hypotension but no free effusion in the subxiphoid path. A blind subxiphoid needle should return nothing and provoke ectopy; the correct action is to call for CT-guided or surgical drainage.",
+    "learnerDoes": "Recognises from echo that the collection is out of reach and calls for CT-guided or surgical drainage instead of needling.",
+    "success": "No blind puncture; CT-guided or surgical drainage requested.",
+    "tips": [
+      "pci-cabg-perforation-act-now"
+    ],
+    "lessonIds": [
+      "cm-perforation-collateral-cabg"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "haemo",
+    "what": "Tamponade physiology on the traces: an arterial trace with a respiratory systolic fall above 10 mmHg (up to the 35 mmHg of Brilakis Fig. 2.2), a raised and blunted right atrial trace, and an echo panel showing an effusion with right atrial collapse; plus a tool to measure the inspiratory fall.",
+    "learnerDoes": "Measures pulsus paradoxus, describes the right atrial pressure and identifies tamponade.",
+    "success": "Pulsus measured within 2 mmHg; tamponade identified.",
+    "tips": [
+      "pci-mon-pulsus-paradoxus"
+    ],
+    "lessonIds": [
+      "cm-perforation-tamponade"
+    ],
+    "priority": "P2"
+  },
+  {
+    "lab": "access",
+    "what": "Vasovagal reaction versus tamponade during sheath removal or compression: a vasovagal variant (bradycardia before hypotension, pallor, sweating, nausea; responds within minutes to leg elevation, atropine and saline) and a tamponade variant (tachycardia with hypotension; no response; echo shows an effusion).",
+    "learnerDoes": "Uses the heart rate to separate the two, treats the vasovagal reaction, and orders an immediate echo when it does not respond or the rate is fast.",
+    "success": "Correct diagnosis and first treatment in both variants.",
+    "tips": [
+      "access-vasovagal-or-tamponade"
+    ],
+    "lessonIds": [
+      "cm-perforation-tamponade"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "cathlab",
+    "what": "Intramyocardial contrast at left ventriculography: when the pigtail tip is wedged in the myocardium, the injection should stain the wall and sometimes leak into the pericardium, occasionally with later hypotension, raising the hypotension event in the lv-aorta phase.",
+    "learnerDoes": "Recognises the myocardial stain, stops injecting, and checks for an effusion if the pressure falls.",
+    "success": "Stain recognised; echo requested when hypotension follows.",
+    "tips": [
+      "diag-lv-gram-tamponade"
+    ],
+    "lessonIds": [
+      "cm-perforation-tamponade"
+    ],
+    "priority": "P3"
+  },
+  {
+    "lab": "engine",
+    "what": "Vocabulary: add LAB_EVENTS 'pericardial-effusion' (an effusion is present or growing) and 'tamponade' (effusion with haemodynamic compromise), so that tamponade tips can trigger on the effusion itself rather than on 'perforation' plus 'hypotension'; and a 'covered-stent' device class in the PCI lab device list. Also add location subtype events 'perforation-large-vessel', 'perforation-distal' and 'perforation-collateral' (raised with 'perforation'), and have the PCI lab raise 'wire-distal-position' when a wire tip enters a small distal branch. Until then the large-vessel tips (pci-perf-second-access, pci-perf-covered-one-guide, pci-perf-covered-two-guides, pci-perf-covered-expand) fire on every perforation, and the distal tips (pci-perf-distal-block-deliver, pci-perf-fat-embolisation, pci-perf-coil-match, pci-perf-distal-covered-origin, pci-perf-distal-finish-watch) require 'wire-distal-position', which no lab raises yet. Once the subtype events exist, this module's tips should be retargeted: large-vessel tips requires ['perforation-large-vessel'], distal tips requires ['perforation-distal'], pci-perf-check-other-side on 'perforation-distal' or 'perforation-collateral'; grade-and-locate, balloon-now and support-and-call stay on 'perforation'.",
+    "learnerDoes": "Not applicable (engine change).",
+    "success": "Events raised by the PCI and pericardiocentesis labs; tips retargeted in a later revision of this module.",
+    "tips": [
+      "pci-perf-check-other-side",
+      "pci-perf-coil-match",
+      "pci-perf-covered-expand",
+      "pci-perf-covered-one-guide",
+      "pci-perf-covered-two-guides",
+      "pci-perf-distal-block-deliver",
+      "pci-perf-distal-covered-origin",
+      "pci-perf-distal-finish-watch",
+      "pci-perf-fat-embolisation",
+      "pci-perf-hypotension-tamponade",
+      "pci-perf-second-access",
+      "pci-perf-support-and-call"
+    ],
+    "lessonIds": [
+      "cm-perforation-collateral-cabg",
+      "cm-perforation-distal",
+      "cm-perforation-first-minutes",
+      "cm-perforation-large-vessel",
+      "cm-perforation-tamponade"
+    ],
+    "priority": "P1"
+  },
+  {
+    "lab": "pericardiocentesis",
+    "what": "Technique tips in the bedside pericardiocentesis lab. src/ui/bedside/PericardioLab.tsx does not match LabTips today (only the PCI lab and the diagnostic lab use src/ui/lab/useLabTips.ts), so the bedside tips of this module appear only inside lessons. Render 'bedside' tips with phase 'pericardiocentesis' in this lab, and raise the 'perforation' event when the pericardiocentesis case is launched from a coronary perforation (the PCI-lab hand-over or the perforation lessons), so that perforation-specific bedside tips can be targeted.",
+    "learnerDoes": "Sees the set-up, wire-confirmation, after-PCI and drain tips at the matching step of the bedside procedure.",
+    "success": "bed-peri-set-up, bed-peri-confirm-wire, bed-peri-after-pci and bed-peri-drain-stays show in the bedside lab during pericardiocentesis.",
+    "tips": [
+      "bed-peri-set-up",
+      "bed-peri-confirm-wire",
+      "bed-peri-after-pci",
+      "bed-peri-drain-stays"
+    ],
+    "lessonIds": [
+      "cm-perforation-pericardiocentesis"
+    ],
+    "priority": "P1"
+  }
+]
