@@ -14,6 +14,7 @@ import { putHandover, useLabHandoverStore } from "../../../state/useLabHandoverS
 import { resolvePciLaunch, subscribePciLaunch, takePciLaunch, type PciLaunchResult } from "../../../ui/pci/launch";
 import { launch as CORE_LAUNCH } from "./packs/core.launch";
 import { launch as CLOSURE_LAUNCH } from "./packs/closure.launch";
+import { launch as COUPLING_LAUNCH } from "../../../content/practice/pci-patient-coupling.launch";
 import { scenarios as CORE } from "./packs/core";
 import { PCI_DEF_BY_ID } from "./registry";
 import { useUiStore } from "../../../state/useUiStore";
@@ -22,7 +23,8 @@ import { pciScenarioById } from "../actions/scenario";
 // The literal patterns match content.test.ts and src/ui/content/practiceIndex.ts.
 const LAUNCH_FILES = import.meta.glob<LaunchFiles[string]>(["/src/**/*.launch.ts", "!/src/**/__fixtures__/**"], { eager: true });
 /** The flow and closure variants the closure pack's launch file adds to the core cases (pci-flow-closure), as "scenario:variant". */
-const CLOSURE_ADDS = new Set((CLOSURE_LAUNCH.links ?? []).flatMap((l) => (l.adds?.variants ?? []).map((v) => `${l.scenario}:${typeof v === "string" ? v : v.id}`)));
+// variants other packs add to core scenarios through their launch links: closure, and pci-patient-coupling's hypotension and arrhythmia variants
+const CLOSURE_ADDS = new Set([...(CLOSURE_LAUNCH.links ?? []), ...(COUPLING_LAUNCH.links ?? [])].flatMap((l) => (l.adds?.variants ?? []).map((v) => `${l.scenario}:${typeof v === "string" ? v : v.id}`)));
 const CORE_PATH = "/src/simulation/pci/scenarios/packs/core.launch.ts";
 
 /** A track with one lesson whose single block is a PCI-lab drill block with the given params. */

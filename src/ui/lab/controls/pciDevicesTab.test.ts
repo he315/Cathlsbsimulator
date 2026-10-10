@@ -46,7 +46,8 @@ describe("the PCI lab's table-side controls", () => {
     // the diagnostic strip does not carry the Devices tab, and its core tabs keep their order (diag-lab-drugs adds Drugs after them)
     const diag = CONTROL_TABS.filter((t) => t.labs.includes("diagnostic")).map((t) => t.id);
     expect(diag).not.toContain("pci-devices");
-    expect(diag.slice(0, 4)).toEqual(["carm", "imaging", "table", "patient"]);
+    // later packages add diagnostic tabs (drugs, route); the four core tabs keep their order
+    expect(diag.filter((id) => ["carm", "imaging", "table", "patient"].includes(id))).toEqual(["carm", "imaging", "table", "patient"]);
   });
 
   it("lists the consoles, shows none until one is opened, then its controls; opening is recorded", () => {

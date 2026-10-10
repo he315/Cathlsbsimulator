@@ -26,7 +26,6 @@ The rod (device physics) implementation for the diagnostic lab (`src/ui/physics/
 
 | Constant | File | Value | Unit | Rests on |
 |---|---|---|---|---|
-| `MOVING_MM` | src/ui/physics/physicsDevices.ts | 0.3 | mm between read-outs | Model choice: tip movement that counts as the catheter moving (an earlier aspiration no longer stands) |
 | `PUSHING_HOLD_S` | src/ui/physics/physicsDevices.ts | 0.3 | s | Model choice: the hub load counts as forward pressure only while the hand pushes and this long after, so a held catheter resting against the wall is not counted as forcing |
 | `PROLAPSE_WINDOW_S`, `PROLAPSE_REPEAT`, `PROLAPSE_MIN_S` | src/ui/physics/physicsDevices.ts | 60, 2, 0.5 | s; prolapses; s | Model choice: two prolapses within 60 s raise 'engage-fail'; a prolapse counts when the catheter stays folded 0.5 s (so the classifier's flicker is not counted) |
 | `MP_CONUS_LATCH_S`, `MP_CONUS_RELEASE_DEPTH_MM` | src/ui/physics/physicsDevices.ts | 0.3, -1.5 | s; mm | MODEL PARAMETERS: with the heart moving the classifier finds a tip in the conus for only part of the beat, so the lab latches it after 0.3 s in all and releases it after more than one RR interval out with the depth short of -1.5 mm |
@@ -37,6 +36,8 @@ The rod (device physics) implementation for the diagnostic lab (`src/ui/physics/
 | `MP_CONUS_GAP_MIN` | src/simulation/patient/transducer.ts | 0.09 | open fraction of the lumen | MODEL PARAMETER: the conus is narrower than a 6 Fr catheter, so the tip lodges in the branch mouth; the leak is the conus gap tipFromEngagement has always used, read as a damped trace |
 | `MP_WALL_CONTACT_PER_N` | src/simulation/patient/transducer.ts | 2 | wall contact (model units) per N | MODEL PARAMETER, fitted: 0.3 N, a firm deep seat in the rod model, gives the 0.6 that tipFromEngagement uses for a deep seat |
 | `MP_DEEP_RCA_RUNOFF` | src/simulation/patient/transducer.ts | 0.5 | runoff (TipInput.runoff) | MODEL PARAMETER: the value tipFromEngagement's deep right seat has always used, now named and shared with tipFromPhysics |
+
+`MOVING_MM` (0.3 mm of tip travel between read-outs) was removed by diag-catheter-kink: the catheter now counts as moving when the hand pushed, pulled or turned it since the last read-out (physicsDevices.ts), because with the heart moving the tip travels more than that while the hub is held still.
 
 ## Drawing (FluoroView.tsx)
 
